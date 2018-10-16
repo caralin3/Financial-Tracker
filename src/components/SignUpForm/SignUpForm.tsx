@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
-import { auth, db } from '../firebase';
-import { SetCurrentUserAction } from '../reducers';
-import * as routes from '../routes';
-import { User } from '../utility/types';
-import { Form } from './';
+import { Form } from '../';
+import { auth, db } from '../../firebase';
+import { SetCurrentUserAction } from '../../reducers';
+import * as routes from '../../routes';
+import { User } from '../../utility/types';
 
 interface SignUpFormProps {
   history: any;
@@ -46,43 +46,46 @@ class DisconnectedSignUpForm extends React.Component<SignUpMergedProps, SignUpFo
     const isInvalid = password !== passwordConfirm || !password || !email || !firstName || !lastName;
 
     return (
-      <Form buttonText='Sign Up' disabled={isInvalid} submit={this.handleSubmit}>
-        {error && <p>{error.message}</p>}
-        <input
-          onChange={(e) => this.handleChange(e, 'firstName')}
-          placeholder='First Name'
-          type='text'
-          value={firstName}
-        />
-        <input
-          onChange={(e) => this.handleChange(e, 'lastName')}
-          placeholder='Last Name'
-          type='text'
-          value={lastName}
-        />
-        <input
-          onChange={(e) => this.handleChange(e, 'email')}
-          placeholder='Email Address'
-          type='text'
-          value={email}
-        />
-        <input
-          placeholder='Password'
-          onChange={(e) => this.handleChange(e, 'password')}
-          type='password'
-          value={password}
-        />
-        <input
-          onChange={(e) => this.handleChange(e, 'passwordConfirm')}
-          placeholder='Confirm Password'
-          type='password'
-          value={passwordConfirm}
-        />
-        <p>
-          Already have an account? {' '}
-          <Link to={routes.SIGN_UP}>Log In</Link>
-        </p>
-      </Form>
+      <div className='signupForm'>
+        <Form buttonText='Sign Up' disabled={isInvalid} submit={this.handleSubmit}>
+          {error && <p>{error.message}</p>}
+          <input
+            className='signupForm_input'
+            onChange={(e) => this.handleChange(e, 'firstName')}
+            placeholder='First Name'
+            type='text'
+            value={firstName}
+          />
+          <input
+            className='signupForm_input'
+            onChange={(e) => this.handleChange(e, 'lastName')}
+            placeholder='Last Name'
+            type='text'
+            value={lastName}
+          />
+          <input
+            className='signupForm_input'
+            onChange={(e) => this.handleChange(e, 'email')}
+            placeholder='Email Address'
+            type='text'
+            value={email}
+          />
+          <input
+            className='signupForm_input'
+            onChange={(e) => this.handleChange(e, 'password')}
+            placeholder='Password'
+            type='password'
+            value={password}
+          />
+          <input
+            className='signupForm_input'
+            onChange={(e) => this.handleChange(e, 'passwordConfirm')}
+            placeholder='Confirm Password'
+            type='password'
+            value={passwordConfirm}
+          />
+        </Form>
+      </div>
     )
   }
 

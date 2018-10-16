@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { firebase } from '../firebase';
 import * as routes from '../routes/';
+import { User } from '../utility/types';
 
 // tslint:disable:no-empty-interface
 interface WithAuthorProps {
@@ -13,7 +14,7 @@ interface WithAuthorProps {
 interface DispatchMappedProps {}
 
 interface StateMappedProps {
-  currentUser: any
+  currentUser: User;
 }
 
 interface WithAuthorMergedProps extends
@@ -28,7 +29,7 @@ export const withAuthorization = (authCondition: any) => (Component: any) => {
     public componentDidMount() {
       firebase.auth.onAuthStateChanged((currentUser: any) => {
         if (!authCondition(currentUser)) {
-          this.props.history.push(routes.SIGN_IN);
+          this.props.history.push(routes.LANDING);
         }
       });
     }

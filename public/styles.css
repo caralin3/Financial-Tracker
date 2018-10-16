@@ -1,0 +1,148 @@
+@import "https://use.fontawesome.com/releases/v5.2.0/css/all.css";
+html {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: arial, sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+}
+button {
+  background: none;
+  border: none;
+}
+button:focus {
+  outline: none;
+}
+.button {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+.button:focus,
+.button:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
+}
+.form_form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.form_fields {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.form_button {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+.form_button:focus,
+.form_button:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
+}
+.loginForm_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 15rem;
+}
+.signupForm_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 15rem;
+}
+.landing {
+  background-image: linear-gradient(#0C98AC, #62D4D9);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem;
+}
+.landing_header {
+  align-items: center;
+  display: flex;
+}
+.landing_title {
+  color: #FFFFFF;
+  padding-left: 1rem;
+}
+.landing_circle {
+  color: #FFFFFF;
+}
+.landing_icon {
+  color: #0C98AC;
+}
+.landing_content {
+  align-items: center;
+  display: grid;
+  grid-gap: 2rem;
+  grid-template-columns: 2fr 1fr;
+  margin: 0 2rem;
+}
+@media only screen and (max-width: 950px) {
+  .landing_content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+.landing_text {
+  color: #FFFFFF;
+  justify-self: center;
+}
+@media only screen and (max-width: 950px) {
+  .landing_text {
+    padding-bottom: 2rem;
+  }
+}
+.login,
+.signup {
+  align-items: center;
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 35rem;
+  padding: 0 5rem;
+}
+@media only screen and (max-width: 640px) {
+  .login,
+  .signup {
+    padding: 0 2rem;
+  }
+}
+.login_title,
+.signup_title {
+  color: #0C98AC;
+}
+.login_button,
+.signup_button {
+  font-size: 0.9rem;
+}
+.login_button:hover,
+.signup_button:hover {
+  color: #0C98AC;
+  cursor: pointer;
+  text-decoration: underline;
+}

@@ -5,7 +5,6 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { PasswordChangeForm } from './PasswordChange';
 import { PasswordForgetForm } from './PasswordForget';
 
-// tslint:disable:no-empty-interface
 interface AccountProps {}
 
 interface DispatchMappedProps {}
