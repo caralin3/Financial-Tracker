@@ -2,8 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { withAuthorization } from '../auth/withAuthorization';
+import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { PasswordChangeForm } from './PasswordChange';
-import { PasswordForgetForm } from './PasswordForget';
 
 interface AccountProps {}
 
@@ -22,7 +22,7 @@ const AccountComponent: React.SFC<AccountMergedProps> = (props) => (
   <div>
     <div>
       <h1>Account: {props.currentUser.email}</h1>
-      <PasswordForgetForm />
+      <ForgotPasswordForm />
       <PasswordChangeForm />
     </div>
   </div>

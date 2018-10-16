@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { LoginForm, SignUpForm } from '../../components';
+import { Link } from 'react-router-dom';
+import { Header, LoginForm, SignUpForm } from '../../components';
 
 export interface LandingPageProps { }
 
@@ -22,6 +23,9 @@ export class LandingPage extends React.Component<LandingPageProps, LandingPageSt
           Don't have an account? {' '}
           <button className="login_button" onClick={this.toggleForm}>Sign Up</button>
         </p>
+        <p className="login_forgot">
+          <Link className="login_link" to='/forgot_password'>Forgot Password?</Link>
+        </p>
       </div>
     );
 
@@ -38,13 +42,7 @@ export class LandingPage extends React.Component<LandingPageProps, LandingPageSt
 
     return (
       <div className="landing">
-        <div className="landing_header">
-          <span className="fa-stack fa-2x">
-            <i className=" landing_circle fas fa-circle fa-stack-2x" />
-            <i className=" landing_icon fa-stack-1x fas fa-university " />
-          </span>
-          <h1 className="landing_title">Financial Tracker</h1>
-        </div>
+        <Header />
         <div className="landing_content">
           <div className="landing_text">
             <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit</h2>
