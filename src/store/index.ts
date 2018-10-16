@@ -1,4 +1,16 @@
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import { rootReducer } from '../reducers';
+import * as actions from './actions';
 
-export const store = createStore(rootReducer);
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(
+    applyMiddleware()
+  )
+);
+
+export {
+  actions,
+  store,
+}

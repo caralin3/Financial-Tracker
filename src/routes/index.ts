@@ -1,0 +1,17 @@
+import {
+  ACCOUNT,
+  DASHBOARD,
+  LANDING,
+  PASSWORD_FORGET,
+  SIGN_IN,
+  SIGN_UP,
+} from './pages';
+
+export {
+  ACCOUNT,
+  DASHBOARD,
+  LANDING,
+  PASSWORD_FORGET,
+  SIGN_IN,
+  SIGN_UP,
+}

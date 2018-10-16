@@ -38,6 +38,3 @@ const settings = {
   timestampsInSnapshots: true,
 };
 db.settings(settings);
-
-// firebase collections
-export const usersCollection = db.collection('users');

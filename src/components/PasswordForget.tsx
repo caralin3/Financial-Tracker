@@ -8,13 +8,13 @@ export const PasswordForgetPage: React.SFC = () => (
     <PasswordForgetForm />
   </div>
 )
-interface IPasswordForgetFormState {
+interface PasswordForgetFormState {
   email: string,
   error: any,
 }
 
-export class PasswordForgetForm extends React.Component<{}, IPasswordForgetFormState> {
-  public readonly state: IPasswordForgetFormState = {
+export class PasswordForgetForm extends React.Component<{}, PasswordForgetFormState> {
+  public readonly state: PasswordForgetFormState = {
     email: '',
     error: null,
   }

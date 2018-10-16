@@ -1,33 +1,33 @@
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import { auth } from '../firebase';
-import * as routes from '../routes/routes';
+import * as routes from '../routes/pages';
 import { PasswordForgetLink } from './PasswordForget';
-import { SignUpLink } from './SignUp';
+// import { SignUpLink } from './SignUp';
 
 const SignInComponent: React.SFC = ({history}: any) => (
   <div>
     <h1>Log In</h1>
     <SignInForm history={history} />
     <PasswordForgetLink />
-    <SignUpLink />
+    {/* <SignUpLink /> */}
   </div>
 )
 
 export const SignInPage = withRouter(SignInComponent);
 
-interface ISignInFormProps {
+interface SignInFormProps {
   history: any
 }
 
-interface ISignInFormState {
+interface SignInFormState {
   email: string,
   error: any,
   password: string,
 }
 
-export class SignInForm extends React.Component<ISignInFormProps, ISignInFormState> {
-  public readonly state: ISignInFormState = {
+export class SignInForm extends React.Component<SignInFormProps, SignInFormState> {
+  public readonly state: SignInFormState = {
     email: '',
     error: null,
     password: ''
@@ -74,7 +74,7 @@ export class SignInForm extends React.Component<ISignInFormProps, ISignInFormSta
         error: null,
         password: ''
       });
-      this.props.history.push(routes.HOME);
+      this.props.history.push(routes.DASHBOARD);
     })
     .catch((error: any) => {
       this.setState(this.byPropKey('error', error));

@@ -6,25 +6,25 @@ import { compose } from 'recompose';
 import { withAuthorization } from '../auth/withAuthorization';
 
 // tslint:disable:no-empty-interface
-interface IHomePageProps {}
+interface HomePageProps {}
 
-interface IDispatchProps {
+interface DispatchMappedProps {
   onSetUsers: (users: any) => void
 }
 
-interface IStateProps {
+interface StateMappedProps {
   users: any
 }
 
-interface IHomePageMergedProps extends
-  IStateProps,
-  IDispatchProps,
-  IHomePageProps {}
+interface HomePageMergedProps extends
+  StateMappedProps,
+  DispatchMappedProps,
+  HomePageProps {}
 
-interface IHomePageState {}
+interface HomePageState {}
 
-class HomeComponent extends React.Component<IHomePageMergedProps, IHomePageState> {
-  public readonly state: IHomePageState = {}
+class HomeComponent extends React.Component<HomePageMergedProps, HomePageState> {
+  public readonly state: HomePageState = {}
 
   public componentDidMount() {
     // const { onSetUsers } = this.props;
@@ -66,5 +66,5 @@ const authCondition = (authUser: any) => !!authUser;
 
 export const HomePage = compose(
   withAuthorization(authCondition),
-  connect<IStateProps, IDispatchProps, IHomePageProps>(mapStateToProps, mapDispatchToProps)
+  connect<StateMappedProps, DispatchMappedProps, HomePageProps>(mapStateToProps, mapDispatchToProps)
 )(HomeComponent);

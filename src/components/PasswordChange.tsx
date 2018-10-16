@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { auth } from '../firebase';
 
-interface IPasswordChangeFormState {
+interface PasswordChangeFormState {
   error: any,
   passwordOne: string,
   passwordTwo: string
 }
 
-export class PasswordChangeForm extends React.Component<{}, IPasswordChangeFormState> {
-  public readonly state: IPasswordChangeFormState = {
+export class PasswordChangeForm extends React.Component<{}, PasswordChangeFormState> {
+  public readonly state: PasswordChangeFormState = {
     error: null,
     passwordOne: '',
     passwordTwo: ''

@@ -1,6 +1,4 @@
-import { auth } from './firebase';
-
-// tslint:disable:no-console
+import { auth } from './fb';
 
 // Sign Up endpoint
 export const doCreateUserWithEmailAndPassword = (email: string, password: string) => (
