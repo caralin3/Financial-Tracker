@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { Route } from 'react-router';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 import { AccountPage } from '../components/Account';
-import { HomePage } from '../components/Home';
-import { ForgotPasswordPage, LandingPage } from '../pages';
+import { DashboardPage, ForgotPasswordPage, LandingPage } from '../pages';
 import { User } from '../utility/types';
 import * as routes from './pages';
 
@@ -27,7 +26,7 @@ const DisconnectedRouter: React.SFC<RouterMergedProps> = (props) => (
 
 const RouterAuth: React.SFC<RouterMergedProps> = (props) => (
   <div>
-    <Route exact={true} path={routes.DASHBOARD} component={HomePage} />
+    <Route exact={true} path={routes.DASHBOARD} component={DashboardPage} />
     <Route exact={true} path={routes.ACCOUNT} component={AccountPage as any} />
   </div>
 )
@@ -37,7 +36,7 @@ const RouterNonAuth = () => (
     <Route exact={true} path={routes.LANDING} component={LandingPage} />
     <Route exact={true} path={routes.LOGIN} component={LandingPage} />
     <Route exact={true} path={routes.FORGOT_PASSWORD} component={ForgotPasswordPage} />
-    {location.pathname === routes.ACCOUNT && <Redirect to={routes.LANDING} />}
+    {location.pathname === (routes.ACCOUNT) && <Redirect to={routes.LANDING} />}
   </div>
 )
 

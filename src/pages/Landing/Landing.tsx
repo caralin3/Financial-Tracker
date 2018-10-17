@@ -11,7 +11,7 @@ export interface LandingPageState {
 }
 
 class DisconnectedLandingPage extends React.Component<RouteComponentProps<any>, LandingPageState> {
-  public readonly state = {
+  public readonly state: LandingPageState = {
     login: false,
   }
 

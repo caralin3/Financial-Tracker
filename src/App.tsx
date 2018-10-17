@@ -19,7 +19,7 @@ interface AppMergedProps extends
 
 const AppComponent: React.SFC<AppMergedProps> = (props) => (
   <ReactRouter history={history}>
-    <div>
+    <div className={props.currentUser ? 'appAuth' : 'app'}>
       {props.currentUser && <Navigation />}
       <Router />
     </div>

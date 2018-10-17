@@ -2,7 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { User } from '../../utility/types';
 
-interface HeaderProps {}
+interface HeaderProps {
+  title?: string;
+}
 
 interface DispatchMappedProps {}
 
@@ -17,14 +19,14 @@ interface HeaderMergedProps extends
 
 const HeaderComponent: React.SFC<HeaderMergedProps> = (props) => (
   <div className="header">
-    {props.currentUser ? <HeaderAuth /> : <HeaderNonAuth />}
+    {props.currentUser ? <HeaderAuth title={props.title} /> : <HeaderNonAuth />}
   </div>
 )
 
-const HeaderAuth = () => (
-<div className="authHeader">
-  <h1 className="authHeader_title">Dashboard</h1>
-</div>
+const HeaderAuth: React.SFC<HeaderProps> = (props) => (
+  <div className="authHeader">
+    <h1 className="authHeader_title">{ props.title }</h1>
+  </div>
 )
 
 const HeaderNonAuth = () => (
