@@ -20,5 +20,15 @@
 
   &_button {
     .button;
+
+    &-disabled {
+      .button;
+      background-color: @middle-blue;
+
+      &:hover {
+        background-color: @middle-blue;
+        cursor: default;
+      }
+    }
   }
 }

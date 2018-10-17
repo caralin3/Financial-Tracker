@@ -1,8 +1,9 @@
 import {
   ACCOUNT,
   DASHBOARD,
+  FORGOT_PASSWORD,
   LANDING,
-  PASSWORD_FORGET,
+  LOGIN,
   SIGN_IN,
   SIGN_UP,
 } from './pages';
@@ -10,8 +11,9 @@ import {
 export {
   ACCOUNT,
   DASHBOARD,
+  FORGOT_PASSWORD,
   LANDING,
-  PASSWORD_FORGET,
+  LOGIN,
   SIGN_IN,
   SIGN_UP,
 }

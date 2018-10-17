@@ -1,17 +1,36 @@
 import * as React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Router as ReactRouter } from 'react-router-dom';
 import { withAuthentication } from './auth/withAuthentication';
-// import { Navigation } from './components/Navigation';
-import Router from './routes/Router';
+import { Navigation } from './components/Navigation';
+import history from './routes/history';
+import { Router } from './routes/Router';
+import { User } from './utility/types';
 
-const AppComponent: React.SFC = () => (
-  <BrowserRouter>
+interface AppProps {}
+
+interface StateMappedProps {
+  currentUser: User;
+}
+
+interface AppMergedProps extends
+  StateMappedProps,
+  AppProps {}
+
+const AppComponent: React.SFC<AppMergedProps> = (props) => (
+  <ReactRouter history={history}>
     <div>
-      {/* <Navigation /> */}
-      {/* <hr /> */}
+      {props.currentUser && <Navigation />}
       <Router />
     </div>
-  </BrowserRouter>
+  </ReactRouter>
 )
 
-export const App = withAuthentication(AppComponent);
+const mapStateToProps = (state: any) => ({
+  currentUser: state.sessionState.currentUser,
+});
+
+const ConnectedApp = connect<StateMappedProps, null, AppProps>
+(mapStateToProps)(AppComponent);
+
+export const App = withAuthentication(ConnectedApp);

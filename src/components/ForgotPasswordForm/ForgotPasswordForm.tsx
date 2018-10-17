@@ -1,13 +1,15 @@
 import * as React from 'react';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { Form } from '../';
 import { auth } from '../../firebase';
+import * as routes from '../../routes';
 
 interface ForgotPasswordFormState {
   email: string,
   error: any,
 }
 
-export class ForgotPasswordForm extends React.Component<{}, ForgotPasswordFormState> {
+class DisconnectedForgotPasswordForm extends React.Component<RouteComponentProps<any>, ForgotPasswordFormState> {
   public readonly state: ForgotPasswordFormState = {
     email: '',
     error: null,
@@ -31,6 +33,7 @@ export class ForgotPasswordForm extends React.Component<{}, ForgotPasswordFormSt
             value={email}
           />
         </Form>
+        <Link className="forgotPasswordForm_link" to={routes.LOGIN}>Return to Login</Link>
       </div>
     )
   }
@@ -47,6 +50,7 @@ export class ForgotPasswordForm extends React.Component<{}, ForgotPasswordFormSt
         email: '',
         error: null,
       });
+      this.props.history.push(routes.LOGIN)
     })
     .catch((error: any) => {
       this.setState({ error });
@@ -54,3 +58,5 @@ export class ForgotPasswordForm extends React.Component<{}, ForgotPasswordFormSt
     event.preventDefault();
   }
 }
+
+export const ForgotPasswordForm = withRouter(DisconnectedForgotPasswordForm)

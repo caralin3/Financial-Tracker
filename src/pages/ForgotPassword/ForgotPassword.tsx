@@ -6,7 +6,7 @@ export interface ForgotPasswordPageProps {}
 export const ForgotPasswordPage: React.SFC<ForgotPasswordPageProps> = (props) => (
   <div className="forgotPassword">
     <Header />
-    <div>
+    <div className="forgotPassword_form">
       <ForgotPasswordForm />
     </div>
   </div>

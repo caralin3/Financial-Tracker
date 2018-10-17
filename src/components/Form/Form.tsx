@@ -12,7 +12,9 @@ export const Form: React.SFC<FormProps> = (props) => (
       <div className="form_fields">
         { props.children }
       </div>
-      <button className="form_button" type="submit" disabled={props.disabled}>{ props.buttonText }</button>
+      <button className={props.disabled ? 'form_button-disabled' : 'form_button'} type="submit" disabled={props.disabled}>
+        { props.buttonText }
+      </button>
     </form>
   </div>
 )

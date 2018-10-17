@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Header, LoginForm, SignUpForm } from '../../components';
+import * as routes from '../../routes';
 
 export interface LandingPageProps { }
 
@@ -8,9 +10,15 @@ export interface LandingPageState {
   login: boolean;
 }
 
-export class LandingPage extends React.Component<LandingPageProps, LandingPageState> {
+class DisconnectedLandingPage extends React.Component<RouteComponentProps<any>, LandingPageState> {
   public readonly state = {
     login: false,
+  }
+
+  public componentDidMount() {
+    if (this.props.location.pathname === routes.LOGIN) {
+      this.setState({ login: true });
+    }
   }
 
   public render() {
@@ -21,10 +29,10 @@ export class LandingPage extends React.Component<LandingPageProps, LandingPageSt
         <LoginForm />
         <p className="login_switch">
           Don't have an account? {' '}
-          <button className="login_button" onClick={this.toggleForm}>Sign Up</button>
+          <Link className="login_link" to={routes.LANDING}>Sign Up</Link>
         </p>
         <p className="login_forgot">
-          <Link className="login_link" to='/forgot_password'>Forgot Password?</Link>
+          <Link className="login_link" to={routes.FORGOT_PASSWORD}>Forgot Password?</Link>
         </p>
       </div>
     );
@@ -35,7 +43,7 @@ export class LandingPage extends React.Component<LandingPageProps, LandingPageSt
         <SignUpForm />
         <p className="signup_switch">
           Already have an account? {' '}
-          <button className="signup_button" onClick={this.toggleForm}>Login</button>
+          <Link className="signup_link" to={routes.LOGIN}>Login</Link>
         </p>
       </div>
     )
@@ -57,6 +65,6 @@ export class LandingPage extends React.Component<LandingPageProps, LandingPageSt
       </div>
     )
   }
-
-  private toggleForm = () => this.setState({ login: !this.state.login })
 }
+
+export const LandingPage = withRouter(DisconnectedLandingPage)

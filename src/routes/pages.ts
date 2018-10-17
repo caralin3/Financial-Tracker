@@ -1,6 +1,7 @@
 export const SIGN_UP = '/signup';
 export const SIGN_IN = '/signin';
 export const LANDING = '/';
-export const DASHBOARD = '/dashboard';
+export const LOGIN = '/login';
+export const DASHBOARD = '/';
 export const ACCOUNT = '/account';
-export const PASSWORD_FORGET = '/forgot_password';
+export const FORGOT_PASSWORD = '/forgot_password';
