@@ -4,7 +4,7 @@ import { Route } from 'react-router';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 import { AccountPage } from '../components/Account';
 import { DashboardPage, ForgotPasswordPage, LandingPage } from '../pages';
-import { User } from '../utility/types';
+import { User } from '../types';
 import * as routes from './pages';
 
 interface RouterProps {}
