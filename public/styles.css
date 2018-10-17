@@ -27,6 +27,15 @@ button {
 button:focus {
   outline: none;
 }
+.appAuth {
+  display: grid;
+  grid-template-columns: 15% auto;
+}
+@media only screen and (max-width: 640px) {
+  .appAuth {
+    display: block;
+  }
+}
 .forgotPasswordForm {
   align-items: center;
   background-color: #FFFFFF;
@@ -100,6 +109,42 @@ button:focus {
   background-color: #62D4D9;
   cursor: default;
 }
+.authHeader {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .authHeader {
+    background-image: linear-gradient(#0C98AC, #62D4D9);
+    border-bottom: none;
+    margin: 0;
+  }
+}
+.authHeader_icon {
+  color: #0C98AC;
+  display: none;
+}
+@media only screen and (max-width: 640px) {
+  .authHeader_icon {
+    color: #FFFFFF;
+    display: block;
+    font-size: 1.5rem;
+    padding-left: 1rem;
+  }
+}
+.authHeader_title {
+  color: #0C98AC;
+}
+@media only screen and (max-width: 640px) {
+  .authHeader_title {
+    color: #FFFFFF;
+    font-size: 1.8rem;
+    margin: 1rem auto;
+  }
+}
 .nonHeader {
   align-items: center;
   display: flex;
@@ -128,6 +173,51 @@ button:focus {
   margin: 1rem 0;
   padding: 0.5rem 0;
   width: 15rem;
+}
+.sidebar {
+  align-items: center;
+  background-image: linear-gradient(#0C98AC, #62D4D9);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 1rem 0;
+  width: 100%;
+}
+.sidebar_circle {
+  color: #FFFFFF;
+}
+.sidebar_icon {
+  color: #0C98AC;
+}
+.sidebar_list {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 2rem;
+  text-align: center;
+  width: 100%;
+}
+.sidebar_item {
+  width: 100%;
+}
+.sidebar_link {
+  color: #FFFFFF;
+  display: inline-block;
+  font-weight: bold;
+  padding: 1.5rem 0;
+  width: 100%;
+}
+.sidebar_link:visited {
+  color: #FFFFFF;
+}
+.sidebar_link:focus,
+.sidebar_link:hover {
+  background-color: #62D4D9;
+}
+.sidebar_link-active {
+  background-color: #62D4D9;
 }
 .landing {
   background-image: linear-gradient(#0C98AC, #62D4D9);

@@ -1,4 +1,40 @@
 @import (reference) '../../less/variables.less';
+
+.authHeader {
+  align-items: center;
+  border-bottom: 1px solid @very-light-gray;
+  display: flex;
+  justify-content: flex-start;
+  margin: 0 2rem;
+
+  @media only screen and (max-width: 640px) {
+    background-image: linear-gradient(#0C98AC, #62D4D9);
+    border-bottom: none;
+    margin: 0;
+  }
+
+  &_icon {
+    color: @blue-green;
+    display: none;
+
+    @media only screen and (max-width: 640px) {
+      color: @white;
+      display: block;
+      font-size: 1.5rem;
+      padding-left: 1rem;
+    }
+  }
+
+  &_title {
+    color: @blue-green;
+
+    @media only screen and (max-width: 640px) {
+      color: @white;
+      font-size: 1.8rem;
+      margin: 1rem auto;
+    }
+  }
+}
   
 .nonHeader {
   align-items: center;

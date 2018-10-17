@@ -25,6 +25,7 @@ const HeaderComponent: React.SFC<HeaderMergedProps> = (props) => (
 
 const HeaderAuth: React.SFC<HeaderProps> = (props) => (
   <div className="authHeader">
+    <i className="authHeader_icon fas fa-bars" />
     <h1 className="authHeader_title">{ props.title }</h1>
   </div>
 )
