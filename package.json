@@ -1,9 +1,9 @@
 {
   "name": "financial-tracker",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
-    "@types/react-redux": "^6.0.6",
+    "@types/react-redux": "5.0.19",
     "@types/recompose": "^0.26.4",
     "@types/redux": "^3.6.0",
     "firebase": "^5.3.0",
@@ -18,7 +18,7 @@
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
-    "build:css": "lessc less/index.less dist/styles.css",
+    "build:css": "lessc src/less/index.less public/styles.css",
     "test": "jest",
     "watch:css": "chokidar \"**/*.less\" -c \"npm run build:css\"",
     "eject": "react-scripts-ts eject"
@@ -32,10 +32,30 @@
     "@types/react-router-dom": "^4.3.0",
     "jest": "^23.4.0",
     "less": "^3.7.1",
+    "less-loader": "^4.1.0",
     "react-test-renderer": "^16.4.1",
     "redux-devtools-extension": "^2.13.5",
     "ts-jest": "^23.0.1",
     "ts-loader": "^4.4.2",
     "typescript": "^3.0.1"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }

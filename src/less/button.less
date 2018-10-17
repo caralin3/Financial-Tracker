@@ -1,0 +1,14 @@
+@import (reference) './variables.less';
+
+.button {
+  background-color: @blue-green;
+  color: @white;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+
+  &:focus,
+  &:hover {
+    background-color: lighten(@blue-green, 10%);
+    cursor: pointer;
+  }
+}

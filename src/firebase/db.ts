@@ -1,33 +1,39 @@
-// import { db } from './firebase';
+import { Dispatch } from 'redux';
+import { setCurrentUser, SetCurrentUserAction } from '../reducers';
+import { User } from '../utility/types';
+import { db } from './fb';
 
-// // User API
+// firebase collections
+export const usersCollection = db.collection('users');
 
-// /* CREATE
-//   Example: 
-//     database.ref('users/123id').set({
-//       name: 'Jack Smith',
-//       job: {
-//           title: 'Software developer',
-//           company: 'Google'
-//       }
-//     }).then(() => {
-//         console.log('Data is saved!');
-//     }).catch((e) => {
-//         console.log('Failed.', e);
-//     });
+// CREATE USER
+// Set current user in store
+export const createUser = (user: User, dispatch: Dispatch<SetCurrentUserAction>) => {
+  usersCollection.doc(user.id).set({
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+  }).then(() => {
+    dispatch(setCurrentUser(user));
+  });
+}
 
-//     No key:
-//       database.ref('users').push({
-//         name: 'Nikola Tesla',
-//         job: {
-//             title: 'Inventor'
-//         }
-//         ...
-//   Asynchronous function creates user as an object
-//   stored on the users/${id} resource path
-// */
-// export const doCreateUser = (id: string, username: string, email: string) => 
-//   db.ref(`users/${id}`).set({username, email});
+// SET CURRENT USER
+// Get current user from db and set in store
+export const getCurrentUser = (id: string, dispatch: Dispatch<SetCurrentUserAction>) => {
+  usersCollection.doc(id).get()
+  .then((user: any) => {
+    if (user.data()) {
+      const currentUser: User = {
+        email: user.data().email,
+        firstName: user.data().firstName,
+        id: user.id,
+        lastName: user.data().lastName,
+      }
+      dispatch(setCurrentUser(currentUser));
+    }
+  });
+}
 
 // /* READ
 //   Snapshot, no listening, tiggers once:

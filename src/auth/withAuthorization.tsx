@@ -3,45 +3,46 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { firebase } from '../firebase';
-import * as routes from '../routes/routes';
+import * as routes from '../routes/';
+import { User } from '../utility/types';
 
 // tslint:disable:no-empty-interface
-interface IWithAuthorProps {
+interface WithAuthorProps {
   history: any
 }
 
-interface IDispatchProps {}
+interface DispatchMappedProps {}
 
-interface IStateProps {
-  authUser: any
+interface StateMappedProps {
+  currentUser: User;
 }
 
-interface IWithAuthorMergedProps extends
-  IStateProps,
-  IDispatchProps,
-  IWithAuthorProps {}
+interface WithAuthorMergedProps extends
+  StateMappedProps,
+  DispatchMappedProps,
+  WithAuthorProps {}
 
-interface IWithAuthState {}
+interface WithAuthState {}
 
 export const withAuthorization = (authCondition: any) => (Component: any) => {
-  class WithAuthorization extends React.Component<IWithAuthorMergedProps, IWithAuthState> {
+  class WithAuthorization extends React.Component<WithAuthorMergedProps, WithAuthState> {
     public componentDidMount() {
-      firebase.auth.onAuthStateChanged((authUser: any) => {
-        if (!authCondition(authUser)) {
-          this.props.history.push(routes.SIGN_IN);
+      firebase.auth.onAuthStateChanged((currentUser: any) => {
+        if (!authCondition(currentUser)) {
+          this.props.history.push(routes.LANDING);
         }
       });
     }
 
     public render() {
       return (
-        this.props.authUser ? <Component /> : null
+        this.props.currentUser ? <Component /> : null
       );
     }
   }
 
   const mapStateToProps = (state: any) => ({
-    authUser: state.sessionState.authUser,
+    currentUser: state.sessionState.currentUser,
   });
 
   return compose(

@@ -1,33 +1,33 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import * as routes from '../routes/routes';
+import * as routes from '../routes';
+import { User } from '../utility/types';
 import { SignOutButton } from './SignOut';
 
-// tslint:disable:no-empty-interface
-interface INavigationProps {}
+interface NavigationProps {}
 
-interface IDispatchProps {}
+interface DispatchMappedProps {}
 
-interface IStateProps {
-  authUser: any
+interface StateMappedProps {
+  currentUser: User;
 }
 
-interface INavigationMergedProps extends
-  IStateProps,
-  IDispatchProps,
-  INavigationProps {}
+interface NavigationMergedProps extends
+  StateMappedProps,
+  DispatchMappedProps,
+  NavigationProps {}
 
-const NavigationComponent: React.SFC<INavigationMergedProps> = (props) => (
+const NavigationComponent: React.SFC<NavigationMergedProps> = (props) => (
   <div>
-    {props.authUser ? <NavigationAuth /> : <NavigationNonAuth />}
+    {props.currentUser ? <NavigationAuth /> : <NavigationNonAuth />}
   </div>
 )
 
 const NavigationAuth = () => (
   <ul>
     <li><Link to={routes.LANDING}>Landing</Link></li>
-    <li><Link to={routes.HOME}>Home</Link></li>
+    <li><Link to={routes.DASHBOARD}>Home</Link></li>
     <li><Link to={routes.ACCOUNT}>Account</Link></li>
     <li><SignOutButton /></li>
   </ul>
@@ -41,8 +41,8 @@ const NavigationNonAuth = () => (
 )
 
 const mapStateToProps = (state: any) => ({
-  authUser: state.sessionState.authUser,
+  currentUser: state.sessionState.currentUser,
 });
 
-export const Navigation = connect<IStateProps, IDispatchProps, INavigationProps
+export const Navigation = connect<StateMappedProps, DispatchMappedProps, NavigationProps
   >(mapStateToProps)(NavigationComponent);

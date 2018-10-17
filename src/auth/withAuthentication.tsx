@@ -1,31 +1,36 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { firebase } from '../firebase';
+import { Dispatch } from 'redux';
+import { db, firebase } from '../firebase';
+import { setCurrentUser, SetCurrentUserAction } from '../reducers';
 
-// tslint:disable:no-empty-interface
-interface IWithAuthProps {}
+interface WithAuthProps {}
 
-interface IDispatchProps {
-  onSetAuthUser: (authUser: any) => void
+interface DispatchMappedProps {
+  dispatch: Dispatch<SetCurrentUserAction>
 }
 
-interface IStateProps {}
+interface StateMappedProps {}
 
-interface IWithAuthMergedProps extends
-  IStateProps,
-  IDispatchProps,
-  IWithAuthProps {}
+interface WithAuthMergedProps extends
+  StateMappedProps,
+  DispatchMappedProps,
+  WithAuthProps {}
 
-interface IWithAuthState {}
+interface WithAuthState {}
 
 export const withAuthentication = (Component: any) => {
-  class WithAuthentication extends React.Component<IWithAuthMergedProps, IWithAuthState> {
-    public readonly state: IWithAuthState = {}
+  class WithAuthentication extends React.Component<WithAuthMergedProps, WithAuthState> {
+    public readonly state: WithAuthState = {}
   
     public componentDidMount() {
-      const { onSetAuthUser } = this.props;
-      firebase.auth.onAuthStateChanged((authUser: any) => {
-        authUser ? onSetAuthUser(authUser) : onSetAuthUser(null);
+      const { dispatch } = this.props;
+      firebase.auth.onAuthStateChanged((user: any) => {
+        if (user) {
+          db.getCurrentUser(user.uid, dispatch);
+        } else {
+          dispatch(setCurrentUser(null))
+        }
       });
     }
 
@@ -36,10 +41,11 @@ export const withAuthentication = (Component: any) => {
     }
   }
 
-  const mapDispatchToProps = (dispatch: any) => ({
-    onSetAuthUser: (authUser: any) => dispatch({type: 'AUTH_USER_SET', authUser}),
-  });
+  const mapDispatchToProps = (dispatch: Dispatch<SetCurrentUserAction>): DispatchMappedProps => ({ dispatch });
 
-  return connect<IStateProps, IDispatchProps, IWithAuthProps>
-  (null, mapDispatchToProps)(WithAuthentication);
+  return connect<
+    StateMappedProps,
+    DispatchMappedProps,
+    WithAuthProps
+  >(null, mapDispatchToProps)(WithAuthentication);
 }

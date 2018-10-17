@@ -1,22 +1,48 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Route } from 'react-router';
+import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 import { AccountPage } from '../components/Account';
-import { HomePage } from '../components/Home';
-import { LandingPage } from '../components/Landing';
-import { PasswordForgetPage } from '../components/PasswordForget';
-import { SignInPage } from '../components/SignIn';
-import { SignUpPage } from '../components/SignUp';
-import * as routes from '../routes/routes';
+import { DashboardPage, ForgotPasswordPage, LandingPage } from '../pages';
+import { User } from '../types';
+import * as routes from './pages';
 
-const Router: React.SFC = () => (
+interface RouterProps {}
+
+interface StateMappedProps {
+  currentUser: User;
+}
+
+interface RouterMergedProps extends
+  RouteComponentProps<any>,
+  StateMappedProps,
+  RouterProps {}
+
+const DisconnectedRouter: React.SFC<RouterMergedProps> = (props) => (
   <div>
-    <Route exact={true} path={routes.LANDING} component={LandingPage} />
-    <Route exact={true} path={routes.SIGN_UP} component={SignUpPage} />
-    <Route exact={true} path={routes.SIGN_IN} component={SignInPage} />
-    <Route exact={true} path={routes.PASSWORD_FORGET} component={PasswordForgetPage} />
-    <Route exact={true} path={routes.HOME} component={HomePage} />
-    <Route exact={true} path={routes.ACCOUNT} component={AccountPage as any} />
+    {props.currentUser ? <RouterAuth {...props} /> : <RouterNonAuth />}
   </div>
 );
 
-export default Router;
+const RouterAuth: React.SFC<RouterMergedProps> = (props) => (
+  <div>
+    <Route exact={true} path={routes.DASHBOARD} component={DashboardPage} />
+    <Route exact={true} path={routes.ACCOUNT} component={AccountPage as any} />
+  </div>
+)
+
+const RouterNonAuth = () => (
+  <div>
+    <Route exact={true} path={routes.LANDING} component={LandingPage} />
+    <Route exact={true} path={routes.LOGIN} component={LandingPage} />
+    <Route exact={true} path={routes.FORGOT_PASSWORD} component={ForgotPasswordPage} />
+    {location.pathname === (routes.ACCOUNT) && <Redirect to={routes.LANDING} />}
+  </div>
+)
+
+const mapStateToProps = (state: any) => ({
+  currentUser: state.sessionState.currentUser,
+});
+
+export const Router = withRouter(connect<StateMappedProps, null, RouterProps>
+(mapStateToProps)(DisconnectedRouter));
