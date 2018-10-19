@@ -59,6 +59,7 @@ button:focus {
   width: 15rem;
 }
 .forgotPasswordForm_link {
+  color: #000000;
   padding-top: 2rem;
 }
 .forgotPasswordForm_link:visited {
@@ -298,6 +299,10 @@ button:focus {
 .login_switch,
 .signup_switch {
   padding-top: 1rem;
+}
+.login_link,
+.signup_link {
+  color: #000000;
 }
 .login_link:visited,
 .signup_link:visited {
