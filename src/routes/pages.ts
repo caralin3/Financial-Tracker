@@ -10,7 +10,7 @@ export const FORGOT_PASSWORD = '/forgot_password';
 export const GOALS = '/goals';
 export const LANDING = '/';
 export const LOGIN = '/login';
-export const SETTINGS = '/accounts';
+export const SETTINGS = '/settings';
 export const SIGN_IN = '/signin';
 export const SIGN_UP = '/signup';
 
