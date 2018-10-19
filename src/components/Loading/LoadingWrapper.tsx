@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { Loading } from './Loading';
 
 interface WrapperProps extends
   RouteComponentProps<any>{}
@@ -8,7 +9,7 @@ interface WrapperState {
   isLoading: boolean;
 }
 
-export default (LoadingWrapper: any) => {
+export const LoadingWrapper = (Component: any) => {
   class Wrapper extends React.Component<WrapperProps, WrapperState> {
     public readonly state: WrapperState = { isLoading: true };
 
@@ -32,9 +33,9 @@ export default (LoadingWrapper: any) => {
     public render = () => (
       <div>
         {this.state.isLoading ? (
-          <h1>Loading</h1>
+          <Loading />
         ) : (
-          <LoadingWrapper {...this.props} />
+          <Component {...this.props} />
         )}
       </div>
     );
