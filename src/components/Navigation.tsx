@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as routes from '../routes';
 import { User } from '../utility/types';
-import { SignOutButton } from './SignOut';
 
 interface NavigationProps {}
 
@@ -29,7 +28,6 @@ const NavigationAuth = () => (
     <li><Link to={routes.LANDING}>Landing</Link></li>
     <li><Link to={routes.DASHBOARD}>Home</Link></li>
     <li><Link to={routes.ACCOUNT}>Account</Link></li>
-    <li><SignOutButton /></li>
   </ul>
 )
 

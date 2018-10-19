@@ -4,7 +4,7 @@ import { Route } from 'react-router';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 import { LoadingWrapper } from '../components';
 import { AccountPage } from '../components/Account';
-import { DashboardPage, ForgotPasswordPage, LandingPage } from '../pages';
+import { DashboardPage, ForgotPasswordPage, LandingPage, SettingsPage } from '../pages';
 import { User } from '../types';
 import * as routes from './pages';
 
@@ -26,20 +26,28 @@ const DisconnectedRouter: React.SFC<RouterMergedProps> = (props) => (
 );
 
 const RouterAuth: React.SFC<RouterMergedProps> = (props) => (
-  <div>
+  <>
     <Route exact={true} path={routes.DASHBOARD} component={DashboardPage} />
     <Route exact={true} path={routes.ACCOUNT} component={AccountPage as any} />
-  </div>
+    <Route exact={true} path={routes.SETTINGS} component={SettingsPage as any} />
+  </>
 )
 
 const RouterNonAuth = () => (
-  <div>
+  <>
     <Route exact={true} path={routes.LANDING} component={LoadingWrapper(LandingPage)} />
     <Route exact={true} path={routes.SIGN_UP} component={LandingPage} />
     <Route exact={true} path={routes.LOGIN} component={LandingPage} />
     <Route exact={true} path={routes.FORGOT_PASSWORD} component={ForgotPasswordPage} />
-    {location.pathname === (routes.ACCOUNT) && <Redirect to={routes.LANDING} />}
-  </div>
+    <Redirects />
+  </>
+)
+
+const Redirects = () => (
+  <>
+    {location.pathname === routes.ACCOUNT && <Redirect to={routes.LANDING} />}
+    {location.pathname === routes.SETTINGS && <Redirect to={routes.LANDING} />}
+  </>
 )
 
 const mapStateToProps = (state: any) => ({
