@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
+    "build": "react-scripts-ts build && yarn run build:css",
     "build:css": "lessc src/less/index.less public/styles.css",
     "test": "jest",
     "watch:css": "chokidar \"**/*.less\" -c \"npm run build:css\"",

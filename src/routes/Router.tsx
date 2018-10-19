@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
+import { LoadingWrapper } from '../components';
 import { AccountPage } from '../components/Account';
 import { DashboardPage, ForgotPasswordPage, LandingPage } from '../pages';
 import { User } from '../types';
@@ -33,7 +34,8 @@ const RouterAuth: React.SFC<RouterMergedProps> = (props) => (
 
 const RouterNonAuth = () => (
   <div>
-    <Route exact={true} path={routes.LANDING} component={LandingPage} />
+    <Route exact={true} path={routes.LANDING} component={LoadingWrapper(LandingPage)} />
+    <Route exact={true} path={routes.SIGN_UP} component={LandingPage} />
     <Route exact={true} path={routes.LOGIN} component={LandingPage} />
     <Route exact={true} path={routes.FORGOT_PASSWORD} component={ForgotPasswordPage} />
     {location.pathname === (routes.ACCOUNT) && <Redirect to={routes.LANDING} />}

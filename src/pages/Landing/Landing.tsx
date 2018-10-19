@@ -29,7 +29,7 @@ class DisconnectedLandingPage extends React.Component<RouteComponentProps<any>, 
         <LoginForm />
         <p className="login_switch">
           Don't have an account? {' '}
-          <Link className="login_link" to={routes.LANDING}>Sign Up</Link>
+          <Link className="login_link" to={routes.SIGN_UP}>Sign Up</Link>
         </p>
         <p className="login_forgot">
           <Link className="login_link" to={routes.FORGOT_PASSWORD}>Forgot Password?</Link>

@@ -5,6 +5,7 @@ import { compose } from 'recompose';
 // import { Dispatch } from 'redux';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { Header } from '../../components';
+import { SignOutButton } from '../../components/SignOut';
 // import * as routes from '../../routes';
 
 export interface DashboardPageProps { }
@@ -22,6 +23,7 @@ class DisconnectedDashboardPage extends React.Component<RouteComponentProps<any>
         <div className="dashboard_content">
           dashboard_content
         </div>
+        <SignOutButton />
       </div>
     )
   }
