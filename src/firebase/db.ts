@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
-import { setCurrentUser, SetCurrentUserAction } from '../reducers';
-import { User } from '../utility/types';
+import { ActionTypes, sessionStateStore } from '../store';
+import { User } from '../types';
 import { db } from './fb';
 
 // firebase collections
@@ -8,19 +8,19 @@ export const usersCollection = db.collection('users');
 
 // CREATE USER
 // Set current user in store
-export const createUser = (user: User, dispatch: Dispatch<SetCurrentUserAction>) => {
+export const createUser = (user: User, dispatch: Dispatch<ActionTypes>) => {
   usersCollection.doc(user.id).set({
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName,
   }).then(() => {
-    dispatch(setCurrentUser(user));
+    dispatch(sessionStateStore.setCurrentUser(user));
   });
 }
 
 // SET CURRENT USER
 // Get current user from db and set in store
-export const getCurrentUser = (id: string, dispatch: Dispatch<SetCurrentUserAction>) => {
+export const getCurrentUser = (id: string, dispatch: Dispatch<ActionTypes>) => {
   usersCollection.doc(id).get()
   .then((user: any) => {
     if (user.data()) {
@@ -30,7 +30,7 @@ export const getCurrentUser = (id: string, dispatch: Dispatch<SetCurrentUserActi
         id: user.id,
         lastName: user.data().lastName,
       }
-      dispatch(setCurrentUser(currentUser));
+      dispatch(sessionStateStore.setCurrentUser(currentUser));
     }
   });
 }

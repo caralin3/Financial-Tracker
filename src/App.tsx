@@ -5,7 +5,7 @@ import { withAuthentication } from './auth/withAuthentication';
 // import { Navigation } from './components/Navigation';
 import { Sidebar } from './components';
 import { history, Router } from './routes';
-import { User } from './utility/types';
+import { User } from './types';
 
 interface AppProps {}
 

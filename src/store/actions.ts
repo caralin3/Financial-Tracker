@@ -1,12 +1,3 @@
-import { SetCurrentUserAction } from '../reducers';
+import { SetCurrentUserAction } from './session';
 
-export interface Action<T, Payload> {
-  type: T,
-  payload: Payload,
-}
-
-export enum TypeKeys {
-  SET_CURRENT_USER = 'SET_CURRENT_USER',
-}
-
-export type ActionTypes = SetCurrentUserAction;
+export type ActionTypes = SetCurrentUserAction

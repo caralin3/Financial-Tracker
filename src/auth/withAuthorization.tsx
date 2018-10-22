@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { firebase } from '../firebase';
 import * as routes from '../routes/';
-import { User } from '../utility/types';
+import { User } from '../types';
 
 // tslint:disable:no-empty-interface
 interface WithAuthorProps {
