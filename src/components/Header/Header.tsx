@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { User } from '../../utility/types';
+import { User } from '../../types';
 
 interface HeaderProps {
   title?: string;

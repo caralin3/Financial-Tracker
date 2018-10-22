@@ -1,7 +1,8 @@
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { rootReducer } from '../reducers';
-import * as actions from './actions';
+import { ActionTypes }from './actions';
+import { rootReducer } from './reducers';
+import { sessionStateStore } from './session';
 
 const store = createStore(
   rootReducer,
@@ -11,6 +12,7 @@ const store = createStore(
 );
 
 export {
-  actions,
+  ActionTypes,
+  sessionStateStore,
   store,
 }

@@ -5,16 +5,16 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { Form } from '../';
 import { auth, db } from '../../firebase';
-import { SetCurrentUserAction } from '../../reducers';
 import * as routes from '../../routes';
-import { User } from '../../utility/types';
+import { ActionTypes } from '../../store';
+import { User } from '../../types';
 
 interface SignUpFormProps {
   history: any;
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<SetCurrentUserAction>;
+  dispatch: Dispatch<ActionTypes>;
 }
 
 interface SignUpMergedProps extends
@@ -129,7 +129,7 @@ class DisconnectedSignUpForm extends React.Component<SignUpMergedProps, SignUpFo
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<SetCurrentUserAction>): DispatchMappedProps => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
 export const SignUpForm = compose(
   withRouter,

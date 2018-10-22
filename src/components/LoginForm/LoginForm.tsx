@@ -1,24 +1,10 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import { Dispatch } from 'redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Form } from '../';
 import { auth } from '../../firebase';
-import { SetCurrentUserAction } from '../../reducers';
 import * as routes from '../../routes';
 
-interface LoginFormProps {
-  history: any;
-}
-
-interface DispatchMappedProps {
-  dispatch: Dispatch<SetCurrentUserAction>;
-}
-
-interface SignUpMergedProps extends
-  DispatchMappedProps,
-  LoginFormProps {}
+interface LoginFormProps extends RouteComponentProps<any> {}
 
 interface LoginFormState {
   email: string;
@@ -26,7 +12,7 @@ interface LoginFormState {
   password: string;
 }
 
-class DisconnectedLoginForm extends React.Component<SignUpMergedProps, LoginFormState> {
+class DisconnectedLoginForm extends React.Component<LoginFormProps, LoginFormState> {
   public readonly state: LoginFormState = {
     email: '',
     error: null,
@@ -87,9 +73,4 @@ class DisconnectedLoginForm extends React.Component<SignUpMergedProps, LoginForm
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<SetCurrentUserAction>): DispatchMappedProps => ({ dispatch });
-
-export const LoginForm = compose(
-  withRouter,
-  connect<null, DispatchMappedProps, LoginFormProps>(null, mapDispatchToProps)
-)(DisconnectedLoginForm);
+export const LoginForm = withRouter(DisconnectedLoginForm);

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as routes from '../routes';
-import { User } from '../utility/types';
+import { User } from '../types';
 
 interface NavigationProps {}
 
