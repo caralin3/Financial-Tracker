@@ -1,10 +1,28 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
+import { connect, Dispatch } from 'react-redux';
+import { NavLink, RouteComponentProps, withRouter } from 'react-router-dom';
 import { navRoutes } from '../../routes';
+import { ActionTypes, sessionStateStore } from '../../store';
 import { Route } from '../../types';
 
-export const Sidebar: React.SFC = () => (
-  <div className="sidebar">
+interface SidebarProps extends
+  RouteComponentProps<any> {}
+
+interface DispatchMappedProps {
+  dispatch: Dispatch<ActionTypes>;
+}
+
+interface StateMappedProps {
+  showSidebar: boolean;
+}
+
+interface SidebarMergedProps extends
+  StateMappedProps,
+  DispatchMappedProps,
+  SidebarProps {}
+
+export const DisconnectedSidebar: React.SFC<SidebarMergedProps> = (props) => (
+  <div className={props.showSidebar ? 'sidebar sidebar_active' : 'sidebar'}>
     <span className="fa-stack fa-2x">
       <i className="sidebar_circle fas fa-circle fa-stack-2x" />
       <i className="sidebar_icon fa-stack-1x fas fa-university " />
@@ -14,8 +32,10 @@ export const Sidebar: React.SFC = () => (
         <li className="sidebar_item" key={index}>
           <NavLink
             activeClassName="sidebar_link-active"
+            exact={true}
             className="sidebar_link"
             to={route.path}
+            onClick={() => props.dispatch(sessionStateStore.setShowSidebar(false))}
           >
             { route.name }
           </NavLink>
@@ -23,23 +43,18 @@ export const Sidebar: React.SFC = () => (
       ))}
     </ul>
   </div>
-  // <div className='sidebar sidebarOverlay'>
-  //   <span className="fa-stack fa-2x">
-  //     <i className=" sidebar_circle fas fa-circle fa-stack-2x" />
-  //     <i className=" sidebar_icon fa-stack-1x fas fa-university " />
-  //   </span>
-  //   <ul>
-  //     {navRoutes.map((route: Route, index: number) => (
-  //       <li key={index}>
-  //         <NavLink
-  //           activeClassName="sidebar_link-active sidebarOverlay_link-active" 
-  //           className="sidebar_link sidebarOverlay_link"
-  //           to={route.path}
-  //         >
-  //           { route.name }
-  //         </NavLink>
-  //       </li>
-  //     ))}
-  //   </ul>
-  // </div>
 )
+
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
+
+const mapStateToProps = (state: any) => ({
+  showSidebar: state.sessionState.showSidebar,
+});
+
+export const ConnectedSidebar = connect<
+  StateMappedProps,
+  DispatchMappedProps,
+  SidebarProps
+>(mapStateToProps, mapDispatchToProps)(DisconnectedSidebar);
+
+export const Sidebar = withRouter(ConnectedSidebar);

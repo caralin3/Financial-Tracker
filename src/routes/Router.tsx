@@ -12,6 +12,7 @@ interface RouterProps {}
 
 interface StateMappedProps {
   currentUser: User;
+  showSidebar: boolean;
 }
 
 interface RouterMergedProps extends
@@ -20,7 +21,7 @@ interface RouterMergedProps extends
   RouterProps {}
 
 const DisconnectedRouter: React.SFC<RouterMergedProps> = (props) => (
-  <div>
+  <div className={props.showSidebar ? 'router' : ''}>
     {props.currentUser ? <RouterAuth {...props} /> : <RouterNonAuth />}
   </div>
 );
@@ -52,6 +53,7 @@ const Redirects = () => (
 
 const mapStateToProps = (state: any) => ({
   currentUser: state.sessionState.currentUser,
+  showSidebar: state.sessionState.showSidebar,
 });
 
 export const Router = withRouter(connect<StateMappedProps, null, RouterProps>
