@@ -10,3 +10,5 @@ export const setCurrentUser = (currentUser: User | null): SetCurrentUserAction =
   currentUser,
   type: SET_CURRENT_USER,
 });
+
+export type SessionActions =  SetCurrentUserAction;

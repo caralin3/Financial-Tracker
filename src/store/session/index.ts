@@ -8,4 +8,4 @@ export const sessionStateStore = {
   setCurrentUser,
 };
 
-export { SetCurrentUserAction } from './actions';
+export { SessionActions } from './actions';

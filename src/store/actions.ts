@@ -1,3 +1,3 @@
-import { SetCurrentUserAction } from './session';
+import { SessionActions } from './session';
 
-export type ActionTypes = SetCurrentUserAction
+export type ActionTypes = SessionActions

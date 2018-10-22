@@ -1,6 +1,6 @@
 
 import { User } from '../../types';
-import { SetCurrentUserAction } from './actions';
+import { SessionActions } from './actions';
 import { SET_CURRENT_USER } from './constants';
 
 export interface SessionState {
@@ -13,10 +13,11 @@ const initialState: SessionState = {
 
 // Session reducer manages the authUser object
 // Authenticated user represents the session
-export const reducer = (state: SessionState = initialState, action: SetCurrentUserAction) => {
+export const reducer = (state: SessionState = initialState, action: SessionActions) => {
   switch (action.type) {
     case SET_CURRENT_USER: {
       return {
+        ...state,
         currentUser: action.currentUser,
       }
     }
