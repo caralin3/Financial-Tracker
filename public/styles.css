@@ -300,6 +300,36 @@ button:focus {
 .sidebar_link-active {
   background-color: #62D4D9;
 }
+.accounts_content {
+  padding: 2rem;
+}
+.activity_content {
+  padding: 2rem;
+}
+.budgets_content {
+  padding: 2rem;
+}
+.charts_content {
+  padding: 2rem;
+}
+.dashboard_content {
+  padding: 2rem;
+}
+.forgotPassword {
+  background-image: linear-gradient(#0C98AC, #62D4D9);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem 1rem 0 1rem;
+}
+.forgotPassword_form {
+  align-self: center;
+  justify-self: center;
+  margin: auto 0;
+}
+.goals_content {
+  padding: 2rem;
+}
 .landing {
   background-image: linear-gradient(#0C98AC, #62D4D9);
   display: flex;
@@ -369,15 +399,17 @@ button:focus {
   cursor: pointer;
   text-decoration: underline;
 }
-.forgotPassword {
-  background-image: linear-gradient(#0C98AC, #62D4D9);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: 1rem 1rem 0 1rem;
+.logoutButton {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
 }
-.forgotPassword_form {
-  align-self: center;
-  justify-self: center;
-  margin: auto 0;
+.logoutButton:focus,
+.logoutButton:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
+}
+.settings_content {
+  padding: 2rem;
 }

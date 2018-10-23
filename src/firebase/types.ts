@@ -24,8 +24,9 @@ export interface FirebaseCategory {
 }
 
 export interface FirebaseSubcategory {
-  categoryId: string;
   name: string;
+  parent: string;
+  userId: string;
 }
 
 export interface FirebaseTransaction {

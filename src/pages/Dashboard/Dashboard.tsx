@@ -5,10 +5,9 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { Header } from '../../components';
-import { db } from '../../firebase';
 import { ActionTypes } from '../../store';
-import { Category, User } from '../../types';
-import { createInitialCategory, defaultCategories } from '../../utility/categories';
+import { User } from '../../types';
+
 // import * as routes from '../../routes';
 
 export interface DashboardPageProps { }
@@ -31,13 +30,6 @@ export interface DashboardPageState {}
 
 class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, DashboardPageState> {
   public readonly state: DashboardPageState = {
-  }
-
-  public componentDidMount() {
-    const { currentUser, dispatch } = this.props;
-    defaultCategories.forEach((cat: Category) => {
-      db.requests.categories.add(createInitialCategory(cat, currentUser.id), dispatch);
-    });
   }
 
   public render() {

@@ -1,5 +1,6 @@
 import { db } from '../fb';
 import * as categories from './categories';
+import * as subcategories from './subcategories';
 import * as users from './users';
 
 // firebase collections
@@ -12,5 +13,6 @@ export const transactionsCollection = db.collection('transactions');
 
 export const requests = {
   categories,
+  subcategories,
   users,
 }

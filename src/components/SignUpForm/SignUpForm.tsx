@@ -7,7 +7,9 @@ import { Form } from '../';
 import { auth, db } from '../../firebase';
 import * as routes from '../../routes';
 import { ActionTypes } from '../../store';
-import { User } from '../../types';
+import { Category, Subcategory, User } from '../../types';
+import { createInitialCategory, defaultCategories } from '../../utility/categories';
+import { createInitialSubcategory, defaultSubcategories } from '../../utility/subcategories';
 
 interface SignUpFormProps {
   history: any;
@@ -101,17 +103,24 @@ class DisconnectedSignUpForm extends React.Component<SignUpMergedProps, SignUpFo
 
     event.preventDefault();
     auth.doCreateUserWithEmailAndPassword(email, password)
-    .then((user: any) => {
+    .then(async (user: any) => {
       const currentUser: User = {
         email,
         firstName,
         id: user.user.uid,
         lastName,
       };
-      // dispatch(setCurrentUser(currentUser))
-      // TODO: Create a user in database
-      db.requests.users.createUser(currentUser, dispatch);
-      // console.log(db.getUser(user.user.uid))
+      // Create a user in database
+      await db.requests.users.createUser(currentUser, dispatch);
+
+      // Intialize Categories
+      defaultSubcategories.forEach(async (sub: Subcategory) => {
+        await db.requests.subcategories.add(createInitialSubcategory(sub, currentUser.id), dispatch);
+      });
+      defaultCategories.forEach(async (cat: Category) => {
+        await db.requests.categories.addIntial(createInitialCategory(cat, currentUser.id), dispatch);
+      });
+      
     }).then(() => {
       this.setState({
         email: '',

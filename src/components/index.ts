@@ -1,7 +1,7 @@
 import { ForgotPasswordForm } from './ForgotPasswordForm'
 import { Form } from './Form';
 import { Header } from './Header';
-import { LoadingWrapper } from './Loading';
+import { Loading, LoadingWrapper } from './Loading';
 import { LoginForm } from './LoginForm';
 import { LogoutButton } from './LogoutButton';
 import { Sidebar } from './Sidebar';
@@ -11,6 +11,7 @@ export {
   ForgotPasswordForm,
   Form,
   Header,
+  Loading,
   LoadingWrapper,
   LoginForm,
   LogoutButton,

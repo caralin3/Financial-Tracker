@@ -40,9 +40,10 @@ export interface Category {
 }
 
 export interface Subcategory {
-  categoryId: string;
   id: string;
   name: string;
+  parent: string;
+  userId: string;
 }
 
 export type TransactionType = 'Expense' | 'Income' | 'Transfer';

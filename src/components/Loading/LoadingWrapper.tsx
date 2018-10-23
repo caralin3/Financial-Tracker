@@ -5,34 +5,31 @@ import { Loading } from './Loading';
 interface WrapperProps extends
   RouteComponentProps<any>{}
 
-interface WrapperState {
-  isLoading: boolean;
-}
-
 export const LoadingWrapper = (Component: any) => {
-  class Wrapper extends React.Component<WrapperProps, WrapperState> {
-    public readonly state: WrapperState = { isLoading: true };
+  class Wrapper extends React.Component<WrapperProps> {
 
     public timeout: NodeJS.Timer;
+    public isLoading: boolean = true;
 
     public componentDidMount = () => this.setTimer();
 
     public componentDidUpdate = (prevProps: WrapperProps) => {
       if (this.props.location !== prevProps.location) {
         this.clearTimer();
-        this.setState({ isLoading: true }, () => this.setTimer());
+        this.isLoading = false;
+        this.setTimer();
       }
     };
 
     public clearTimer = () => clearTimeout(this.timeout);
 
-    public timer = () => this.setState({ isLoading: false }, () => this.clearTimer());
+    public timer = () => {this.isLoading = false; this.clearTimer()};
 
     public setTimer = () => (this.timeout = setTimeout(this.timer, 1500));
 
     public render = () => (
       <div>
-        {this.state.isLoading ? (
+        {this.isLoading ? (
           <Loading />
         ) : (
           <Component {...this.props} />
