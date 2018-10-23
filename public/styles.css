@@ -1,4 +1,5 @@
-@import "https://use.fontawesome.com/releases/v5.2.0/css/all.css";
+@import 'https://use.fontawesome.com/releases/v5.2.0/css/all.css';
+@import 'https://fonts.googleapis.com/css?family=Archivo+Narrow|Francois+One|Oswald';
 html {
   margin: 0;
   padding: 0;
@@ -40,6 +41,9 @@ button:focus {
   .router {
     display: none;
   }
+}
+.contentCard {
+  background-image: linear-gradient(#0C98AC, #62D4D9);
 }
 .forgotPasswordForm {
   align-items: center;
@@ -303,17 +307,123 @@ button:focus {
 .accounts_content {
   padding: 2rem;
 }
+@media only screen and (max-width: 640px) {
+  .accounts_content {
+    padding: 1rem;
+  }
+}
 .activity_content {
   padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .activity_content {
+    padding: 1rem;
+  }
 }
 .budgets_content {
   padding: 2rem;
 }
+@media only screen and (max-width: 640px) {
+  .budgets_content {
+    padding: 1rem;
+  }
+}
 .charts_content {
   padding: 2rem;
 }
+@media only screen and (max-width: 640px) {
+  .charts_content {
+    padding: 1rem;
+  }
+}
 .dashboard_content {
+  display: grid;
+  gap: 1rem;
+  grid-template: "hero hero hero hero" auto "recent accounts accounts topExpenses" auto "budget budget expInc expInc" auto / 1fr 0.5fr 0.5fr 1fr;
   padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+}
+.dashboard_hero {
+  display: grid;
+  gap: 1rem;
+  grid-area: hero;
+  grid-template: "income worth expense" / 0.5fr 0.5fr 2fr;
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_hero {
+    grid-template: "income worth" auto "expense expense" auto / 1fr 1fr;
+    padding: 1rem;
+  }
+}
+.dashboard_income {
+  grid-area: income;
+}
+.dashboard_worth {
+  grid-area: worth;
+}
+.dashboard_expense {
+  grid-area: expense;
+}
+.dashboard_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.dashboard_amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboard_recent {
+  grid-area: recent;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_recent {
+    margin: 1rem 0;
+  }
+}
+.dashboard_accounts {
+  grid-area: accounts;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_accounts {
+    margin: 1rem 0;
+  }
+}
+.dashboard_topExpenses {
+  grid-area: topExpenses;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_topExpenses {
+    margin: 1rem 0;
+  }
+}
+.dashboard_budget {
+  grid-area: budget;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_budget {
+    margin: 1rem 0;
+  }
+}
+.dashboard_expInc {
+  grid-area: expInc;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_expInc {
+    margin: 1rem 0;
+  }
 }
 .forgotPassword {
   background-image: linear-gradient(#0C98AC, #62D4D9);
@@ -329,6 +439,11 @@ button:focus {
 }
 .goals_content {
   padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .goals_content {
+    padding: 1rem;
+  }
 }
 .landing {
   background-image: linear-gradient(#0C98AC, #62D4D9);
@@ -412,4 +527,9 @@ button:focus {
 }
 .settings_content {
   padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .settings_content {
+    padding: 1rem;
+  }
 }

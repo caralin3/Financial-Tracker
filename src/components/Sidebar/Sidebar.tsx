@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { NavLink, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, NavLink, RouteComponentProps, withRouter } from 'react-router-dom';
 import { navRoutes } from '../../routes';
 import { ActionTypes, sessionStateStore } from '../../store';
 import { Route } from '../../types';
@@ -23,10 +23,10 @@ interface SidebarMergedProps extends
 
 export const DisconnectedSidebar: React.SFC<SidebarMergedProps> = (props) => (
   <div className={props.showSidebar ? 'sidebar sidebar_active' : 'sidebar'}>
-    <span className="fa-stack fa-2x">
+    <Link className="fa-stack fa-2x" to="/">
       <i className="sidebar_circle fas fa-circle fa-stack-2x" />
       <i className="sidebar_icon fa-stack-1x fas fa-university " />
-    </span>
+    </Link>
     <ul className="sidebar_list">
       {navRoutes.map((route: Route, index: number) => (
         <li className="sidebar_item" key={index}>

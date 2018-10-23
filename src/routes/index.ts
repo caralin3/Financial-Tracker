@@ -1,6 +1,6 @@
 import history from './history';
 import {
-  ACCOUNT,
+  ACCOUNTS,
   DASHBOARD,
   FORGOT_PASSWORD,
   LANDING,
@@ -12,7 +12,7 @@ import {
 import { Router } from './Router';
 
 export {
-  ACCOUNT,
+  ACCOUNTS,
   DASHBOARD,
   FORGOT_PASSWORD,
   history,

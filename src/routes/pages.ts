@@ -1,6 +1,5 @@
 import { Route } from '../types';
 
-export const ACCOUNT = '/account';
 export const ACCOUNTS = '/accounts';
 export const ACTIVITY = '/activity';
 export const BUDGETS = '/budgets';

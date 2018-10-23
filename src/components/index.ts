@@ -1,3 +1,4 @@
+import { ContentCard } from './ContentCard'
 import { ForgotPasswordForm } from './ForgotPasswordForm'
 import { Form } from './Form';
 import { Header } from './Header';
@@ -8,6 +9,7 @@ import { Sidebar } from './Sidebar';
 import { SignUpForm } from './SignUpForm';
 
 export {
+  ContentCard,
   ForgotPasswordForm,
   Form,
   Header,

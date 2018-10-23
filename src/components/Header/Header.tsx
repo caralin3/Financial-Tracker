@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { ActionTypes, sessionStateStore } from '../../store';
 import { User } from '../../types';
 
@@ -42,13 +43,13 @@ const DisconnectedHeaderAuth: React.SFC<HeaderAuthMergedProps> = (props) => (
 )
 
 const HeaderNonAuth = () => (
-  <div className="nonHeader">
+  <Link className="nonHeader" to="/">
     <span className="fa-stack fa-2x">
       <i className=" nonHeader_circle fas fa-circle fa-stack-2x" />
       <i className=" nonHeader_icon fa-stack-1x fas fa-university " />
     </span>
     <h1 className="nonHeader_title">Financial Tracker</h1>
-  </div>
+  </Link>
 )
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });

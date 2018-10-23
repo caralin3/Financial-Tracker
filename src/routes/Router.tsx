@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Route } from 'react-router';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 // import { LoadingWrapper } from '../components';
-import { AccountPage } from '../components/Account';
 import {
   AccountsPage,
   ActivityPage,
@@ -45,7 +44,6 @@ const RouterAuth: React.SFC<RouterMergedProps> = (props) => (
     <Route exact={true} path={routes.CHARTS} component={ChartsPage} />
     <Route exact={true} path={routes.GOALS} component={GoalsPage} />
     <Route exact={true} path={routes.SETTINGS} component={SettingsPage} />
-    <Route exact={true} path={routes.ACCOUNT} component={AccountPage as any} />
   </>
 )
 
@@ -68,7 +66,6 @@ const Redirects = () => (
     {location.pathname === routes.CHARTS && <Redirect to={routes.LANDING} />}
     {location.pathname === routes.GOALS && <Redirect to={routes.LANDING} />}
     {location.pathname === routes.SETTINGS && <Redirect to={routes.LANDING} />}
-    {location.pathname === routes.ACCOUNT && <Redirect to={routes.LANDING} />}
   </>
 )
 

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Router as ReactRouter } from 'react-router-dom';
 import { withAuthentication } from './auth/withAuthentication';
-// import { Navigation } from './components/Navigation';
 import { Sidebar } from './components';
 import { history, Router } from './routes';
 import { User } from './types';
