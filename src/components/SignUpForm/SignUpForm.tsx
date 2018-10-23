@@ -110,7 +110,7 @@ class DisconnectedSignUpForm extends React.Component<SignUpMergedProps, SignUpFo
       };
       // dispatch(setCurrentUser(currentUser))
       // TODO: Create a user in database
-      db.createUser(currentUser, dispatch);
+      db.requests.users.createUser(currentUser, dispatch);
       // console.log(db.getUser(user.user.uid))
     }).then(() => {
       this.setState({

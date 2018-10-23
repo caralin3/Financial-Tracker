@@ -21,4 +21,4 @@ export const setShowSidebar = (showSidebar: boolean): SetShowSidebarAction => ({
   type: SET_SHOW_SIDEBAR,
 });
 
-export type SessionActions =  SetCurrentUserAction | SetShowSidebarAction;
+export type SessionActions = SetCurrentUserAction | SetShowSidebarAction;

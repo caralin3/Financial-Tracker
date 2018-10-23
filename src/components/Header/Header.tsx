@@ -33,8 +33,10 @@ interface HeaderAuthMergedProps extends
 
 const DisconnectedHeaderAuth: React.SFC<HeaderAuthMergedProps> = (props) => (
   <div className="authHeader">
-    <i className="authHeader_icon fas fa-bars" onClick={() => 
-      props.dispatch(sessionStateStore.setShowSidebar(!props.showSidebar))} />
+    <i
+      className="authHeader_icon fas fa-bars"
+      onClick={() => props.dispatch(sessionStateStore.setShowSidebar(!props.showSidebar))}
+    />
     <h1 className="authHeader_title">{ props.title }</h1>
   </div>
 )
