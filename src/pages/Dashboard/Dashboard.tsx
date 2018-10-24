@@ -36,35 +36,17 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
   }
 
   public componentWillMount() {
+    this.loadAccounts();
+    this.loadTransactions();
     this.loadCategories();
     this.loadSubcategories();
-  }
-
-  public loadCategories = async () => {
-    const { dispatch } = this.props;
-    try {
-      await db.requests.categories.load(dispatch);
-    } catch (e) {
-      console.log(e);
-    }
-    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
-  }
-
-  public loadSubcategories = async () => {
-    const { dispatch } = this.props;
-    try {
-      await db.requests.subcategories.load(dispatch);
-    } catch (e) {
-      console.log(e);
-    }
-    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
   }
 
   public render() {
     return (
       <div className="dashboard">
         <Header title="Dashboard" />
-        {this.state.dataLoaded !== 2 ?
+        {this.state.dataLoaded !== 4 ?
           <Loading /> :
           <div className="dashboard_content">
             <ContentCard class="dashboard_hero">
@@ -99,6 +81,46 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
         }
       </div>
     )
+  }
+
+  private loadAccounts = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.accounts.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
+  }
+
+  private loadTransactions = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.transactions.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
+  }
+
+  private loadCategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.categories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
+  }
+
+  private loadSubcategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.subcategories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
   }
 }
 

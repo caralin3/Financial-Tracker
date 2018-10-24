@@ -42,8 +42,70 @@ button:focus {
     display: none;
   }
 }
+.addAccountDialog_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
+}
 .contentCard {
-  background-image: linear-gradient(#0C98AC, #62D4D9);
+  background-image: linear-gradient(#62D4D9, #0C98AC);
+}
+.dialog {
+  background-color: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  left: 0;
+  overflow: auto;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+.dialog_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 2rem;
+}
+.dialog_title {
+  color: #0C98AC;
+}
+@media only screen and (max-width: 640px) {
+  .dialog_title {
+    font-size: 1.5rem;
+  }
+}
+.dialog_close {
+  color: #0C98AC;
+  font-size: 1.5rem;
+}
+.dialog_close:focus,
+.dialog_close:hover {
+  cursor: pointer;
+}
+@media only screen and (max-width: 640px) {
+  .dialog_close {
+    font-size: 1rem;
+  }
+}
+.dialog_content {
+  display: flex;
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  flex-direction: column;
+  margin: 5% auto;
+  padding: 1.5rem 0;
+  width: 50%;
+}
+@media only screen and (max-width: 640px) {
+  .dialog_content {
+    margin: 25% auto;
+    padding: 1.5rem 0;
+    width: 75%;
+  }
+}
+.dialog_body {
+  padding: 2rem;
 }
 .forgotPasswordForm {
   align-items: center;
@@ -253,10 +315,10 @@ button:focus {
 }
 .sidebar_link:focus,
 .sidebar_link:hover {
-  background-color: #62D4D9;
+  background-color: #39c9cf;
 }
 .sidebar_link-active {
-  background-color: #62D4D9;
+  background-color: #39c9cf;
 }
 .sidebar_active {
   align-items: center;
@@ -298,18 +360,105 @@ button:focus {
 }
 .sidebar_link:focus,
 .sidebar_link:hover {
-  background-color: #62D4D9;
+  background-color: #39c9cf;
 }
 .sidebar_link-active {
-  background-color: #62D4D9;
+  background-color: #39c9cf;
 }
 .accounts_content {
+  display: grid;
+  gap: 1rem;
+  grid-template: "bank cash credit" auto "details details details" auto "accounts accounts accounts" / 1fr 1fr 1fr;
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
   .accounts_content {
+    display: flex;
+    flex-direction: column;
     padding: 1rem;
   }
+}
+.accounts_bank,
+.accounts_cash,
+.accounts_credit {
+  background-color: #62D4D9;
+  background-image: none;
+  padding: 1rem;
+  text-align: center;
+}
+@media only screen and (max-width: 640px) {
+  .accounts_bank,
+  .accounts_cash,
+  .accounts_credit {
+    margin: 0.5rem 0;
+  }
+}
+.accounts_bank {
+  grid-area: bank;
+}
+.accounts_cash {
+  grid-area: cash;
+}
+.accounts_credit {
+  grid-area: credit;
+}
+.accounts_details {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  grid-area: details;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+.accounts_details-add:focus,
+.accounts_details-add:hover {
+  cursor: pointer;
+}
+.accounts_list {
+  grid-area: accounts;
+  padding: 1rem;
+}
+.accounts_item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+.accounts_item-amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.accounts_item-amount-credit {
+  color: #FF0000;
+}
+.accounts_item-details {
+  text-align: right;
+}
+.accounts_item-activity,
+.accounts_item-name,
+.accounts_item-none,
+.accounts_item-type {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.accounts_item-activity:focus,
+.accounts_item-activity:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.accounts_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.accounts_amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.accounts_amount-credit {
+  color: #FF0000;
 }
 .activity_content {
   padding: 2rem;

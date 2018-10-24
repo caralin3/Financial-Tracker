@@ -2,10 +2,122 @@
 
 .accounts {
   &_content {
+    display: grid;
+    gap: 1rem;
+    grid-template: 
+      "bank cash credit"
+      auto
+      "details details details"
+      auto
+      "accounts accounts accounts"
+      ~'/' 1fr 1fr 1fr;
     padding: 2rem;
 
     @media only screen and (max-width: 640px) {
+      display: flex;
+      flex-direction: column;
       padding: 1rem;
+    }
+  }
+
+  &_bank,
+  &_cash,
+  &_credit {
+    background-color: @middle-blue;
+    background-image: none;
+    padding: 1rem;
+    text-align: center;
+    
+    @media only screen and (max-width: 640px) {
+      margin: 0.5rem 0;
+    }
+  }
+
+  &_bank {
+    grid-area: bank;
+  }
+  
+  &_cash {
+    grid-area: cash;
+  }
+  
+  &_credit {
+    grid-area: credit;
+  }
+
+  &_details {
+    align-items: center;
+    border-bottom: 1px solid @very-light-gray;
+    color: @blue-green;
+    display: flex;
+    grid-area: details;
+    justify-content: space-between;
+    padding: 1rem 1rem 0;
+
+    &-add {
+      &:focus,
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &_list {
+    // background-color: @middle-blue;
+    // background-image: none;
+    grid-area: accounts;
+    padding: 1rem;
+  }
+
+  &_item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+
+    &-amount {
+      font-family: @font-oswald;
+      font-weight: normal;
+      margin: 0;
+
+      &-credit {
+        color: @red;
+      }
+    }
+
+    &-details {
+      text-align: right;
+    }
+
+    &-activity,
+    &-name,
+    &-none,
+    &-type {
+      font-family: @font-archivo;
+      font-weight: normal;
+      margin: 0;
+    }
+
+    &-activity {
+      &:focus,
+      &:hover {
+        color: @blue-green;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &_label {
+    font-family: @font-francois;
+    margin: 0;
+  }
+
+  &_amount {
+    font-family: @font-oswald;
+    font-weight: normal;
+    margin: 0;
+
+    &-credit {
+      color: @red;
     }
   }
 }

@@ -1,5 +1,7 @@
-import { ContentCard } from './ContentCard'
-import { ForgotPasswordForm } from './ForgotPasswordForm'
+import { AddAccountDialog } from './AddAccountDialog';
+import { ContentCard } from './ContentCard';
+import { Dialog } from './Dialog';
+import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { Form } from './Form';
 import { Header } from './Header';
 import { Loading, LoadingWrapper } from './Loading';
@@ -9,7 +11,9 @@ import { Sidebar } from './Sidebar';
 import { SignUpForm } from './SignUpForm';
 
 export {
+  AddAccountDialog,
   ContentCard,
+  Dialog,
   ForgotPasswordForm,
   Form,
   Header,
