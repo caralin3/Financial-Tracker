@@ -1,5 +1,15 @@
 import { Subcategory } from '../../types';
-import { ADD_SUBCATEGORY, DELETE_SUBCATEGORY, EDIT_SUBCATEGORY } from './constants';
+import { ADD_SUBCATEGORY, DELETE_SUBCATEGORY, EDIT_SUBCATEGORY, LOAD_SUBCATEGORIES } from './constants';
+
+export interface LoadSubcategoriesAction {
+  subcategories: Subcategory[];
+  type: 'LOAD_SUBCATEGORIES';
+}
+
+export const loadSubcategories = (subcategories: Subcategory[]): LoadSubcategoriesAction => ({
+  subcategories,
+  type: LOAD_SUBCATEGORIES,
+});
 
 export interface AddSubcategoryAction {
   subcategory: Subcategory;
@@ -31,4 +41,4 @@ export const deleteSubcategory = (subcategory: Subcategory): DeleteSubcategoryAc
   type: DELETE_SUBCATEGORY,
 });
 
-export type SubcategoryActions = AddSubcategoryAction | DeleteSubcategoryAction | EditSubcategoryAction;
+export type SubcategoryActions = AddSubcategoryAction | DeleteSubcategoryAction | EditSubcategoryAction | LoadSubcategoriesAction;

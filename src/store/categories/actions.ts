@@ -1,5 +1,15 @@
 import { Category } from '../../types';
-import { ADD_CATEGORY, DELETE_CATEGORY, EDIT_CATEGORY } from './constants';
+import { ADD_CATEGORY, DELETE_CATEGORY, EDIT_CATEGORY, LOAD_CATEGORIES } from './constants';
+
+export interface LoadCategoriesAction {
+  categories: Category[];
+  type: 'LOAD_CATEGORIES';
+}
+
+export const loadCategories = (categories: Category[]): LoadCategoriesAction => ({
+  categories,
+  type: LOAD_CATEGORIES,
+});
 
 export interface AddCategoryAction {
   category: Category;
@@ -31,4 +41,4 @@ export const deleteCategory = (category: Category): DeleteCategoryAction => ({
   type: DELETE_CATEGORY,
 });
 
-export type CategoryActions = AddCategoryAction | DeleteCategoryAction | EditCategoryAction;
+export type CategoryActions = AddCategoryAction | DeleteCategoryAction | EditCategoryAction | LoadCategoriesAction;

@@ -114,11 +114,13 @@ class DisconnectedSignUpForm extends React.Component<SignUpMergedProps, SignUpFo
       await db.requests.users.createUser(currentUser, dispatch);
 
       // Intialize Categories
-      defaultSubcategories.forEach(async (sub: Subcategory) => {
-        await db.requests.subcategories.add(createInitialSubcategory(sub, currentUser.id), dispatch);
+      await defaultCategories.forEach(async (cat: Category) => {
+        await db.requests.categories.add(createInitialCategory(cat, currentUser.id), dispatch);
       });
-      defaultCategories.forEach(async (cat: Category) => {
-        await db.requests.categories.addIntial(createInitialCategory(cat, currentUser.id), dispatch);
+      
+      // Intialize Subcategories
+      await defaultSubcategories.forEach(async (sub: Subcategory) => {
+        await db.requests.subcategories.add(createInitialSubcategory(sub, currentUser.id), dispatch);
       });
       
     }).then(() => {

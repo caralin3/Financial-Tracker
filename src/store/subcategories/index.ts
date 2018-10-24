@@ -1,10 +1,11 @@
-import { addSubcategory, deleteSubcategory, editSubcategory } from './actions';
+import { addSubcategory, deleteSubcategory, editSubcategory, loadSubcategories } from './actions';
 import { reducer } from './reducer';
 
 export const subcategoryStateStore = {
   addSubcategory,
   deleteSubcategory,
   editSubcategory,
+  loadSubcategories,
   reducer,
 };
 

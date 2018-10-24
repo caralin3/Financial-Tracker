@@ -176,7 +176,6 @@ button:focus {
 }
 .loading {
   align-items: center;
-  background-image: linear-gradient(#0C98AC, #62D4D9);
   display: flex;
   justify-content: center;
   margin: 0;
@@ -185,7 +184,7 @@ button:focus {
 }
 .loading_front,
 .loading_back {
-  font-size: 4rem;
+  font-size: 3rem;
 }
 @media only screen and (max-width: 640px) {
   .loading_front,
@@ -194,10 +193,10 @@ button:focus {
   }
 }
 .loading_circle {
-  color: #FFFFFF;
+  color: #0C98AC;
 }
 .loading_icon {
-  color: #0C98AC;
+  color: #FFFFFF;
 }
 .loginForm_input {
   margin: 1rem 0;

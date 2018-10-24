@@ -1,7 +1,7 @@
 
 import { Category } from '../../types';
 import { CategoryActions } from './actions';
-import { ADD_CATEGORY, DELETE_CATEGORY, EDIT_CATEGORY } from './constants';
+import { ADD_CATEGORY, DELETE_CATEGORY, EDIT_CATEGORY, LOAD_CATEGORIES } from './constants';
 
 export interface CategoriesState {
   categories: Category[];
@@ -13,6 +13,12 @@ const initialState: CategoriesState = {
 
 export const reducer = (state: CategoriesState = initialState, action: CategoryActions) => {
   switch (action.type) {
+    case LOAD_CATEGORIES: {
+      return {
+        ...state,
+        categories: action.categories,
+      }
+    }
     case ADD_CATEGORY: {
       return {
         ...state,
@@ -23,7 +29,7 @@ export const reducer = (state: CategoriesState = initialState, action: CategoryA
       return {
         ...state,
         categories: [
-          ...state.categories.filter((cat: Category) => cat.id === action.category.id),
+          ...state.categories.filter((cat: Category) => cat.id !== action.category.id),
           action.category,
         ],
       }

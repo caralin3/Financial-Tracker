@@ -58,7 +58,7 @@ export const defaultCategories: FirebaseCategory[] = [
   {
     budget: 0,
     budgetPercent: 1,
-    name: 'Household Items/Supplies',
+    name: 'Household Supplies',
     subcategories: [],  
     userId: '',
   },

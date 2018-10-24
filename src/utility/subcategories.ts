@@ -233,27 +233,27 @@ export const defaultSubcategories: FirebaseSubcategory[] = [
   },
   {
     name: 'Toiletries',
-    parent: 'Household Items/Supplies',
+    parent: 'Household Supplies',
     userId: '',
   },
   {
     name: 'Laundry',
-    parent: 'Household Items/Supplies',
+    parent: 'Household Supplies',
     userId: '',
   },
   {
     name: 'Cleaning Supplies',
-    parent: 'Household Items/Supplies',
+    parent: 'Household Supplies',
     userId: '',
   },
   {
     name: 'Tools',
-    parent: 'Household Items/Supplies',
+    parent: 'Household Supplies',
     userId: '',
   },
   {
     name: 'Appliances',
-    parent: 'Household Items/Supplies',
+    parent: 'Household Supplies',
     userId: '',
   },
   {
