@@ -2,12 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-// import { Dispatch } from 'redux';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { AddAccountDialog, ContentCard, Header } from '../../components';
-// import * as routes from '../../routes';
-import { Account, AccountType, User } from '../../types';
-import { formatter } from '../../utility';
+import { AccountSection, AddAccountDialog, ContentCard, Header } from '../../components';
+import { Account, User } from '../../types';
 
 export interface AccountsPageProps {}
 
@@ -110,25 +107,3 @@ export const AccountsPage = compose(
   withAuthorization(authCondition),
   connect<StateMappedProps, DispatchMappedProps, AccountsPageProps>(mapStateToProps)
 )(DisconnectedAccountsPage);
-
-interface AccountSectionProps {
-  balance: number;
-  name: string;
-  type: AccountType;
-}
-
-const AccountSection: React.SFC<AccountSectionProps> = (props) => (
-  <div className="accounts_item">
-    <div className="accounts_item-labels">
-      <h3 className="accounts_item-name">{ props.name }</h3>
-      <h4 className="accounts_item-type">{ props.type }</h4>
-    </div>
-    <div className="accounts_item-details">
-      <h2 className={`accounts_item-amount ${props.type === 'Credit' && 'accounts_item-amount'}`}>
-        { props.type === 'Credit' && props.balance !== 0 && '-' }
-        { formatter.formatMoney(props.balance) }
-      </h2>
-      <h4 className="accounts_item-activity">View Activity</h4>
-    </div>
-  </div>
-)

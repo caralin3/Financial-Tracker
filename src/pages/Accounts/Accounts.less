@@ -45,6 +45,21 @@
     grid-area: credit;
   }
 
+  &_label {
+    font-family: @font-francois;
+    margin: 0;
+  }
+
+  &_amount {
+    font-family: @font-oswald;
+    font-weight: normal;
+    margin: 0;
+
+    &-credit {
+      color: @red;
+    }
+  }
+
   &_details {
     align-items: center;
     border-bottom: 1px solid @very-light-gray;
@@ -63,61 +78,7 @@
   }
 
   &_list {
-    // background-color: @middle-blue;
-    // background-image: none;
     grid-area: accounts;
     padding: 1rem;
-  }
-
-  &_item {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 1rem;
-
-    &-amount {
-      font-family: @font-oswald;
-      font-weight: normal;
-      margin: 0;
-
-      &-credit {
-        color: @red;
-      }
-    }
-
-    &-details {
-      text-align: right;
-    }
-
-    &-activity,
-    &-name,
-    &-none,
-    &-type {
-      font-family: @font-archivo;
-      font-weight: normal;
-      margin: 0;
-    }
-
-    &-activity {
-      &:focus,
-      &:hover {
-        color: @blue-green;
-        cursor: pointer;
-      }
-    }
-  }
-
-  &_label {
-    font-family: @font-francois;
-    margin: 0;
-  }
-
-  &_amount {
-    font-family: @font-oswald;
-    font-weight: normal;
-    margin: 0;
-
-    &-credit {
-      color: @red;
-    }
   }
 }

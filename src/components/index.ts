@@ -1,3 +1,4 @@
+import { AccountSection } from './AccountSection';
 import { AddAccountDialog } from './AddAccountDialog';
 import { ContentCard } from './ContentCard';
 import { Dialog } from './Dialog';
@@ -11,6 +12,7 @@ import { Sidebar } from './Sidebar';
 import { SignUpForm } from './SignUpForm';
 
 export {
+  AccountSection,
   AddAccountDialog,
   ContentCard,
   Dialog,

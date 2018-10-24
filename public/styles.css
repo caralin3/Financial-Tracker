@@ -42,6 +42,41 @@ button:focus {
     display: none;
   }
 }
+.accountSection {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+.accountSection_details {
+  text-align: right;
+}
+.accountSection_amount_credit {
+  color: #FF0000;
+}
+.accountSection_amount,
+.accountSection_activity,
+.accountSection_name,
+.accountSection_none,
+.accountSection_type {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.accountSection_activity:focus,
+.accountSection_activity:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.accountSection_amount:focus,
+.accountSection_name:focus,
+.accountSection_type:focus,
+.accountSection_amount:hover,
+.accountSection_name:hover,
+.accountSection_type:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
 .addAccountDialog_input {
   margin: 1rem 0;
   padding: 0.5rem 0;
@@ -402,6 +437,18 @@ button:focus {
 .accounts_credit {
   grid-area: credit;
 }
+.accounts_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.accounts_amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.accounts_amount-credit {
+  color: #FF0000;
+}
 .accounts_details {
   align-items: center;
   border-bottom: 1px solid #CCCCCC;
@@ -418,47 +465,6 @@ button:focus {
 .accounts_list {
   grid-area: accounts;
   padding: 1rem;
-}
-.accounts_item {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
-}
-.accounts_item-amount {
-  font-family: 'Oswald', sans-serif;
-  font-weight: normal;
-  margin: 0;
-}
-.accounts_item-amount-credit {
-  color: #FF0000;
-}
-.accounts_item-details {
-  text-align: right;
-}
-.accounts_item-activity,
-.accounts_item-name,
-.accounts_item-none,
-.accounts_item-type {
-  font-family: 'Archivo Narrow', sans-serif;
-  font-weight: normal;
-  margin: 0;
-}
-.accounts_item-activity:focus,
-.accounts_item-activity:hover {
-  color: #0C98AC;
-  cursor: pointer;
-}
-.accounts_label {
-  font-family: 'Francois One', sans-serif;
-  margin: 0;
-}
-.accounts_amount {
-  font-family: 'Oswald', sans-serif;
-  font-weight: normal;
-  margin: 0;
-}
-.accounts_amount-credit {
-  color: #FF0000;
 }
 .activity_content {
   padding: 2rem;

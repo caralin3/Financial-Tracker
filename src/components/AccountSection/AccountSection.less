@@ -1,0 +1,46 @@
+@import (reference) '../../less/variables.less';
+
+.accountSection {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+
+  &_details {
+    text-align: right;
+  }
+
+  &_amount {
+    &_credit {
+      color: @red;
+    }
+  }
+
+  &_amount,
+  &_activity,
+  &_name,
+  &_none,
+  &_type {
+    font-family: @font-archivo;
+    font-weight: normal;
+    margin: 0;
+  }
+
+  &_activity {
+    &:focus,
+    &:hover {
+      color: @blue-green;
+      cursor: pointer;
+    }
+  }
+
+  &_amount,
+  &_name,
+  &_type {
+    &:focus,
+    &:hover {
+      border: 1px solid @blue-green;
+      cursor: pointer;
+    }
+  }
+}
