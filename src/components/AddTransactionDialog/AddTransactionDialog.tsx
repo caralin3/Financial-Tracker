@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Dialog, Form } from '..';
-// import { db } from '../../firebase';
-// import { FirebaseAccount } from '../../firebase/types';
+import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Account, Category, Subcategory, TransactionType, User } from '../../types';
+import { Account, Category, Subcategory, Transaction, TransactionType, User } from '../../types';
 
 interface AddTransactionDialogProps {
   class?: string;
@@ -56,7 +55,8 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
     const {active, amount, category, date, from, note, subcategory, tags, to } = this.state;
 
     const isInvalid = from === 'Select Account' || from === 'Select Job' || to === 'Select Account'
-      || !to || !date || !amount || category === 'Select Category' || subcategory === 'Select Subcategory';
+      || !to || !date || !amount || (active === 'Expense' && category === 'Select Category') || 
+      (active === 'Expense' && subcategory === 'Select Subcategory');
 
     return (
       <Dialog class="addTransactionDialog" title="Add Transaction" toggleDialog={this.props.toggleDialog}>
@@ -259,18 +259,40 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
   }
 
   private onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const {from, active, amount, category, date, note, subcategory, tags, to } = this.state;
-    console.log(from, active, amount, category, date, note, subcategory, tags, to);
-    // const { currentUser, dispatch, toggleDialog } = this.props;
+    const {from, active, amount, category, date, note, subcategory, to } = this.state;
+    const { currentUser, dispatch, toggleDialog } = this.props;
     e.preventDefault();
-    // const newAccount: any = {
-    //   amount,
-    //   name,
-    //   type,
-    //   userId: currentUser.id,
-    // }
-    // db.requests.accounts.add(newAccount, dispatch);
-    // toggleDialog();
+    const tags = !this.state.tags ? [] : this.state.tags.split(',').map((tag: string) => tag.trim());
+    let transaction: Transaction;
+    if (active === 'Expense') {
+      transaction = {
+        amount,
+        category,
+        date,
+        from,
+        id: '',
+        note,
+        subcategory,
+        tags,
+        to,
+        type: 'Expense',
+        userId: currentUser ? currentUser.id : '',
+      }
+    } else {
+      transaction = {
+        amount,
+        date,
+        from,
+        id: '',
+        note,
+        tags,
+        to,
+        type: active,
+        userId: currentUser ? currentUser.id : '',
+      }
+    }
+    db.requests.transactions.add(transaction, dispatch);
+    toggleDialog();
   }
 }
 

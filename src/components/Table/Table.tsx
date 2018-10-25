@@ -6,6 +6,7 @@ import { formatter } from '../../utility';
 
 interface TableProps {
   content: TableData;
+  type: string;
 }
 
 interface DispatchMappedProps {
@@ -30,7 +31,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
         <thead className="table_header">
           <tr className="table_row">
             {content.headers.map((header: string, index: number) => (
-              <th className="table_heading" key={index}>{ header }</th>
+              <th className="table_heading" key={index}>{ this.getHeader(header) }</th>
             ))}
           </tr>
         </thead>
@@ -51,7 +52,40 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
         </tbody>
       </table>
     )
-  } 
+  }
+
+  private getHeader = (header: string) => {
+    const { type } = this.props;
+    if (type === 'expenses') {
+      switch(header) {
+        case 'From':
+          return 'Payment Method';
+        case 'To':
+          return 'Item';
+        default:
+          return header;
+      }
+    } else if (type === 'income') {
+      switch(header) {
+        case 'From':
+          return 'Job';
+        case 'To':
+          return 'Account';
+        default:
+          return header;
+      }
+    } else if (type === 'transfers') {
+      switch(header) {
+        case 'From':
+          return 'Account From';
+        case 'To':
+          return 'Account To';
+        default:
+          return header;
+      }
+    }
+    return header;
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });

@@ -48,22 +48,6 @@ export interface Subcategory {
 
 export type TransactionType = 'Expense' | 'Income' | 'Transfer';
 
-// export interface Transaction {
-//   amount: number;
-//   category?: Category;
-//   date: Date;
-//   from?: Account;
-//   id: string;
-//   item?: string;
-//   job?: Job;
-//   note?: string;
-//   subcategory?: Subcategory;
-//   tags?: string[];
-//   to?: Account;
-//   type: TransactionType;
-//   userId: string;
-// }
-
 export interface Transaction {
   amount: number;
   category?: string; // Category id

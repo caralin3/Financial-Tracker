@@ -4,14 +4,17 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { AddTransactionDialog, Header, Table } from '../../components';
-import { ActionTypes } from '../../store';
+import { ActionTypes, AppState } from '../../store';
 // import * as routes from '../../routes';
-import { TableData, Transaction, User } from '../../types';
+import { Account, Category, Subcategory, TableData, Transaction, User } from '../../types';
 
 export interface ActivityPageProps {}
 
 interface StateMappedProps {
-  currentUser: User;
+  accounts: Account[],
+  categories: Category[];
+  currentUser: User | null;
+  subcategories: Subcategory[];
   transactions: Transaction[];
 }
 
@@ -54,28 +57,28 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
           <div className="activity_section">
             <h3 className="activity_label">All</h3>
             {this.getAllTransactions().data.length > 0 ?
-              <Table content={this.getAllTransactions()} /> :
+              <Table content={this.getAllTransactions()} type="transactions" /> :
               <h3 className="activity_empty">No transactions</h3>
             }
           </div>
           <div className="activity_section">
             <h3 className="activity_label">Expenses</h3>
             {this.getExpenses().data.length > 0 ?
-              <Table content={this.getExpenses()} /> :
+              <Table content={this.getExpenses()} type="expenses" /> :
               <h3 className="activity_empty">No expenses</h3>
             }
           </div>
           <div className="activity_section">
             <h3 className="activity_label">Income</h3>
             {this.getIncome().data.length > 0 ?
-              <Table content={this.getIncome()} /> :
+              <Table content={this.getIncome()} type="income" /> :
               <h3 className="activity_empty">No income</h3>
             }
           </div>
           <div className="activity_section">
             <h3 className="activity_label">Transfers</h3>
             {this.getTransfers().data.length > 0 ?
-              <Table content={this.getTransfers()} /> :
+              <Table content={this.getTransfers()} type="transfers" /> :
               <h3 className="activity_empty">No transfers</h3>
             }
           </div>
@@ -87,59 +90,96 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
   private getAllTransactions = () => {
     const { currentUser, transactions } = this.props;
     const headers: string[] = [
-      'Item',
-      'Category',
-      'Subcategory',
+      'Type',
       'From',
       'To',
-      'Job',
-      'Job Type',
+      'Category',
+      'Subcategory',
+      // 'Job',
+      // 'Job Type',
       'Note',
       'Date',
       'Amount'
     ];
-    const data: Transaction[] = transactions.filter((tr: Transaction) => tr.userId === currentUser.id);
-    const tableData: TableData = {
-      data,
-      headers,
+    if (currentUser) {
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.userId === currentUser.id);
+      data = this.convertData(data);
+      const tableData: TableData = {
+        data,
+        headers,
+      }
+      return tableData;
     }
-    return tableData;
+    return {headers, data: []}
+  }
+
+  private convertData = (data: Transaction[]) => {
+    const { accounts, categories, subcategories } = this.props;
+    return data.map((trans) => {
+      if (trans.type === 'Expense') {
+        return {
+          ...trans,
+          category: categories.filter((cat) => cat.id === trans.category)[0].name,
+          from: accounts.filter((acc) => acc.id === trans.from)[0].name,
+          subcategory: subcategories.filter((sub) => sub.id === trans.subcategory)[0].name,
+        }
+      } else if (trans.type === 'Transfer') {
+        return {
+          ...trans,
+          from: accounts.filter((acc) => acc.id === trans.from)[0].name,
+          to: accounts.filter((acc) => acc.id === trans.to)[0].name,
+        }
+      }
+      return {...trans}
+    })
   }
 
   private getExpenses = () => {
     const { currentUser, transactions } = this.props;
-    const headers: string[] = ['Item', 'Category', 'Subcategory', 'From', 'Note', 'Date', 'Amount'];
-    const data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Expense'
-      && tr.userId === currentUser.id);
-    const tableData: TableData = {
-      data,
-      headers,
+    const headers: string[] = ['To', 'From', 'Category', 'Subcategory', 'Note', 'Date', 'Amount'];
+    if (currentUser) {
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Expense'
+        && tr.userId === currentUser.id);
+      data = this.convertData(data);
+      const tableData: TableData = {
+        data,
+        headers,
+      }
+      return tableData;
     }
-    return tableData;
+    return {headers, data: []};
   }
 
   private getIncome = () => {
     const { currentUser, transactions } = this.props;
     const headers: string[] = ['Job', 'Job Type', 'To', 'Note', 'Date', 'Amount'];
-    const data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Income'
-      && tr.userId === currentUser.id);
-    const tableData: TableData = {
-      data,
-      headers,
+    if (currentUser) {
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Income'
+        && tr.userId === currentUser.id);
+      data = this.convertData(data);
+      const tableData: TableData = {
+        data,
+        headers,
+      }
+      return tableData;
     }
-    return tableData;
+    return {headers, data: []};
   }
 
   private getTransfers = () => {
     const { currentUser, transactions } = this.props;
     const headers: string[] = ['From', 'To', 'Note', 'Date', 'Amount'];
-    const data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Transfer'
-      && tr.userId === currentUser.id);
-    const tableData: TableData = {
-      data,
-      headers,
+    if (currentUser) {
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Transfer'
+        && tr.userId === currentUser.id);
+      data = this.convertData(data);
+      const tableData: TableData = {
+        data,
+        headers,
+      }
+      return tableData;
     }
-    return tableData;
+    return {headers, data: []};
   }
 }
 
@@ -147,8 +187,11 @@ const authCondition = (authUser: any) => !!authUser;
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: AppState) => ({
+  accounts: state.accountsState.accounts,
+  categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionState.transactions,
 });
 
