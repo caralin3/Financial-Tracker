@@ -96,13 +96,12 @@ export class DisconnectedAddAccountDialog extends React.Component<AddAccountDial
       type,
       userId: currentUser.id,
     }
-    console.log(newAccount);
     db.requests.accounts.add(newAccount, dispatch);
     toggleDialog();
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
 const mapStateToProps = (state: any) => ({
   currentUser: state.sessionState.currentUser,

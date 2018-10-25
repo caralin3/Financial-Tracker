@@ -39,5 +39,12 @@ export const add = (account: FirebaseAccount, dispatch: Dispatch<ActionTypes>) =
 }
 
 // EDIT ACCOUNT
+export const edit = (account: Account, dispatch: Dispatch<ActionTypes>) => {
+  accountsCollection.doc(account.id).update(account).then(() => {
+    dispatch(accountStateStore.editAccount(account));
+  }).catch((err: any) => {
+    console.log(err.message);
+  });
+}
 
 // DELETE ACCOUNT
