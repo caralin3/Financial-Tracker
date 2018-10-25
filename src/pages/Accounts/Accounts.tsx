@@ -78,13 +78,13 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
             </h2>
           </ContentCard>
 
-          <div className="accounts_details">
-            <h2 className="accounts_details-header">Account Details</h2>
-            <div className="accounts_details-icons">
-              <i className="fas fa-plus accounts_details-add" onClick={this.toggleDialog} />
+          <div className="accounts_header">
+            <h2>Account Details</h2>
+            <div className="accounts_header-icons">
+              <i className="fas fa-plus accounts_header-add" onClick={this.toggleDialog} />
               {!this.state.deleting ? 
-                <i className="fas fa-edit accounts_details-add" onClick={this.toggleDelete} /> :
-                <i className="fas fa-trash-alt accounts_details-delete" onClick={this.toggleDeleteDialog} />
+                <i className="fas fa-edit accounts_header-add" onClick={this.toggleDelete} /> :
+                <i className="fas fa-trash-alt accounts_header-delete" onClick={this.toggleDeleteDialog} />
               }
             </div>
           </div>

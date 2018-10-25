@@ -21,3 +21,4 @@ export const accountStateStore = {
 };
 
 export { AccountActions } from './actions';
+export { AccountsState } from './reducer';

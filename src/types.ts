@@ -48,17 +48,37 @@ export interface Subcategory {
 
 export type TransactionType = 'Expense' | 'Income' | 'Transfer';
 
+// export interface Transaction {
+//   amount: number;
+//   category?: Category;
+//   date: Date;
+//   from?: Account;
+//   id: string;
+//   item?: string;
+//   job?: Job;
+//   note?: string;
+//   subcategory?: Subcategory;
+//   tags?: string[];
+//   to?: Account;
+//   type: TransactionType;
+//   userId: string;
+// }
+
 export interface Transaction {
-  category?: Category;
-  date: Date;
-  from: Account;
+  amount: number;
+  category?: string; // Category id
+  date: string;
+  from: string; // Account id, Job id, N/A
   id: string;
-  item?: string;
-  job?: Job;
   note?: string;
-  subcategory?: Subcategory;
   tags?: string[];
-  to?: Account;
+  subcategory?: string; // Subcategory id
+  to: string; // Account id, Item Name
   type: TransactionType;
   userId: string;
+}
+
+export interface TableData {
+  headers: string[];
+  data: any[];
 }

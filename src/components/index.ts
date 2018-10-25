@@ -1,5 +1,6 @@
 import { AccountSection } from './AccountSection';
 import { AddAccountDialog } from './AddAccountDialog';
+import { AddTransactionDialog } from './AddTransactionDialog';
 import { ContentCard } from './ContentCard';
 import { Dialog } from './Dialog';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
@@ -10,10 +11,12 @@ import { LoginForm } from './LoginForm';
 import { LogoutButton } from './LogoutButton';
 import { Sidebar } from './Sidebar';
 import { SignUpForm } from './SignUpForm';
+import { Table } from './Table';
 
 export {
   AccountSection,
   AddAccountDialog,
+  AddTransactionDialog,
   ContentCard,
   Dialog,
   ForgotPasswordForm,
@@ -25,4 +28,5 @@ export {
   LogoutButton,
   Sidebar,
   SignUpForm,
+  Table,
 }

@@ -10,3 +10,4 @@ export const subcategoryStateStore = {
 };
 
 export { SubcategoryActions } from './actions';
+export { SubcategoriesState } from './reducer';

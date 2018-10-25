@@ -5,7 +5,33 @@
     padding: 2rem;
 
     @media only screen and (max-width: 640px) {
+      overflow-x: scroll;
       padding: 1rem;
     }
+  }
+
+  &_header {
+    align-items: center;
+    border-bottom: 1px solid @very-light-gray;
+    color: @blue-green;
+    display: flex;
+    grid-area: details;
+    justify-content: space-between;
+    padding: 1rem 1rem 0;
+  }
+
+  &_label {
+    font-family: @font-francois;
+  }
+
+  &_section {
+    padding: 0 1rem;
+  }
+
+  &_empty {
+    font-family: @font-archivo;
+    font-weight: normal;
+    margin: 0;
+    padding-left: 1rem;
   }
 }

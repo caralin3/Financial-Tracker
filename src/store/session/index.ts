@@ -8,3 +8,4 @@ export const sessionStateStore = {
 };
 
 export { SessionActions } from './actions';
+export { SessionState } from './reducer';

@@ -10,3 +10,4 @@ export const categoryStateStore = {
 };
 
 export { CategoryActions } from './actions';
+export { CategoriesState } from './reducer';

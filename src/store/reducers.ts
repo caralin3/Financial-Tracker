@@ -1,10 +1,17 @@
 import { combineReducers } from 'redux';
-import { accountStateStore } from './accounts';
-import { categoryStateStore } from './categories';
-import { sessionStateStore } from './session';
-import { subcategoryStateStore } from './subcategories';
-import { transactionStateStore } from './transactions';
-import { userReducer } from './user';
+import { AccountsState, accountStateStore } from './accounts';
+import { CategoriesState, categoryStateStore } from './categories';
+import { SessionState, sessionStateStore } from './session';
+import { SubcategoriesState, subcategoryStateStore } from './subcategories';
+import { TransactionsState, transactionStateStore } from './transactions';
+
+export interface AppState {
+  accountsState: AccountsState,
+  categoriesState: CategoriesState,
+  sessionState: SessionState,
+  subcategoriesState: SubcategoriesState,
+  transactionState: TransactionsState,
+}
 
 export const rootReducer = combineReducers({
   accountsState: accountStateStore.reducer,
@@ -12,5 +19,4 @@ export const rootReducer = combineReducers({
   sessionState: sessionStateStore.reducer,
   subcategoriesState: subcategoryStateStore.reducer,
   transactionState: transactionStateStore.reducer,
-  userState: userReducer
 });

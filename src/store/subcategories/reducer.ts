@@ -3,15 +3,15 @@ import { Subcategory } from '../../types';
 import { SubcategoryActions } from './actions';
 import { ADD_SUBCATEGORY, DELETE_SUBCATEGORY, EDIT_SUBCATEGORY, LOAD_SUBCATEGORIES } from './constants';
 
-export interface CategoriesState {
+export interface SubcategoriesState {
   subcategories: Subcategory[];
 }
 
-const initialState: CategoriesState = {
+const initialState: SubcategoriesState = {
   subcategories: [],
 }
 
-export const reducer = (state: CategoriesState = initialState, action: SubcategoryActions) => {
+export const reducer = (state: SubcategoriesState = initialState, action: SubcategoryActions) => {
   switch (action.type) {
     case LOAD_SUBCATEGORIES: {
       return {

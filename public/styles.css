@@ -99,6 +99,73 @@ button:focus {
   padding: 0.5rem 0;
   width: 100%;
 }
+.addTransactionDialog_options {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1rem;
+}
+.addTransactionDialog_button {
+  border-bottom: 1px solid #CCCCCC;
+  font-size: 1rem;
+  width: 100%;
+}
+@media only screen and (max-width: 640px) {
+  .addTransactionDialog_button {
+    font-size: 0.9rem;
+  }
+}
+.addTransactionDialog_button:focus,
+.addTransactionDialog_button:hover,
+.addTransactionDialog_button-active {
+  border-bottom: 1.5px solid #0C98AC;
+  color: #0C98AC;
+  cursor: pointer;
+}
+.addTransactionDialog_form {
+  display: grid;
+  gap: 1rem;
+  grid-template: "from to" auto "date amount" auto "category subcategory" auto "note tags" auto / 1fr 1fr;
+}
+@media only screen and (max-width: 800px) {
+  .addTransactionDialog_form {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.addTransactionDialog_section-from {
+  grid-area: from;
+}
+.addTransactionDialog_section-to {
+  grid-area: to;
+}
+.addTransactionDialog_section-date {
+  grid-area: date;
+}
+.addTransactionDialog_section-amount {
+  grid-area: amount;
+}
+.addTransactionDialog_section-category {
+  grid-area: category;
+}
+.addTransactionDialog_section-subcategory {
+  grid-area: subcategory;
+}
+.addTransactionDialog_section-note {
+  grid-area: note;
+}
+.addTransactionDialog_section-tags {
+  grid-area: tags;
+}
+.addTransactionDialog_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+.addTransactionDialog_input-amount,
+.addTransactionDialog_input-date {
+  text-align: right;
+}
 .contentCard {
   background-image: linear-gradient(#62D4D9, #0C98AC);
 }
@@ -153,7 +220,7 @@ button:focus {
   .dialog_content {
     margin: 25% auto;
     padding: 1.5rem 0;
-    width: 75%;
+    width: 85%;
   }
 }
 .dialog_body {
@@ -417,6 +484,26 @@ button:focus {
 .sidebar_link-active {
   background-color: #39c9cf;
 }
+.table {
+  border: 1px solid #0C98AC;
+  border-collapse: collapse;
+}
+.table_header,
+.table_heading,
+.table_body,
+.table_row,
+.table_data {
+  border: 1px solid #0C98AC;
+  border-collapse: collapse;
+}
+.table_header {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+}
+.table_heading,
+.table_data {
+  padding: 0.5rem 1rem;
+}
 .accounts_content {
   display: grid;
   gap: 1rem;
@@ -466,7 +553,7 @@ button:focus {
 .accounts_amount-credit {
   color: #FF0000;
 }
-.accounts_details {
+.accounts_header {
   align-items: center;
   border-bottom: 1px solid #CCCCCC;
   color: #0C98AC;
@@ -475,14 +562,14 @@ button:focus {
   justify-content: space-between;
   padding: 1rem 1rem 0;
 }
-.accounts_details-delete,
-.accounts_details-add {
+.accounts_header-delete,
+.accounts_header-add {
   padding: 0 0.5rem;
 }
-.accounts_details-delete:focus,
-.accounts_details-add:focus,
-.accounts_details-delete:hover,
-.accounts_details-add:hover {
+.accounts_header-delete:focus,
+.accounts_header-add:focus,
+.accounts_header-delete:hover,
+.accounts_header-add:hover {
   cursor: pointer;
 }
 .accounts_list {
@@ -530,8 +617,30 @@ button:focus {
 }
 @media only screen and (max-width: 640px) {
   .activity_content {
+    overflow-x: scroll;
     padding: 1rem;
   }
+}
+.activity_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  grid-area: details;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+.activity_label {
+  font-family: 'Francois One', sans-serif;
+}
+.activity_section {
+  padding: 0 1rem;
+}
+.activity_empty {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+  padding-left: 1rem;
 }
 .budgets_content {
   padding: 2rem;

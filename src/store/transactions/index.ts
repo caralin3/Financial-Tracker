@@ -10,3 +10,4 @@ export const transactionStateStore = {
 };
 
 export { TransactionActions } from './actions';
+export { TransactionsState } from './reducer';

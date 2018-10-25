@@ -5,7 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import { accountStateStore } from './accounts';
 import { ActionTypes }from './actions';
 import { categoryStateStore } from './categories';
-import { rootReducer } from './reducers';
+import { AppState, rootReducer } from './reducers';
 import { sessionStateStore } from './session';
 import { subcategoryStateStore } from './subcategories';
 import { transactionStateStore } from './transactions';
@@ -29,6 +29,7 @@ const persistor = persistStore(store);
 export {
   accountStateStore,
   ActionTypes,
+  AppState,
   categoryStateStore,
   persistor,
   sessionStateStore,
