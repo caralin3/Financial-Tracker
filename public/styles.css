@@ -49,15 +49,25 @@ button:focus {
   padding: 0.5rem 1rem;
 }
 .accountSection_details {
+  align-items: center;
+  display: flex;
   text-align: right;
 }
-.accountSection_amount_credit {
+.accountSection_details-square {
+  color: #0C98AC;
+  font-size: 1.5rem;
+  padding-left: 1rem;
+}
+.accountSection_details-square:focus,
+.accountSection_details-square:hover {
+  cursor: pointer;
+}
+.accountSection_amount-credit {
   color: #FF0000;
 }
 .accountSection_amount,
 .accountSection_activity,
 .accountSection_name,
-.accountSection_none,
 .accountSection_type {
   font-family: 'Archivo Narrow', sans-serif;
   font-weight: normal;
@@ -76,6 +86,13 @@ button:focus {
 .accountSection_type:hover {
   border: 1px solid #0C98AC;
   cursor: pointer;
+}
+.accountSection_input {
+  padding: 0.5rem 0;
+}
+.accountSection_input-number {
+  text-align: right;
+  width: 5rem;
 }
 .addAccountDialog_input {
   margin: 1rem 0;
@@ -458,13 +475,55 @@ button:focus {
   justify-content: space-between;
   padding: 1rem 1rem 0;
 }
+.accounts_details-delete,
+.accounts_details-add {
+  padding: 0 0.5rem;
+}
+.accounts_details-delete:focus,
 .accounts_details-add:focus,
+.accounts_details-delete:hover,
 .accounts_details-add:hover {
   cursor: pointer;
 }
 .accounts_list {
   grid-area: accounts;
   padding: 1rem;
+}
+.accounts_item {
+  padding: 0.5rem 1rem;
+}
+.accounts_item-none {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.deleteDialog_subtitle {
+  font-weight: normal;
+  margin: 0;
+  text-align: center;
+}
+.deleteDialog_buttons {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 2rem 5rem 0;
+}
+@media only screen and (max-width: 800px) {
+  .deleteDialog_buttons {
+    padding: 2rem 0 0;
+  }
+}
+.deleteDialog_button {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  width: 5rem;
+}
+.deleteDialog_button:focus,
+.deleteDialog_button:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
 }
 .activity_content {
   padding: 2rem;

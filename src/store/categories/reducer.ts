@@ -37,7 +37,7 @@ export const reducer = (state: CategoriesState = initialState, action: CategoryA
     case DELETE_CATEGORY: {
       return {
         ...state,
-        categories: state.categories.splice(state.categories.indexOf(action.category), 1),
+        categories: state.categories.filter((cat: Category) => cat.id !== action.category.id),
       }
     }
     default:

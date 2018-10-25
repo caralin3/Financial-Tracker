@@ -1,14 +1,24 @@
 
 import { Account } from '../../types';
 import { AccountActions } from './actions';
-import { ADD_ACCOUNT, DELETE_ACCOUNT, EDIT_ACCOUNT, LOAD_ACCOUNTS } from './constants';
+import {
+  ADD_ACCOUNT,
+  ADD_DELETED_ACCOUNT,
+  DELETE_ACCOUNT,
+  EDIT_ACCOUNT,
+  LOAD_ACCOUNTS,
+  REMOVE_DELETED_ACCOUNT,
+  RESET_DELETED_ACCOUNTS,
+} from './constants';
 
 export interface AccountsState {
   accounts: Account[];
+  deletedAccounts: string[];
 }
 
 const initialState: AccountsState = {
   accounts: [],
+  deletedAccounts: [],
 }
 
 export const reducer = (state: AccountsState = initialState, action: AccountActions) => {
@@ -37,7 +47,25 @@ export const reducer = (state: AccountsState = initialState, action: AccountActi
     case DELETE_ACCOUNT: {
       return {
         ...state,
-        accounts: state.accounts.splice(state.accounts.indexOf(action.account), 1),
+        accounts: state.accounts.filter((acc: Account) => acc.id !== action.id),
+      }
+    }
+    case ADD_DELETED_ACCOUNT: {
+      return {
+        ...state,
+        deletedAccounts: [...state.deletedAccounts, action.id],
+      }
+    }
+    case REMOVE_DELETED_ACCOUNT: {
+      return {
+        ...state,
+        deletedAccounts: state.deletedAccounts.filter((id: string) => id !== action.id),
+      }
+    }
+    case RESET_DELETED_ACCOUNTS: {
+      return {
+        ...state,
+        deletedAccounts: [],
       }
     }
     default:

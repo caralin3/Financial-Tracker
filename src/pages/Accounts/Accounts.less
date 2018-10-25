@@ -69,7 +69,10 @@
     justify-content: space-between;
     padding: 1rem 1rem 0;
 
+    &-delete,
     &-add {
+      padding: 0 0.5rem;
+
       &:focus,
       &:hover {
         cursor: pointer;
@@ -80,5 +83,40 @@
   &_list {
     grid-area: accounts;
     padding: 1rem;
+  }
+
+  &_item {
+    padding: 0.5rem 1rem;
+
+    &-none {
+      font-family: @font-archivo;
+      font-weight: normal;
+      margin: 0;
+    }
+  }
+}
+
+.deleteDialog {
+
+  &_subtitle {
+    font-weight: normal;
+    margin: 0;
+    text-align: center;
+  }
+
+  &_buttons {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    padding: 2rem 5rem 0;
+
+    @media only screen and (max-width: 800px) {
+      padding: 2rem 0 0;
+    }
+  }
+
+  &_button {
+    .button;
+    width: 5rem;
   }
 }

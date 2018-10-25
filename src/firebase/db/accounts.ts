@@ -48,3 +48,11 @@ export const edit = (account: Account, dispatch: Dispatch<ActionTypes>) => {
 }
 
 // DELETE ACCOUNT
+export const remove = (id: string, dispatch: Dispatch<ActionTypes>) => {
+  accountsCollection.doc(id).delete().then(() => {
+    dispatch(accountStateStore.deleteAccount(id));
+    console.log(`Document ${id} successfully deleted!`);
+  }).catch((err: any) => {
+    console.log("Error removing document: ", err.message);
+  });
+}

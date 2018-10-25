@@ -7,11 +7,24 @@
   padding: 0.5rem 1rem;
 
   &_details {
+    align-items: center;
+    display: flex;
     text-align: right;
+
+    &-square {
+      color: @blue-green;
+      font-size: 1.5rem;
+      padding-left: 1rem;
+
+      &:focus,
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 
   &_amount {
-    &_credit {
+    &-credit {
       color: @red;
     }
   }
@@ -19,7 +32,6 @@
   &_amount,
   &_activity,
   &_name,
-  &_none,
   &_type {
     font-family: @font-archivo;
     font-weight: normal;
@@ -41,6 +53,15 @@
     &:hover {
       border: 1px solid @blue-green;
       cursor: pointer;
+    }
+  }
+
+  &_input {
+    padding: 0.5rem 0;
+
+    &-number {
+      text-align: right;
+      width: 5rem;
     }
   }
 }

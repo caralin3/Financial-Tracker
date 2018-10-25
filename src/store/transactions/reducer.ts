@@ -37,7 +37,7 @@ export const reducer = (state: TransactionsState = initialState, action: Transac
     case DELETE_TRANSACTION: {
       return {
         ...state,
-        transactions: state.transactions.splice(state.transactions.indexOf(action.transaction), 1),
+        transactions: state.transactions.filter((acc: Transaction) => acc.id !== action.transaction.id),
       }
     }
     default:
