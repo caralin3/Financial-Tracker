@@ -37,7 +37,7 @@ export const reducer = (state: SubcategoriesState = initialState, action: Subcat
     case DELETE_SUBCATEGORY: {
       return {
         ...state,
-        subcategories: state.subcategories.filter((sub: Subcategory) => sub.id !== action.subcategory.id),
+        subcategories: state.subcategories.filter((sub: Subcategory) => sub.id !== action.id),
       }
     }
     default:

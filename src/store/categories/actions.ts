@@ -32,12 +32,12 @@ export const editCategory = (category: Category): EditCategoryAction => ({
 });
 
 export interface DeleteCategoryAction {
-  category: Category;
+  id: string;
   type: 'DELETE_CATEGORY';
 }
 
-export const deleteCategory = (category: Category): DeleteCategoryAction => ({
-  category,
+export const deleteCategory = (id: string): DeleteCategoryAction => ({
+  id,
   type: DELETE_CATEGORY,
 });
 

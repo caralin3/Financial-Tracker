@@ -37,7 +37,7 @@ export const reducer = (state: CategoriesState = initialState, action: CategoryA
     case DELETE_CATEGORY: {
       return {
         ...state,
-        categories: state.categories.filter((cat: Category) => cat.id !== action.category.id),
+        categories: state.categories.filter((cat: Category) => cat.id !== action.id),
       }
     }
     default:

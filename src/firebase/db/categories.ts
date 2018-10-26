@@ -39,5 +39,20 @@ export const add = (category: FirebaseCategory, dispatch: Dispatch<ActionTypes>)
 }
 
 // EDIT CATEGORY
+export const edit = (category: Category, dispatch: Dispatch<ActionTypes>) => {
+  categoriesCollection.doc(category.id).update(category).then(() => {
+    dispatch(categoryStateStore.editCategory(category));
+  }).catch((err: any) => {
+    console.log(err.message);
+  });
+}
 
 // DELETE CATEGORY
+export const remove = (id: string, dispatch: Dispatch<ActionTypes>) => {
+  categoriesCollection.doc(id).delete().then(() => {
+    dispatch(categoryStateStore.deleteCategory(id));
+    console.log(`Document ${id} successfully deleted!`);
+  }).catch((err: any) => {
+    console.log("Error removing document: ", err.message);
+  });
+}

@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 // import { Dispatch } from 'redux';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { Header, LogoutButton } from '../../components';
+import { CategoriesSection, Header, LogoutButton } from '../../components';
 // import * as routes from '../../routes';
 import { User } from '../../types';
 
@@ -34,6 +34,7 @@ class DisconnectedSettingsPage extends React.Component<SettingsMergedProps, Sett
         <Header title="Settings" />
         <div className="settings_content">
           <LogoutButton />
+          <CategoriesSection />
         </div>
       </div>
     )

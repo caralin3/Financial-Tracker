@@ -60,6 +60,22 @@ export const add = (subcategory: FirebaseSubcategory, dispatch: Dispatch<ActionT
   });
 }
 
-// EDIT CATEGORY
+// EDIT SUBCATEGORY
+export const edit = (subcategory: Subcategory, dispatch: Dispatch<ActionTypes>) => {
+  // Edit name
+  subcategoriesCollection.doc(subcategory.id).update(subcategory).then(() => {
+    dispatch(subcategoryStateStore.editSubcategory(subcategory));
+  }).catch((err: any) => {
+    console.log(err.message);
+  });
+}
 
-// DELETE CATEGORY
+// DELETE SUBCATEGORY
+export const remove = (id: string, dispatch: Dispatch<ActionTypes>) => {
+  subcategoriesCollection.doc(id).delete().then(() => {
+    dispatch(subcategoryStateStore.deleteSubcategory(id));
+    console.log(`Document ${id} successfully deleted!`);
+  }).catch((err: any) => {
+    console.log("Error removing document: ", err.message);
+  });
+}

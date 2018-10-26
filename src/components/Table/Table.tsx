@@ -65,13 +65,6 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
                     key={ind}
                     type={this.props.type}
                   />
-                  // <td className="table_data" key={ind}>
-                  //   { header === 'Amount' ? 
-                  //     formatter.formatMoney(d[header.toLowerCase()]) :
-                  //     header === 'Date' ? formatter.formatMMDDYYYY(d[header.toLowerCase()])
-                  //     : d[header.toLowerCase()] || 'N/A'
-                  //   }
-                  // </td>
                 ))}
                 <td className="table_icons">
                   <i className="fas fa-edit table_icon" onClick={this.toggleEdit} />

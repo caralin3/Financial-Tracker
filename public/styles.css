@@ -166,6 +166,131 @@ button:focus {
 .addTransactionDialog_input-date {
   text-align: right;
 }
+.categoriesSection_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+.categoriesSection_header-add {
+  padding: 0 0.5rem;
+}
+.categoriesSection_header-add:focus,
+.categoriesSection_header-add:hover {
+  cursor: pointer;
+}
+.categoriesSection_categories {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(auto-fill, auto);
+}
+@media only screen and (max-width: 1025px) {
+  .categoriesSection_categories {
+    grid-template-columns: repeat(2, auto);
+  }
+}
+@media only screen and (max-width: 640px) {
+  .categoriesSection_categories {
+    grid-template-columns: 1fr;
+  }
+}
+.categoryItem {
+  padding: 0 1rem 1rem;
+}
+@media only screen and (max-width: 800px) {
+  .categoryItem {
+    padding: 0 0.5rem;
+  }
+}
+.categoryItem_header {
+  align-items: center;
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .categoryItem_header {
+    font-size: 0.9rem;
+  }
+}
+.categoryItem_header-name {
+  margin: 0;
+  width: 100%;
+}
+.categoryItem_header:focus,
+.categoryItem_header:hover {
+  cursor: pointer;
+}
+.categoryItem_header-icons {
+  display: flex;
+}
+.categoryItem_header-icon {
+  padding: 0 0.5rem;
+}
+.categoryItem_header-icon:focus,
+.categoryItem_header-icon:hover {
+  cursor: pointer;
+}
+.categoryItem_subcategories-closed {
+  overflow: hidden;
+  margin: 0;
+  max-height: 0;
+  padding: 0;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s ease-in;
+}
+.categoryItem_subcategories {
+  border: 1px solid #0C98AC;
+  padding: 0.5rem 1rem;
+  max-height: auto;
+  overflow: hidden;
+  transform: scaleY(1);
+  transform-origin: top;
+  transition: transform 0.5s ease-out;
+}
+.categoryItem_subcategory {
+  align-items: center;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+}
+.categoryItem_subcategory:focus,
+.categoryItem_subcategory:hover {
+  cursor: pointer;
+}
+.categoryItem_subcategory:focus .categoryItem_subcategory-icon,
+.categoryItem_subcategory:hover .categoryItem_subcategory-icon {
+  opacity: 1;
+}
+.categoryItem_subcategory-name {
+  margin: 0;
+  padding: 0.5rem;
+}
+.categoryItem_subcategory-name:focus,
+.categoryItem_subcategory-name:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.categoryItem_subcategory-icons {
+  display: flex;
+}
+.categoryItem_subcategory-icon {
+  opacity: 0;
+  padding: 0 0.5rem;
+}
+.categoryItem_subcategory-icon:focus,
+.categoryItem_subcategory-icon:hover {
+  cursor: pointer;
+}
+.categoryItem_input {
+  padding: 0.5rem 0;
+}
 .contentCard {
   background-image: linear-gradient(#62D4D9, #0C98AC);
 }
@@ -382,6 +507,58 @@ button:focus {
 }
 .nonHeader_icon {
   color: #0C98AC;
+}
+.jobsSection {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+.jobsSection_details {
+  align-items: center;
+  display: flex;
+  text-align: right;
+}
+.jobsSection_details-square {
+  color: #0C98AC;
+  font-size: 1.5rem;
+  padding-left: 1rem;
+}
+.jobsSection_details-square:focus,
+.jobsSection_details-square:hover {
+  cursor: pointer;
+}
+.jobsSection_amount-credit {
+  color: #FF0000;
+}
+.jobsSection_amount,
+.jobsSection_activity,
+.jobsSection_name,
+.jobsSection_type {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.jobsSection_activity:focus,
+.jobsSection_activity:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.jobsSection_amount:focus,
+.jobsSection_name:focus,
+.jobsSection_type:focus,
+.jobsSection_amount:hover,
+.jobsSection_name:hover,
+.jobsSection_type:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.jobsSection_input {
+  padding: 0.5rem 0;
+}
+.jobsSection_input-number {
+  text-align: right;
+  width: 5rem;
 }
 .loading {
   align-items: center;
