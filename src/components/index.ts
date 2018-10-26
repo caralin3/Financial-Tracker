@@ -13,6 +13,7 @@ import { LogoutButton } from './LogoutButton';
 import { Sidebar } from './Sidebar';
 import { SignUpForm } from './SignUpForm';
 import { Table } from './Table';
+import { TableData } from './TableData';
 
 export {
   AccountSection,
@@ -31,4 +32,5 @@ export {
   Sidebar,
   SignUpForm,
   Table,
+  TableData,
 }

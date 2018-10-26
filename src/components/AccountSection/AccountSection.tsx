@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
 import { accountStateStore, ActionTypes } from '../../store';
-import { Account, AccountType,  } from '../../types';
+import { Account, AccountType } from '../../types';
 import { formatter } from '../../utility';
 
 interface AccountSectionProps {

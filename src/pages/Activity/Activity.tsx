@@ -6,7 +6,7 @@ import { withAuthorization } from '../../auth/withAuthorization';
 import { AddTransactionDialog, Header, Table } from '../../components';
 import { ActionTypes, AppState } from '../../store';
 // import * as routes from '../../routes';
-import { Account, Category, Subcategory, TableData, Transaction, User } from '../../types';
+import { Account, Category, Subcategory, TableDataType, Transaction, User } from '../../types';
 
 export interface ActivityPageProps {}
 
@@ -102,7 +102,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.userId === currentUser.id);
       data = this.convertData(data);
-      const tableData: TableData = {
+      const tableData: TableDataType = {
         data,
         headers,
       }
@@ -144,7 +144,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Expense'
         && tr.userId === currentUser.id);
       data = this.convertData(data);
-      const tableData: TableData = {
+      const tableData: TableDataType = {
         data,
         headers,
       }
@@ -160,7 +160,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Income'
         && tr.userId === currentUser.id);
       data = this.convertData(data);
-      const tableData: TableData = {
+      const tableData: TableDataType = {
         data,
         headers,
       }
@@ -176,7 +176,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Transfer'
         && tr.userId === currentUser.id);
       data = this.convertData(data);
-      const tableData: TableData = {
+      const tableData: TableDataType = {
         data,
         headers,
       }

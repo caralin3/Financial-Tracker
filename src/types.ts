@@ -62,7 +62,7 @@ export interface Transaction {
   userId: string;
 }
 
-export interface TableData {
+export interface TableDataType {
   headers: string[];
   data: any[];
 }

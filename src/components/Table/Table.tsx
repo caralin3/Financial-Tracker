@@ -3,11 +3,12 @@ import { connect, Dispatch } from 'react-redux';
 import { DeleteDialog } from '../';
 import { db } from '../../firebase';
 import { ActionTypes } from '../../store';
-import { TableData } from '../../types';
-import { formatter } from '../../utility';
+import { TableDataType } from '../../types';
+// import { formatter } from '../../utility';
+import { TableData } from '../TableData';
 
 interface TableProps {
-  content: TableData;
+  content: TableDataType;
   type: string;
 }
 
@@ -56,13 +57,21 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
             {content.data.map((d: any, index: number) => (
               <tr className="table_row" key={index}>
                 {content.headers.map((header: string, ind: number) => (
-                  <td className="table_data" key={ind}>
-                    { header === 'Amount' ? 
-                      formatter.formatMoney(d[header.toLowerCase()]) :
-                      header === 'Date' ? formatter.formatMMDDYYYY(d[header.toLowerCase()])
-                      : d[header.toLowerCase()] || 'N/A'
-                    }
-                  </td>
+                  <TableData
+                    data={d[header.toLowerCase()] || 'N/A'}
+                    editing={this.state.editing}
+                    heading={this.getHeader(header)}
+                    id={d.id}
+                    key={ind}
+                    type={this.props.type}
+                  />
+                  // <td className="table_data" key={ind}>
+                  //   { header === 'Amount' ? 
+                  //     formatter.formatMoney(d[header.toLowerCase()]) :
+                  //     header === 'Date' ? formatter.formatMMDDYYYY(d[header.toLowerCase()])
+                  //     : d[header.toLowerCase()] || 'N/A'
+                  //   }
+                  // </td>
                 ))}
                 <td className="table_icons">
                   <i className="fas fa-edit table_icon" onClick={this.toggleEdit} />
@@ -86,8 +95,10 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
   }
 
   private onDelete = () => {
-    const { dispatch } = this.props;
-    db.requests.transactions.remove(this.state.id, dispatch);
+    const { dispatch, type } = this.props;
+    if (type !== 'budget') {
+      db.requests.transactions.remove(this.state.id, dispatch);
+    }
     this.toggleDeleteDialog();
   }
 
