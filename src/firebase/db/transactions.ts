@@ -41,5 +41,20 @@ export const add = (transaction: Transaction, dispatch: Dispatch<ActionTypes>) =
 }
 
 // EDIT TRANSACTION
+export const edit = (transaction: Transaction, dispatch: Dispatch<ActionTypes>) => {
+  transactionsCollection.doc(transaction.id).update(transaction).then(() => {
+    dispatch(transactionStateStore.editTransaction(transaction));
+  }).catch((err: any) => {
+    console.log(err.message);
+  });
+}
 
 // DELETE TRANSACTION
+export const remove = (id: string, dispatch: Dispatch<ActionTypes>) => {
+  transactionsCollection.doc(id).delete().then(() => {
+    dispatch(transactionStateStore.deleteTransaction(id));
+    console.log(`Document ${id} successfully deleted!`);
+  }).catch((err: any) => {
+    console.log("Error removing document: ", err.message);
+  });
+}

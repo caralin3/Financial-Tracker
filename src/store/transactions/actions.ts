@@ -32,12 +32,12 @@ export const editTransaction = (transaction: Transaction): EditTransactionAction
 });
 
 export interface DeleteTransactionAction {
-  transaction: Transaction;
+  id: string
   type: 'DELETE_TRANSACTION';
 }
 
-export const deleteTransaction = (transaction: Transaction): DeleteTransactionAction => ({
-  transaction,
+export const deleteTransaction = (id: string): DeleteTransactionAction => ({
+  id,
   type: DELETE_TRANSACTION,
 });
 

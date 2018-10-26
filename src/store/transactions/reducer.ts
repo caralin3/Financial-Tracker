@@ -29,7 +29,7 @@ export const reducer = (state: TransactionsState = initialState, action: Transac
       return {
         ...state,
         transactions: [
-          ...state.transactions.filter((acc: Transaction) => acc.id !== action.transaction.id),
+          ...state.transactions.filter((trans: Transaction) => trans.id !== action.transaction.id),
           action.transaction,
         ],
       }
@@ -37,7 +37,7 @@ export const reducer = (state: TransactionsState = initialState, action: Transac
     case DELETE_TRANSACTION: {
       return {
         ...state,
-        transactions: state.transactions.filter((acc: Transaction) => acc.id !== action.transaction.id),
+        transactions: state.transactions.filter((trans: Transaction) => trans.id !== action.id),
       }
     }
     default:

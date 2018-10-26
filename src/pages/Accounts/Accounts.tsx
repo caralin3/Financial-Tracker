@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { AccountSection, AddAccountDialog, ContentCard, Dialog, Header } from '../../components';
+import { AccountSection, AddAccountDialog, ContentCard, DeleteDialog, Header } from '../../components';
 import { db } from '../../firebase';
 import { accountStateStore, ActionTypes } from '../../store';
 import { Account, User } from '../../types';
@@ -58,7 +58,11 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
           <AddAccountDialog toggleDialog={this.toggleDialog} />
         }
         {this.state.showDeleteDialog && 
-          <DeleteDialog toggleDialog={this.toggleDeleteDialog} confirmDelete={this.onDelete} />
+          <DeleteDialog
+            confirmDelete={this.onDelete}
+            text="Are you sure you want to delete these accounts?"
+            toggleDialog={this.toggleDeleteDialog}
+          />
         }
         <Header title="Accounts" />
         <div className="accounts_content">
@@ -177,24 +181,3 @@ export const AccountsPage = compose(
   withAuthorization(authCondition),
   connect<StateMappedProps, DispatchMappedProps, AccountsPageProps>(mapStateToProps, mapDispatchToProps)
 )(DisconnectedAccountsPage);
-
-
-interface DeleteDialogProps {
-  confirmDelete: () => void;
-  toggleDialog: () => void;
-}
-
-export const DeleteDialog: React.SFC<DeleteDialogProps> = (props) => (
-  <Dialog class="deleteDialog" title="Confirm Delete" toggleDialog={props.toggleDialog}>
-    <h3 className="deleteDialog_subtitle">Are you sure you want to delete these accounts?</h3>
-    <div className="deleteDialog_buttons">
-      <button className="deleteDialog_button deleteDialog_button-yes" type="button" onClick={props.confirmDelete}>
-        Yes
-      </button>
-      <button className="deleteDialog_button deleteDialog_button-no" type="button" onClick={props.toggleDialog}>
-        No
-      </button>
-    </div>
-  </Dialog>
-)
-

@@ -226,6 +226,34 @@ button:focus {
 .dialog_body {
   padding: 2rem;
 }
+.deleteDialog_subtitle {
+  font-weight: normal;
+  margin: 0;
+  text-align: center;
+}
+.deleteDialog_buttons {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 2rem 5rem 0;
+}
+@media only screen and (max-width: 800px) {
+  .deleteDialog_buttons {
+    padding: 2rem 0 0;
+  }
+}
+.deleteDialog_button {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  width: 5rem;
+}
+.deleteDialog_button:focus,
+.deleteDialog_button:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
+}
 .forgotPasswordForm {
   align-items: center;
   background-color: #FFFFFF;
@@ -504,6 +532,16 @@ button:focus {
 .table_data {
   padding: 0.5rem 1rem;
 }
+.table_icons {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: auto 0;
+}
+.table_icon {
+  color: #0C98AC;
+  padding: 0.5rem;
+}
 .accounts_content {
   display: grid;
   gap: 1rem;
@@ -584,40 +622,12 @@ button:focus {
   font-weight: normal;
   margin: 0;
 }
-.deleteDialog_subtitle {
-  font-weight: normal;
-  margin: 0;
-  text-align: center;
-}
-.deleteDialog_buttons {
-  align-items: center;
-  display: flex;
-  justify-content: space-around;
-  padding: 2rem 5rem 0;
-}
-@media only screen and (max-width: 800px) {
-  .deleteDialog_buttons {
-    padding: 2rem 0 0;
-  }
-}
-.deleteDialog_button {
-  background-color: #0C98AC;
-  color: #FFFFFF;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  width: 5rem;
-}
-.deleteDialog_button:focus,
-.deleteDialog_button:hover {
-  background-color: #0fc2dc;
-  cursor: pointer;
-}
 .activity_content {
+  overflow-x: auto;
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
   .activity_content {
-    overflow-x: scroll;
     padding: 1rem;
   }
 }
@@ -634,6 +644,7 @@ button:focus {
   font-family: 'Francois One', sans-serif;
 }
 .activity_section {
+  overflow-x: auto;
   padding: 0 1rem;
 }
 .activity_empty {

@@ -2,6 +2,7 @@ import { AccountSection } from './AccountSection';
 import { AddAccountDialog } from './AddAccountDialog';
 import { AddTransactionDialog } from './AddTransactionDialog';
 import { ContentCard } from './ContentCard';
+import { DeleteDialog } from './DeleteDialog';
 import { Dialog } from './Dialog';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { Form } from './Form';
@@ -18,6 +19,7 @@ export {
   AddAccountDialog,
   AddTransactionDialog,
   ContentCard,
+  DeleteDialog,
   Dialog,
   ForgotPasswordForm,
   Form,

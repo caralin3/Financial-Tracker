@@ -19,6 +19,7 @@ interface StateMappedProps {
   categories: Category[];
   currentUser: User | null;
   subcategories: Subcategory[];
+  transactions: Transaction[];
 }
 
 interface AddTransactionDialogMergedProps extends
@@ -117,10 +118,16 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
                 <label className="addTransactionDialog_input-label">Item</label>
                 <input
                   className='addTransactionDialog_input'
+                  list="items"
                   onChange={(e) => this.handleChange(e, 'to')}
                   type='text'
                   value={to}
                 />
+                <datalist id="items">
+                  {this.expenses().map((exp: Transaction) => (
+                    <option key={exp.id} value={exp.to}>{ exp.to }</option>
+                  ))}
+                </datalist>
               </div> :
               <div className="addTransactionDialog_section addTransactionDialog_section-to">
                 <label className="addTransactionDialog_input-label">To</label>
@@ -195,11 +202,17 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
               <label className="addTransactionDialog_input-label">Tags</label>
               <input
                 className='addTransactionDialog_input'
+                list="tags"
                 onChange={(e) => this.handleChange(e, 'tags')}
                 placeholder='School, Travel, ...'
                 type='text'
                 value={tags}
               />
+              <datalist id="tags">
+                {this.tags().map((tag: string, index: number) => (
+                  <option key={index} value={tag}>{ tag }</option>
+                ))}
+              </datalist>
             </div>
           </div>
         </Form>
@@ -225,6 +238,25 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
         currentUser && sub.userId === currentUser.id);
     }
     return subcategories.filter((sub: Subcategory) => currentUser && sub.userId === currentUser.id);
+  }
+
+  private expenses = () => {
+    const { currentUser, transactions } = this.props;
+    return transactions.filter((trans: Transaction) => (currentUser && currentUser.id === trans.userId) &&
+      trans.type === 'Expense'
+    );
+  }
+
+  private tags = () => {
+    const { currentUser, transactions } = this.props;
+    const trans: Transaction[] = transactions.filter((tran: Transaction) => currentUser && currentUser.id === tran.userId);
+    const tags: string[] = [];
+    trans.forEach((tr: Transaction) => {
+      if (tr.tags) {
+        tags.push.apply(tags, tr.tags);
+      }
+    });
+    return tags;
   }
 
   private handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, propertyName: string) => {
@@ -303,6 +335,7 @@ const mapStateToProps = (state: AppState) => ({
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
   subcategories: state.subcategoriesState.subcategories,
+  transactions: state.transactionState.transactions,
 });
 
 export const AddTransactionDialog = connect<

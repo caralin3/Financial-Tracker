@@ -95,8 +95,6 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       'To',
       'Category',
       'Subcategory',
-      // 'Job',
-      // 'Job Type',
       'Note',
       'Date',
       'Amount'
@@ -119,15 +117,20 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       if (trans.type === 'Expense') {
         return {
           ...trans,
-          category: categories.filter((cat) => cat.id === trans.category)[0].name,
-          from: accounts.filter((acc) => acc.id === trans.from)[0].name,
-          subcategory: subcategories.filter((sub) => sub.id === trans.subcategory)[0].name,
+          category: categories.filter((cat) => cat.id === trans.category)[0] ? 
+            categories.filter((cat) => cat.id === trans.category)[0].name : '',
+          from: accounts.filter((acc) => acc.id === trans.from)[0] ?
+            accounts.filter((acc) => acc.id === trans.from)[0].name : '',
+          subcategory: subcategories.filter((sub) => sub.id === trans.subcategory)[0] ?
+            subcategories.filter((sub) => sub.id === trans.subcategory)[0].name : '',
         }
       } else if (trans.type === 'Transfer') {
         return {
           ...trans,
-          from: accounts.filter((acc) => acc.id === trans.from)[0].name,
-          to: accounts.filter((acc) => acc.id === trans.to)[0].name,
+          from: accounts.filter((acc) => acc.id === trans.from)[0] ?
+            accounts.filter((acc) => acc.id === trans.from)[0].name : '',
+          to: accounts.filter((acc) => acc.id === trans.to)[0] ?
+            accounts.filter((acc) => acc.id === trans.to)[0].name : '',
         }
       }
       return {...trans}
