@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { Link, NavLink, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, NavLink, RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { navRoutes } from '../../routes';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { Route } from '../../types';
 
 interface SidebarProps extends
-  RouteComponentProps<any> {}
+  RouteComponentProps<RouteProps> {}
 
 interface DispatchMappedProps {
   dispatch: Dispatch<ActionTypes>;

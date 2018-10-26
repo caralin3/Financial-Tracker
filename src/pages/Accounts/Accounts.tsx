@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { AccountSection, AddAccountDialog, ContentCard, DeleteDialog, Header } from '../../components';
@@ -22,7 +22,7 @@ interface StateMappedProps {
 }
 
 interface AccountsMergedProps extends
-  RouteComponentProps<any>,
+  RouteComponentProps<RouteProps>,
   StateMappedProps,
   DispatchMappedProps,
   AccountsPageProps {}

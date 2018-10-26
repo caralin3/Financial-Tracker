@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 // import { Dispatch } from 'redux';
 import { withAuthorization } from '../../auth/withAuthorization';
@@ -17,7 +17,7 @@ interface StateMappedProps {
 interface DispatchMappedProps {}
 
 interface BudgetsMergedProps extends
-  RouteComponentProps<any>,
+  RouteComponentProps<RouteProps>,
   StateMappedProps,
   DispatchMappedProps,
   BudgetsPageProps {}

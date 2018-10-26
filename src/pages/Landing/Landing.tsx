@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { Header, LoginForm, SignUpForm } from '../../components';
 import * as routes from '../../routes';
 
@@ -10,7 +10,7 @@ export interface LandingPageState {
   login: boolean;
 }
 
-class DisconnectedLandingPage extends React.Component<RouteComponentProps<any>, LandingPageState> {
+class DisconnectedLandingPage extends React.Component<RouteComponentProps<RouteProps>, LandingPageState> {
   public readonly state: LandingPageState = {
     login: false,
   }

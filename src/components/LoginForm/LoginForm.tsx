@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { Form } from '../';
 import { auth } from '../../firebase';
 import * as routes from '../../routes';
 
-interface LoginFormProps extends RouteComponentProps<any> {}
+interface LoginFormProps extends RouteComponentProps<RouteProps> {}
 
 interface LoginFormState {
   email: string;

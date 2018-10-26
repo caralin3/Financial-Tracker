@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, RouteProps, withRouter } from 'react-router';
 import { Loading } from './Loading';
 
 interface WrapperProps extends
-  RouteComponentProps<any>{}
+  RouteComponentProps<RouteProps>{}
 
 export const LoadingWrapper = (Component: any) => {
   class Wrapper extends React.Component<WrapperProps> {
