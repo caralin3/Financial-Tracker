@@ -6,7 +6,7 @@ import { Dispatch } from 'redux';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { ContentCard, Header, Loading } from '../../components';
 import { db } from '../../firebase';
-import { ActionTypes } from '../../store';
+import { ActionTypes, AppState } from '../../store';
 import { User } from '../../types';
 // import * as routes from '../../routes';
 
@@ -17,7 +17,7 @@ interface DispatchMappedProps {
 }
 
 interface StateMappedProps {
-  currentUser: User;
+  currentUser: User | null;
 }
 
 interface DashboardMergedProps extends
@@ -128,7 +128,7 @@ const authCondition = (authUser: any) => !!authUser;
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: AppState) => ({
   currentUser: state.sessionState.currentUser,
 });
 

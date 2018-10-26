@@ -4,7 +4,6 @@ import { DeleteDialog } from '../';
 import { db } from '../../firebase';
 import { ActionTypes } from '../../store';
 import { TableDataType } from '../../types';
-// import { formatter } from '../../utility';
 import { TableData } from '../TableData';
 
 interface TableProps {

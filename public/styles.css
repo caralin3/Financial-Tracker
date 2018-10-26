@@ -219,6 +219,7 @@ button:focus {
   }
 }
 .categoryItem_header-name {
+  font-family: 'Archivo Narrow', sans-serif;
   margin: 0;
   width: 100%;
 }
@@ -269,6 +270,7 @@ button:focus {
   opacity: 1;
 }
 .categoryItem_subcategory-name {
+  font-family: 'Archivo Narrow', sans-serif;
   margin: 0;
   padding: 0.5rem;
 }
@@ -730,6 +732,49 @@ button:focus {
 }
 .tableData_input-number {
   text-align: right;
+}
+.userProfile_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+.userProfile_header-add {
+  padding: 0 0.5rem;
+}
+.userProfile_header-add:focus,
+.userProfile_header-add:hover {
+  cursor: pointer;
+}
+.userProfile_profile {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .userProfile_profile {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.userProfile_profile_text {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+}
+.userProfile_profile_reset {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.userProfile_profile_reset:focus,
+.userProfile_profile_reset:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
 }
 .accounts_content {
   display: grid;

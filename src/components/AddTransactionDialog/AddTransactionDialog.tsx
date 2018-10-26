@@ -4,6 +4,7 @@ import { Dialog, Form } from '..';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, Category, Subcategory, Transaction, TransactionType, User } from '../../types';
+import { sorter } from '../../utility';
 
 interface AddTransactionDialogProps {
   class?: string;
@@ -227,17 +228,19 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
 
   private categories = () => {
     const { categories, currentUser } = this.props;
-    return categories.filter((cat: Category) => currentUser && cat.userId === currentUser.id);
+    return sorter.sort(categories.filter((cat: Category) => 
+      currentUser && cat.userId === currentUser.id), 'desc', 'name');
   }
 
   private subcategories = () => {
     const { categories, currentUser, subcategories } = this.props;
     const category: Category = categories.filter((cat: Category) => this.state.category === cat.id)[0];
     if (category) {
-      return subcategories.filter((sub: Subcategory) => sub.parent === category.name &&
-        currentUser && sub.userId === currentUser.id);
+      return sorter.sort(subcategories.filter((sub: Subcategory) => sub.parent === category.name &&
+        currentUser && sub.userId === currentUser.id), 'desc', 'name');
     }
-    return subcategories.filter((sub: Subcategory) => currentUser && sub.userId === currentUser.id);
+    return sorter.sort(subcategories.filter((sub: Subcategory) =>
+      currentUser && sub.userId === currentUser.id), 'desc', 'name');
   }
 
   private expenses = () => {
@@ -295,35 +298,37 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
     const { currentUser, dispatch, toggleDialog } = this.props;
     e.preventDefault();
     const tags = !this.state.tags ? [] : this.state.tags.split(',').map((tag: string) => tag.trim());
-    let transaction: Transaction;
-    if (active === 'Expense') {
-      transaction = {
-        amount,
-        category,
-        date,
-        from,
-        id: '',
-        note,
-        subcategory,
-        tags,
-        to,
-        type: 'Expense',
-        userId: currentUser ? currentUser.id : '',
+    if (currentUser) {
+      let transaction: Transaction;
+      if (active === 'Expense') {
+        transaction = {
+          amount,
+          category,
+          date,
+          from,
+          id: '',
+          note,
+          subcategory,
+          tags,
+          to,
+          type: 'Expense',
+          userId: currentUser.id,
+        }
+      } else {
+        transaction = {
+          amount,
+          date,
+          from,
+          id: '',
+          note,
+          tags,
+          to,
+          type: active,
+          userId: currentUser.id,
+        }
       }
-    } else {
-      transaction = {
-        amount,
-        date,
-        from,
-        id: '',
-        note,
-        tags,
-        to,
-        type: active,
-        userId: currentUser ? currentUser.id : '',
-      }
+      db.requests.transactions.add(transaction, dispatch);
     }
-    db.requests.transactions.add(transaction, dispatch);
     toggleDialog();
   }
 }

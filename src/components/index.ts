@@ -17,6 +17,7 @@ import { Sidebar } from './Sidebar';
 import { SignUpForm } from './SignUpForm';
 import { Table } from './Table';
 import { TableData } from './TableData';
+import { UserProfile } from './UserProfile';
 
 export {
   AccountSection,
@@ -39,4 +40,5 @@ export {
   SignUpForm,
   Table,
   TableData,
+  UserProfile,
 }

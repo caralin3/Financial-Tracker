@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { Dialog, Form } from '../';
 import { db } from '../../firebase';
 import { FirebaseAccount } from '../../firebase/types';
-import { ActionTypes } from '../../store';
+import { ActionTypes, AppState } from '../../store';
 import { AccountType, User } from '../../types';
 
 interface AddAccountDialogProps {
@@ -16,7 +16,7 @@ interface DispatchMappedProps {
 }
 
 interface StateMappedProps {
-  currentUser: User;
+  currentUser: User | null;
 }
 
 interface AddAccountDialogMergedProps extends
@@ -90,20 +90,22 @@ export class DisconnectedAddAccountDialog extends React.Component<AddAccountDial
     const { balance, name, type } = this.state;
     const { currentUser, dispatch, toggleDialog } = this.props;
     e.preventDefault();
-    const newAccount: FirebaseAccount = {
-      balance,
-      name,
-      type,
-      userId: currentUser.id,
+    if (currentUser) {
+      const newAccount: FirebaseAccount = {
+        balance,
+        name,
+        type,
+        userId: currentUser.id,
+      }
+      db.requests.accounts.add(newAccount, dispatch);
     }
-    db.requests.accounts.add(newAccount, dispatch);
     toggleDialog();
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: AppState) => ({
   currentUser: state.sessionState.currentUser,
 });
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Link, NavLink, RouteComponentProps, withRouter } from 'react-router-dom';
 import { navRoutes } from '../../routes';
-import { ActionTypes, sessionStateStore } from '../../store';
+import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { Route } from '../../types';
 
 interface SidebarProps extends
@@ -47,7 +47,7 @@ export const DisconnectedSidebar: React.SFC<SidebarMergedProps> = (props) => (
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: AppState) => ({
   showSidebar: state.sessionState.showSidebar,
 });
 

@@ -41,8 +41,6 @@ export class DisconnectedCategoriesSection extends React.Component<CategoriesSec
           <h2>Categories</h2>
           <div className="categoriesSection_header-icons">
             <i className="fas fa-plus categoriesSection_header-add" onClick={this.toggleDialog} />
-            {/* <i className="fas fa-edit categoriesSection_header-add" onClick={this.toggleDelete} /> :
-            <i className="fas fa-trash-alt categoriesSection_header-delete" onClick={this.toggleDeleteDialog} /> */}
           </div>
         </div>
         <div className="categoriesSection_categories">

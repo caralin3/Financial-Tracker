@@ -2,16 +2,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-// import { Dispatch } from 'redux';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { CategoriesSection, Header, LogoutButton } from '../../components';
-// import * as routes from '../../routes';
+import { CategoriesSection, Header, UserProfile } from '../../components';
+import { AppState } from '../../store';
 import { User } from '../../types';
 
 export interface SettingsPageProps {}
 
 interface StateMappedProps {
-  currentUser: User;
+  currentUser: User | null;
 }
 
 interface DispatchMappedProps {}
@@ -33,7 +32,7 @@ class DisconnectedSettingsPage extends React.Component<SettingsMergedProps, Sett
       <div className="settings">
         <Header title="Settings" />
         <div className="settings_content">
-          <LogoutButton />
+          <UserProfile />
           <CategoriesSection />
         </div>
       </div>
@@ -43,7 +42,7 @@ class DisconnectedSettingsPage extends React.Component<SettingsMergedProps, Sett
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: AppState) => ({
   currentUser: state.sessionState.currentUser,
 });
 

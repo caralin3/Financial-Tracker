@@ -1,0 +1,45 @@
+@import (reference) '../../less/button.less';
+@import (reference) '../../less/variables.less';
+
+.userProfile {
+  &_header {
+    align-items: center;
+    border-bottom: 1px solid @very-light-gray;
+    color: @blue-green;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+
+    &-add {
+      padding: 0 0.5rem;
+
+      &:focus,
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &_profile {
+    // color: @blue-green;
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+
+    @media only screen and (max-width: 640px) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &_text {
+      font-family: @font-archivo;
+      font-weight: normal;
+    }
+
+    &_reset {
+      .button;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+  }
+}

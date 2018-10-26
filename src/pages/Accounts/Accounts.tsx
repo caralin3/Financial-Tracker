@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { AccountSection, AddAccountDialog, ContentCard, DeleteDialog, Header } from '../../components';
 import { db } from '../../firebase';
-import { accountStateStore, ActionTypes } from '../../store';
+import { accountStateStore, ActionTypes, AppState } from '../../store';
 import { Account, User } from '../../types';
 import { formatter } from '../../utility';
 
@@ -17,7 +17,7 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   accounts: Account[];
-  currentUser: User;
+  currentUser: User | null;
   deletedAccounts: string[];
 }
 
@@ -48,9 +48,9 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
 
   public render() {
     const { accounts, currentUser } = this.props;
-    const bankAccounts = accounts.filter((ba: Account) => ba.type === 'Bank Account' && ba.userId === currentUser.id);
-    const cash = accounts.filter((ca: Account) => ca.type === 'Cash' && ca.userId === currentUser.id);
-    const creditCards = accounts.filter((cr: Account) => cr.type === 'Credit' && cr.userId === currentUser.id);
+    const bankAccounts = accounts.filter((ba: Account) => ba.type === 'Bank Account' && currentUser && ba.userId === currentUser.id);
+    const cash = accounts.filter((ca: Account) => ca.type === 'Cash' && currentUser && ca.userId === currentUser.id);
+    const creditCards = accounts.filter((cr: Account) => cr.type === 'Credit' && currentUser && cr.userId === currentUser.id);
 
     return (
       <div className="accounts">
@@ -170,7 +170,7 @@ const authCondition = (authUser: any) => !!authUser;
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
-const mapStateToProps = (state: any) => ({
+const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
   currentUser: state.sessionState.currentUser,
   deletedAccounts: state.accountsState.deletedAccounts,
