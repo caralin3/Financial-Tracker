@@ -3,13 +3,18 @@
 
 .sidebar {
   align-items: center;
-  background-image: linear-gradient(#0C98AC, #62D4D9);
+  background-color: @blue-green;
+  // background-image: linear-gradient(#0C98AC, #62D4D9);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   min-height: 100vh;
   padding: 1rem 0;
   width: 100%;
+
+  @media only screen and (max-width: 640px) {
+    display: none;
+  }
 
   &_circle {
     color: @white;
@@ -46,12 +51,68 @@
 
     &:focus,
     &:hover {
-      background-color: @middle-blue;
+      background-color: darken(@middle-blue, 10%);
     }
 
     &-active {
-      background-color: @middle-blue;
+      background-color: darken(@middle-blue, 10%);
     }
   }
+}
+
+.sidebar {
+  &_active {
+    align-items: center;
+    background-color: @blue-green;
+    // background-image: linear-gradient(#0C98AC, #62D4D9);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 100vh;
+    padding: 1rem 0;
+    width: 100%;
+  }
+
+  &_circle {
+    color: @white;
+  }
   
+  &_icon {
+    color: @blue-green;
+  }
+
+  &_list {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 2rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  &_item {
+    width: 100%;
+  }
+
+  &_link {
+    color: @white;
+    display: inline-block;
+    font-weight: bold;
+    padding: 1.5rem 0;
+    width: 100%;
+    
+    &:visited {
+      color: @white;
+    }
+
+    &:focus,
+    &:hover {
+      background-color: darken(@middle-blue, 10%);
+    }
+
+    &-active {
+      background-color: darken(@middle-blue, 10%);
+    }
+  }  
 }

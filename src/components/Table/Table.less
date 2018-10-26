@@ -1,0 +1,41 @@
+@import (reference) '../../less/variables.less';
+
+.table {
+  border: 1px solid @blue-green;
+  border-collapse: collapse;
+
+  &_header,
+  &_heading,
+  &_body,
+  &_row,
+  &_data {
+    border: 1px solid @blue-green;
+    border-collapse: collapse;
+  }
+
+  &_header {
+    background-color: @blue-green;
+    color: @white;
+  }
+
+  &_heading {
+    padding: 0.5rem 1rem;
+  }
+
+  &_icons {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: auto 0;
+  }
+
+  &_icon {
+    color: @blue-green;
+    padding: 0.5rem;
+
+    &:focus,
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

@@ -1,4 +1,5 @@
-@import "https://use.fontawesome.com/releases/v5.2.0/css/all.css";
+@import 'https://use.fontawesome.com/releases/v5.2.0/css/all.css';
+@import 'https://fonts.googleapis.com/css?family=Archivo+Narrow|Francois+One|Oswald';
 html {
   margin: 0;
   padding: 0;
@@ -35,6 +36,350 @@ button:focus {
   .appAuth {
     display: block;
   }
+}
+@media only screen and (max-width: 640px) {
+  .router {
+    display: none;
+  }
+}
+.accountSection {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+.accountSection_details {
+  align-items: center;
+  display: flex;
+  text-align: right;
+}
+.accountSection_details-square {
+  color: #0C98AC;
+  font-size: 1.5rem;
+  padding-left: 1rem;
+}
+.accountSection_details-square:focus,
+.accountSection_details-square:hover {
+  cursor: pointer;
+}
+.accountSection_amount-credit {
+  color: #FF0000;
+}
+.accountSection_amount,
+.accountSection_activity,
+.accountSection_name,
+.accountSection_type {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.accountSection_activity:focus,
+.accountSection_activity:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.accountSection_amount:focus,
+.accountSection_name:focus,
+.accountSection_type:focus,
+.accountSection_amount:hover,
+.accountSection_name:hover,
+.accountSection_type:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.accountSection_input {
+  padding: 0.5rem 0;
+}
+.accountSection_input-number {
+  text-align: right;
+  width: 5rem;
+}
+.addAccountDialog_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+.addTransactionDialog_options {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1rem;
+}
+.addTransactionDialog_button {
+  border-bottom: 1px solid #CCCCCC;
+  font-size: 1rem;
+  width: 100%;
+}
+@media only screen and (max-width: 640px) {
+  .addTransactionDialog_button {
+    font-size: 0.9rem;
+  }
+}
+.addTransactionDialog_button:focus,
+.addTransactionDialog_button:hover,
+.addTransactionDialog_button-active {
+  border-bottom: 1.5px solid #0C98AC;
+  color: #0C98AC;
+  cursor: pointer;
+}
+.addTransactionDialog_form {
+  display: grid;
+  gap: 1rem;
+  grid-template: "from to" auto "date amount" auto "category subcategory" auto "note tags" auto / 1fr 1fr;
+}
+@media only screen and (max-width: 800px) {
+  .addTransactionDialog_form {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.addTransactionDialog_section-from {
+  grid-area: from;
+}
+.addTransactionDialog_section-to {
+  grid-area: to;
+}
+.addTransactionDialog_section-date {
+  grid-area: date;
+}
+.addTransactionDialog_section-amount {
+  grid-area: amount;
+}
+.addTransactionDialog_section-category {
+  grid-area: category;
+}
+.addTransactionDialog_section-subcategory {
+  grid-area: subcategory;
+}
+.addTransactionDialog_section-note {
+  grid-area: note;
+}
+.addTransactionDialog_section-tags {
+  grid-area: tags;
+}
+.addTransactionDialog_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+.addTransactionDialog_input-amount,
+.addTransactionDialog_input-date {
+  text-align: right;
+}
+.categoriesSection_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+.categoriesSection_header-add {
+  padding: 0 0.5rem;
+}
+.categoriesSection_header-add:focus,
+.categoriesSection_header-add:hover {
+  cursor: pointer;
+}
+.categoriesSection_categories {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(auto-fill, auto);
+}
+@media only screen and (max-width: 1025px) {
+  .categoriesSection_categories {
+    grid-template-columns: repeat(2, auto);
+  }
+}
+@media only screen and (max-width: 640px) {
+  .categoriesSection_categories {
+    grid-template-columns: 1fr;
+  }
+}
+.categoryItem {
+  padding: 0 1rem 1rem;
+}
+@media only screen and (max-width: 800px) {
+  .categoryItem {
+    padding: 0 0.5rem;
+  }
+}
+.categoryItem_header {
+  align-items: center;
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .categoryItem_header {
+    font-size: 0.9rem;
+  }
+}
+.categoryItem_header-name {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+  width: 100%;
+}
+.categoryItem_header:focus,
+.categoryItem_header:hover {
+  cursor: pointer;
+}
+.categoryItem_header-icons {
+  display: flex;
+}
+.categoryItem_header-icon {
+  padding: 0 0.5rem;
+}
+.categoryItem_header-icon:focus,
+.categoryItem_header-icon:hover {
+  cursor: pointer;
+}
+.categoryItem_subcategories-closed {
+  overflow: hidden;
+  margin: 0;
+  max-height: 0;
+  padding: 0;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s ease-in;
+}
+.categoryItem_subcategories {
+  border: 1px solid #0C98AC;
+  padding: 0.5rem 1rem;
+  max-height: auto;
+  overflow: hidden;
+  transform: scaleY(1);
+  transform-origin: top;
+  transition: transform 0.5s ease-out;
+}
+.categoryItem_subcategory {
+  align-items: center;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+}
+.categoryItem_subcategory:focus,
+.categoryItem_subcategory:hover {
+  cursor: pointer;
+}
+.categoryItem_subcategory:focus .categoryItem_subcategory-icon,
+.categoryItem_subcategory:hover .categoryItem_subcategory-icon {
+  opacity: 1;
+}
+.categoryItem_subcategory-name {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+  padding: 0.5rem;
+}
+.categoryItem_subcategory-name:focus,
+.categoryItem_subcategory-name:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.categoryItem_subcategory-icons {
+  display: flex;
+}
+.categoryItem_subcategory-icon {
+  opacity: 0;
+  padding: 0 0.5rem;
+}
+.categoryItem_subcategory-icon:focus,
+.categoryItem_subcategory-icon:hover {
+  cursor: pointer;
+}
+.categoryItem_input {
+  padding: 0.5rem 0;
+}
+.contentCard {
+  background-image: linear-gradient(#62D4D9, #0C98AC);
+}
+.dialog {
+  background-color: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  left: 0;
+  overflow: auto;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+.dialog_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 2rem;
+}
+.dialog_title {
+  color: #0C98AC;
+}
+@media only screen and (max-width: 640px) {
+  .dialog_title {
+    font-size: 1.5rem;
+  }
+}
+.dialog_close {
+  color: #0C98AC;
+  font-size: 1.5rem;
+}
+.dialog_close:focus,
+.dialog_close:hover {
+  cursor: pointer;
+}
+@media only screen and (max-width: 640px) {
+  .dialog_close {
+    font-size: 1rem;
+  }
+}
+.dialog_content {
+  display: flex;
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC;
+  flex-direction: column;
+  margin: 5% auto;
+  padding: 1.5rem 0;
+  width: 50%;
+}
+@media only screen and (max-width: 640px) {
+  .dialog_content {
+    margin: 25% auto;
+    padding: 1.5rem 0;
+    width: 85%;
+  }
+}
+.dialog_body {
+  padding: 2rem;
+}
+.deleteDialog_subtitle {
+  font-weight: normal;
+  margin: 0;
+  text-align: center;
+}
+.deleteDialog_buttons {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 2rem 5rem 0;
+}
+@media only screen and (max-width: 800px) {
+  .deleteDialog_buttons {
+    padding: 2rem 0 0;
+  }
+}
+.deleteDialog_button {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  width: 5rem;
+}
+.deleteDialog_button:focus,
+.deleteDialog_button:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
 }
 .forgotPasswordForm {
   align-items: center;
@@ -165,9 +510,60 @@ button:focus {
 .nonHeader_icon {
   color: #0C98AC;
 }
+.jobsSection {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+.jobsSection_details {
+  align-items: center;
+  display: flex;
+  text-align: right;
+}
+.jobsSection_details-square {
+  color: #0C98AC;
+  font-size: 1.5rem;
+  padding-left: 1rem;
+}
+.jobsSection_details-square:focus,
+.jobsSection_details-square:hover {
+  cursor: pointer;
+}
+.jobsSection_amount-credit {
+  color: #FF0000;
+}
+.jobsSection_amount,
+.jobsSection_activity,
+.jobsSection_name,
+.jobsSection_type {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.jobsSection_activity:focus,
+.jobsSection_activity:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.jobsSection_amount:focus,
+.jobsSection_name:focus,
+.jobsSection_type:focus,
+.jobsSection_amount:hover,
+.jobsSection_name:hover,
+.jobsSection_type:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.jobsSection_input {
+  padding: 0.5rem 0;
+}
+.jobsSection_input-number {
+  text-align: right;
+  width: 5rem;
+}
 .loading {
   align-items: center;
-  background-image: linear-gradient(#0C98AC, #62D4D9);
   display: flex;
   justify-content: center;
   margin: 0;
@@ -176,7 +572,7 @@ button:focus {
 }
 .loading_front,
 .loading_back {
-  font-size: 4rem;
+  font-size: 3rem;
 }
 @media only screen and (max-width: 640px) {
   .loading_front,
@@ -185,10 +581,10 @@ button:focus {
   }
 }
 .loading_circle {
-  color: #FFFFFF;
+  color: #0C98AC;
 }
 .loading_icon {
-  color: #0C98AC;
+  color: #FFFFFF;
 }
 .loginForm_input {
   margin: 1rem 0;
@@ -202,7 +598,57 @@ button:focus {
 }
 .sidebar {
   align-items: center;
-  background-image: linear-gradient(#0C98AC, #62D4D9);
+  background-color: #0C98AC;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 1rem 0;
+  width: 100%;
+}
+@media only screen and (max-width: 640px) {
+  .sidebar {
+    display: none;
+  }
+}
+.sidebar_circle {
+  color: #FFFFFF;
+}
+.sidebar_icon {
+  color: #0C98AC;
+}
+.sidebar_list {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 2rem;
+  text-align: center;
+  width: 100%;
+}
+.sidebar_item {
+  width: 100%;
+}
+.sidebar_link {
+  color: #FFFFFF;
+  display: inline-block;
+  font-weight: bold;
+  padding: 1.5rem 0;
+  width: 100%;
+}
+.sidebar_link:visited {
+  color: #FFFFFF;
+}
+.sidebar_link:focus,
+.sidebar_link:hover {
+  background-color: #39c9cf;
+}
+.sidebar_link-active {
+  background-color: #39c9cf;
+}
+.sidebar_active {
+  align-items: center;
+  background-color: #0C98AC;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -240,10 +686,331 @@ button:focus {
 }
 .sidebar_link:focus,
 .sidebar_link:hover {
-  background-color: #62D4D9;
+  background-color: #39c9cf;
 }
 .sidebar_link-active {
+  background-color: #39c9cf;
+}
+.table {
+  border: 1px solid #0C98AC;
+  border-collapse: collapse;
+}
+.table_header,
+.table_heading,
+.table_body,
+.table_row,
+.table_data {
+  border: 1px solid #0C98AC;
+  border-collapse: collapse;
+}
+.table_header {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+}
+.table_heading {
+  padding: 0.5rem 1rem;
+}
+.table_icons {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: auto 0;
+}
+.table_icon {
+  color: #0C98AC;
+  padding: 0.5rem;
+}
+.table_icon:focus,
+.table_icon:hover {
+  cursor: pointer;
+}
+.tableData {
+  padding: 0.5rem 1rem;
+}
+.tableData_input {
+  width: 100%;
+}
+.tableData_input-number {
+  text-align: right;
+}
+.userProfile_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+.userProfile_header-add {
+  padding: 0 0.5rem;
+}
+.userProfile_header-add:focus,
+.userProfile_header-add:hover {
+  cursor: pointer;
+}
+.userProfile_profile {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .userProfile_profile {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.userProfile_profile_text {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+}
+.userProfile_profile_reset {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.userProfile_profile_reset:focus,
+.userProfile_profile_reset:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
+}
+.accounts_content {
+  display: grid;
+  gap: 1rem;
+  grid-template: "bank cash credit" auto "details details details" auto "accounts accounts accounts" / 1fr 1fr 1fr;
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .accounts_content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+}
+.accounts_bank,
+.accounts_cash,
+.accounts_credit {
   background-color: #62D4D9;
+  background-image: none;
+  padding: 1rem;
+  text-align: center;
+}
+@media only screen and (max-width: 640px) {
+  .accounts_bank,
+  .accounts_cash,
+  .accounts_credit {
+    margin: 0.5rem 0;
+  }
+}
+.accounts_bank {
+  grid-area: bank;
+}
+.accounts_cash {
+  grid-area: cash;
+}
+.accounts_credit {
+  grid-area: credit;
+}
+.accounts_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.accounts_amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.accounts_amount-credit {
+  color: #FF0000;
+}
+.accounts_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  grid-area: details;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+.accounts_header-delete,
+.accounts_header-add {
+  padding: 0 0.5rem;
+}
+.accounts_header-delete:focus,
+.accounts_header-add:focus,
+.accounts_header-delete:hover,
+.accounts_header-add:hover {
+  cursor: pointer;
+}
+.accounts_list {
+  grid-area: accounts;
+  padding: 1rem;
+}
+.accounts_item {
+  padding: 0.5rem 1rem;
+}
+.accounts_item-none {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.activity_content {
+  overflow-x: auto;
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .activity_content {
+    padding: 1rem;
+  }
+}
+.activity_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  grid-area: details;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+.activity_label {
+  font-family: 'Francois One', sans-serif;
+}
+.activity_section {
+  overflow-x: auto;
+  padding: 0 1rem;
+}
+.activity_empty {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+  padding-left: 1rem;
+}
+.budgets_content {
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .budgets_content {
+    padding: 1rem;
+  }
+}
+.charts_content {
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .charts_content {
+    padding: 1rem;
+  }
+}
+.dashboard_content {
+  display: grid;
+  gap: 1rem;
+  grid-template: "hero hero hero hero" auto "recent accounts accounts topExpenses" auto "budget budget expInc expInc" auto / 1fr 0.5fr 0.5fr 1fr;
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+}
+.dashboard_hero {
+  display: grid;
+  gap: 1rem;
+  grid-area: hero;
+  grid-template: "income worth expense" / 0.5fr 0.5fr 2fr;
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_hero {
+    grid-template: "income worth" auto "expense expense" auto / 1fr 1fr;
+    padding: 1rem;
+  }
+}
+.dashboard_income {
+  grid-area: income;
+}
+.dashboard_worth {
+  grid-area: worth;
+}
+.dashboard_expense {
+  grid-area: expense;
+}
+.dashboard_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.dashboard_amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboard_recent {
+  grid-area: recent;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_recent {
+    margin: 1rem 0;
+  }
+}
+.dashboard_accounts {
+  grid-area: accounts;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_accounts {
+    margin: 1rem 0;
+  }
+}
+.dashboard_topExpenses {
+  grid-area: topExpenses;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_topExpenses {
+    margin: 1rem 0;
+  }
+}
+.dashboard_budget {
+  grid-area: budget;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_budget {
+    margin: 1rem 0;
+  }
+}
+.dashboard_expInc {
+  grid-area: expInc;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_expInc {
+    margin: 1rem 0;
+  }
+}
+.forgotPassword {
+  background-image: linear-gradient(#0C98AC, #62D4D9);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem 1rem 0 1rem;
+}
+.forgotPassword_form {
+  align-self: center;
+  justify-self: center;
+  margin: auto 0;
+}
+.goals_content {
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .goals_content {
+    padding: 1rem;
+  }
 }
 .landing {
   background-image: linear-gradient(#0C98AC, #62D4D9);
@@ -314,15 +1081,22 @@ button:focus {
   cursor: pointer;
   text-decoration: underline;
 }
-.forgotPassword {
-  background-image: linear-gradient(#0C98AC, #62D4D9);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: 1rem 1rem 0 1rem;
+.logoutButton {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
 }
-.forgotPassword_form {
-  align-self: center;
-  justify-self: center;
-  margin: auto 0;
+.logoutButton:focus,
+.logoutButton:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
+}
+.settings_content {
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .settings_content {
+    padding: 1rem;
+  }
 }

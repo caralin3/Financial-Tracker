@@ -27,7 +27,7 @@ export const withAuthentication = (Component: any) => {
       const { dispatch } = this.props;
       firebase.auth.onAuthStateChanged((user: any) => {
         if (user) {
-          db.getCurrentUser(user.uid, dispatch);
+          db.requests.users.getCurrentUser(user.uid, dispatch);
         } else {
           dispatch(sessionStateStore.setCurrentUser(null))
         }

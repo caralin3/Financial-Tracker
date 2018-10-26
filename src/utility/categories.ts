@@ -1,0 +1,121 @@
+import { FirebaseCategory } from '../firebase/types';
+
+export const createInitialCategory = (category: FirebaseCategory, userId: string): FirebaseCategory => ({
+  ...category,
+  userId,
+})
+
+export const defaultCategories: FirebaseCategory[] = [
+  {
+    budget: 0,
+    budgetPercent: 15,
+    name: 'Housing',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 12,
+    name: 'Auto & Transportation',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 14,
+    name: 'Food',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 8,
+    name: 'Utilities',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 6,
+    name: 'Medical',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 4,
+    name: 'Shopping',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 4,
+    name: 'Insurance',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 1,
+    name: 'Household Supplies',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 2,
+    name: 'Personal',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 10,
+    name: 'Debt',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 5,
+    name: 'Retirement',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 1,
+    name: 'Education',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 4,
+    name: 'Gifts & Donations',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 5,
+    name: 'Entertainment',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 4,
+    name: 'Travel',
+    subcategories: [],  
+    userId: '',
+  },
+  {
+    budget: 0,
+    budgetPercent: 5,
+    name: 'Savings',
+    subcategories: [],  
+    userId: '',
+  },
+]

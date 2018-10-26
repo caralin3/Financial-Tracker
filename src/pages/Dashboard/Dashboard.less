@@ -1,0 +1,109 @@
+@import (reference) '../../less/variables.less';
+
+.dashboard {
+  &_content {
+    display: grid;
+    gap: 1rem;
+    grid-template: 
+      "hero hero hero hero"
+      auto
+      "recent accounts accounts topExpenses"
+      auto
+      "budget budget expInc expInc"
+      auto
+      ~'/' 1fr 0.5fr 0.5fr 1fr;
+    padding: 2rem;
+
+    @media only screen and (max-width: 640px) {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+  }
+
+  &_hero {
+    display: grid;
+    gap: 1rem;
+    grid-area: hero;
+    grid-template: "income worth expense" ~'/' 0.5fr 0.5fr 2fr;
+    padding: 2rem;
+
+    @media only screen and (max-width: 640px) {
+      grid-template:
+        "income worth"
+        auto
+        "expense expense"
+        auto
+        ~'/' 1fr 1fr;
+      padding: 1rem;
+    }
+  }
+
+  &_income {
+    grid-area: income;
+  }
+
+  &_worth {
+    grid-area: worth;
+  }
+
+  &_expense {
+    grid-area: expense;
+  }
+
+  &_label {
+    font-family: @font-francois;
+    margin: 0;
+  }
+
+  &_amount {
+    font-family: @font-oswald;
+    font-weight: normal;
+    margin: 0;
+  }
+
+  &_recent {
+    grid-area: recent;
+    padding: 1rem;
+
+    @media only screen and (max-width: 640px) {
+      margin: 1rem 0;
+    }
+  }
+
+  &_accounts {
+    grid-area: accounts;
+    padding: 1rem;
+
+    @media only screen and (max-width: 640px) {
+      margin: 1rem 0;
+    }
+  }
+
+  &_topExpenses {
+    grid-area: topExpenses;
+    padding: 1rem;
+
+    @media only screen and (max-width: 640px) {
+      margin: 1rem 0;
+    }
+  }
+
+  &_budget {
+    grid-area: budget;
+    padding: 1rem;
+
+    @media only screen and (max-width: 640px) {
+      margin: 1rem 0;
+    }
+  }
+
+  &_expInc {
+    grid-area: expInc;
+    padding: 1rem;
+
+    @media only screen and (max-width: 640px) {
+      margin: 1rem 0;
+    }
+  }
+}

@@ -1,20 +1,24 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { ActionTypes, sessionStateStore } from '../../store';
 import { User } from '../../types';
 
 interface HeaderProps {
   title?: string;
 }
 
-interface DispatchMappedProps {}
+interface DispatchMappedProps {
+  dispatch: Dispatch<ActionTypes>;
+}
 
 interface StateMappedProps {
   currentUser: User;
+  showSidebar: boolean;
 }
 
 interface HeaderMergedProps extends
   StateMappedProps,
-  DispatchMappedProps,
   HeaderProps {}
 
 const HeaderComponent: React.SFC<HeaderMergedProps> = (props) => (
@@ -23,26 +27,46 @@ const HeaderComponent: React.SFC<HeaderMergedProps> = (props) => (
   </div>
 )
 
-const HeaderAuth: React.SFC<HeaderProps> = (props) => (
+interface HeaderAuthMergedProps extends
+  StateMappedProps,
+  DispatchMappedProps,
+  HeaderProps {}
+
+const DisconnectedHeaderAuth: React.SFC<HeaderAuthMergedProps> = (props) => (
   <div className="authHeader">
-    <i className="authHeader_icon fas fa-bars" />
+    <i
+      className="authHeader_icon fas fa-bars"
+      onClick={() => props.dispatch(sessionStateStore.setShowSidebar(!props.showSidebar))}
+    />
     <h1 className="authHeader_title">{ props.title }</h1>
   </div>
 )
 
 const HeaderNonAuth = () => (
-  <div className="nonHeader">
+  <Link className="nonHeader" to="/">
     <span className="fa-stack fa-2x">
       <i className=" nonHeader_circle fas fa-circle fa-stack-2x" />
       <i className=" nonHeader_icon fa-stack-1x fas fa-university " />
     </span>
     <h1 className="nonHeader_title">Financial Tracker</h1>
-  </div>
+  </Link>
 )
+
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: any) => ({
   currentUser: state.sessionState.currentUser,
+  showSidebar: state.sessionState.showSidebar,
 });
 
-export const Header = connect<StateMappedProps, DispatchMappedProps, HeaderProps
-  >(mapStateToProps)(HeaderComponent);
+const HeaderAuth = connect<
+  StateMappedProps,
+  DispatchMappedProps,
+  HeaderProps
+>(mapStateToProps, mapDispatchToProps)(DisconnectedHeaderAuth);
+
+export const Header = connect<
+  StateMappedProps,
+  DispatchMappedProps,
+  HeaderProps
+>(mapStateToProps)(HeaderComponent);

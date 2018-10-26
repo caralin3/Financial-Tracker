@@ -1,11 +1,11 @@
-import { setCurrentUser } from './actions';
-import { SET_CURRENT_USER } from './constants';
+import { setCurrentUser, setShowSidebar } from './actions';
 import { reducer } from './reducer';
 
 export const sessionStateStore = {
-  SET_CURRENT_USER,
   reducer,
   setCurrentUser,
+  setShowSidebar,
 };
 
-export { SetCurrentUserAction } from './actions';
+export { SessionActions } from './actions';
+export { SessionState } from './reducer';
