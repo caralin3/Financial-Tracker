@@ -4,8 +4,7 @@ import 'firebase/firestore';
 import { devConfig, prodConfig } from './config';
 
 const config = process.env.NODE_ENV === 'development'
-  ? devConfig
-  : prodConfig;
+  ? devConfig : prodConfig;
 
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
