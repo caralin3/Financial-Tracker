@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { DeleteDialog } from '../';
+import { DeleteDialog, EditSubcategoryDialog } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Category, Subcategory, User } from '../../types';
@@ -26,10 +26,12 @@ interface CategoryItemMergedProps extends
   CategoryItemProps {}
 
 interface CategoryItemState {
+  addSubcategory: boolean;
   category: string;
   deleteCategoryId: string;
   deleteSubcategoryId: string;
   editCategory: boolean;
+  newSubcategory: string;
   showDeleteDialog: boolean;
   showEditParentDialog: boolean;
   showSubcategories: boolean;
@@ -39,10 +41,12 @@ interface CategoryItemState {
 
 export class DisconnectedCategoryItem extends React.Component<CategoryItemMergedProps, CategoryItemState> {
   public readonly state: CategoryItemState = {
+    addSubcategory: false,
     category: '',
     deleteCategoryId: '',
     deleteSubcategoryId: '',
     editCategory: false,
+    newSubcategory: '',
     showDeleteDialog: false,
     showEditParentDialog: false,
     showSubcategories: false,
@@ -51,7 +55,7 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
   }
 
   public render () {
-    const { editCategory, subcategoryId } = this.state;
+    const { addSubcategory, editCategory, newSubcategory, subcategoryId } = this.state;
     const { category, currentUser, subcategories } = this.props;
     const sortedSubs = sorter.sort(subcategories.filter((sub) => currentUser && sub.userId === currentUser.id &&
       sub.parent === category.name), 'desc', 'name');
@@ -64,6 +68,9 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
             text="Are you sure you want to delete?"
             toggleDialog={this.toggleDeleteDialog}
           />
+        }
+        {this.state.showEditParentDialog &&
+          <EditSubcategoryDialog toggleDialog={this.toggleParentDialog} />
         }
         <div className="categoryItem_header">
           {editCategory ?
@@ -94,7 +101,9 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
                   onKeyPress={this.handleKeyPress}
                   type="text"
                 /> :
-                <h4 className="categoryItem_subcategory-name" onClick={() => this.setEditSubcategory(sub.id)}>{ sub.name }</h4>
+                <h4 className="categoryItem_subcategory-name" onClick={() => this.setEditSubcategory(sub.id)}>
+                  { sub.name }
+                </h4>
               }
               <div className="categoryItem_subcategory-icons">
                 <i className="fas fa-arrows-alt-h categoryItem_subcategory-icon" onClick={this.toggleParentDialog} />
@@ -102,12 +111,28 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
               </div>
             </div>
           ))}
+          {addSubcategory ?
+            <input
+              className="categoryItem_input"
+              value={newSubcategory}
+              placeholder="New Subcategory"
+              onBlur={this.handleBlur}
+              onChange={(e) => this.handleChange(e, 'newSubcategory')}
+              onKeyPress={this.handleKeyPress}
+              type="text"
+            /> :
+            <h3 className="categoryItem_subcategory-name" onClick={this.toggleAddSubcategory}>
+              Add New Subcategory
+            </h3>
+          }
         </div>
       </div>
     )
   }
 
   private toggleEditCategory = () => this.setState({ editCategory: !this.state.editCategory });
+
+  private toggleAddSubcategory = () => this.setState({ addSubcategory: !this.state.addSubcategory });
 
   private setEditSubcategory = (id: string) => this.setState({ subcategoryId: id });
 

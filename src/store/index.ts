@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import { accountStateStore } from './accounts';
 import { ActionTypes }from './actions';
 import { categoryStateStore } from './categories';
+import { jobStateStore } from './jobs';
 import { AppState, rootReducer } from './reducers';
 import { sessionStateStore } from './session';
 import { subcategoryStateStore } from './subcategories';
@@ -31,6 +32,7 @@ export {
   ActionTypes,
   AppState,
   categoryStateStore,
+  jobStateStore,
   persistor,
   sessionStateStore,
   subcategoryStateStore,

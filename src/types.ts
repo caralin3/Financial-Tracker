@@ -27,7 +27,7 @@ export interface Job {
   name: string;
   type: JobType;
   userId: string;
-  ytd: string;
+  ytd: number;
 }
 
 export interface Category {
