@@ -1,4 +1,4 @@
-import { AccountType, Category, Job, JobType, Subcategory, TransactionType } from '../types';
+import { AccountType, Category, Job, Subcategory, TransactionType } from '../types';
 
 
 export interface FirebaseAccount {
@@ -10,9 +10,8 @@ export interface FirebaseAccount {
 
 export interface FirebaseJob {
   name: string;
-  type: JobType;
   userId: string;
-  ytd: string;
+  ytd: number;
 }
 
 export interface FirebaseCategory {

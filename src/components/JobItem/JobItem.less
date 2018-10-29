@@ -1,0 +1,67 @@
+@import (reference) '../../less/variables.less';
+
+.jobItem {
+  padding: 0 1rem 1rem;
+
+  @media only screen and (max-width: 800px) {
+    padding: 0 0.5rem;
+  }
+
+  &_item {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    &:focus,
+    &:hover {
+      cursor: pointer;
+      .jobItem_icon {
+        opacity: 1;
+      }
+    }
+    
+    &-name {
+      font-family: @font-archivo;
+      font-weight: normal;
+      margin: 0;
+      padding: 0.5rem;
+
+      &:focus,
+      &:hover {
+        border: 1px solid @blue-green;
+        cursor: pointer;
+      }
+    }
+
+    &-number {
+      font-family: @font-archivo;
+      font-weight: bold;
+      margin: 0;
+      padding: 0.5rem;
+    }
+  }
+
+  &_icons {
+    align-items: center;
+    display: flex;
+  }
+
+  &_icon {
+    color: @blue-green;
+    opacity: 0;
+    padding: 0 0.5rem;
+
+    &:focus,
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &_input {
+    padding: 0.5rem 0;
+
+    &-number {
+      text-align: right;
+    }
+  }
+}

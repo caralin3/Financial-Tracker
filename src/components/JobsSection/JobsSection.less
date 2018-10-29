@@ -1,20 +1,16 @@
 @import (reference) '../../less/variables.less';
 
 .jobsSection {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
-
-  &_details {
+  &_header {
     align-items: center;
+    border-bottom: 1px solid @very-light-gray;
+    color: @blue-green;
     display: flex;
-    text-align: right;
+    justify-content: space-between;
+    padding: 1rem 1rem 0;
 
-    &-square {
-      color: @blue-green;
-      font-size: 1.5rem;
-      padding-left: 1rem;
+    &-add {
+      padding: 0 0.5rem;
 
       &:focus,
       &:hover {
@@ -23,45 +19,13 @@
     }
   }
 
-  &_amount {
-    &-credit {
-      color: @red;
-    }
+  &_jobs {
+    padding-top: 1rem;
   }
 
-  &_amount,
-  &_activity,
-  &_name,
-  &_type {
+  &_none {
     font-family: @font-archivo;
     font-weight: normal;
-    margin: 0;
-  }
-
-  &_activity {
-    &:focus,
-    &:hover {
-      color: @blue-green;
-      cursor: pointer;
-    }
-  }
-
-  &_amount,
-  &_name,
-  &_type {
-    &:focus,
-    &:hover {
-      border: 1px solid @blue-green;
-      cursor: pointer;
-    }
-  }
-
-  &_input {
-    padding: 0.5rem 0;
-
-    &-number {
-      text-align: right;
-      width: 5rem;
-    }
+    padding-left: 1rem;
   }
 }

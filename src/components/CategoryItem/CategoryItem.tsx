@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { DeleteDialog } from '../';
+import { DeleteDialog, EditSubcategoryDialog } from '../';
 import { db } from '../../firebase';
+import { FirebaseSubcategory } from '../../firebase/types';
 import { ActionTypes, AppState } from '../../store';
 import { Category, Subcategory, User } from '../../types';
 import { sorter } from '../../utility';
@@ -26,10 +27,13 @@ interface CategoryItemMergedProps extends
   CategoryItemProps {}
 
 interface CategoryItemState {
+  addSubcategory: boolean;
   category: string;
   deleteCategoryId: string;
   deleteSubcategoryId: string;
   editCategory: boolean;
+  movedSub: Subcategory;
+  newSubcategory: string;
   showDeleteDialog: boolean;
   showEditParentDialog: boolean;
   showSubcategories: boolean;
@@ -39,10 +43,13 @@ interface CategoryItemState {
 
 export class DisconnectedCategoryItem extends React.Component<CategoryItemMergedProps, CategoryItemState> {
   public readonly state: CategoryItemState = {
+    addSubcategory: false,
     category: '',
     deleteCategoryId: '',
     deleteSubcategoryId: '',
     editCategory: false,
+    movedSub: {} as Subcategory,
+    newSubcategory: '',
     showDeleteDialog: false,
     showEditParentDialog: false,
     showSubcategories: false,
@@ -51,7 +58,7 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
   }
 
   public render () {
-    const { editCategory, subcategoryId } = this.state;
+    const { addSubcategory, editCategory, movedSub, newSubcategory, subcategoryId } = this.state;
     const { category, currentUser, subcategories } = this.props;
     const sortedSubs = sorter.sort(subcategories.filter((sub) => currentUser && sub.userId === currentUser.id &&
       sub.parent === category.name), 'desc', 'name');
@@ -64,6 +71,9 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
             text="Are you sure you want to delete?"
             toggleDialog={this.toggleDeleteDialog}
           />
+        }
+        {this.state.showEditParentDialog &&
+          <EditSubcategoryDialog subcategory={movedSub} toggleDialog={() => this.toggleParentDialog(movedSub)} />
         }
         <div className="categoryItem_header">
           {editCategory ?
@@ -94,14 +104,30 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
                   onKeyPress={this.handleKeyPress}
                   type="text"
                 /> :
-                <h4 className="categoryItem_subcategory-name" onClick={() => this.setEditSubcategory(sub.id)}>{ sub.name }</h4>
+                <h4 className="categoryItem_subcategory-name" onClick={() => this.setEditSubcategory(sub.id)}>
+                  { sub.name }
+                </h4>
               }
               <div className="categoryItem_subcategory-icons">
-                <i className="fas fa-arrows-alt-h categoryItem_subcategory-icon" onClick={this.toggleParentDialog} />
+                <i className="fas fa-arrows-alt-h categoryItem_subcategory-icon" onClick={() => this.toggleParentDialog(sub)} />
                 <i className="fas fa-trash-alt categoryItem_subcategory-icon" onClick={() => this.onDeleteSubcategory(sub.id)} />
               </div>
             </div>
           ))}
+          {addSubcategory ?
+            <input
+              className="categoryItem_input"
+              value={newSubcategory}
+              placeholder="New Subcategory"
+              onBlur={this.handleNewSubBlur}
+              onChange={(e) => this.handleChange(e, 'newSubcategory')}
+              onKeyPress={this.handleNewSubKeyPress}
+              type="text"
+            /> :
+            <h3 className="categoryItem_subcategory-name categoryItem_subcategory-new" onClick={this.toggleAddSubcategory}>
+              Add New Subcategory
+            </h3>
+          }
         </div>
       </div>
     )
@@ -109,13 +135,23 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
 
   private toggleEditCategory = () => this.setState({ editCategory: !this.state.editCategory });
 
+  private toggleAddSubcategory = () => this.setState({ addSubcategory: !this.state.addSubcategory });
+
   private setEditSubcategory = (id: string) => this.setState({ subcategoryId: id });
 
-  private toggleParentDialog = () => this.setState({ showEditParentDialog: !this.state.showEditParentDialog });
+  private toggleParentDialog = (sub: Subcategory) => this.setState({ movedSub: sub , showEditParentDialog: !this.state.showEditParentDialog });
 
   private toggleSubcategories = () => this.setState({ showSubcategories: !this.state.showSubcategories });
 
   private toggleDeleteDialog = () => this.setState({ showDeleteDialog: !this.state.showDeleteDialog });
+
+  // Check category name not in categories list
+  private checkCategory = () => {
+    const { category } = this.state;
+    const { categories, currentUser } = this.props;
+    return categories.filter((cat: Category) => category.toUpperCase() === cat.name.toUpperCase() &&
+      currentUser && cat.userId === currentUser.id)[0];
+  }
 
   private onDeleteCategory = (id: string) => {
     this.setState({ deleteCategoryId: id });
@@ -129,18 +165,36 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
 
   private onDelete = () => {
     const { deleteCategoryId, deleteSubcategoryId } = this.state;
-    const { dispatch } = this.props;
+    const { category, categories, currentUser, dispatch, subcategories } = this.props;
     if (deleteCategoryId) {
       db.requests.categories.remove(deleteCategoryId, dispatch);
+      // Delete subcategories with parent
+      const subsToDelete: Subcategory[] = subcategories.filter((sub) => sub.parent === category.name && 
+        currentUser && sub.userId === currentUser.id);
+      subsToDelete.forEach((s) => {
+        db.requests.subcategories.remove(s.id, dispatch);
+      });
+      
     } else if (deleteSubcategoryId) {
-      // db.requests.subcategories.remove(deleteSubcategoryId, dispatch);
-      // TODO: Update parent category
+      db.requests.subcategories.remove(deleteSubcategoryId, dispatch);
+      // Update parent category
+      const deletedSub: Subcategory = subcategories.filter((sub) => sub.id === deleteSubcategoryId)[0];
+      let updatedCat: Category = categories.filter((cat) => cat.name === deletedSub.parent &&
+        currentUser && cat.userId === currentUser.id)[0];
+      let newSubs = [...updatedCat.subcategories];
+      newSubs = newSubs.filter((id: string) => id !== deleteSubcategoryId);
+      updatedCat = {
+        ...updatedCat,
+        subcategories: newSubs,
+      }
+      db.requests.categories.edit(updatedCat, dispatch);
     }
+    this.toggleDeleteDialog();
   }
 
   private handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, propertyName: string) => {
     this.setState({
-      [propertyName]: event.target.value as string | boolean,
+      [propertyName]: event.target.value as string | boolean | Subcategory,
     } as Pick<CategoryItemState, keyof CategoryItemState>)
   }
 
@@ -151,32 +205,58 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
     }
   }
 
+  private handleNewSubKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.charCode === 13) {
+      this.handleNewSubBlur();
+    }
+  }
+
+  private handleNewSubBlur = () => {
+    const { newSubcategory } = this.state;
+    const { category, currentUser, dispatch } = this.props;
+    if (currentUser && newSubcategory) {
+      const newSub: FirebaseSubcategory = {
+        name: newSubcategory,
+        parent: category.name,
+        userId: currentUser.id,
+      }
+      db.requests.subcategories.add(newSub, dispatch);
+    }
+    this.setState({ addSubcategory: false });
+  }
+
   private handleBlur = () => {
     const { category, subcategoryId, subcategory } = this.state;
     const { categories, currentUser, dispatch, subcategories } = this.props;
     
-    const currentCategory = categories.filter((cat) => currentUser && cat.userId === currentUser.id &&
-      cat.id === this.props.category.id)[0];
+    const currentCategory = categories.filter((cat) => cat.id === this.props.category.id)[0];
+    const currentSubcategory = subcategories.filter((sub) => sub.id === subcategoryId)[0];
+    const duplicate = this.checkCategory();
 
-    const currentSubcategory = subcategories.filter((sub) => currentUser && sub.userId === currentUser.id &&
-      sub.id === subcategoryId)[0];
+    if (category && category !== currentCategory.name && !duplicate) {
+      const updatedCategory: Category = {
+        ...currentCategory,
+        name: category,
+      }
+      db.requests.categories.edit(updatedCategory, dispatch);
+      // Update parent category for subcategories
+      const updatedSubs: Subcategory[] = subcategories.filter((sub) => sub.parent === currentCategory.name &&
+        currentUser && sub.userId === currentUser.id);
+      updatedSubs.forEach((subcat) => {
+        const updatedSub: Subcategory = {
+          ...subcat,
+          parent: category,
+        }
+        db.requests.subcategories.edit(updatedSub, dispatch);
+      })
 
-  if (category && category !== currentCategory.name) {
-    const updatedCategory: Category = {
-      ...currentCategory,
-      name: category,
+    } else if (subcategory && subcategory !== currentSubcategory.name) {
+      const updatedSub: Subcategory = {
+        ...currentSubcategory,
+        name: subcategory,
+      }
+      db.requests.subcategories.edit(updatedSub, dispatch);
     }
-    db.requests.categories.edit(updatedCategory, dispatch);
-  } else if (subcategory && subcategory !== currentSubcategory.name) {
-    const updatedSub: Subcategory = {
-      ...currentSubcategory,
-      name: subcategory,
-    }
-    console.log(subcategory, subcategoryId);
-    db.requests.subcategories.edit(updatedSub, dispatch);
-
-    // TODO: Update parent category when changing parent
-  }
     this.setState({
       category: '',
       editCategory: false,

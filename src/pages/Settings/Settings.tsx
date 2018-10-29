@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { CategoriesSection, Header, UserProfile } from '../../components';
+import { CategoriesSection, Header, JobsSection, UserProfile } from '../../components';
 import { AppState } from '../../store';
 import { User } from '../../types';
 
@@ -33,6 +33,7 @@ class DisconnectedSettingsPage extends React.Component<SettingsMergedProps, Sett
         <Header title="Settings" />
         <div className="settings_content">
           <UserProfile />
+          <JobsSection />
           <CategoriesSection />
         </div>
       </div>

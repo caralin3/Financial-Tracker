@@ -7,9 +7,14 @@ html {
 body {
   font-family: arial, sans-serif;
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: scroll;
   padding: 0;
+}
+@media only screen and (max-width: 640px) {
+  body {
+    overflow-x: hidden;
+  }
 }
 a {
   text-decoration: none;
@@ -27,6 +32,9 @@ button {
 }
 button:focus {
   outline: none;
+}
+select {
+  background-color: #FFFFFF;
 }
 .appAuth {
   display: grid;
@@ -98,6 +106,34 @@ button:focus {
   margin: 1rem 0;
   padding: 0.5rem 0;
   width: 100%;
+}
+.addCategoryDialog_section {
+  display: flex;
+  flex-direction: column;
+}
+.addCategoryDialog_message {
+  color: #FF0000;
+  margin: 0 auto;
+}
+.addCategoryDialog_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+.addJobDialog_section {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.addJobDialog_input,
+.addJobDialog_select {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+.addJobDialog_number {
+  text-align: right;
 }
 .addTransactionDialog_options {
   align-items: center;
@@ -271,6 +307,7 @@ button:focus {
 }
 .categoryItem_subcategory-name {
   font-family: 'Archivo Narrow', sans-serif;
+  font-size: 1rem;
   margin: 0;
   padding: 0.5rem;
 }
@@ -380,6 +417,11 @@ button:focus {
 .deleteDialog_button:hover {
   background-color: #0fc2dc;
   cursor: pointer;
+}
+.editSubcategoryDialog_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
 }
 .forgotPasswordForm {
   align-items: center;
@@ -510,57 +552,85 @@ button:focus {
 .nonHeader_icon {
   color: #0C98AC;
 }
-.jobsSection {
+.jobItem {
+  padding: 0 1rem 1rem;
+}
+@media only screen and (max-width: 800px) {
+  .jobItem {
+    padding: 0 0.5rem;
+  }
+}
+.jobItem_item {
   align-items: center;
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
 }
-.jobsSection_details {
-  align-items: center;
-  display: flex;
-  text-align: right;
-}
-.jobsSection_details-square {
-  color: #0C98AC;
-  font-size: 1.5rem;
-  padding-left: 1rem;
-}
-.jobsSection_details-square:focus,
-.jobsSection_details-square:hover {
+.jobItem_item:focus,
+.jobItem_item:hover {
   cursor: pointer;
 }
-.jobsSection_amount-credit {
-  color: #FF0000;
+.jobItem_item:focus .jobItem_icon,
+.jobItem_item:hover .jobItem_icon {
+  opacity: 1;
 }
-.jobsSection_amount,
-.jobsSection_activity,
-.jobsSection_name,
-.jobsSection_type {
+.jobItem_item-name {
   font-family: 'Archivo Narrow', sans-serif;
   font-weight: normal;
   margin: 0;
+  padding: 0.5rem;
 }
-.jobsSection_activity:focus,
-.jobsSection_activity:hover {
-  color: #0C98AC;
-  cursor: pointer;
-}
-.jobsSection_amount:focus,
-.jobsSection_name:focus,
-.jobsSection_type:focus,
-.jobsSection_amount:hover,
-.jobsSection_name:hover,
-.jobsSection_type:hover {
+.jobItem_item-name:focus,
+.jobItem_item-name:hover {
   border: 1px solid #0C98AC;
   cursor: pointer;
 }
-.jobsSection_input {
+.jobItem_item-number {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: bold;
+  margin: 0;
+  padding: 0.5rem;
+}
+.jobItem_icons {
+  align-items: center;
+  display: flex;
+}
+.jobItem_icon {
+  color: #0C98AC;
+  opacity: 0;
+  padding: 0 0.5rem;
+}
+.jobItem_icon:focus,
+.jobItem_icon:hover {
+  cursor: pointer;
+}
+.jobItem_input {
   padding: 0.5rem 0;
 }
-.jobsSection_input-number {
+.jobItem_input-number {
   text-align: right;
-  width: 5rem;
+}
+.jobsSection_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+}
+.jobsSection_header-add {
+  padding: 0 0.5rem;
+}
+.jobsSection_header-add:focus,
+.jobsSection_header-add:hover {
+  cursor: pointer;
+}
+.jobsSection_jobs {
+  padding-top: 1rem;
+}
+.jobsSection_none {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  padding-left: 1rem;
 }
 .loading {
   align-items: center;
@@ -727,6 +797,10 @@ button:focus {
 .tableData {
   padding: 0.5rem 1rem;
 }
+.tableData_tags {
+  display: block;
+  text-align: center;
+}
 .tableData_input {
   width: 100%;
 }
@@ -857,7 +931,6 @@ button:focus {
   margin: 0;
 }
 .activity_content {
-  overflow-x: auto;
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
@@ -872,6 +945,7 @@ button:focus {
   display: flex;
   grid-area: details;
   justify-content: space-between;
+  margin-bottom: 1rem;
   padding: 1rem 1rem 0;
 }
 .activity_label {
@@ -880,6 +954,23 @@ button:focus {
 .activity_section {
   overflow-x: auto;
   padding: 0 1rem;
+}
+.activity_sectionHeader {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.activity_sectionHeader-title {
+  font-family: 'Francois One', sans-serif;
+  font-size: 1.2rem;
+}
+.activity_sectionHeader-arrow {
+  font-size: 1.5rem;
+}
+.activity_sectionHeader:focus,
+.activity_sectionHeader:hover {
+  color: #0C98AC;
+  cursor: pointer;
 }
 .activity_empty {
   font-family: 'Archivo Narrow', sans-serif;

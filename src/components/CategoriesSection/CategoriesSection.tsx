@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { CategoryItem } from '../';
+import { AddCategoryDialog, CategoryItem } from '../';
 import { ActionTypes, AppState } from '../../store';
 import { Category, User } from '../../types';
 import { sorter } from '../../utility';
@@ -37,6 +37,7 @@ export class DisconnectedCategoriesSection extends React.Component<CategoriesSec
 
     return (
       <div className="categoriesSection">
+        {this.state.showDialog && <AddCategoryDialog toggleDialog={this.toggleDialog} />}
         <div className="categoriesSection_header">
           <h2>Categories</h2>
           <div className="categoriesSection_header-icons">

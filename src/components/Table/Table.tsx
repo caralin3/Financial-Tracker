@@ -21,14 +21,14 @@ interface TableMergedProps extends
 
 interface TableState {
   deleting: boolean;
-  editing: boolean;
+  editId: string;
   id: string;
 }
 
 export class DisconnectedTable extends React.Component<TableMergedProps, TableState> {
   public readonly state: TableState = {
     deleting: false,
-    editing: false,
+    editId: '',
     id: '',
   }
   
@@ -58,15 +58,16 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
                 {content.headers.map((header: string, ind: number) => (
                   <TableData
                     data={d[header.toLowerCase()] || 'N/A'}
-                    editing={this.state.editing}
+                    editing={this.state.editId === d.id}
                     heading={this.getHeader(header)}
                     id={d.id}
                     key={ind}
+                    transType={d.type}
                     type={this.props.type}
                   />
                 ))}
                 <td className="table_icons">
-                  <i className="fas fa-edit table_icon" onClick={this.toggleEdit} />
+                  <i className="fas fa-edit table_icon" onClick={() => this.toggleEdit(d.id)} />
                   <i className="fas fa-trash-alt table_icon" onClick={() => this.onPressDelete(d.id)} />
                 </td>
               </tr>
@@ -77,7 +78,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
     )
   }
 
-  private toggleEdit = () => this.setState({ editing: !this.state.editing });
+  private toggleEdit = (id: string) => this.setState({ editId: this.state.editId ? '' : id });
 
   private toggleDeleteDialog = () => this.setState({ deleting: !this.state.deleting });
 
@@ -109,17 +110,6 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
       switch(header) {
         case 'From':
           return 'Job';
-        case 'To':
-          return 'Account';
-        default:
-          return header;
-      }
-    } else if (type === 'transfers') {
-      switch(header) {
-        case 'From':
-          return 'Account From';
-        case 'To':
-          return 'Account To';
         default:
           return header;
       }

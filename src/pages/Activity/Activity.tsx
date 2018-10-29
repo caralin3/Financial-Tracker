@@ -6,7 +6,8 @@ import { withAuthorization } from '../../auth/withAuthorization';
 import { AddTransactionDialog, Header, Table } from '../../components';
 import { ActionTypes, AppState } from '../../store';
 // import * as routes from '../../routes';
-import { Account, Category, Subcategory, TableDataType, Transaction, User } from '../../types';
+import { Account, Category, Job, Subcategory, TableDataType, Transaction, User } from '../../types';
+import { sorter } from '../../utility';
 
 export interface ActivityPageProps {}
 
@@ -14,6 +15,7 @@ interface StateMappedProps {
   accounts: Account[],
   categories: Category[];
   currentUser: User | null;
+  jobs: Job[];
   subcategories: Subcategory[];
   transactions: Transaction[];
 }
@@ -29,12 +31,20 @@ interface ActivityMergedProps extends
   ActivityPageProps {}
 
 export interface ActivityPageState {
+  showAll: boolean;
   showDialog: boolean;
+  showExpenses: boolean;
+  showIncome: boolean;
+  showTransfers: boolean;
 }
 
 class DisconnectedActivityPage extends React.Component<ActivityMergedProps, ActivityPageState> {
   public readonly state = {
+    showAll: false,
     showDialog: false,
+    showExpenses: true,
+    showIncome: false,
+    showTransfers: false,
   }
 
   public toggleDialog = () => this.setState({ showDialog: !this.state.showDialog });
@@ -55,31 +65,59 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
             </div>
           </div>
           <div className="activity_section">
-            <h3 className="activity_label">All</h3>
-            {this.getAllTransactions().data.length > 0 ?
+            <div className="activity_sectionHeader" onClick={() => this.setState({ showAll: !this.state.showAll })}>
+            <h3 className="activity_sectionHeader-title">All Transactions</h3>
+              <div className="activity_sectionHeader-icons">
+                <i
+                  className={`fas ${this.state.showAll ? 'fa-caret-up' : 'fa-caret-down'} activity_sectionHeader-arrow`}
+                />
+              </div>
+            </div>
+            {this.state.showAll && (this.getAllTransactions().data.length > 0 ?
               <Table content={this.getAllTransactions()} type="transactions" /> :
-              <h3 className="activity_empty">No transactions</h3>
+              <h3 className="activity_empty">No transactions</h3>)
             }
           </div>
           <div className="activity_section">
-            <h3 className="activity_label">Expenses</h3>
-            {this.getExpenses().data.length > 0 ?
+          <div className="activity_sectionHeader" onClick={() => this.setState({ showExpenses: !this.state.showExpenses })}>
+            <h3 className="activity_sectionHeader-title">Expenses</h3>
+              <div className="activity_sectionHeader-icons">
+                <i
+                  className={`fas ${this.state.showExpenses ? 'fa-caret-up' : 'fa-caret-down'} activity_sectionHeader-arrow`}
+                />
+              </div>
+            </div>
+            {this.state.showExpenses && (this.getExpenses().data.length > 0 ?
               <Table content={this.getExpenses()} type="expenses" /> :
-              <h3 className="activity_empty">No expenses</h3>
+              <h3 className="activity_empty">No expenses</h3>)
             }
           </div>
           <div className="activity_section">
-            <h3 className="activity_label">Income</h3>
-            {this.getIncome().data.length > 0 ?
+          <div className="activity_sectionHeader" onClick={() => this.setState({ showIncome: !this.state.showIncome })}>
+            <h3 className="activity_sectionHeader-title">Income History</h3>
+              <div className="activity_sectionHeader-icons">
+                <i
+                  className={`fas ${this.state.showIncome ? 'fa-caret-up' : 'fa-caret-down'} activity_sectionHeader-arrow`}
+                />
+              </div>
+            </div>
+            {this.state.showIncome && (this.getIncome().data.length > 0 ?
               <Table content={this.getIncome()} type="income" /> :
-              <h3 className="activity_empty">No income</h3>
+              <h3 className="activity_empty">No income</h3>)
             }
           </div>
           <div className="activity_section">
-            <h3 className="activity_label">Transfers</h3>
-            {this.getTransfers().data.length > 0 ?
+          <div className="activity_sectionHeader" onClick={() => this.setState({ showTransfers: !this.state.showTransfers })}>
+            <h3 className="activity_sectionHeader-title">Transfers</h3>
+              <div className="activity_sectionHeader-icons">
+                <i
+                  className={`fas ${this.state.showTransfers ? 'fa-caret-up' : 'fa-caret-down'} activity_sectionHeader-arrow`}
+                />
+              </div>
+            </div>
+            {this.state.showTransfers && (this.getTransfers().data.length > 0 ?
               <Table content={this.getTransfers()} type="transfers" /> :
-              <h3 className="activity_empty">No transfers</h3>
+              <h3 className="activity_empty">No transfers</h3>)
             }
           </div>
         </div>
@@ -96,11 +134,13 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       'Category',
       'Subcategory',
       'Note',
+      'Tags',
       'Date',
       'Amount'
     ];
     if (currentUser) {
-      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.userId === currentUser.id);
+      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) =>
+        tr.userId === currentUser.id), 'asc', 'date');
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -112,7 +152,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
   }
 
   private convertData = (data: Transaction[]) => {
-    const { accounts, categories, subcategories } = this.props;
+    const { accounts, categories, jobs, subcategories } = this.props;
     return data.map((trans) => {
       if (trans.type === 'Expense') {
         return {
@@ -133,16 +173,22 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
             accounts.filter((acc) => acc.id === trans.to)[0].name : '',
         }
       }
-      return {...trans}
+      return {
+        ...trans,
+        from: jobs.filter((job) => job.id === trans.from)[0] ?
+          jobs.filter((job) => job.id === trans.from)[0].name : '',
+        to: accounts.filter((acc) => acc.id === trans.to)[0] ?
+          accounts.filter((acc) => acc.id === trans.to)[0].name : '',
+      }
     })
   }
 
   private getExpenses = () => {
     const { currentUser, transactions } = this.props;
-    const headers: string[] = ['To', 'From', 'Category', 'Subcategory', 'Note', 'Date', 'Amount'];
+    const headers: string[] = ['To', 'From', 'Category', 'Subcategory', 'Note', 'Tags', 'Date', 'Amount'];
     if (currentUser) {
-      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Expense'
-        && tr.userId === currentUser.id);
+      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) => tr.type === 'Expense'
+        && tr.userId === currentUser.id), 'asc', 'date');
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -155,10 +201,10 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
 
   private getIncome = () => {
     const { currentUser, transactions } = this.props;
-    const headers: string[] = ['Job', 'Job Type', 'To', 'Note', 'Date', 'Amount'];
+    const headers: string[] = ['From', 'To', 'Note', 'Tags', 'Date', 'Amount'];
     if (currentUser) {
-      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Income'
-        && tr.userId === currentUser.id);
+      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) => tr.type === 'Income'
+        && tr.userId === currentUser.id), 'asc', 'date');
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -171,10 +217,10 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
 
   private getTransfers = () => {
     const { currentUser, transactions } = this.props;
-    const headers: string[] = ['From', 'To', 'Note', 'Date', 'Amount'];
+    const headers: string[] = ['From', 'To', 'Note', 'Tags', 'Date', 'Amount'];
     if (currentUser) {
-      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Transfer'
-        && tr.userId === currentUser.id);
+      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) => tr.type === 'Transfer'
+        && tr.userId === currentUser.id), 'asc', 'date');
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -194,6 +240,7 @@ const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  jobs: state.jobsState.jobs,
   subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionState.transactions,
 });

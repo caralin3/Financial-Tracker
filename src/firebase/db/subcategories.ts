@@ -62,7 +62,6 @@ export const add = (subcategory: FirebaseSubcategory, dispatch: Dispatch<ActionT
 
 // EDIT SUBCATEGORY
 export const edit = (subcategory: Subcategory, dispatch: Dispatch<ActionTypes>) => {
-  // Edit name
   subcategoriesCollection.doc(subcategory.id).update(subcategory).then(() => {
     dispatch(subcategoryStateStore.editSubcategory(subcategory));
   }).catch((err: any) => {
