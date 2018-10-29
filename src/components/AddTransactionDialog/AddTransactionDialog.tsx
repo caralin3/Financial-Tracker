@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { Dialog, Form } from '..';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Account, Category, Subcategory, Transaction, TransactionType, User } from '../../types';
+import { Account, Category, Job, Subcategory, Transaction, TransactionType, User } from '../../types';
 import { sorter } from '../../utility';
 
 interface AddTransactionDialogProps {
@@ -19,6 +19,7 @@ interface StateMappedProps {
   accounts: Account[];
   categories: Category[];
   currentUser: User | null;
+  jobs: Job[];
   subcategories: Subcategory[];
   transactions: Transaction[];
 }
@@ -102,13 +103,12 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
                     <option key={acc.id} value={acc.id}>{ acc.name }</option>
                   ))}
                 </select> :
-                // TODO: Select Job Id
                 <select
                   className='addTransactionDialog_input'
                   onChange={(e) => this.handleChange(e, 'from')}
                 >
                   <option defaultValue="Select Job">Select Job</option>
-                  {this.accounts().map((job: Account) => (
+                  {this.jobs().map((job: Job) => (
                     <option key={job.id} value={job.id}>{ job.name }</option>
                   ))}
                 </select>
@@ -223,13 +223,20 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
 
   private accounts = () => {
     const { accounts, currentUser } = this.props;
-    return accounts.filter((acc: Account) => currentUser && acc.userId === currentUser.id);
+    return sorter.sort(accounts.filter((acc: Account) => 
+      currentUser && acc.userId === currentUser.id), 'desc', 'name');
   }
 
   private categories = () => {
     const { categories, currentUser } = this.props;
     return sorter.sort(categories.filter((cat: Category) => 
       currentUser && cat.userId === currentUser.id), 'desc', 'name');
+  }
+
+  private jobs = () => {
+    const { jobs, currentUser } = this.props;
+    return sorter.sort(jobs.filter((job: Job) => 
+      currentUser && job.userId === currentUser.id), 'desc', 'name');
   }
 
   private subcategories = () => {
@@ -245,9 +252,9 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
 
   private expenses = () => {
     const { currentUser, transactions } = this.props;
-    return transactions.filter((trans: Transaction) => (currentUser && currentUser.id === trans.userId) &&
-      trans.type === 'Expense'
-    );
+    return transactions.filter((trans: Transaction, index, self) =>
+      self.findIndex((t: Transaction) => trans.type === 'Expense' && t.to === trans.to) === index &&
+      (currentUser && currentUser.id === trans.userId));
   }
 
   private tags = () => {
@@ -259,37 +266,19 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
         tags.push.apply(tags, tr.tags);
       }
     });
-    return tags;
+    return tags.filter((tag: string, index, self) => self.findIndex((t: string) => t === tag) === index);
   }
 
   private handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, propertyName: string) => {
     switch(propertyName) {
-      case 'from':
-        this.setState({ from: event.target.value});
-        return;
       case 'amount':
         this.setState({ amount: parseFloat(event.target.value)});
         return;
-      case 'category':
-        this.setState({ category: event.target.value});
-        return;
-      case 'date':
-        this.setState({ date: event.target.value});
-        return;
-      case 'note':
-        this.setState({ note: event.target.value});
-        return;
-      case 'subcategory':
-        this.setState({ subcategory: event.target.value});
-        return;
-      case 'tags':
-        this.setState({ tags: event.target.value });
-        return;
-      case 'to':
-        this.setState({ to: event.target.value});
-        return;
       default:
-        return;
+      this.setState({
+        [propertyName]: event.target.value as string| number
+      } as Pick<AddTransactionDialogState, keyof AddTransactionDialogState>);
+      return;
     }
   }
 
@@ -339,6 +328,7 @@ const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  jobs: state.jobsState.jobs,
   subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionState.transactions,
 });

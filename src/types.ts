@@ -20,12 +20,9 @@ export interface Account {
   userId: string;
 }
 
-export type JobType = 'Salary' | 'Bonus' | 'Other' | 'Select Type';
-
 export interface Job {
   id: string;
   name: string;
-  type: JobType;
   userId: string;
   ytd: number;
 }

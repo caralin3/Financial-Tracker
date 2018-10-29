@@ -7,9 +7,14 @@ html {
 body {
   font-family: arial, sans-serif;
   margin: 0;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: scroll;
   padding: 0;
+}
+@media only screen and (max-width: 640px) {
+  body {
+    overflow-x: hidden;
+  }
 }
 a {
   text-decoration: none;
@@ -129,9 +134,6 @@ select {
 }
 .addJobDialog_number {
   text-align: right;
-}
-.addJobDialog_select {
-  width: 11rem;
 }
 .addTransactionDialog_options {
   align-items: center;
@@ -795,6 +797,10 @@ select {
 .tableData {
   padding: 0.5rem 1rem;
 }
+.tableData_tags {
+  display: block;
+  text-align: center;
+}
 .tableData_input {
   width: 100%;
 }
@@ -925,7 +931,6 @@ select {
   margin: 0;
 }
 .activity_content {
-  overflow-x: auto;
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
@@ -940,6 +945,7 @@ select {
   display: flex;
   grid-area: details;
   justify-content: space-between;
+  margin-bottom: 1rem;
   padding: 1rem 1rem 0;
 }
 .activity_label {
@@ -948,6 +954,23 @@ select {
 .activity_section {
   overflow-x: auto;
   padding: 0 1rem;
+}
+.activity_sectionHeader {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.activity_sectionHeader-title {
+  font-family: 'Francois One', sans-serif;
+  font-size: 1.2rem;
+}
+.activity_sectionHeader-arrow {
+  font-size: 1.5rem;
+}
+.activity_sectionHeader:focus,
+.activity_sectionHeader:hover {
+  color: #0C98AC;
+  cursor: pointer;
 }
 .activity_empty {
   font-family: 'Archivo Narrow', sans-serif;

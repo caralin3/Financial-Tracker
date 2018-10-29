@@ -4,7 +4,7 @@ import { Dialog, Form } from '..';
 import { db } from '../../firebase';
 import { FirebaseJob } from '../../firebase/types';
 import { ActionTypes, AppState } from '../../store';
-import { JobType, User } from '../../types';
+import { User } from '../../types';
 
 interface AddJobDialogProps {
   class?: string;
@@ -26,21 +26,19 @@ interface AddJobDialogMergedProps extends
 
 interface AddJobDialogState {
   name: string;
-  type: JobType;
   ytd: number;
 }
 
 export class DisconnectedAddJobDialog extends React.Component<AddJobDialogMergedProps, AddJobDialogState> {
   public readonly state: AddJobDialogState = {
     name: '',
-    type: 'Salary',
     ytd: 0,
   }
 
   public render() {
-    const { ytd, name, type } = this.state;
+    const { ytd, name } = this.state;
 
-    const isInvalid = !name || !type;
+    const isInvalid = !name || isNaN(ytd);
 
     return (
       <Dialog title="Add Job" toggleDialog={this.props.toggleDialog}>
@@ -66,14 +64,6 @@ export class DisconnectedAddJobDialog extends React.Component<AddJobDialogMerged
               value={ytd}
             />
           </div>
-          <div className="addJobDialog_section">
-            <label className="addJobDialog_input-label">Job Type</label>
-            <select className="addJobDialog_select" onChange={(e) => this.handleChange(e, 'type')}>
-              <option value="Salary">Salary</option>
-              <option value="Bonus">Bonus</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
         </Form>
       </Dialog>
     )
@@ -87,22 +77,18 @@ export class DisconnectedAddJobDialog extends React.Component<AddJobDialogMerged
       case 'name':
         this.setState({ name: event.target.value});
         return;
-      case 'type':
-        this.setState({ type: event.target.value as JobType });
-        return;
       default:
         return;
     }
   }
 
   private onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const { name, type, ytd } = this.state;
+    const { name, ytd } = this.state;
     const { currentUser, dispatch, toggleDialog } = this.props;
     e.preventDefault();
     if (currentUser) {
       const newJob: FirebaseJob = {
         name,
-        type,
         userId: currentUser.id,
         ytd,
       }

@@ -2,14 +2,15 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Account, Category, Subcategory, Transaction, TransactionType, User } from '../../types';
-import { formatter } from '../../utility';
+import { Account, Category, Job, Subcategory, Transaction, TransactionType, User } from '../../types';
+import { formatter, sorter } from '../../utility';
 
 interface TableDataProps {
   data: any;
   editing: boolean;
   heading: string;
   id: string;
+  transType: TransactionType;
   type: string;
 }
 
@@ -21,6 +22,7 @@ interface StateMappedProps {
   accounts: Account[];
   categories: Category[];
   currentUser: User | null;
+  jobs: Job[];
   subcategories: Subcategory[];
   transactions: Transaction[];
 }
@@ -34,9 +36,11 @@ interface TableDataState {
   amount: number;
   category: string;
   date: string;
+  editing: boolean;
   from: string;
   note: string;
   subcategory: string;
+  tags: string;
   to: string;
   type: TransactionType;
 }
@@ -46,28 +50,37 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
     amount: this.props.data || 0,
     category: this.props.data || 'Select Category',
     date: this.props.data || '',
+    editing: false,
     from: this.props.data || 'Select Account',
     note: this.props.data || '',
     subcategory: this.props.data || 'Select Subcategory',
+    tags: this.props.data.toString() || '',
     to: this.props.data || 'Select Account' ,
     type: this.props.data || 'Select Type' as TransactionType,
   }
+
+  public componentWillReceiveProps(nextProps: TableDataMergedProps) {
+    if (nextProps.editing !== this.props.editing) {
+      this.setState({ editing: nextProps.editing })
+    }
+  }
   
   public render () {
-    const { data, editing, heading, type } = this.props;
-    const { amount, date, note, to } = this.state;
+    const { data, heading, transType } = this.props;
+    const { amount, date, editing, note, tags, to } = this.state;
 
     return (
       <td className="tableData">
         {!editing ?
-          <span className="tableData_name">
+          <span className={heading === 'Tags' ? 'tableData_tags' : ''}>
             { heading === 'Amount' ?
               formatter.formatMoney(data) :
               heading === 'Date' ? formatter.formatMMDDYYYY(data) :
+              heading === 'Tags' ?  data.slice(0, 2).toString() || 'N/A' :
               data || 'N/A'
             }
           </span> :
-          ((heading === 'Item' || heading === 'To' && type === 'transactions') ?
+          ((heading === 'Item' || (heading === 'To' && transType === 'Expense')) ?
           <span>
             <input
               className="tableData_input"
@@ -121,11 +134,11 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
             <select
               className="tableData_input"
               onBlur={this.handleBlur}
-              onChange={(e) => this.handleChange(e, 'to')}
+              onChange={(e) => this.handleChange(e, 'from')}
             >
-              <option defaultValue="Select Account">Select Account</option>
-              {this.accounts().map((acc: Account) => (
-                <option key={acc.id} value={acc.id}>{ acc.name }</option>
+              <option defaultValue="Select Job">Select Job</option>
+              {this.jobs().map((job: Job) => (
+                <option key={job.id} value={job.id}>{ job.name }</option>
               ))}
             </select> :
           heading === 'Category' ?
@@ -159,6 +172,23 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
               type="text"
               value={note}
             /> :
+          heading === 'Tags' ?
+          <span>
+            <input
+              className="tableData_input"
+              list="tags"
+              onBlur={this.handleBlur}
+              onChange={(e) => this.handleChange(e, 'tags')}
+              onKeyPress={this.handleKeyPress}
+              type="text"
+              value={tags}
+            />
+            <datalist id="tags">
+              {this.tags().map((tag: string, index: number) => (
+                <option key={index} value={tag}>{ tag }</option>
+              ))}
+            </datalist>
+          </span> :
           heading === 'Date' ?
           <input
             className="tableData_input tableData_input-date"
@@ -185,38 +215,20 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
 
   private handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, propertyName: string) => {
     switch(propertyName) {
-      case 'from':
-        this.setState({ from: event.target.value});
-        return;
       case 'amount':
         this.setState({ amount: parseFloat(event.target.value)});
         return;
-      case 'category':
-        this.setState({ category: event.target.value});
-        return;
-      case 'date':
-        this.setState({ date: event.target.value});
-        return;
-      case 'note':
-        this.setState({ note: event.target.value});
-        return;
-      case 'subcategory':
-        this.setState({ subcategory: event.target.value});
-        return;
-      case 'type':
-        this.setState({ type: event.target.value as TransactionType });
-        return;
-      case 'to':
-        this.setState({ to: event.target.value});
-        return;
       default:
+        this.setState({
+          [propertyName]: event.target.value as any
+        } as Pick<TableDataState, keyof TableDataState>);
         return;
     }
   }
 
   private change = () => {
     const { data, heading } = this.props;
-    const { amount, category, date, from, note, subcategory, to, type } = this.state;
+    const { amount, category, date, from, note, subcategory, tags, to, type } = this.state;
     switch(heading) {
       case 'Amount':
         if (data !== amount) {
@@ -254,6 +266,11 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
       case 'Subcategory':
         if (data !== subcategory) {
           return 'subcategory';
+        }
+        return '';
+      case 'Tags':
+        if (data !== tags) {
+          return 'tags';
         }
         return '';
       case 'Type':
@@ -305,40 +322,72 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
       (currentUser && currentUser.id === trans.userId))[0];
 
     if (!!this.change() && !this.isInvalid()) {
-      transaction = {
-        ...transaction,
-        [this.change()]: this.state[this.change()],
+      if (this.change() === 'tags') {
+        const tags = !this.state.tags ? [] : this.state.tags.split(',').map((tag: string) => tag.trim());
+        transaction = {
+          ...transaction,
+          tags,
+        }
+      } else {
+        transaction = {
+          ...transaction,
+          [this.change()]: this.state[this.change()],
+        }
       }
       db.requests.transactions.edit(transaction, dispatch);
     }
+    // this.setState({ editing: false })
   }
 
   private accounts = () => {
     const { accounts, currentUser } = this.props;
-    return accounts.filter((acc: Account) => currentUser && acc.userId === currentUser.id);
+    return sorter.sort(accounts.filter((acc: Account) => currentUser && acc.userId === currentUser.id),
+    'desc', 'name');
   }
 
   private categories = () => {
     const { categories, currentUser } = this.props;
-    return categories.filter((cat: Category) => currentUser && cat.userId === currentUser.id);
+    return sorter.sort(categories.filter((cat: Category) => 
+      currentUser && cat.userId === currentUser.id), 'desc', 'name');
+  }
+
+  private jobs = () => {
+    const { jobs, currentUser } = this.props;
+    return sorter.sort(jobs.filter((job: Job) => currentUser && job.userId === currentUser.id),
+      'desc', 'name');
   }
 
   private subcategories = () => {
-    const { categories, currentUser, subcategories } = this.props;
-    const category: Category = categories.filter((cat: Category) => this.state.category === cat.id &&
-      currentUser && cat.userId === currentUser.id)[0];
+    const { id, categories, currentUser, subcategories, transactions } = this.props;
+    const transaction: Transaction = transactions.filter((trans: Transaction) => trans.id === id && 
+      (currentUser && currentUser.id === trans.userId))[0];
+    const categoryId: string = transaction.category ? transaction.category : '';
+    const category: Category = categories.filter((cat: Category) => categoryId === cat.id)[0];
     if (category) {
       return subcategories.filter((sub: Subcategory) => sub.parent === category.name &&
         currentUser && sub.userId === currentUser.id);
     }
-    return subcategories.filter((sub: Subcategory) => currentUser && sub.userId === currentUser.id);
+    return sorter.sort(subcategories.filter((sub: Subcategory) => 
+      currentUser && sub.userId === currentUser.id), 'desc', 'name');
   }
 
   private expenses = () => {
     const { currentUser, transactions } = this.props;
-    return transactions.filter((trans: Transaction) => (currentUser && currentUser.id === trans.userId) &&
-      trans.type === 'Expense'
-    );
+    return transactions.filter((trans: Transaction, index, self) =>
+      self.findIndex((t: Transaction) => trans.type === 'Expense' && t.to === trans.to) === index &&
+      (currentUser && currentUser.id === trans.userId));
+  }
+
+  private tags = () => {
+    const { currentUser, transactions } = this.props;
+    const trans: Transaction[] = transactions.filter((tran: Transaction) => currentUser && currentUser.id === tran.userId);
+    const tags: string[] = [];
+    trans.forEach((tr: Transaction) => {
+      if (tr.tags) {
+        tags.push.apply(tags, tr.tags);
+      }
+    });
+    return tags.filter((tag: string, index, self) => self.findIndex((t: string) => t === tag) === index);
   }
 }
 
@@ -348,6 +397,7 @@ const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  jobs: state.jobsState.jobs,
   subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionState.transactions,
 });
