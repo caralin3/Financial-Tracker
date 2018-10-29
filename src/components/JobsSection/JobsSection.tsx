@@ -1,18 +1,23 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { AddJobDialog } from '../';
-// import { db } from '../../firebase';
-import { ActionTypes } from '../../store';
+import { AddJobDialog, JobItem } from '../';
+import { ActionTypes, AppState } from '../../store';
+import { Job, User } from '../../types';
+import { sorter } from '../../utility';
 
-interface JobsSectionProps {
-  
-}
+interface JobsSectionProps {}
 
 interface DispatchMappedProps {
   dispatch: Dispatch<ActionTypes>;
 }
 
+interface StateMappedProps {
+  currentUser: User | null;
+  jobs: Job[];
+}
+
 interface JobsSectionMergedProps extends
+  StateMappedProps,
   DispatchMappedProps,
   JobsSectionProps {}
 
@@ -26,6 +31,10 @@ export class DisconnectedJobsSection extends React.Component<JobsSectionMergedPr
   }
   
   public render () {
+    const { jobs } = this.props;
+    const sortedJobs = sorter.sort(jobs.filter((job) => 
+      this.props.currentUser && job.userId === this.props.currentUser.id), 'desc', 'name')
+
     return (
       <div className="jobsSection">
         {this.state.showDialog && <AddJobDialog toggleDialog={this.toggleDialog} />}
@@ -35,63 +44,29 @@ export class DisconnectedJobsSection extends React.Component<JobsSectionMergedPr
             <i className="fas fa-plus jobsSection_header-add" onClick={this.toggleDialog} />
           </div>
         </div>
+        <div className="jobsSection_jobs">
+          {sortedJobs.length > 0 ? sortedJobs.map((job) => (
+            <JobItem key={job.id} job={job} />
+          )) :
+            <h3 className="jobsSection_none">No Jobs</h3>
+          }
+        </div>
       </div>
     )
   }
 
   private toggleDialog = () => this.setState({ showDialog: !this.state.showDialog });
-
-  // private handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, propertyName: string) => {
-  //   switch(propertyName) {
-  //     case 'balance':
-  //       this.setState({ balance: parseFloat(event.target.value)});
-  //       return;
-  //     case 'name':
-  //       this.setState({ name: event.target.value});
-  //       return;
-  //     case 'type':
-  //       this.setState({ type: event.target.value as AccountType });
-  //       return;
-  //     default:
-  //       return;
-  //   }
-  // }
-
-  // // Listen for enter key
-  // private handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (event.charCode === 13) {
-  //       this.handleBlur();
-  //   }
-  // }
-
-  // private handleBlur = () => {
-  //   const { balance, name, type } = this.state;
-  //   const { dispatch, id, userId } = this.props;
-    
-  //   const isInvalid = isNaN(balance) || !name || type === 'Select Type';
-  //   const hasChanged = balance !== this.props.balance || name !== this.props.name || type !== this.props.type;
-
-  //   if (!isInvalid && hasChanged) {
-  //     const updatedAccount: Account = {
-  //       balance,
-  //       id,
-  //       name,
-  //       type,
-  //       userId,
-  //     }
-  //     db.requests.accounts.edit(updatedAccount, dispatch);
-  //   }
-  //   this.setState({
-  //     editBalance: false,
-  //     editName: false,
-  //     editType: false,
-  //   });
-  // }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
+const mapStateToProps = (state: AppState) => ({
+  currentUser: state.sessionState.currentUser,
+  jobs: state.jobsState.jobs,
+});
+
 export const JobsSection = connect<
-  JobsSectionProps,
-  DispatchMappedProps
->(null, mapDispatchToProps)(DisconnectedJobsSection);
+  StateMappedProps,
+  DispatchMappedProps,
+  JobsSectionProps
+>(mapStateToProps, mapDispatchToProps)(DisconnectedJobsSection);

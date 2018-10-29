@@ -13,6 +13,7 @@ import { EditSubcategoryDialog } from './EditSubcategoryDialog';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { Form } from './Form';
 import { Header } from './Header';
+import { JobItem } from './JobItem';
 import { JobsSection } from './JobsSection';
 import { Loading, LoadingWrapper } from './Loading';
 import { LoginForm } from './LoginForm';
@@ -39,6 +40,7 @@ export {
   ForgotPasswordForm,
   Form,
   Header,
+  JobItem,
   JobsSection,
   Loading,
   LoadingWrapper,

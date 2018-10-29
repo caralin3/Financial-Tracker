@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Dialog, Form } from '..';
-// import { db } from '../../firebase';
+import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Category, User } from '../../types';
+import { Category, Subcategory, User } from '../../types';
 import { sorter } from '../../utility';
 
 interface EditSubcategoryDialogProps {
   class?: string;
+  subcategory: Subcategory;
   toggleDialog: () => void;
 }
 
@@ -44,7 +45,7 @@ export class DisconnectedEditSubcategoryDialog extends React.Component<EditSubca
         <Form buttonText="Change" disabled={isInvalid} submit={this.onSubmit}>
           
           <div className="editSubcategoryDialog_section">
-            {/* <label className="editSubcategoryDialog_input-label">Change Category</label> */}
+            <label className="editSubcategoryDialog_input-label">Move To</label>
             <select
               className='editSubcategoryDialog_input'
               onChange={(e) => this.handleChange(e)}
@@ -78,17 +79,35 @@ export class DisconnectedEditSubcategoryDialog extends React.Component<EditSubca
   }
 
   private onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const { currentUser, toggleDialog } = this.props;
+    const { categories, currentUser, dispatch, subcategory, toggleDialog } = this.props;
     e.preventDefault();
     const parent = this.getCategory();
     if (currentUser) {
-      console.log(parent);
-
-      // const newAccount: FirebaseAccount = {
-      //   parent,
-      //   userId: currentUser.id,
-      // }
-      // db.requests.accounts.add(newAccount, dispatch);
+      // Update subcategory parent
+      const updatedSub = {
+        ...subcategory,
+        parent: parent.name,
+      }
+      db.requests.subcategories.edit(updatedSub, dispatch);
+      // Remove subcategory from original parent
+      let removedParent: Category = categories.filter((cat) => cat.name === subcategory.parent &&
+        currentUser && cat.userId === currentUser.id)[0];
+      let removedSubs = [...removedParent.subcategories];
+      removedSubs = removedSubs.filter((rId) => rId !== subcategory.id);
+      removedParent = {
+        ...removedParent,
+        subcategories: removedSubs,
+      }
+      db.requests.categories.edit(removedParent, dispatch);
+      // Add subcategory to new parent
+      let addedParent: Category = categories.filter((cat) => cat.id === parent.id)[0];
+      const newSubs = [...addedParent.subcategories];
+      newSubs.push(subcategory.id);
+      addedParent = {
+        ...addedParent,
+        subcategories: newSubs,
+      }
+      db.requests.categories.edit(addedParent, dispatch);
     }
     toggleDialog();
   }

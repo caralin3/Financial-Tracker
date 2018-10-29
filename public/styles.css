@@ -28,6 +28,9 @@ button {
 button:focus {
   outline: none;
 }
+select {
+  background-color: #FFFFFF;
+}
 .appAuth {
   display: grid;
   grid-template-columns: 15% auto;
@@ -519,6 +522,102 @@ button:focus {
 }
 .nonHeader_icon {
   color: #0C98AC;
+}
+.jobItem {
+  padding: 0 1rem 1rem;
+}
+@media only screen and (max-width: 800px) {
+  .jobItem {
+    padding: 0 0.5rem;
+  }
+}
+.jobItem_header {
+  align-items: center;
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+@media only screen and (max-width: 640px) {
+  .jobItem_header {
+    font-size: 0.9rem;
+  }
+}
+.jobItem_header-name {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+  width: 100%;
+}
+.jobItem_header:focus,
+.jobItem_header:hover {
+  cursor: pointer;
+}
+.jobItem_header-icons {
+  display: flex;
+}
+.jobItem_header-icon {
+  padding: 0 0.5rem;
+}
+.jobItem_header-icon:focus,
+.jobItem_header-icon:hover {
+  cursor: pointer;
+}
+.jobItem_subcategories-closed {
+  overflow: hidden;
+  margin: 0;
+  max-height: 0;
+  padding: 0;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s ease-in;
+}
+.jobItem_subcategories {
+  border: 1px solid #0C98AC;
+  padding: 0.5rem 1rem;
+  max-height: auto;
+  overflow: hidden;
+  transform: scaleY(1);
+  transform-origin: top;
+  transition: transform 0.5s ease-out;
+}
+.jobItem_subcategory {
+  align-items: center;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+}
+.jobItem_subcategory:focus,
+.jobItem_subcategory:hover {
+  cursor: pointer;
+}
+.jobItem_subcategory:focus .categoryItem_subcategory-icon,
+.jobItem_subcategory:hover .categoryItem_subcategory-icon {
+  opacity: 1;
+}
+.jobItem_subcategory-name {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+  padding: 0.5rem;
+}
+.jobItem_subcategory-name:focus,
+.jobItem_subcategory-name:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.jobItem_subcategory-icons {
+  display: flex;
+}
+.jobItem_subcategory-icon {
+  opacity: 0;
+  padding: 0 0.5rem;
+}
+.jobItem_subcategory-icon:focus,
+.jobItem_subcategory-icon:hover {
+  cursor: pointer;
+}
+.jobItem_input {
+  padding: 0.5rem 0;
 }
 .jobsSection_header {
   align-items: center;
