@@ -124,7 +124,7 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
               onKeyPress={this.handleNewSubKeyPress}
               type="text"
             /> :
-            <h3 className="categoryItem_subcategory-name" onClick={this.toggleAddSubcategory}>
+            <h3 className="categoryItem_subcategory-name categoryItem_subcategory-new" onClick={this.toggleAddSubcategory}>
               Add New Subcategory
             </h3>
           }
@@ -144,6 +144,14 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
   private toggleSubcategories = () => this.setState({ showSubcategories: !this.state.showSubcategories });
 
   private toggleDeleteDialog = () => this.setState({ showDeleteDialog: !this.state.showDeleteDialog });
+
+  // Check category name not in categories list
+  private checkCategory = () => {
+    const { category } = this.state;
+    const { categories, currentUser } = this.props;
+    return categories.filter((cat: Category) => category.toUpperCase() === cat.name.toUpperCase() &&
+      currentUser && cat.userId === currentUser.id)[0];
+  }
 
   private onDeleteCategory = (id: string) => {
     this.setState({ deleteCategoryId: id });
@@ -223,8 +231,9 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
     
     const currentCategory = categories.filter((cat) => cat.id === this.props.category.id)[0];
     const currentSubcategory = subcategories.filter((sub) => sub.id === subcategoryId)[0];
+    const duplicate = this.checkCategory();
 
-    if (category && category !== currentCategory.name) {
+    if (category && category !== currentCategory.name && !duplicate) {
       const updatedCategory: Category = {
         ...currentCategory,
         name: category,

@@ -7,79 +7,22 @@
     padding: 0 0.5rem;
   }
 
-  &_header {
+  &_item {
     align-items: center;
-    background-color: @blue-green;
-    color: @white;
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
-
-    @media only screen and (max-width: 640px) {
-      font-size: 0.9rem;
-    }
-
-    &-name {
-      font-family: @font-archivo;
-      margin: 0;
-      width: 100%;
-    }
-
-    &:focus,
-    &:hover {
-      cursor: pointer;
-    }
-
-    &-icons {
-      display: flex;
-    }
-
-    &-icon {
-      padding: 0 0.5rem;
-
-      &:focus,
-      &:hover {
-        cursor: pointer;
-      }
-    }
-  }
-
-  &_subcategories-closed {
-    overflow: hidden;
-    margin: 0;
-    max-height: 0;
-    padding: 0;
-    transform: scaleY(0);
-    transform-origin: bottom;
-    transition: transform 0.5s ease-in;
-  }
-
-  &_subcategories {
-    border: 1px solid @blue-green;
-    padding: 0.5rem 1rem;
-    max-height: auto;
-    overflow: hidden;
-    transform: scaleY(1);
-    transform-origin: top;
-    transition: transform 0.5s ease-out;
-  }
-
-  &_subcategory {
-    align-items: center;
-    color: @blue-green;
     display: flex;
     justify-content: space-between;
 
     &:focus,
     &:hover {
       cursor: pointer;
-      .categoryItem_subcategory-icon {
+      .jobItem_icon {
         opacity: 1;
       }
     }
-
+    
     &-name {
       font-family: @font-archivo;
+      font-weight: normal;
       margin: 0;
       padding: 0.5rem;
 
@@ -90,31 +33,35 @@
       }
     }
 
-    &-icons {
-      display: flex;
+    &-number {
+      font-family: @font-archivo;
+      font-weight: bold;
+      margin: 0;
+      padding: 0.5rem;
     }
+  }
 
-    &-icon {
-      opacity: 0;
-      padding: 0 0.5rem;
+  &_icons {
+    align-items: center;
+    display: flex;
+  }
 
-      &:focus,
-      &:hover {
-        cursor: pointer;
-      }
+  &_icon {
+    color: @blue-green;
+    opacity: 0;
+    padding: 0 0.5rem;
+
+    &:focus,
+    &:hover {
+      cursor: pointer;
     }
   }
 
   &_input {
     padding: 0.5rem 0;
-  }
 
-  // &_amount,
-  // &_activity,
-  // &_name,
-  // &_type {
-  //   font-family: @font-archivo;
-  //   font-weight: normal;
-  //   margin: 0;
-  // }
+    &-number {
+      text-align: right;
+    }
+  }
 }

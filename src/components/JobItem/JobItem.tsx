@@ -4,7 +4,7 @@ import { DeleteDialog } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Job, User } from '../../types';
-// import { sorter } from '../../utility';
+import { formatter } from '../../utility';
 
 interface JobItemProps {
   job: Job;
@@ -26,21 +26,25 @@ interface JobItemMergedProps extends
 
 interface JobItemState {
   deleteJobId: string;
-  editJob: boolean;
+  editJobName: boolean;
+  editJobYTD: boolean;
   jobName: string;
+  jobYTD: number;
   showDeleteDialog: boolean;
 }
 
 export class DisconnectedJobItem extends React.Component<JobItemMergedProps, JobItemState> {
   public readonly state: JobItemState = {
     deleteJobId: '',
-    editJob: false,
-    jobName: '',
+    editJobName: false,
+    editJobYTD: false,
+    jobName: this.props.job.name || '',
+    jobYTD: this.props.job.ytd || 0,
     showDeleteDialog: false,
   }
 
   public render () {
-    const { editJob } = this.state;
+    const { editJobName, editJobYTD, jobName, jobYTD } = this.state;
     const { job } = this.props;
 
     return (
@@ -53,19 +57,33 @@ export class DisconnectedJobItem extends React.Component<JobItemMergedProps, Job
           />
         }
         <div className="jobItem_item">
-          {editJob ?
+          {editJobName ?
             <input
               className="jobItem_input"
-              defaultValue={job.name}
+              defaultValue={jobName}
               onBlur={this.handleBlur}
               onChange={(e) => this.handleChange(e, 'jobName')}
               onKeyPress={this.handleKeyPress}
               type="text"
             /> :
-            <h3 className="jobItem_item-name" onClick={this.toggleEditJob}>{ job.name }</h3>
+            <h3 className="jobItem_item-name" onClick={this.toggleEditJobName}>{ job.name }</h3>
           }
           <div className="jobItem_icons">
-            <i className="fas fa-edit jobItem_icon" onClick={this.toggleEditJob} />
+          {editJobYTD ?
+            <input
+              className="jobItem_input jobItem_input-number"
+              onBlur={this.handleBlur}
+              onChange={(e) => this.handleChange(e, 'jobYTD')}
+              onKeyPress={this.handleKeyPress}
+              step="0.01"
+              type="number"
+              value={jobYTD}
+            /> :
+            <h3 className="jobItem_item-name" onClick={this.toggleEditJobYTD}>
+              YTD:{' '}
+              <span className="jobItem_item-number">{ formatter.formatMoney(job.ytd) }</span>
+            </h3>
+          }
             <i className="fas fa-trash-alt jobItem_icon" onClick={() => this.onDeleteJob(job.id)} />
           </div>
         </div>
@@ -74,7 +92,9 @@ export class DisconnectedJobItem extends React.Component<JobItemMergedProps, Job
     )
   }
 
-  private toggleEditJob = () => this.setState({ editJob: !this.state.editJob });
+  private toggleEditJobName = () => this.setState({ editJobName: !this.state.editJobName });
+
+  private toggleEditJobYTD = () => this.setState({ editJobYTD: !this.state.editJobYTD });
 
   private toggleDeleteDialog = () => this.setState({ showDeleteDialog: !this.state.showDeleteDialog });
 
@@ -90,9 +110,13 @@ export class DisconnectedJobItem extends React.Component<JobItemMergedProps, Job
   }
 
   private handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, propertyName: string) => {
-    this.setState({
-      [propertyName]: event.target.value as string | boolean,
-    } as Pick<JobItemState, keyof JobItemState>)
+    if (propertyName === 'jobYTD') {
+      this.setState({ jobYTD: parseFloat(event.target.value) });
+    } else {
+      this.setState({
+        [propertyName]: event.target.value as string| boolean | number
+      } as Pick<JobItemState, keyof JobItemState>)
+    }
   }
 
   // Listen for enter key
@@ -103,22 +127,22 @@ export class DisconnectedJobItem extends React.Component<JobItemMergedProps, Job
   }
 
   private handleBlur = () => {
-    // const { jobId } = this.state;
-    // const { currentUser, dispatch, jobs } = this.props;
-    
-    // const currentJob = jobs.filter((j) => currentUser && j.userId === currentUser.id &&
-    //   j.id === this.props.job.id)[0];;
-
-  // if (jobId) {
-  //   const updatedJob: Job = {
-  //     ...currentJob,
-  //     name: category,
-  //   }
-  //   db.requests.jobs.edit(updatedJob, dispatch);
-  //   this.setState({
-  //     jobId: '',
-  //     editJob: false,
-  //   });
+    const { jobName, jobYTD } = this.state;
+    const { dispatch, job } = this.props;
+    const isInvalid = !jobName || !jobYTD || isNaN(jobYTD);
+    const hasChanged = jobName !== job.name || jobYTD !== job.ytd;
+    if (!isInvalid && hasChanged) {
+      const updatedJob: Job = {
+        ...job,
+        name: jobName,
+        ytd: jobYTD,
+      }
+      db.requests.jobs.edit(updatedJob, dispatch);
+    }
+    this.setState({
+      editJobName: false,
+      editJobYTD: false,
+    });
   }
 }
 

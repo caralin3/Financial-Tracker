@@ -44,12 +44,11 @@ export class DisconnectedAddCategoryDialog extends React.Component<AddCategoryDi
       <Dialog title="Add Category" toggleDialog={this.props.toggleDialog}>
         <Form buttonText="Add" disabled={isInvalid} submit={this.onSubmit}>
           {!!duplicate && 
-            <h4 className="addCategoryDialog_message">
+            <h5 className="addCategoryDialog_message">
               Category name already taken
-            </h4>
+            </h5>
           }
           <div className="addCategoryDialog_section">
-            <label className="addCategoryDialog_input-label">Category</label>
             <input
               className='addCategoryDialog_input'
               onChange={(e) => this.handleChange(e)}
@@ -67,7 +66,7 @@ export class DisconnectedAddCategoryDialog extends React.Component<AddCategoryDi
   private checkCategory = () => {
     const { name } = this.state;
     const { categories, currentUser } = this.props;
-    return categories.filter((cat: Category) => name === cat.name &&
+    return categories.filter((cat: Category) => name.toUpperCase() === cat.name.toUpperCase() &&
       currentUser && cat.userId === currentUser.id)[0];
   }
 

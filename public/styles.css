@@ -102,10 +102,36 @@ select {
   padding: 0.5rem 0;
   width: 100%;
 }
-.addJobDialog_input {
+.addCategoryDialog_section {
+  display: flex;
+  flex-direction: column;
+}
+.addCategoryDialog_message {
+  color: #FF0000;
+  margin: 0 auto;
+}
+.addCategoryDialog_input {
   margin: 1rem 0;
   padding: 0.5rem 0;
   width: 100%;
+}
+.addJobDialog_section {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.addJobDialog_input,
+.addJobDialog_select {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+.addJobDialog_number {
+  text-align: right;
+}
+.addJobDialog_select {
+  width: 11rem;
 }
 .addTransactionDialog_options {
   align-items: center;
@@ -279,6 +305,7 @@ select {
 }
 .categoryItem_subcategory-name {
   font-family: 'Archivo Narrow', sans-serif;
+  font-size: 1rem;
   margin: 0;
   padding: 0.5rem;
 }
@@ -531,93 +558,54 @@ select {
     padding: 0 0.5rem;
   }
 }
-.jobItem_header {
+.jobItem_item {
   align-items: center;
-  background-color: #0C98AC;
-  color: #FFFFFF;
-  display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-}
-@media only screen and (max-width: 640px) {
-  .jobItem_header {
-    font-size: 0.9rem;
-  }
-}
-.jobItem_header-name {
-  font-family: 'Archivo Narrow', sans-serif;
-  margin: 0;
-  width: 100%;
-}
-.jobItem_header:focus,
-.jobItem_header:hover {
-  cursor: pointer;
-}
-.jobItem_header-icons {
-  display: flex;
-}
-.jobItem_header-icon {
-  padding: 0 0.5rem;
-}
-.jobItem_header-icon:focus,
-.jobItem_header-icon:hover {
-  cursor: pointer;
-}
-.jobItem_subcategories-closed {
-  overflow: hidden;
-  margin: 0;
-  max-height: 0;
-  padding: 0;
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform 0.5s ease-in;
-}
-.jobItem_subcategories {
-  border: 1px solid #0C98AC;
-  padding: 0.5rem 1rem;
-  max-height: auto;
-  overflow: hidden;
-  transform: scaleY(1);
-  transform-origin: top;
-  transition: transform 0.5s ease-out;
-}
-.jobItem_subcategory {
-  align-items: center;
-  color: #0C98AC;
   display: flex;
   justify-content: space-between;
 }
-.jobItem_subcategory:focus,
-.jobItem_subcategory:hover {
+.jobItem_item:focus,
+.jobItem_item:hover {
   cursor: pointer;
 }
-.jobItem_subcategory:focus .categoryItem_subcategory-icon,
-.jobItem_subcategory:hover .categoryItem_subcategory-icon {
+.jobItem_item:focus .jobItem_icon,
+.jobItem_item:hover .jobItem_icon {
   opacity: 1;
 }
-.jobItem_subcategory-name {
+.jobItem_item-name {
   font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
   margin: 0;
   padding: 0.5rem;
 }
-.jobItem_subcategory-name:focus,
-.jobItem_subcategory-name:hover {
+.jobItem_item-name:focus,
+.jobItem_item-name:hover {
   border: 1px solid #0C98AC;
   cursor: pointer;
 }
-.jobItem_subcategory-icons {
+.jobItem_item-number {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: bold;
+  margin: 0;
+  padding: 0.5rem;
+}
+.jobItem_icons {
+  align-items: center;
   display: flex;
 }
-.jobItem_subcategory-icon {
+.jobItem_icon {
+  color: #0C98AC;
   opacity: 0;
   padding: 0 0.5rem;
 }
-.jobItem_subcategory-icon:focus,
-.jobItem_subcategory-icon:hover {
+.jobItem_icon:focus,
+.jobItem_icon:hover {
   cursor: pointer;
 }
 .jobItem_input {
   padding: 0.5rem 0;
+}
+.jobItem_input-number {
+  text-align: right;
 }
 .jobsSection_header {
   align-items: center;
@@ -633,6 +621,14 @@ select {
 .jobsSection_header-add:focus,
 .jobsSection_header-add:hover {
   cursor: pointer;
+}
+.jobsSection_jobs {
+  padding-top: 1rem;
+}
+.jobsSection_none {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  padding-left: 1rem;
 }
 .loading {
   align-items: center;

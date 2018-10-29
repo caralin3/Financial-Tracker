@@ -45,26 +45,35 @@ export class DisconnectedAddJobDialog extends React.Component<AddJobDialogMerged
     return (
       <Dialog title="Add Job" toggleDialog={this.props.toggleDialog}>
         <Form buttonText="Add" disabled={isInvalid} submit={this.onSubmit}>
-          <input
-            className='addJobDialog_input'
-            onChange={(e) => this.handleChange(e, 'name')}
-            placeholder='Job Name'
-            type='text'
-            value={name}
-          />
-          <input
-            className='addJobDialog_input'
-            onChange={(e) => this.handleChange(e, 'ytd')}
-            placeholder='Year to Date'
-            step='0.01'
-            type='number'
-            value={ytd}
-          />
-          <select className='addJobDialog_input' onChange={(e) => this.handleChange(e, 'type')}>
-            <option value='Salary'>Salary</option>
-            <option value='Bonus'>Bonus</option>
-            <option value='Other'>Other</option>
-          </select>
+          <div className="addJobDialog_section">
+            <label className="addJobDialog_input-label">Job Name</label>
+            <input
+              className="addJobDialog_input"
+              onChange={(e) => this.handleChange(e, 'name')}
+              placeholder="Job Name"
+              type="text"
+              value={name}
+            />
+          </div>
+          <div className="addJobDialog_section">
+            <label className="addJobDialog_input-label">Year to Date ($)</label>
+            <input
+              className="addJobDialog_input addJobDialog_number"
+              onChange={(e) => this.handleChange(e, 'ytd')}
+              placeholder="Year to Date"
+              step="0.01"
+              type="number"
+              value={ytd}
+            />
+          </div>
+          <div className="addJobDialog_section">
+            <label className="addJobDialog_input-label">Job Type</label>
+            <select className="addJobDialog_select" onChange={(e) => this.handleChange(e, 'type')}>
+              <option value="Salary">Salary</option>
+              <option value="Bonus">Bonus</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
         </Form>
       </Dialog>
     )
