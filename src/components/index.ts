@@ -2,7 +2,6 @@ import { AccountSection } from './AccountSection';
 import { AddAccountDialog } from './AddAccountDialog';
 import { AddCategoryDialog } from './AddCategoryDialog';
 import { AddJobDialog } from './AddJobDialog';
-import { AddSubcategoryDialog } from './AddSubcategoryDialog';
 import { AddTransactionDialog } from './AddTransactionDialog';
 import { CategoriesSection } from './CategoriesSection';
 import { CategoryItem } from './CategoryItem';
@@ -11,6 +10,7 @@ import { DeleteDialog } from './DeleteDialog';
 import { Dialog } from './Dialog';
 import { Dropdown } from './Dropdown';
 import { EditSubcategoryDialog } from './EditSubcategoryDialog';
+import { FilterDropdown } from './FilterDropdown';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { Form } from './Form';
 import { Header } from './Header';
@@ -23,6 +23,7 @@ import { Sidebar } from './Sidebar';
 import { SignUpForm } from './SignUpForm';
 import { Table } from './Table';
 import { TableData } from './TableData';
+import { TableFilters } from './TableFilters';
 import { UserProfile } from './UserProfile';
 
 export {
@@ -30,7 +31,6 @@ export {
   AddAccountDialog,
   AddCategoryDialog,
   AddJobDialog,
-  AddSubcategoryDialog,
   AddTransactionDialog,
   CategoriesSection,
   CategoryItem,
@@ -39,6 +39,7 @@ export {
   Dialog,
   Dropdown,
   EditSubcategoryDialog,
+  FilterDropdown,
   ForgotPasswordForm,
   Form,
   Header,
@@ -52,5 +53,6 @@ export {
   SignUpForm,
   Table,
   TableData,
+  TableFilters,
   UserProfile,
 }

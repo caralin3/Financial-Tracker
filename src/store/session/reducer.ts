@@ -1,16 +1,27 @@
 
-import { User } from '../../types';
+import { TransactionFilter, User } from '../../types';
 import { SessionActions } from './actions';
-import { SET_CURRENT_USER, SET_SHOW_SIDEBAR } from './constants';
+import {
+  ADD_TRANS_FILTER,
+  REMOVE_TRANS_FILTER,
+  RESET_TRANS_FILTERS,
+  SET_CURRENT_USER,
+  SET_EDITING_TRANSACTION,
+  SET_SHOW_SIDEBAR
+} from './constants';
 
 export interface SessionState {
   currentUser: User | null;
+  editingTransaction: boolean;
   showSidebar: boolean;
+  transactionFilters: TransactionFilter[];
 }
 
 const initialState: SessionState = {
   currentUser: null,
+  editingTransaction: false,
   showSidebar: false,
+  transactionFilters: [],
 }
 
 // Session reducer manages the authUser object
@@ -21,6 +32,30 @@ export const reducer = (state: SessionState = initialState, action: SessionActio
       return {
         ...state,
         currentUser: action.currentUser,
+      }
+    }
+    case ADD_TRANS_FILTER: {
+      return {
+        ...state,
+        transactionFilters: [...state.transactionFilters, action.filter],
+      }
+    }
+    case REMOVE_TRANS_FILTER: {
+      return {
+        ...state,
+        transactionFilters: state.transactionFilters.filter((filter: TransactionFilter) => filter !== action.filter),
+      }
+    }
+    case RESET_TRANS_FILTERS: {
+      return {
+        ...state,
+        transactionFilters: state.transactionFilters.filter((filter: TransactionFilter) => filter.table !== action.table),
+      }
+    }
+    case SET_EDITING_TRANSACTION: {
+      return {
+        ...state,
+        editingTransaction: action.editing,
       }
     }
     case SET_SHOW_SIDEBAR: {

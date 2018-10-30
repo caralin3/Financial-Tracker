@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { Dispatch } from 'redux';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { ContentCard, Header, Loading } from '../../components';
 import { db } from '../../firebase';
@@ -37,9 +36,10 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
 
   public componentWillMount() {
     this.loadAccounts();
-    this.loadTransactions();
     this.loadCategories();
+    this.loadJobs();
     this.loadSubcategories();
+    this.loadTransactions();
   }
 
   public render() {
@@ -93,16 +93,6 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
     this.setState({ dataLoaded: this.state.dataLoaded + 1 });
   }
 
-  private loadTransactions = async () => {
-    const { dispatch } = this.props;
-    try {
-      await db.requests.transactions.load(dispatch);
-    } catch (e) {
-      console.log(e);
-    }
-    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
-  }
-
   private loadCategories = async () => {
     const { dispatch } = this.props;
     try {
@@ -113,10 +103,29 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
     this.setState({ dataLoaded: this.state.dataLoaded + 1 });
   }
 
+  private loadJobs = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.jobs.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   private loadSubcategories = async () => {
     const { dispatch } = this.props;
     try {
       await db.requests.subcategories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
+  }
+
+  private loadTransactions = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.transactions.load(dispatch);
     } catch (e) {
       console.log(e);
     }

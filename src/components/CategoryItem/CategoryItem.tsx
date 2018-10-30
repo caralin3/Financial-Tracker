@@ -222,7 +222,7 @@ export class DisconnectedCategoryItem extends React.Component<CategoryItemMerged
       }
       db.requests.subcategories.add(newSub, dispatch);
     }
-    this.setState({ addSubcategory: false });
+    this.setState({ addSubcategory: false, newSubcategory: '' });
   }
 
   private handleBlur = () => {

@@ -6,7 +6,7 @@ import { jobsCollection } from './';
 
 // LOAD JOBS
 export const load = (dispatch: Dispatch<ActionTypes>) => {
-  jobsCollection.get().then((querySnapshot: any) => {
+  jobsCollection.orderBy('name').get().then((querySnapshot: any) => {
     const jobList: Job[] = [];
     querySnapshot.forEach((doc: any) => {
       const job: Job = doc.data();

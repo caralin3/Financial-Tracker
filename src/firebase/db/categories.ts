@@ -6,7 +6,7 @@ import { categoriesCollection } from './';
 
 // LOAD CATEGORIES
 export const load = (dispatch: Dispatch<ActionTypes>) => {
-  categoriesCollection.get().then((querySnapshot: any) => {
+  categoriesCollection.orderBy('name').get().then((querySnapshot: any) => {
     const categoryList: Category[] = [];
     querySnapshot.forEach((doc: any) => {
       const category: Category = doc.data();

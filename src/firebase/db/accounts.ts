@@ -6,7 +6,7 @@ import { accountsCollection } from './';
 
 // LOAD ACCOUNTS
 export const load = (dispatch: Dispatch<ActionTypes>) => {
-  accountsCollection.get().then((querySnapshot: any) => {
+  accountsCollection.orderBy('name').get().then((querySnapshot: any) => {
     const accountList: Account[] = [];
     querySnapshot.forEach((doc: any) => {
       const account: Account = doc.data();

@@ -1,0 +1,94 @@
+@import (reference) '../../less/variables.less';
+@import (reference) '../../less/button.less';
+
+.filterDropdown {
+  &_add {
+    color: @very-light-gray;
+    padding: 0 0.5rem;
+    font-size: 1.4rem;
+    
+    &:focus,
+    &:hover {
+      color: darken(@middle-blue, 10%);
+      cursor: pointer;
+    }
+  }
+
+  &_content {
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    display: none;
+    min-width: 10rem;
+    padding: 1rem;
+    position: absolute;
+    z-index: 1;
+
+    @media only screen and (max-width: 640px) {
+      left: 0.5rem;
+      min-width: 8rem;
+    }
+
+    &-show {
+      display: block;
+    }
+  }
+
+  &_item {
+    align-items: center;
+    color: @black;
+    display: flex;
+    font-family: @font-francois;
+    justify-content: space-between;
+
+    &:focus,
+    &:hover {
+      color: @blue-green;
+      cursor: pointer;
+    }
+  }
+
+  &_subItem {
+    background-color: #f9f9f9;
+    box-shadow: 5px 8px 16px rgba(85, 85, 85, 0.2);
+    display: none;
+    left: 100%;
+    min-width: 10rem;
+    padding: 0.5rem;
+    position: absolute;
+    z-index: 1;
+
+    &-show {
+      display: block;
+    }
+  }
+
+  &_option {
+    align-items: center;
+    color: @black;
+    display: flex;
+    font-family: @font-francois;
+
+    &:focus,
+    &:hover {
+      color: @blue-green;
+      cursor: pointer;
+    }
+  }
+}
+
+.rangeDialog {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+
+  &_label {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+  }
+
+  &_input {
+    padding: 0.5rem 0;
+    text-align: right;
+  }
+}

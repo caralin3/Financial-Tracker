@@ -5,10 +5,9 @@ import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { AddTransactionDialog, Dropdown, Header, Table } from '../../components';
+import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-// import * as routes from '../../routes';
 import { Account, Category, HeaderData, Job, Subcategory, TableDataType, Transaction, User } from '../../types';
-import { sorter } from '../../utility';
 
 export interface ActivityPageProps {}
 
@@ -48,7 +47,13 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     showTransfers: false,
   }
 
-  public toggleDialog = () => this.setState({ showDialog: !this.state.showDialog });
+  public componentWillMount() {
+    this.loadAccounts();
+    this.loadCategories();
+    this.loadJobs();
+    this.loadSubcategories();
+    this.loadTransactions();
+  }
 
   public render() {
     const dropdownOptions: JSX.Element[] = [
@@ -57,7 +62,6 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
         data={this.getAllTransactions().data}
         filename="allTransactions.csv"
         headers={this.getAllTransactions().headers}
-        onClick={() => console.log('Clicked')}
       >
         Download All Transactions
       </CSVLink>),
@@ -102,7 +106,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
           </div>
           <div className="activity_section">
             <div className="activity_sectionHeader" onClick={() => this.setState({ showAll: !this.state.showAll })}>
-            <h3 className="activity_sectionHeader-title">All Transactions</h3>
+              <h3 className="activity_sectionHeader-title">All Transactions</h3>
               <div className="activity_sectionHeader-icons">
                 <i
                   className={`fas ${this.state.showAll ? 'fa-caret-up' : 'fa-caret-down'} activity_sectionHeader-arrow`}
@@ -161,6 +165,53 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     )
   }
 
+  private loadAccounts = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.accounts.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadCategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.categories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadJobs = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.jobs.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadSubcategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.subcategories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadTransactions = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.transactions.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private toggleDialog = () => this.setState({ showDialog: !this.state.showDialog });
+
   private getAllTransactions = () => {
     const { currentUser, transactions } = this.props;
     const headers: HeaderData[] = [
@@ -175,8 +226,8 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       {key: 'amount', label: 'Amount'}
     ];
     if (currentUser) {
-      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) =>
-        tr.userId === currentUser.id), 'asc', 'date');
+      let data: Transaction[] = transactions.filter((tr: Transaction) =>
+        tr.userId === currentUser.id);
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -204,7 +255,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
         return {
           ...trans,
           from: accounts.filter((acc) => acc.id === trans.from)[0] ?
-            accounts.filter((acc) => acc.id === trans.from)[0].name : 'N/A',
+            accounts.filter((acc) => acc.id === trans.from)[0].name : '',
           to: accounts.filter((acc) => acc.id === trans.to)[0] ?
             accounts.filter((acc) => acc.id === trans.to)[0].name : 'N/A',
         }
@@ -232,8 +283,8 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       {key: 'amount', label: 'Amount'}
     ];
     if (currentUser) {
-      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) => tr.type === 'Expense'
-        && tr.userId === currentUser.id), 'asc', 'date');
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Expense'
+        && tr.userId === currentUser.id);
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -255,8 +306,8 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       {key: 'amount', label: 'Amount'}
     ];
     if (currentUser) {
-      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) => tr.type === 'Income'
-        && tr.userId === currentUser.id), 'asc', 'date');
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Income'
+        && tr.userId === currentUser.id);
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -278,8 +329,8 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       {key: 'amount', label: 'Amount'}
     ];
     if (currentUser) {
-      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) => tr.type === 'Transfer'
-        && tr.userId === currentUser.id), 'asc', 'date');
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Transfer'
+        && tr.userId === currentUser.id);
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
