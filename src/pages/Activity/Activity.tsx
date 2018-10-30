@@ -7,9 +7,7 @@ import { withAuthorization } from '../../auth/withAuthorization';
 import { AddTransactionDialog, Dropdown, Header, Table } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-// import * as routes from '../../routes';
 import { Account, Category, HeaderData, Job, Subcategory, TableDataType, Transaction, User } from '../../types';
-// import { sorter } from '../../utility';
 
 export interface ActivityPageProps {}
 
@@ -50,6 +48,10 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
   }
 
   public componentWillMount() {
+    this.loadAccounts();
+    this.loadCategories();
+    this.loadJobs();
+    this.loadSubcategories();
     this.loadTransactions();
   }
 
@@ -60,7 +62,6 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
         data={this.getAllTransactions().data}
         filename="allTransactions.csv"
         headers={this.getAllTransactions().headers}
-        onClick={() => console.log('Clicked')}
       >
         Download All Transactions
       </CSVLink>),
@@ -162,6 +163,42 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
         </div>
       </div>
     )
+  }
+
+  private loadAccounts = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.accounts.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadCategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.categories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadJobs = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.jobs.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadSubcategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.subcategories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   private loadTransactions = async () => {

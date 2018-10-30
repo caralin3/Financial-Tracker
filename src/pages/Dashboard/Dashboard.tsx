@@ -36,9 +36,10 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
 
   public componentWillMount() {
     this.loadAccounts();
-    this.loadTransactions();
     this.loadCategories();
+    this.loadJobs();
     this.loadSubcategories();
+    this.loadTransactions();
   }
 
   public render() {
@@ -92,16 +93,6 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
     this.setState({ dataLoaded: this.state.dataLoaded + 1 });
   }
 
-  private loadTransactions = async () => {
-    const { dispatch } = this.props;
-    try {
-      await db.requests.transactions.load(dispatch);
-    } catch (e) {
-      console.log(e);
-    }
-    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
-  }
-
   private loadCategories = async () => {
     const { dispatch } = this.props;
     try {
@@ -112,10 +103,29 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
     this.setState({ dataLoaded: this.state.dataLoaded + 1 });
   }
 
+  private loadJobs = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.jobs.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   private loadSubcategories = async () => {
     const { dispatch } = this.props;
     try {
       await db.requests.subcategories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+    this.setState({ dataLoaded: this.state.dataLoaded + 1 });
+  }
+
+  private loadTransactions = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.transactions.load(dispatch);
     } catch (e) {
       console.log(e);
     }
