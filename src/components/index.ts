@@ -10,6 +10,7 @@ import { DeleteDialog } from './DeleteDialog';
 import { Dialog } from './Dialog';
 import { Dropdown } from './Dropdown';
 import { EditSubcategoryDialog } from './EditSubcategoryDialog';
+import { FilterDropdown } from './FilterDropdown';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { Form } from './Form';
 import { Header } from './Header';
@@ -22,6 +23,7 @@ import { Sidebar } from './Sidebar';
 import { SignUpForm } from './SignUpForm';
 import { Table } from './Table';
 import { TableData } from './TableData';
+import { TableFilters } from './TableFilters';
 import { UserProfile } from './UserProfile';
 
 export {
@@ -37,6 +39,7 @@ export {
   Dialog,
   Dropdown,
   EditSubcategoryDialog,
+  FilterDropdown,
   ForgotPasswordForm,
   Form,
   Header,
@@ -50,5 +53,6 @@ export {
   SignUpForm,
   Table,
   TableData,
+  TableFilters,
   UserProfile,
 }

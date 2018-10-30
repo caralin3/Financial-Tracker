@@ -468,6 +468,70 @@ select {
   padding: 0.5rem 0;
   width: 100%;
 }
+.filterDropdown_add {
+  color: #CCCCCC;
+  padding: 0 0.5rem;
+  font-size: 1.4rem;
+}
+.filterDropdown_add:focus,
+.filterDropdown_add:hover {
+  color: #39c9cf;
+  cursor: pointer;
+}
+.filterDropdown_content {
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  display: none;
+  min-width: 10rem;
+  padding: 1rem;
+  position: absolute;
+  z-index: 1;
+}
+@media only screen and (max-width: 640px) {
+  .filterDropdown_content {
+    left: 0.5rem;
+    min-width: 8rem;
+  }
+}
+.filterDropdown_content-show {
+  display: block;
+}
+.filterDropdown_item {
+  align-items: center;
+  color: #000000;
+  display: flex;
+  font-family: 'Francois One', sans-serif;
+  justify-content: space-between;
+}
+.filterDropdown_item:focus,
+.filterDropdown_item:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.filterDropdown_subItem {
+  background-color: #f9f9f9;
+  box-shadow: 5px 8px 16px rgba(85, 85, 85, 0.2);
+  display: none;
+  left: 100%;
+  min-width: 10rem;
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 1;
+}
+.filterDropdown_subItem-show {
+  display: block;
+}
+.filterDropdown_option {
+  align-items: center;
+  color: #000000;
+  display: flex;
+  font-family: 'Francois One', sans-serif;
+}
+.filterDropdown_option:focus,
+.filterDropdown_option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
 .forgotPasswordForm {
   align-items: center;
   background-color: #FFFFFF;
@@ -866,6 +930,47 @@ select {
 }
 .tableData_input-number {
   text-align: right;
+}
+.tableFilters {
+  align-items: center;
+  display: flex;
+  padding-bottom: 1rem;
+}
+.tableFilters_filterIcon {
+  padding: 0 0.5rem;
+}
+.tableFilters_icon {
+  color: #CCCCCC;
+  padding: 0 0.5rem;
+}
+.tableFilters_icon:focus,
+.tableFilters_icon:hover {
+  color: #39c9cf;
+  cursor: pointer;
+}
+.tableFilters_title {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+}
+.tableFilters_filter {
+  align-items: center;
+  background-color: rgba(98, 212, 217, 0.25);
+  border: 1px solid #62D4D9;
+  border-radius: 1rem;
+  display: flex;
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0 0.5rem;
+  padding: 0.3rem 0.5rem;
+}
+.tableFilters_remove {
+  color: #2ebac0;
+  font-size: 1rem;
+  padding-left: 0.5rem;
+}
+.tableFilters_remove:focus,
+.tableFilters_remove:hover {
+  color: #259297;
+  cursor: pointer;
 }
 .userProfile_header {
   align-items: center;

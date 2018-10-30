@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { DeleteDialog, TableData } from '../';
+import { DeleteDialog, TableData, TableFilters } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { HeaderData, TableDataType } from '../../types';
@@ -54,6 +54,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
             toggleDialog={this.toggleDeleteDialog}
           />
         }
+        <TableFilters data={content.data} headers={content.headers} table={this.props.type} />
         <table className="table">
           <thead className="table_header">
             <tr className="table_row">
@@ -95,27 +96,6 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
     )
   }
 
-  private setSort = (key: string) => {
-    const { sortedBy } = this.state;
-    let dir: 'asc' | 'desc' = 'desc';
-    if (key === sortedBy.key) {
-      if (sortedBy.dir === dir) {
-        dir = 'asc';
-      } else {
-        dir = 'desc';
-      }
-    } else {
-      dir = 'asc';
-    }
-    this.setState({sortedBy: {key, dir}});
-    this.sortData(key, dir);
-  }
-
-  private sortData = (key: string, dir: 'asc' | 'desc') => {
-    const { content } = this.props;
-    sorter.sort(content.data, dir, key);
-  }
-
   private toggleEdit = (id: string) => {
     const { dispatch } = this.props;
     this.setState({ editId: this.state.editId ? '' : id });
@@ -135,6 +115,27 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
       db.requests.transactions.remove(this.state.id, dispatch);
     }
     this.toggleDeleteDialog();
+  }
+
+  private setSort = (key: string) => {
+    const { sortedBy } = this.state;
+    let dir: 'asc' | 'desc' = 'desc';
+    if (key === sortedBy.key) {
+      if (sortedBy.dir === dir) {
+        dir = 'asc';
+      } else {
+        dir = 'desc';
+      }
+    } else {
+      dir = 'asc';
+    }
+    this.setState({sortedBy: {key, dir}});
+    this.sortData(key, dir);
+  }
+
+  private sortData = (key: string, dir: 'asc' | 'desc') => {
+    const { content } = this.props;
+    sorter.sort(content.data, dir, key);
   }
 }
 

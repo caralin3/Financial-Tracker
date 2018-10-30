@@ -1,5 +1,12 @@
-import { User } from '../../types';
-import { SET_CURRENT_USER, SET_EDITING_TRANSACTION, SET_SHOW_SIDEBAR } from './constants';
+import { TransactionFilter, User } from '../../types';
+import {
+  ADD_TRANS_FILTER,
+  REMOVE_TRANS_FILTER,
+  RESET_TRANS_FILTERS,
+  SET_CURRENT_USER,
+  SET_EDITING_TRANSACTION,
+  SET_SHOW_SIDEBAR
+} from './constants';
 
 export interface SetCurrentUserAction {
   currentUser: User | null;
@@ -9,6 +16,36 @@ export interface SetCurrentUserAction {
 export const setCurrentUser = (currentUser: User | null): SetCurrentUserAction => ({
   currentUser,
   type: SET_CURRENT_USER,
+});
+
+export interface AddTransFilterAction {
+  filter: TransactionFilter;
+  type: 'ADD_TRANS_FILTER';
+}
+
+export const addTransactionFilter = (filter: TransactionFilter): AddTransFilterAction => ({
+  filter,
+  type: ADD_TRANS_FILTER,
+});
+
+export interface RemoveTransFilterAction {
+  filter: TransactionFilter;
+  type: 'REMOVE_TRANS_FILTER';
+}
+
+export const removeTransactionFilter = (filter: TransactionFilter): RemoveTransFilterAction => ({
+  filter,
+  type: REMOVE_TRANS_FILTER,
+});
+
+export interface ResetTransFilterAction {
+  table: string;
+  type: 'RESET_TRANS_FILTERS';
+}
+
+export const resetTransactionFilters = (table: string): ResetTransFilterAction => ({
+  table,
+  type: RESET_TRANS_FILTERS,
 });
 
 export interface SetEditingTransactionAction {
@@ -31,4 +68,10 @@ export const setShowSidebar = (showSidebar: boolean): SetShowSidebarAction => ({
   type: SET_SHOW_SIDEBAR,
 });
 
-export type SessionActions = SetCurrentUserAction | SetEditingTransactionAction | SetShowSidebarAction;
+export type SessionActions =
+  AddTransFilterAction |
+  RemoveTransFilterAction |
+  ResetTransFilterAction |
+  SetCurrentUserAction |
+  SetEditingTransactionAction |
+  SetShowSidebarAction;

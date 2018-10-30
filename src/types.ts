@@ -68,3 +68,9 @@ export interface TableDataType {
   headers: HeaderData[];
   data: any[];
 }
+
+export interface TransactionFilter {
+  filter: string;
+  key: string;
+  table: string;
+}

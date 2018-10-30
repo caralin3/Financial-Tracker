@@ -105,7 +105,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
           </div>
           <div className="activity_section">
             <div className="activity_sectionHeader" onClick={() => this.setState({ showAll: !this.state.showAll })}>
-            <h3 className="activity_sectionHeader-title">All Transactions</h3>
+              <h3 className="activity_sectionHeader-title">All Transactions</h3>
               <div className="activity_sectionHeader-icons">
                 <i
                   className={`fas ${this.state.showAll ? 'fa-caret-up' : 'fa-caret-down'} activity_sectionHeader-arrow`}
