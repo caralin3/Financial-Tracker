@@ -4,7 +4,7 @@ import { Dialog, Form } from '..';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, Category, Job, Subcategory, Transaction, TransactionType, User } from '../../types';
-import { sorter } from '../../utility';
+// import { sorter } from '../../utility';
 
 interface AddTransactionDialogProps {
   class?: string;
@@ -52,6 +52,13 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
     subcategory: 'Select Subcategory',
     tags: '',
     to: '',
+  }
+
+  public componentWillMount() {
+    this.loadAccounts();
+    this.loadCategories();
+    this.loadJobs();
+    this.loadSubcategories();
   }
 
   public render() {
@@ -221,33 +228,66 @@ export class DisconnectedAddTransactionDialog extends React.Component<AddTransac
     )
   }
 
+  private loadAccounts = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.accounts.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadCategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.categories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadJobs = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.jobs.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadSubcategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.subcategories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   private accounts = () => {
     const { accounts, currentUser } = this.props;
-    return sorter.sort(accounts.filter((acc: Account) => 
-      currentUser && acc.userId === currentUser.id), 'desc', 'name');
+    return accounts.filter((acc: Account) => currentUser && acc.userId === currentUser.id);
   }
 
   private categories = () => {
     const { categories, currentUser } = this.props;
-    return sorter.sort(categories.filter((cat: Category) => 
-      currentUser && cat.userId === currentUser.id), 'desc', 'name');
+    return categories.filter((cat: Category) => currentUser && cat.userId === currentUser.id);
   }
 
   private jobs = () => {
     const { jobs, currentUser } = this.props;
-    return sorter.sort(jobs.filter((job: Job) => 
-      currentUser && job.userId === currentUser.id), 'desc', 'name');
+    return jobs.filter((job: Job) => currentUser && job.userId === currentUser.id);
   }
 
   private subcategories = () => {
     const { categories, currentUser, subcategories } = this.props;
     const category: Category = categories.filter((cat: Category) => this.state.category === cat.id)[0];
     if (category) {
-      return sorter.sort(subcategories.filter((sub: Subcategory) => sub.parent === category.name &&
-        currentUser && sub.userId === currentUser.id), 'desc', 'name');
+      return subcategories.filter((sub: Subcategory) => sub.parent === category.name &&
+        currentUser && sub.userId === currentUser.id);
     }
-    return sorter.sort(subcategories.filter((sub: Subcategory) =>
-      currentUser && sub.userId === currentUser.id), 'desc', 'name');
+    return subcategories.filter((sub: Subcategory) =>
+      currentUser && sub.userId === currentUser.id);
   }
 
   private expenses = () => {

@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { CategoriesSection, Header, JobsSection, UserProfile } from '../../components';
-import { AppState } from '../../store';
+import { db } from '../../firebase';
+import { ActionTypes, AppState } from '../../store';
 import { User } from '../../types';
 
 export interface SettingsPageProps {}
@@ -13,7 +14,9 @@ interface StateMappedProps {
   currentUser: User | null;
 }
 
-interface DispatchMappedProps {}
+interface DispatchMappedProps {
+  dispatch: Dispatch<ActionTypes>;
+}
 
 interface SettingsMergedProps extends
   RouteComponentProps<RouteProps>,
@@ -24,7 +27,12 @@ interface SettingsMergedProps extends
 export interface SettingsPageState {}
 
 class DisconnectedSettingsPage extends React.Component<SettingsMergedProps, SettingsPageState> {
-  public readonly state = {
+  public readonly state = {}
+
+  public componentWillMount() {
+    this.loadCategories();
+    this.loadJobs();
+    this.loadSubcategories();
   }
 
   public render() {
@@ -39,9 +47,38 @@ class DisconnectedSettingsPage extends React.Component<SettingsMergedProps, Sett
       </div>
     )
   }
+
+  private loadCategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.categories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadJobs = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.jobs.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadSubcategories = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.subcategories.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 const authCondition = (authUser: any) => !!authUser;
+
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
   currentUser: state.sessionState.currentUser,
@@ -50,5 +87,5 @@ const mapStateToProps = (state: AppState) => ({
 export const SettingsPage = compose(
   withRouter,
   withAuthorization(authCondition),
-  connect<StateMappedProps, DispatchMappedProps, SettingsPageProps>(mapStateToProps)
+  connect<StateMappedProps, DispatchMappedProps, SettingsPageProps>(mapStateToProps, mapDispatchToProps)
 )(DisconnectedSettingsPage);

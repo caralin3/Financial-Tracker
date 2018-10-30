@@ -5,10 +5,11 @@ import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { AddTransactionDialog, Dropdown, Header, Table } from '../../components';
+import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 // import * as routes from '../../routes';
 import { Account, Category, HeaderData, Job, Subcategory, TableDataType, Transaction, User } from '../../types';
-import { sorter } from '../../utility';
+// import { sorter } from '../../utility';
 
 export interface ActivityPageProps {}
 
@@ -48,7 +49,9 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     showTransfers: false,
   }
 
-  public toggleDialog = () => this.setState({ showDialog: !this.state.showDialog });
+  public componentWillMount() {
+    this.loadTransactions();
+  }
 
   public render() {
     const dropdownOptions: JSX.Element[] = [
@@ -161,6 +164,17 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     )
   }
 
+  private loadTransactions = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.transactions.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private toggleDialog = () => this.setState({ showDialog: !this.state.showDialog });
+
   private getAllTransactions = () => {
     const { currentUser, transactions } = this.props;
     const headers: HeaderData[] = [
@@ -175,8 +189,8 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       {key: 'amount', label: 'Amount'}
     ];
     if (currentUser) {
-      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) =>
-        tr.userId === currentUser.id), 'asc', 'date');
+      let data: Transaction[] = transactions.filter((tr: Transaction) =>
+        tr.userId === currentUser.id);
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -232,8 +246,8 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       {key: 'amount', label: 'Amount'}
     ];
     if (currentUser) {
-      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) => tr.type === 'Expense'
-        && tr.userId === currentUser.id), 'asc', 'date');
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Expense'
+        && tr.userId === currentUser.id);
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -255,8 +269,8 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       {key: 'amount', label: 'Amount'}
     ];
     if (currentUser) {
-      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) => tr.type === 'Income'
-        && tr.userId === currentUser.id), 'asc', 'date');
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Income'
+        && tr.userId === currentUser.id);
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,
@@ -278,8 +292,8 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       {key: 'amount', label: 'Amount'}
     ];
     if (currentUser) {
-      let data: Transaction[] = sorter.sort(transactions.filter((tr: Transaction) => tr.type === 'Transfer'
-        && tr.userId === currentUser.id), 'asc', 'date');
+      let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Transfer'
+        && tr.userId === currentUser.id);
       data = this.convertData(data);
       const tableData: TableDataType = {
         data,

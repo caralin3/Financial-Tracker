@@ -40,6 +40,10 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
     showDialog: false,
   }
 
+  public componentWillMount() {
+    this.loadAccounts();
+  }
+
   public componentWillUnmount() {
     this.props.dispatch(accountStateStore.resetDeletedAccounts());
   }
@@ -134,6 +138,15 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
         </div>
       </div>
     )
+  }
+
+  private loadAccounts = async () => {
+    const { dispatch } = this.props;
+    try {
+      await db.requests.accounts.load(dispatch);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   private toggleDelete = () => this.setState({ deleting: !this.state.deleting });

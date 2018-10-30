@@ -2,7 +2,6 @@ import { AccountSection } from './AccountSection';
 import { AddAccountDialog } from './AddAccountDialog';
 import { AddCategoryDialog } from './AddCategoryDialog';
 import { AddJobDialog } from './AddJobDialog';
-import { AddSubcategoryDialog } from './AddSubcategoryDialog';
 import { AddTransactionDialog } from './AddTransactionDialog';
 import { CategoriesSection } from './CategoriesSection';
 import { CategoryItem } from './CategoryItem';
@@ -30,7 +29,6 @@ export {
   AddAccountDialog,
   AddCategoryDialog,
   AddJobDialog,
-  AddSubcategoryDialog,
   AddTransactionDialog,
   CategoriesSection,
   CategoryItem,

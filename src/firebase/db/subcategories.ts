@@ -8,7 +8,7 @@ import { categoriesCollection, subcategoriesCollection } from './';
 
 // LOAD SUBCATEGORIES
 export const load = (dispatch: Dispatch<ActionTypes>) => {
-  subcategoriesCollection.get().then((querySnapshot: any) => {
+  subcategoriesCollection.orderBy('name').get().then((querySnapshot: any) => {
     const subcategoryList: Subcategory[] = [];
     querySnapshot.forEach((doc: any) => {
       const subcategory: Subcategory = doc.data();

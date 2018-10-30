@@ -21,7 +21,12 @@
 
     @media only screen and (max-width: 640px) {
       display: grid;
-      grid-template: "title add" auto "export export" auto ~'/' auto auto;
+      grid-template: 
+        "title add"
+        auto
+        "export export" 
+        auto
+      ~'/' [export-start] 100% [export-end];
       padding-bottom: 1rem;
     }
 
@@ -34,7 +39,7 @@
       padding: 0 0.5rem 0 1rem;
 
       @media only screen and (max-width: 640px) {
-        padding: 1rem;
+        padding: 0;
       }
 
       &:focus,

@@ -433,6 +433,11 @@ select {
   right: 0;
   z-index: 1;
 }
+@media only screen and (max-width: 640px) {
+  .dropdown_content {
+    left: 0;
+  }
+}
 .dropdown_content-show {
   display: block;
 }
@@ -544,7 +549,7 @@ select {
 }
 @media only screen and (max-width: 640px) {
   .authHeader {
-    background-image: linear-gradient(#0C98AC, #62D4D9);
+    background-color: #0C98AC;
     border-bottom: none;
     margin: 0;
   }
@@ -559,6 +564,7 @@ select {
     display: block;
     font-size: 1.5rem;
     padding-left: 1rem;
+    position: absolute;
   }
 }
 .authHeader_title {
@@ -991,7 +997,7 @@ select {
 @media only screen and (max-width: 640px) {
   .activity_header {
     display: grid;
-    grid-template: "title add" auto "export export" auto / auto auto;
+    grid-template: "title add" auto "export export" auto / [export-start] 100% [export-end];
     padding-bottom: 1rem;
   }
 }
@@ -1004,7 +1010,7 @@ select {
 }
 @media only screen and (max-width: 640px) {
   .activity_header-add {
-    padding: 1rem;
+    padding: 0;
   }
 }
 .activity_header-add:focus,
