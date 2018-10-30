@@ -9,6 +9,7 @@ import { CategoryItem } from './CategoryItem';
 import { ContentCard } from './ContentCard';
 import { DeleteDialog } from './DeleteDialog';
 import { Dialog } from './Dialog';
+import { Dropdown } from './Dropdown';
 import { EditSubcategoryDialog } from './EditSubcategoryDialog';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { Form } from './Form';
@@ -36,6 +37,7 @@ export {
   ContentCard,
   DeleteDialog,
   Dialog,
+  Dropdown,
   EditSubcategoryDialog,
   ForgotPasswordForm,
   Form,
