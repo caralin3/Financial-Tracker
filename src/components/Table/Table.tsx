@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { DeleteDialog, TableData, TableFilters } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
-import { HeaderData, TableDataType } from '../../types';
+import { HeaderData, TableDataType, TransactionFilter } from '../../types';
 import { sorter } from '../../utility';
 
 interface TableProps {
@@ -17,6 +17,7 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   editingTransaction: boolean;
+  filters: TransactionFilter[];
 }
 
 interface TableMergedProps extends
@@ -45,6 +46,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
   public render () {
     const { content } = this.props;
     const { sortedBy } = this.state;
+
     return (
       <div className="table_wrapper">
         {this.state.deleting && 
@@ -54,7 +56,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
             toggleDialog={this.toggleDeleteDialog}
           />
         }
-        <TableFilters data={content.data} headers={content.headers} table={this.props.type} />
+        <TableFilters data={this.filterData(content.data)} headers={content.headers} table={this.props.type} />
         <table className="table">
           <thead className="table_header">
             <tr className="table_row">
@@ -71,7 +73,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
             </tr>
           </thead>
           <tbody className="table_body">
-            {content.data.map((d: any, index: number) => (
+            {this.filterData(content.data).map((d: any, index: number) => (
               <tr className="table_row" key={index}>
                 {content.headers.map((header: HeaderData, ind: number) => (
                   <TableData
@@ -137,12 +139,31 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
     const { content } = this.props;
     sorter.sort(content.data, dir, key);
   }
+
+  private filterData = (data: any[]) => {
+    const { filters, type } = this.props;
+    const conditions: any[] = [];
+    filters.forEach((filter) => {
+      if (type === filter.table) {
+        if (filter.range) {
+          conditions.push((d: any) => filter.range && 
+            d[filter.key] >= filter.range.start && d[filter.key] <= filter.range.end)
+        } else if (filter.key === 'tags') {
+          conditions.push((d: any) => d[filter.key].indexOf(filter.filter) !== -1);
+        } else {
+          conditions.push((d: any) => d[filter.key] === filter.filter);
+        }
+      }
+    });
+    return data.filter((d: any) => conditions.every((cond) => cond(d)));
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
   editingTransaction: state.sessionState.editingTransaction,
+  filters: state.sessionState.transactionFilters,
 });
 
 export const Table = connect<

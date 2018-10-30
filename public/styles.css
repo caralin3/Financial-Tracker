@@ -532,6 +532,20 @@ select {
   color: #0C98AC;
   cursor: pointer;
 }
+.rangeDialog {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+}
+.rangeDialog_label {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+.rangeDialog_input {
+  padding: 0.5rem 0;
+  text-align: right;
+}
 .forgotPasswordForm {
   align-items: center;
   background-color: #FFFFFF;

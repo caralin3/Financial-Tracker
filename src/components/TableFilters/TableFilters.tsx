@@ -37,7 +37,11 @@ export class DisconnectedTableFilters extends React.Component<TableFiltersMerged
         <h3 className="tableFilters_title">Filters:</h3>
         {sortedFilters.map((filter, index: number) => (
           <span className="tableFilters_filter" key={index}>
-            {formatter.capitalize(filter.key)}: {filter.filter}
+            {formatter.capitalize(filter.key)}: {filter.filter === 'Range' ?
+              filter.key === 'date' ? 
+              `${formatter.formatMMDDYYYY(filter.range.start)} - ${formatter.formatMMDDYYYY(filter.range.end)}` 
+              : `${formatter.formatMoney(filter.range.start)} - ${formatter.formatMoney(filter.range.end)}` : 
+              filter.key === 'date' ? formatter.formatMMDDYYYY(filter.filter) : filter.filter}
             <i className="fas fa-times tableFilters_remove" onClick={() => this.removeFilter(filter)} />
           </span>
         ))}

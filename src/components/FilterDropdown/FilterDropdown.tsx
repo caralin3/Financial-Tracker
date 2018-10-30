@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
+import { Dialog, Form } from '../';
 import { ActionTypes, sessionStateStore } from '../../store';
 import { Transaction, TransactionFilter } from '../../types';
 import { HeaderData } from '../../types';
@@ -20,12 +21,24 @@ interface FilterDropdownMergedProps extends
   FilterDropdownProps {}
 
 interface FilterDropdownState {
+  range: {
+    end: string | number;
+    key: string;
+    start: string | number;
+  };
+  showDialog: boolean;
   showOptions: boolean;
   subOption: string;
 }
 
 export class DisconnectedFilterDropdown extends React.Component<FilterDropdownMergedProps, FilterDropdownState> {
   public readonly state: FilterDropdownState = {
+    range: {
+      end: '',
+      key: '',
+      start: '',
+    },
+    showDialog: false,
     showOptions: false,
     subOption: '',
   }
@@ -59,13 +72,14 @@ export class DisconnectedFilterDropdown extends React.Component<FilterDropdownMe
                       key={idx}
                       onClick={() => this.handleClickFilter(header.key, op)}
                     >
-                      { op || header.key === 'note' && 'None' }
+                      {header.key === 'date' ? formatter.formatMMDDYYYY(op) :
+                        op || header.key === 'note' && 'None'}
                     </li>
                   ))}
                   {(header.key === 'amount' || header.key === 'date') && 
                     <li
                       className="filterDropdown_option"
-                      onClick={() => this.handleClickFilter(header.key, 'Select Range')}
+                      onClick={() => this.handleSelectRange(header.key)}
                     >
                       Select Range
                     </li>
@@ -75,8 +89,63 @@ export class DisconnectedFilterDropdown extends React.Component<FilterDropdownMe
             </div>
           )}
         </div>
+        {this.state.showDialog && 
+        <Dialog title="Select Range" toggleDialog={this.toggleDialog}>
+          <Form buttonText="Set Range" submit={this.onSetRange}>
+            {this.state.range.key === 'date' ? 
+              <div className="rangeDialog">
+                <label className="rangeDialog_label">Start</label>
+                <input
+                  className="rangeDialog_input"
+                  onChange={(e) => this.handleChange(e, 'date', 'start')}
+                  type='date'
+                  value={this.state.range.start}
+                />
+                <label className="rangeDialog_label">End</label>
+                <input
+                  className="rangeDialog_input"
+                  onChange={(e) => this.handleChange(e, 'date', 'end')}
+                  type='date'
+                  value={this.state.range.end}
+                />
+              </div> :
+              <div className="rangeDialog">
+                <label className="rangeDialog_label">Start</label>
+                <input
+                  className="rangeDialog_input"
+                  onChange={(e) => this.handleChange(e, 'amount', 'start')}
+                  step='0.01'
+                  type='number'
+                  value={this.state.range.start}
+                />
+                <label className="rangeDialog_label">End</label>
+                <input
+                  className="rangeDialog_input"
+                  onChange={(e) => this.handleChange(e, 'amount', 'end')}
+                  step='0.01'
+                  type='number'
+                  value={this.state.range.end}
+                />
+              </div>
+            }
+          </Form>
+        </Dialog>}
       </div>
     )
+  }
+
+  private toggleDialog = () => this.setState({ 
+    showDialog: !this.state.showDialog,
+    showOptions: false,
+    subOption: '',
+  });
+
+  private handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, propertyName: string, field: string) => {
+    if (propertyName === 'amount') {
+      this.setState({ range: {...this.state.range, [field]: parseFloat(event.target.value)}});
+    } else if (propertyName === 'date') {
+      this.setState({ range: {...this.state.range, [field]: event.target.value}});
+    }
   }
 
   private handleClickFilter = (key: string, filter: string) => {
@@ -90,7 +159,37 @@ export class DisconnectedFilterDropdown extends React.Component<FilterDropdownMe
     this.setState({
       showOptions: false,
       subOption: '',
-    })
+    });
+  }
+
+  private handleSelectRange = (key: string) => {
+    this.setState({
+      range: {...this.state.range, key}
+    });
+    this.toggleDialog();
+  }
+
+  private onSetRange = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { dispatch, table } = this.props;
+    const newFilter: TransactionFilter = {
+      filter: 'Range',
+      key: this.state.range.key,
+      range: {
+        end: this.state.range.end,
+        start: this.state.range.start,
+      },
+      table,
+    }
+    dispatch(sessionStateStore.addTransactionFilter(newFilter));
+    this.toggleDialog();
+    this.setState({
+      range: {
+        end: '',
+        key: '',
+        start: '',
+      }
+    });
   }
 
   private getSubOptions = (key: string): any[] => {
@@ -109,7 +208,7 @@ export class DisconnectedFilterDropdown extends React.Component<FilterDropdownMe
     } else if (key === 'amount') {
       return data.map((d) => formatter.formatMoney(d[key])).filter((dt: string, index, self) => self.findIndex((t: string) => t === dt) === index);
     } else if (key === 'date') {
-      return data.map((d) => formatter.formatMMDDYYYY(d[key])).filter((dt: string, index, self) => self.findIndex((t: string) => t === dt) === index);
+      return data.map((d) => d[key]).filter((dt: string, index, self) => self.findIndex((t: string) => t === dt) === index);
     }
     return data.map((d) => d[key]).filter((dt: string, index, self) => self.findIndex((t: string) => t === dt) === index);
   }
