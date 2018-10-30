@@ -1,9 +1,10 @@
-import { setCurrentUser, setShowSidebar } from './actions';
+import { setCurrentUser, setEditingTransaction, setShowSidebar } from './actions';
 import { reducer } from './reducer';
 
 export const sessionStateStore = {
   reducer,
   setCurrentUser,
+  setEditingTransaction,
   setShowSidebar,
 };
 

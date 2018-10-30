@@ -1,15 +1,17 @@
 
 import { User } from '../../types';
 import { SessionActions } from './actions';
-import { SET_CURRENT_USER, SET_SHOW_SIDEBAR } from './constants';
+import { SET_CURRENT_USER, SET_EDITING_TRANSACTION, SET_SHOW_SIDEBAR } from './constants';
 
 export interface SessionState {
   currentUser: User | null;
+  editingTransaction: boolean;
   showSidebar: boolean;
 }
 
 const initialState: SessionState = {
   currentUser: null,
+  editingTransaction: false,
   showSidebar: false,
 }
 
@@ -21,6 +23,12 @@ export const reducer = (state: SessionState = initialState, action: SessionActio
       return {
         ...state,
         currentUser: action.currentUser,
+      }
+    }
+    case SET_EDITING_TRANSACTION: {
+      return {
+        ...state,
+        editingTransaction: action.editing,
       }
     }
     case SET_SHOW_SIDEBAR: {

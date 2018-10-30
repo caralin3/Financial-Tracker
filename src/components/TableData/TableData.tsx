@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
-import { ActionTypes, AppState } from '../../store';
+import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { Account, Category, Job, Subcategory, Transaction, TransactionType, User } from '../../types';
 import { formatter, sorter } from '../../utility';
 
@@ -22,6 +22,7 @@ interface StateMappedProps {
   accounts: Account[];
   categories: Category[];
   currentUser: User | null;
+  editingTransaction: boolean;
   jobs: Job[];
   subcategories: Subcategory[];
   transactions: Transaction[];
@@ -66,12 +67,12 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
   }
   
   public render () {
-    const { data, heading, transType } = this.props;
+    const { data, editingTransaction, heading, transType } = this.props;
     const { amount, date, editing, note, tags, to } = this.state;
 
     return (
       <td className="tableData">
-        {!editing ?
+        {(!editing || !editingTransaction)?
           <span className={heading === 'Tags' ? 'tableData_tags' : ''}>
             { heading === 'Amount' ?
               formatter.formatMoney(data) :
@@ -337,6 +338,7 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
       db.requests.transactions.edit(transaction, dispatch);
     }
     // this.setState({ editing: false })
+    dispatch(sessionStateStore.setEditingTransaction(false));
   }
 
   private accounts = () => {
@@ -397,6 +399,7 @@ const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  editingTransaction: state.sessionState.editingTransaction,
   jobs: state.jobsState.jobs,
   subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionState.transactions,

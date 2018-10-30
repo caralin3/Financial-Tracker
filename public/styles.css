@@ -33,6 +33,8 @@ button {
 button:focus {
   outline: none;
 }
+input,
+datalist,
 select {
   background-color: #FFFFFF;
 }
@@ -826,6 +828,17 @@ select {
 }
 .table_heading {
   padding: 0.5rem 1rem;
+}
+.table_heading-header {
+  align-items: center;
+  display: flex;
+}
+.table_heading-header:focus,
+.table_heading-header:hover {
+  cursor: pointer;
+}
+.table_heading-icon {
+  padding-left: 0.5rem;
 }
 .table_icons {
   align-items: center;

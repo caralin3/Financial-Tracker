@@ -218,7 +218,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
         return {
           ...trans,
           from: accounts.filter((acc) => acc.id === trans.from)[0] ?
-            accounts.filter((acc) => acc.id === trans.from)[0].name : 'N/A',
+            accounts.filter((acc) => acc.id === trans.from)[0].name : '',
           to: accounts.filter((acc) => acc.id === trans.to)[0] ?
             accounts.filter((acc) => acc.id === trans.to)[0].name : 'N/A',
         }
