@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { DeleteDialog } from '../';
 import { db } from '../../firebase';
 import { ActionTypes } from '../../store';
-import { TableDataType } from '../../types';
+import { HeaderData, TableDataType } from '../../types';
 import { TableData } from '../TableData';
 
 interface TableProps {
@@ -35,7 +35,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
   public render () {
     const { content } = this.props;
     return (
-      <div>
+      <div className="table_wrapper">
         {this.state.deleting && 
           <DeleteDialog
             confirmDelete={this.onDelete}
@@ -46,8 +46,8 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
         <table className="table">
           <thead className="table_header">
             <tr className="table_row">
-              {content.headers.map((header: string, index: number) => (
-                <th className="table_heading" key={index}>{ this.getHeader(header) }</th>
+              {content.headers.map((header: HeaderData, index: number) => (
+                <th className="table_heading" key={index}>{ header.label }</th>
               ))}
               <th className="table_heading">Actions</th>
             </tr>
@@ -55,11 +55,11 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
           <tbody className="table_body">
             {content.data.map((d: any, index: number) => (
               <tr className="table_row" key={index}>
-                {content.headers.map((header: string, ind: number) => (
+                {content.headers.map((header: HeaderData, ind: number) => (
                   <TableData
-                    data={d[header.toLowerCase()] || 'N/A'}
+                    data={d[header.key.toLowerCase()] || 'N/A'}
                     editing={this.state.editId === d.id}
-                    heading={this.getHeader(header)}
+                    heading={header.label}
                     id={d.id}
                     key={ind}
                     transType={d.type}
@@ -93,28 +93,6 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
       db.requests.transactions.remove(this.state.id, dispatch);
     }
     this.toggleDeleteDialog();
-  }
-
-  private getHeader = (header: string) => {
-    const { type } = this.props;
-    if (type === 'expenses') {
-      switch(header) {
-        case 'From':
-          return 'Payment Method';
-        case 'To':
-          return 'Item';
-        default:
-          return header;
-      }
-    } else if (type === 'income') {
-      switch(header) {
-        case 'From':
-          return 'Job';
-        default:
-          return header;
-      }
-    }
-    return header;
   }
 }
 

@@ -14,19 +14,49 @@
     align-items: center;
     border-bottom: 1px solid @very-light-gray;
     color: @blue-green;
-    display: flex;
-    grid-area: details;
-    justify-content: space-between;
+    display: grid;
+    grid-template: "title export add" auto ~'/' auto 5rem 2rem;
     margin-bottom: 1rem;
     padding: 1rem 1rem 0;
+
+    @media only screen and (max-width: 640px) {
+      display: grid;
+      grid-template: "title add" auto "export export" auto ~'/' auto auto;
+      padding-bottom: 1rem;
+    }
+
+    &-title {
+      grid-area: title;
+    }
+
+    &-add {
+      grid-area: add;
+      padding: 0 0.5rem 0 1rem;
+
+      @media only screen and (max-width: 640px) {
+        padding: 1rem;
+      }
+
+      &:focus,
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 
-  &_label {
+  &_export {
+    color: @black;
     font-family: @font-francois;
+    grid-area: export;
+
+    &:focus,
+    &:hover {
+      color: @blue-green;
+      cursor: pointer;
+    }
   }
 
   &_section {
-    overflow-x: auto;
     padding: 0 1rem;
 
     &Header {

@@ -59,7 +59,12 @@ export interface Transaction {
   userId: string;
 }
 
+export interface HeaderData {
+  key: string;
+  label: string;
+}
+
 export interface TableDataType {
-  headers: string[];
+  headers: HeaderData[];
   data: any[];
 }
