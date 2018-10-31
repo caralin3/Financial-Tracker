@@ -143,19 +143,22 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
   private filterData = (data: any[]) => {
     const { filters, type } = this.props;
     const conditions: any[] = [];
-    filters.forEach((filter) => {
-      if (type === filter.table) {
-        if (filter.range) {
-          conditions.push((d: any) => filter.range && 
-            d[filter.key] >= filter.range.start && d[filter.key] <= filter.range.end)
-        } else if (filter.key === 'tags') {
-          conditions.push((d: any) => d[filter.key].indexOf(filter.filter) !== -1);
-        } else {
-          conditions.push((d: any) => d[filter.key] === filter.filter);
+    if (filters && filters.length > 0) {
+      filters.forEach((filter) => {
+        if (type === filter.table) {
+          if (filter.range) {
+            conditions.push((d: any) => filter.range && 
+              d[filter.key] >= filter.range.start && d[filter.key] <= filter.range.end)
+          } else if (filter.key === 'tags') {
+            conditions.push((d: any) => d[filter.key].indexOf(filter.filter) !== -1);
+          } else {
+            conditions.push((d: any) => d[filter.key] === filter.filter);
+          }
         }
-      }
-    });
-    return data.filter((d: any) => conditions.every((cond) => cond(d)));
+      });
+      return data.filter((d: any) => conditions.every((cond) => cond(d)));
+    }
+    return data;
   }
 }
 

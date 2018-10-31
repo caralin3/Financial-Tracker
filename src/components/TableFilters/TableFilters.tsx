@@ -29,13 +29,16 @@ export class DisconnectedTableFilters extends React.Component<TableFiltersMerged
 
   public render() {
     const { data, headers, filters, table } = this.props;
-    const sortedFilters = sorter.sort(filters.filter((f) => f.table === table), 'desc', 'key');
+    let sortedFilters;
+    if (filters && filters.length > 0) {
+      sortedFilters = sorter.sort(filters.filter((f) => f.table === table), 'desc', 'key');
+    }
 
     return (
       <div className="tableFilters">
         <i className="tableFilters_filterIcon fas fa-filter" />
         <h3 className="tableFilters_title">Filters:</h3>
-        {sortedFilters.map((filter, index: number) => (
+        {sortedFilters && sortedFilters.map((filter, index: number) => (
           <span className="tableFilters_filter" key={index}>
             {formatter.capitalize(filter.key)}: {filter.filter === 'Range' ?
               filter.key === 'date' ? 
@@ -46,7 +49,8 @@ export class DisconnectedTableFilters extends React.Component<TableFiltersMerged
           </span>
         ))}
         <FilterDropdown data={data} headers={headers} table={table} />
-        {sortedFilters.length > 0 && <i className="fas fa-trash-alt tableFilters_icon" onClick={this.resetFilters} />}
+        {sortedFilters && sortedFilters.length > 0 && 
+          <i className="fas fa-trash-alt tableFilters_icon" onClick={this.resetFilters} />}
       </div>
     )
   }

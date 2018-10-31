@@ -16,21 +16,20 @@ interface AppMergedProps extends
   StateMappedProps,
   AppProps {}
 
-// class AppComponent extends React.Component<AppMergedProps, {}> {
-//   public componentWillMount() {
-//     if (this.props.currentUser) {
-//       history.push('/dashboard')
-//     }
+// class AppComponent extends React.Component<AppMergedProps> {
+
+//   public componentWillUnmount() {
+//     localStorage.clear();
 //   }
 
 //   public render() {
 //     return (
-//       <ReactRouter history={history}>
-//         <div className={this.props.currentUser ? 'appAuth' : 'app'}>
-//           {this.props.currentUser && <Navigation />}
-//           <Router />
-//         </div>
-//       </ReactRouter>
+//         <ReactRouter history={history}>
+//           <div className={this.props.currentUser ? 'appAuth' : 'app'}>
+//             {this.props.currentUser && <Sidebar />}
+//             <Router />
+//           </div>
+//         </ReactRouter>
 //     )
 //   }
 // }
