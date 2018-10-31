@@ -5,8 +5,9 @@ import { FirebaseAccount } from '../types';
 import { accountsCollection } from './';
 
 // LOAD ACCOUNTS
-export const load = (dispatch: Dispatch<ActionTypes>) => {
-  accountsCollection.orderBy('name').get().then((querySnapshot: any) => {
+export const load = (userId: string, dispatch: Dispatch<ActionTypes>) => {
+  accountsCollection.where('userId', '==', userId)
+  .orderBy('name').get().then((querySnapshot: any) => {
     const accountList: Account[] = [];
     querySnapshot.forEach((doc: any) => {
       const account: Account = doc.data();

@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { AddTransactionForm, ContentCard, Header, Loading } from '../../components';
+import { AddTransactionForm, ContentCard, DashboardHero, Header, Loading } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { User } from '../../types';
@@ -50,17 +50,7 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
           <Loading /> :
           <div className="dashboard_content">
             <ContentCard class="dashboard_hero">
-              <div className="dashboard_income">
-                <h3 className="dashboard_label">Income</h3>
-                <h2 className="dashboard_amount">$3,020.51</h2>
-              </div>
-              <div className="dashboard_worth">
-                <h3 className="dashboard_label">Net Worth</h3>
-                <h2 className="dashboard_amount">$18,452.00</h2>
-              </div>
-              <div className="dashboard_expense">
-                <h3 className="dashboard_label">Expenses vs. Budget</h3>
-              </div>
+              <DashboardHero />
             </ContentCard>
             <ContentCard class="dashboard_form">
               <h3 className="dashboard_label dashboard_label-log">
@@ -90,9 +80,11 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
   }
 
   private loadAccounts = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.accounts.load(dispatch);
+      if (currentUser) {
+        await db.requests.accounts.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -100,9 +92,11 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
   }
 
   private loadCategories = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.categories.load(dispatch);
+      if (currentUser) {
+        await db.requests.categories.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -110,18 +104,22 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
   }
 
   private loadJobs = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.jobs.load(dispatch);
+      if (currentUser) {
+        await db.requests.jobs.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
   }
 
   private loadSubcategories = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.subcategories.load(dispatch);
+      if (currentUser) {
+        await db.requests.subcategories.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -129,9 +127,11 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
   }
 
   private loadTransactions = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.transactions.load(dispatch);
+      if (currentUser) {
+        await db.requests.transactions.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }

@@ -339,6 +339,70 @@ select {
 .contentCard {
   border: 1px solid #0C98AC;
 }
+.dashboardHero {
+  display: grid;
+  gap: 1rem;
+  grid-template: "income worth expense" auto / 0.5fr 0.5fr 2fr;
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardHero {
+    grid-template: "income worth date" auto "expense expense expense" auto / 1fr 1fr 0.5fr;
+    padding: 1rem;
+  }
+}
+.dashboardHero_income {
+  grid-area: income;
+}
+.dashboardHero_worth {
+  grid-area: worth;
+}
+.dashboardHero_expense {
+  grid-area: expense;
+}
+.dashboardHero_date {
+  position: absolute;
+  display: flex;
+  right: 4rem;
+  padding: 1rem 0;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardHero_date {
+    position: relative;
+    grid-area: date;
+    right: 0;
+    padding: 0;
+  }
+}
+.dashboardHero_date-text {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+  padding-right: 0.3rem;
+}
+.dashboardHero_date-year {
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardHero_date-year:focus,
+.dashboardHero_date-year:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.dashboardHero_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.dashboardHero_amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardHero_dropdown {
+  min-width: auto !important;
+}
+.dashboardHero_neg {
+  color: #FF0000;
+}
 .deleteDialog_subtitle {
   font-weight: normal;
   margin: 0;
@@ -1219,26 +1283,7 @@ select {
   }
 }
 .dashboard_hero {
-  display: grid;
-  gap: 1rem;
   grid-area: hero;
-  grid-template: "income worth expense" / 0.5fr 0.5fr 2fr;
-  padding: 2rem;
-}
-@media only screen and (max-width: 640px) {
-  .dashboard_hero {
-    grid-template: "income worth" auto "expense expense" auto / 1fr 1fr;
-    padding: 1rem;
-  }
-}
-.dashboard_income {
-  grid-area: income;
-}
-.dashboard_worth {
-  grid-area: worth;
-}
-.dashboard_expense {
-  grid-area: expense;
 }
 .dashboard_label {
   font-family: 'Francois One', sans-serif;
@@ -1246,11 +1291,6 @@ select {
 }
 .dashboard_label-log {
   padding-bottom: 1rem;
-}
-.dashboard_amount {
-  font-family: 'Oswald', sans-serif;
-  font-weight: normal;
-  margin: 0;
 }
 .dashboard_form {
   grid-area: form;

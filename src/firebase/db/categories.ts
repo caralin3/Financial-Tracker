@@ -5,8 +5,9 @@ import { FirebaseCategory } from '../types';
 import { categoriesCollection } from './';
 
 // LOAD CATEGORIES
-export const load = (dispatch: Dispatch<ActionTypes>) => {
-  categoriesCollection.orderBy('name').get().then((querySnapshot: any) => {
+export const load = (userId: string, dispatch: Dispatch<ActionTypes>) => {
+  categoriesCollection.where('userId', '==', userId)
+    .orderBy('name').get().then((querySnapshot: any) => {
     const categoryList: Category[] = [];
     querySnapshot.forEach((doc: any) => {
       const category: Category = doc.data();

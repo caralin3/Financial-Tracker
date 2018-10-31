@@ -7,8 +7,9 @@ import { FirebaseSubcategory } from '../types';
 import { categoriesCollection, subcategoriesCollection } from './';
 
 // LOAD SUBCATEGORIES
-export const load = (dispatch: Dispatch<ActionTypes>) => {
-  subcategoriesCollection.orderBy('name').get().then((querySnapshot: any) => {
+export const load = (userId: string, dispatch: Dispatch<ActionTypes>) => {
+  subcategoriesCollection.where('userId', '==', userId)
+    .orderBy('name').get().then((querySnapshot: any) => {
     const subcategoryList: Subcategory[] = [];
     querySnapshot.forEach((doc: any) => {
       const subcategory: Subcategory = doc.data();
@@ -47,7 +48,7 @@ export const add = (subcategory: FirebaseSubcategory, dispatch: Dispatch<ActionT
               console.log(err.message);
             }).then(() => {
               // Update in redux state
-              db.requests.categories.load(dispatch);
+              db.requests.categories.load(subcategory.userId, dispatch);
             });
           }).catch((err: any) => {
             console.log(err.message);

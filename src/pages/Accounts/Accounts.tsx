@@ -141,9 +141,11 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
   }
 
   private loadAccounts = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.accounts.load(dispatch);
+      if (currentUser) {
+        await db.requests.accounts.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }

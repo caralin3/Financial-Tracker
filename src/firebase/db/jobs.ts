@@ -5,8 +5,9 @@ import { FirebaseJob } from '../types';
 import { jobsCollection } from './';
 
 // LOAD JOBS
-export const load = (dispatch: Dispatch<ActionTypes>) => {
-  jobsCollection.orderBy('name').get().then((querySnapshot: any) => {
+export const load = (userId: string, dispatch: Dispatch<ActionTypes>) => {
+  jobsCollection.where('userId', '==', userId)
+    .orderBy('name').get().then((querySnapshot: any) => {
     const jobList: Job[] = [];
     querySnapshot.forEach((doc: any) => {
       const job: Job = doc.data();

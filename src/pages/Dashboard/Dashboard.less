@@ -25,34 +25,10 @@
   }
 
   &_hero {
-    display: grid;
-    gap: 1rem;
     grid-area: hero;
-    grid-template: "income worth expense" ~'/' 0.5fr 0.5fr 2fr;
-    padding: 2rem;
-
-    @media only screen and (max-width: 640px) {
-      grid-template:
-        "income worth"
-        auto
-        "expense expense"
-        auto
-        ~'/' 1fr 1fr;
-      padding: 1rem;
-    }
   }
 
-  &_income {
-    grid-area: income;
-  }
-
-  &_worth {
-    grid-area: worth;
-  }
-
-  &_expense {
-    grid-area: expense;
-  }
+  
 
   &_label {
     font-family: @font-francois;
@@ -61,12 +37,6 @@
     &-log {
       padding-bottom: 1rem;
     }
-  }
-
-  &_amount {
-    font-family: @font-oswald;
-    font-weight: normal;
-    margin: 0;
   }
 
   &_form {

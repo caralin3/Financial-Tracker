@@ -28,4 +28,8 @@ export const formatMD = (date: string) => {
   return (months[month - 1] + ' ' + day);
 };
 
+export const formatYYYY = (date: string) => {
+  return date.toString().substring(0,4);
+};
+
 export const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);

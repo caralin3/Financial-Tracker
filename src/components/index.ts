@@ -7,6 +7,7 @@ import { AddTransactionForm } from './AddTransactionForm';
 import { CategoriesSection } from './CategoriesSection';
 import { CategoryItem } from './CategoryItem';
 import { ContentCard } from './ContentCard';
+import { DashboardHero } from './DashboardHero';
 import { DeleteDialog } from './DeleteDialog';
 import { Dialog } from './Dialog';
 import { Dropdown } from './Dropdown';
@@ -37,6 +38,7 @@ export {
   CategoriesSection,
   CategoryItem,
   ContentCard,
+  DashboardHero,
   DeleteDialog,
   Dialog,
   Dropdown,

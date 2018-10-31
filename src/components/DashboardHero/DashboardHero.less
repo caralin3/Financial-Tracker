@@ -1,0 +1,80 @@
+@import (reference) '../../less/variables.less';
+
+.dashboardHero {
+  display: grid;
+  gap: 1rem;
+  grid-template: "income worth expense" auto ~'/' 0.5fr 0.5fr 2fr;
+  padding: 2rem;
+
+  @media only screen and (max-width: 640px) {
+    grid-template:
+      "income worth date"
+      auto
+      "expense expense expense"
+      auto
+      ~'/' 1fr 1fr 0.5fr;
+    padding: 1rem;
+  }
+
+  &_income {
+    grid-area: income;
+  }
+
+  &_worth {
+    grid-area: worth;
+  }
+
+  &_expense {
+    grid-area: expense;
+  }
+
+  &_date {
+    position: absolute;
+    display: flex;
+    right: 4rem;
+    padding: 1rem 0;
+
+    @media only screen and (max-width: 640px) {
+      position: relative;
+      grid-area: date;
+      right: 0;
+      padding: 0;
+    }
+
+    &-text {
+      font-family: @font-francois;
+      margin: 0;
+      padding-right: 0.3rem;
+    }
+
+    &-year {
+      font-family: @font-oswald;
+      margin: 0;
+
+      &:focus,
+      &:hover {
+        color: @blue-green;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &_label {
+    font-family: @font-francois;
+    margin: 0;
+  }
+
+  &_amount {
+    font-family: @font-oswald;
+    font-weight: normal;
+    margin: 0;
+  }
+
+  &_dropdown {
+    min-width: auto !important;
+  }
+
+  &_neg {
+    color: @red;
+  }
+}
