@@ -10,7 +10,7 @@ import { ActionTypes, AppState } from '../../store';
 
 import { Category, HeaderData, TableDataType, User } from '../../types';
 
-export interface BudgetsPageProps {}
+export interface BudgetPageProps {}
 
 interface StateMappedProps {
   categories: Category[];
@@ -21,15 +21,15 @@ interface DispatchMappedProps {
   dispatch: Dispatch<ActionTypes>;
 }
 
-interface BudgetsMergedProps extends
+interface BudgetMergedProps extends
   RouteComponentProps<RouteProps>,
   StateMappedProps,
   DispatchMappedProps,
-  BudgetsPageProps {}
+  BudgetPageProps {}
 
-export interface BudgetsPageState {}
+export interface BudgetPageState {}
 
-class DisconnectedBudgetsPage extends React.Component<BudgetsMergedProps, BudgetsPageState> {
+class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPageState> {
   public readonly state = {}
 
   public componentWillMount() {
@@ -101,8 +101,8 @@ const mapStateToProps = (state: AppState) => ({
   currentUser: state.sessionState.currentUser,
 });
 
-export const BudgetsPage = compose(
+export const BudgetPage = compose(
   withRouter,
   withAuthorization(authCondition),
-  connect<StateMappedProps, DispatchMappedProps, BudgetsPageProps
->(mapStateToProps, mapDispatchToProps))(DisconnectedBudgetsPage);
+  connect<StateMappedProps, DispatchMappedProps, BudgetPageProps
+>(mapStateToProps, mapDispatchToProps))(DisconnectedBudgetPage);

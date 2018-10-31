@@ -1,6 +1,6 @@
 import { AccountsPage } from './Accounts';
 import { ActivityPage } from './Activity';
-import { BudgetsPage } from './Budgets';
+import { BudgetPage } from './Budget';
 import { ChartsPage } from './Charts';
 import { DashboardPage } from './Dashboard';
 import { ForgotPasswordPage } from './ForgotPassword';
@@ -11,7 +11,7 @@ import { SettingsPage } from './Settings';
 export {
   AccountsPage,
   ActivityPage,
-  BudgetsPage,
+  BudgetPage,
   ChartsPage,
   DashboardPage,
   ForgotPasswordPage,

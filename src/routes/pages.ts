@@ -2,7 +2,7 @@ import { Route } from '../types';
 
 export const ACCOUNTS = '/accounts';
 export const ACTIVITY = '/activity';
-export const BUDGETS = '/budgets';
+export const BUDGET = '/budget';
 export const CHARTS = '/charts';
 export const DASHBOARD = '/';
 export const FORGOT_PASSWORD = '/forgot_password';
@@ -17,7 +17,7 @@ export const navRoutes: Route[] = [
   {name: 'Dashboard', path: DASHBOARD},
   {name: 'Activity', path: ACTIVITY},
   {name: 'Accounts', path: ACCOUNTS},
-  {name: 'Budgets', path: BUDGETS},
+  {name: 'Budget', path: BUDGET},
   {name: 'Charts', path: CHARTS},
   {name: 'Goals', path: GOALS},
   {name: 'Settings', path: SETTINGS},

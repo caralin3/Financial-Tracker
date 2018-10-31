@@ -6,7 +6,7 @@ import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 import {
   AccountsPage,
   ActivityPage,
-  BudgetsPage,
+  BudgetPage,
   ChartsPage,
   DashboardPage,
   ForgotPasswordPage,
@@ -40,7 +40,7 @@ const RouterAuth: React.SFC<RouterMergedProps> = (props) => (
     <Route exact={true} path={routes.DASHBOARD} component={DashboardPage} />
     <Route exact={true} path={routes.ACCOUNTS} component={AccountsPage} />
     <Route exact={true} path={routes.ACTIVITY} component={ActivityPage} />
-    <Route exact={true} path={routes.BUDGETS} component={BudgetsPage} />
+    <Route exact={true} path={routes.BUDGET} component={BudgetPage} />
     <Route exact={true} path={routes.CHARTS} component={ChartsPage} />
     <Route exact={true} path={routes.GOALS} component={GoalsPage} />
     <Route exact={true} path={routes.SETTINGS} component={SettingsPage} />
@@ -62,7 +62,7 @@ const Redirects = () => (
   <>
     {location.pathname === routes.ACCOUNTS && <Redirect to={routes.LANDING} />}
     {location.pathname === routes.ACTIVITY && <Redirect to={routes.LANDING} />}
-    {location.pathname === routes.BUDGETS && <Redirect to={routes.LANDING} />}
+    {location.pathname === routes.BUDGET && <Redirect to={routes.LANDING} />}
     {location.pathname === routes.CHARTS && <Redirect to={routes.LANDING} />}
     {location.pathname === routes.GOALS && <Redirect to={routes.LANDING} />}
     {location.pathname === routes.SETTINGS && <Redirect to={routes.LANDING} />}
