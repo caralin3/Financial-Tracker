@@ -1,11 +1,14 @@
 @import (reference) '../../less/variables.less';
 
 .dashboard {
+
   &_content {
     display: grid;
     gap: 1rem;
     grid-template: 
       "hero hero hero hero"
+      auto
+      "form form form form"
       auto
       "recent accounts accounts topExpenses"
       auto
@@ -54,12 +57,26 @@
   &_label {
     font-family: @font-francois;
     margin: 0;
+
+    &-log {
+      padding-bottom: 1rem;
+    }
   }
 
   &_amount {
     font-family: @font-oswald;
     font-weight: normal;
     margin: 0;
+  }
+
+  &_form {
+    // background-color: @middle-blue;
+    grid-area: form;
+    padding: 2rem;
+
+    @media only screen and (max-width: 640px) {
+      margin: 1rem 0;
+    }
   }
 
   &_recent {

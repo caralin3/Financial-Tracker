@@ -1,0 +1,97 @@
+@import (reference) '../../less/variables.less';
+
+.addTransactionForm {
+  font-family: @font-francois;
+
+  &_options {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1rem;
+  }
+  
+  &_button {
+    border-bottom: 1px solid fade(@blue-green, 50%);
+    font-family: @font-francois;
+    font-size: 1rem;
+    width: 100%;
+
+    @media only screen and (max-width: 640px) {
+      font-size: 0.9rem;
+    }
+
+    &:focus,
+    &:hover,
+    &-active {
+      border-bottom: 1.5px solid @blue-green;
+      color: @blue-green;
+      cursor: pointer;
+    }
+  }
+
+  &_form {
+    display: grid;
+    gap: 1rem;
+    grid-template:
+      "from to"
+      auto
+      "date amount"
+      auto
+      "category subcategory"
+      auto
+      "note tags"
+      auto
+      ~'/' 1fr 1fr;
+
+    @media only screen and (max-width: 800px) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &_section {
+
+    &-from {
+      grid-area: from;
+    }
+
+    &-to {
+      grid-area: to;
+    }
+
+    &-date {
+      grid-area: date;
+    }
+
+    &-amount {
+      grid-area: amount;
+    }
+
+    &-category {
+      grid-area: category;
+    }
+    
+    &-subcategory {
+      grid-area: subcategory;
+    }
+
+    &-note {
+      grid-area: note;
+    }
+
+    &-tags {
+      grid-area: tags;
+    }
+  }
+  
+  &_input {
+    margin: 1rem 0;
+    padding: 0.5rem 0;
+    width: 100%;
+
+    &-amount,
+    &-date {
+      text-align: right;
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { ContentCard, Header, Loading } from '../../components';
+import { AddTransactionForm, ContentCard, Header, Loading } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { User } from '../../types';
@@ -61,6 +61,12 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
               <div className="dashboard_expense">
                 <h3 className="dashboard_label">Expenses vs. Budget</h3>
               </div>
+            </ContentCard>
+            <ContentCard class="dashboard_form">
+              <h3 className="dashboard_label dashboard_label-log">
+                Log Transaction
+              </h3>
+              <AddTransactionForm toggleDialog={() => null} />
             </ContentCard>
             <ContentCard class="dashboard_recent">
               <h3 className="dashboard_label">Recent Transactions</h3>

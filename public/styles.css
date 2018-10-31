@@ -137,71 +137,75 @@ select {
 .addJobDialog_number {
   text-align: right;
 }
-.addTransactionDialog_options {
+.addTransactionForm {
+  font-family: 'Francois One', sans-serif;
+}
+.addTransactionForm_options {
   align-items: center;
   display: flex;
   justify-content: center;
   padding-bottom: 1rem;
 }
-.addTransactionDialog_button {
-  border-bottom: 1px solid #CCCCCC;
+.addTransactionForm_button {
+  border-bottom: 1px solid rgba(12, 152, 172, 0.5);
+  font-family: 'Francois One', sans-serif;
   font-size: 1rem;
   width: 100%;
 }
 @media only screen and (max-width: 640px) {
-  .addTransactionDialog_button {
+  .addTransactionForm_button {
     font-size: 0.9rem;
   }
 }
-.addTransactionDialog_button:focus,
-.addTransactionDialog_button:hover,
-.addTransactionDialog_button-active {
+.addTransactionForm_button:focus,
+.addTransactionForm_button:hover,
+.addTransactionForm_button-active {
   border-bottom: 1.5px solid #0C98AC;
   color: #0C98AC;
   cursor: pointer;
 }
-.addTransactionDialog_form {
+.addTransactionForm_form {
   display: grid;
   gap: 1rem;
   grid-template: "from to" auto "date amount" auto "category subcategory" auto "note tags" auto / 1fr 1fr;
 }
 @media only screen and (max-width: 800px) {
-  .addTransactionDialog_form {
+  .addTransactionForm_form {
     display: flex;
     flex-direction: column;
   }
 }
-.addTransactionDialog_section-from {
+.addTransactionForm_section-from {
   grid-area: from;
 }
-.addTransactionDialog_section-to {
+.addTransactionForm_section-to {
   grid-area: to;
 }
-.addTransactionDialog_section-date {
+.addTransactionForm_section-date {
   grid-area: date;
 }
-.addTransactionDialog_section-amount {
+.addTransactionForm_section-amount {
   grid-area: amount;
 }
-.addTransactionDialog_section-category {
+.addTransactionForm_section-category {
   grid-area: category;
 }
-.addTransactionDialog_section-subcategory {
+.addTransactionForm_section-subcategory {
   grid-area: subcategory;
 }
-.addTransactionDialog_section-note {
+.addTransactionForm_section-note {
   grid-area: note;
 }
-.addTransactionDialog_section-tags {
+.addTransactionForm_section-tags {
   grid-area: tags;
 }
-.addTransactionDialog_input {
+.addTransactionForm_input {
   margin: 1rem 0;
   padding: 0.5rem 0;
   width: 100%;
 }
-.addTransactionDialog_input-amount,
-.addTransactionDialog_input-date {
+.addTransactionForm_input-amount,
+.addTransactionForm_input-date {
   text-align: right;
 }
 .categoriesSection_header {
@@ -333,7 +337,7 @@ select {
   padding: 0.5rem 0;
 }
 .contentCard {
-  background-image: linear-gradient(#62D4D9, #0C98AC);
+  border: 1px solid #0C98AC;
 }
 .deleteDialog_subtitle {
   font-weight: normal;
@@ -1204,7 +1208,7 @@ select {
 .dashboard_content {
   display: grid;
   gap: 1rem;
-  grid-template: "hero hero hero hero" auto "recent accounts accounts topExpenses" auto "budget budget expInc expInc" auto / 1fr 0.5fr 0.5fr 1fr;
+  grid-template: "hero hero hero hero" auto "form form form form" auto "recent accounts accounts topExpenses" auto "budget budget expInc expInc" auto / 1fr 0.5fr 0.5fr 1fr;
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
@@ -1240,10 +1244,22 @@ select {
   font-family: 'Francois One', sans-serif;
   margin: 0;
 }
+.dashboard_label-log {
+  padding-bottom: 1rem;
+}
 .dashboard_amount {
   font-family: 'Oswald', sans-serif;
   font-weight: normal;
   margin: 0;
+}
+.dashboard_form {
+  grid-area: form;
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_form {
+    margin: 1rem 0;
+  }
 }
 .dashboard_recent {
   grid-area: recent;
