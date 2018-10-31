@@ -4,7 +4,8 @@ import {
   resetTransactionFilters,
   setCurrentUser,
   setEditingTransaction,
-  setShowSidebar
+  setShowSidebar,
+  setTopExpenses
 } from './actions';
 import { reducer } from './reducer';
 
@@ -16,6 +17,7 @@ export const sessionStateStore = {
   setCurrentUser,
   setEditingTransaction,
   setShowSidebar,
+  setTopExpenses,
 };
 
 export { SessionActions } from './actions';

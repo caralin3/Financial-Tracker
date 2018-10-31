@@ -10,6 +10,7 @@ import { ContentCard } from './ContentCard';
 import { DashboardAccounts } from './DashboardAccounts';
 import { DashboardHero } from './DashboardHero';
 import { DashboardRecentTrans } from './DashboardRecentTrans';
+import { DashboardTopExpenses } from './DashboardTopExpenses';
 import { DeleteDialog } from './DeleteDialog';
 import { Dialog } from './Dialog';
 import { Dropdown } from './Dropdown';
@@ -23,6 +24,7 @@ import { JobsSection } from './JobsSection';
 import { Loading, LoadingWrapper } from './Loading';
 import { LoginForm } from './LoginForm';
 import { LogoutButton } from './LogoutButton';
+import { RangeDialog } from './RangeDialog';
 import { Sidebar } from './Sidebar';
 import { SignUpForm } from './SignUpForm';
 import { Table } from './Table';
@@ -43,6 +45,7 @@ export {
   DashboardAccounts,
   DashboardHero,
   DashboardRecentTrans,
+  DashboardTopExpenses,
   DeleteDialog,
   Dialog,
   Dropdown,
@@ -57,6 +60,7 @@ export {
   LoadingWrapper,
   LoginForm,
   LogoutButton,
+  RangeDialog,
   Sidebar,
   SignUpForm,
   Table,

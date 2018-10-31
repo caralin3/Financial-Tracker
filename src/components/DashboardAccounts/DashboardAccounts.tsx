@@ -57,6 +57,10 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
             { formatter.formatMoney(creditSum) }
           </h3>
         </div>
+        <div className="dashboardAccounts_chart">
+          <h3 className="dashboardAccounts_chart-title">Expenses By Accounts</h3>
+          <div className="dashboardAccounts_chart-chart">Pie Chart</div>
+        </div>
       </div>
     )
   }

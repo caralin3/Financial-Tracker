@@ -1,5 +1,5 @@
 
-import { TransactionFilter, User } from '../../types';
+import { Range, TransactionFilter, User } from '../../types';
 import { SessionActions } from './actions';
 import {
   ADD_TRANS_FILTER,
@@ -7,13 +7,15 @@ import {
   RESET_TRANS_FILTERS,
   SET_CURRENT_USER,
   SET_EDITING_TRANSACTION,
-  SET_SHOW_SIDEBAR
+  SET_SHOW_SIDEBAR,
+  SET_TOP_EXPENSES
 } from './constants';
 
 export interface SessionState {
   currentUser: User | null;
   editingTransaction: boolean;
   showSidebar: boolean;
+  topExpenses: Range;
   transactionFilters: TransactionFilter[];
 }
 
@@ -21,6 +23,10 @@ const initialState: SessionState = {
   currentUser: null,
   editingTransaction: false,
   showSidebar: false,
+  topExpenses: {
+    end: '',
+    start: '',
+  },
   transactionFilters: [],
 }
 
@@ -62,6 +68,12 @@ export const reducer = (state: SessionState = initialState, action: SessionActio
       return {
         ...state,
         showSidebar: action.showSidebar,
+      }
+    }
+    case SET_TOP_EXPENSES: {
+      return {
+        ...state,
+        topExpenses: action.range,
       }
     }
     default:

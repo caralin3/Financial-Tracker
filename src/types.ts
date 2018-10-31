@@ -78,3 +78,8 @@ export interface TransactionFilter {
   };
   table: string;
 }
+
+export interface Range {
+  end: string;
+  start: string;
+}

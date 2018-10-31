@@ -9,7 +9,8 @@ import {
   DashboardAccounts,
   DashboardHero,
   DashboardRecentTrans,
-  Header
+  DashboardTopExpenses,
+  Header,
 } from '../../components';
 import { ActionTypes, AppState } from '../../store';
 import { User } from '../../types';
@@ -59,7 +60,7 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
             <DashboardAccounts />
           </ContentCard>
           <ContentCard class="dashboard_topExpenses">
-            <h3 className="dashboard_label">Top 5 Expenses</h3>
+            <DashboardTopExpenses />
           </ContentCard>
           <ContentCard class="dashboard_budget">
             <h3 className="dashboard_label">Budget by Category</h3>

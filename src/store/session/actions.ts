@@ -1,11 +1,12 @@
-import { TransactionFilter, User } from '../../types';
+import { Range, TransactionFilter, User } from '../../types';
 import {
   ADD_TRANS_FILTER,
   REMOVE_TRANS_FILTER,
   RESET_TRANS_FILTERS,
   SET_CURRENT_USER,
   SET_EDITING_TRANSACTION,
-  SET_SHOW_SIDEBAR
+  SET_SHOW_SIDEBAR,
+  SET_TOP_EXPENSES
 } from './constants';
 
 export interface SetCurrentUserAction {
@@ -68,10 +69,21 @@ export const setShowSidebar = (showSidebar: boolean): SetShowSidebarAction => ({
   type: SET_SHOW_SIDEBAR,
 });
 
+export interface SetTopExpensesAction {
+  range: Range;
+  type: 'SET_TOP_EXPENSES';
+}
+
+export const setTopExpenses = (range: Range): SetTopExpensesAction => ({
+  range,
+  type: SET_TOP_EXPENSES,
+});
+
 export type SessionActions =
   AddTransFilterAction |
   RemoveTransFilterAction |
   ResetTransFilterAction |
   SetCurrentUserAction |
   SetEditingTransactionAction |
-  SetShowSidebarAction;
+  SetShowSidebarAction |
+  SetTopExpensesAction;
