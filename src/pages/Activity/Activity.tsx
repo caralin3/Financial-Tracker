@@ -8,6 +8,7 @@ import { AddTransactionDialog, Dropdown, Header, Table } from '../../components'
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, Category, HeaderData, Job, Subcategory, TableDataType, Transaction, User } from '../../types';
+import { transactions as tranConverter } from '../../utility';
 
 export interface ActivityPageProps {}
 
@@ -254,28 +255,21 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
       if (trans.type === 'Expense') {
         return {
           ...trans,
-          category: categories.filter((cat) => cat.id === trans.category)[0] ? 
-            categories.filter((cat) => cat.id === trans.category)[0].name : 'N/A',
-          from: accounts.filter((acc) => acc.id === trans.from)[0] ?
-            accounts.filter((acc) => acc.id === trans.from)[0].name : 'N/A',
-          subcategory: subcategories.filter((sub) => sub.id === trans.subcategory)[0] ?
-            subcategories.filter((sub) => sub.id === trans.subcategory)[0].name : 'N/A',
+          category: tranConverter.category(trans, categories),
+          from: tranConverter.from(trans, accounts, jobs),
+          subcategory: tranConverter.subcategory(trans, subcategories),
         }
       } else if (trans.type === 'Transfer') {
         return {
           ...trans,
-          from: accounts.filter((acc) => acc.id === trans.from)[0] ?
-            accounts.filter((acc) => acc.id === trans.from)[0].name : '',
-          to: accounts.filter((acc) => acc.id === trans.to)[0] ?
-            accounts.filter((acc) => acc.id === trans.to)[0].name : 'N/A',
+          from: tranConverter.from(trans, accounts, jobs),
+          to: tranConverter.to(trans, accounts),
         }
       }
       return {
         ...trans,
-        from: jobs.filter((job) => job.id === trans.from)[0] ?
-          jobs.filter((job) => job.id === trans.from)[0].name : 'N/A',
-        to: accounts.filter((acc) => acc.id === trans.to)[0] ?
-          accounts.filter((acc) => acc.id === trans.to)[0].name : 'N/A',
+        from: tranConverter.from(trans, accounts, jobs),
+        to: tranConverter.to(trans, accounts),
       }
     })
   }

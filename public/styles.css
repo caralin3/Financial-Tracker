@@ -1370,13 +1370,25 @@ select {
   margin: 0;
   padding-left: 1rem;
 }
-.budgets_content {
+.budget_content {
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
-  .budgets_content {
+  .budget_content {
     padding: 1rem;
   }
+}
+.budget_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 1rem 1rem 0;
+}
+.budget_table {
+  padding: 0 1rem;
 }
 .charts_content {
   padding: 2rem;

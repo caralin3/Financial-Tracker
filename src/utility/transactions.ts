@@ -1,4 +1,4 @@
-import { Account, Job, Transaction } from '../types';
+import { Account, Category, Job, Subcategory, Transaction } from '../types';
 
 export const to = (transaction: Transaction, accounts: Account[]) => {
   if (transaction.type === 'Expense') {
@@ -13,3 +13,9 @@ export const from = (transaction: Transaction, accounts: Account[], jobs: Job[])
   }
   return accounts.filter((acc) => acc.id === transaction.from)[0].name;
 }
+
+export const category = (transaction: Transaction, categories: Category[]) =>
+  categories.filter((cat) => cat.id === transaction.category)[0].name
+
+export const subcategory = (transaction: Transaction, subcategories: Subcategory[]) =>
+  subcategories.filter((sub) => sub.id === transaction.subcategory)[0].name

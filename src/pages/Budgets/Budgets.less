@@ -1,11 +1,36 @@
 @import (reference) '../../less/variables.less';
 
-.budgets {
+.budget {
   &_content {
     padding: 2rem;
 
     @media only screen and (max-width: 640px) {
       padding: 1rem;
     }
+  }
+
+  &_header {
+    align-items: center;
+    border-bottom: 1px solid @very-light-gray;
+    color: @blue-green;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding: 1rem 1rem 0;
+
+    // @media only screen and (max-width: 640px) {
+    //   display: grid;
+    //   grid-template: 
+    //     "title add"
+    //     auto
+    //     "export export" 
+    //     auto
+    //   ~'/' [export-start] 100% [export-end];
+    //   padding-bottom: 1rem;
+    // }
+  }
+
+  &_table {
+    padding: 0 1rem;
   }
 }

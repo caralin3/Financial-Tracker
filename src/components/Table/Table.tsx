@@ -40,11 +40,11 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
     deleting: false,
     editId: '',
     id: '',
-    sortedBy: {dir: 'desc', key: 'date'},
+    sortedBy: {dir: 'desc', key: this.props.type === 'budget' ? 'name' : 'date'},
   }
   
   public render () {
-    const { content } = this.props;
+    const { content, type } = this.props;
     const { sortedBy } = this.state;
 
     return (
@@ -69,7 +69,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
                   </span>
                 </th>
               ))}
-              <th className="table_heading">Actions</th>
+              {type !== 'budget' && <th className="table_heading">Actions</th>}
             </tr>
           </thead>
           <tbody className="table_body">
@@ -77,19 +77,24 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
               <tr className="table_row" key={index}>
                 {content.headers.map((header: HeaderData, ind: number) => (
                   <TableData
-                    data={d[header.key.toLowerCase()] || 'N/A'}
+                    data={d[header.key] || ((header.key === 'budget' || header.key === 'actual'
+                      || header.key === 'variance') ? '0' : 'N/A')
+                    }
                     editing={this.state.editId === d.id}
                     heading={header.label}
                     id={d.id}
                     key={ind}
                     transType={d.type}
-                    type={this.props.type}
+                    type={type}
                   />
-                ))}
+                ))
+                }
+              {type !== 'budget' && 
                 <td className="table_icons">
                   <i className="fas fa-edit table_icon" onClick={() => this.toggleEdit(d.id)} />
                   <i className="fas fa-trash-alt table_icon" onClick={() => this.onPressDelete(d.id)} />
                 </td>
+              }
               </tr>
             ))}
           </tbody>
