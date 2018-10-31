@@ -339,6 +339,28 @@ select {
 .contentCard {
   border: 1px solid #0C98AC;
 }
+.dashboardAccounts {
+  display: flex;
+  flex-direction: column;
+}
+.dashboardAccounts_account {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+.dashboardAccounts_label {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+}
+.dashboardAccounts_sum {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardAccounts_neg {
+  color: #FF0000;
+}
 .dashboardHero {
   display: grid;
   gap: 1rem;
@@ -402,6 +424,37 @@ select {
 }
 .dashboardHero_neg {
   color: #FF0000;
+}
+.dashboardRecentTrans_trans {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+}
+.dashboardRecentTrans_row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.dashboardRecentTrans_text {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardRecentTrans_to {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+}
+.dashboardRecentTrans_amount,
+.dashboardRecentTrans_date {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardRecentTrans_neg {
+  color: #FF0000;
+}
+.dashboardRecentTrans_pos {
+  color: #007C0C;
 }
 .deleteDialog_subtitle {
   font-weight: normal;

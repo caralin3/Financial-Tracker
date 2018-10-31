@@ -1,0 +1,28 @@
+@import (reference) '../../less/variables.less';
+
+.dashboardAccounts {
+  display: flex;
+  flex-direction: column;
+
+  &_account {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+  }
+
+  &_label {
+    font-family: @font-archivo;
+    margin: 0;
+  }
+
+  &_sum {
+    font-family: @font-oswald;
+    font-weight: normal;
+    margin: 0;
+  }
+
+  &_neg {
+    color: @red;
+  }
+}

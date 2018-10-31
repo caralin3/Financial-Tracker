@@ -6,8 +6,7 @@ import { ActionTypes, AppState } from '../../store';
 import { Transaction, User } from '../../types';
 import { calculations, formatter, sorter } from '../../utility';
 
-interface DashboardHeroProps {
-}
+interface DashboardHeroProps {}
 
 interface DispatchMappedProps {
   dispatch: Dispatch<ActionTypes>;
