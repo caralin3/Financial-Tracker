@@ -1,11 +1,13 @@
 declare module 'react-vis' {
 
-  interface Data {
+  interface GraphData {
     angle: number,
     className?: string;
     color?: string | number;
     gradientLabel?: string;
     label?: string,
+    name?: string;
+    opacity?: number;
     padAngle?: number | Function;
     radius?: number,
     style?: object;
@@ -17,8 +19,9 @@ declare module 'react-vis' {
     colorType?: string;
     colorDomain?: number[];
     colorRange?: number[];
-    data: Data[];
+    data: GraphData[];
     getColor?: Function;
+    getLabel?: Function;
     height: number;
     labelsAboveChildren?: boolean;
     labelsRadiusMultiplier?: number;
