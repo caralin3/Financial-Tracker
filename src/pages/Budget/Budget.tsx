@@ -4,17 +4,19 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { Header, Table } from '../../components';
+import { Dropdown, Header, Table } from '../../components';
 import { db } from '../../firebase';
-import { ActionTypes, AppState } from '../../store';
-import { Category, HeaderData, TableDataType, User } from '../../types';
-import { categories as utilityCategories, sorter } from '../../utility';
+import { ActionTypes, AppState, sessionStateStore } from '../../store';
+import { BudgetInfo, Category, HeaderData, TableDataType, Transaction, User } from '../../types';
+import { categories as utilityCategories, sorter, transactionConverter } from '../../utility';
 
 export interface BudgetPageProps {}
 
 interface StateMappedProps {
+  budgetInfo: BudgetInfo;
   categories: Category[];
   currentUser: User | null;
+  transactions: Transaction[];
 }
 
 interface DispatchMappedProps {
@@ -30,29 +32,56 @@ interface BudgetMergedProps extends
 export interface BudgetPageState {}
 
 class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPageState> {
-  public readonly state = {}
+  public readonly state: BudgetPageState = {}
 
   public componentWillMount() {
     this.loadCategories();
   }
 
   public render() {
+    const { budgetInfo, transactions } = this.props;
+
+    const monthOptions: JSX.Element[] = [];
+    const yearOptions: JSX.Element[] = [];
+
+    transactionConverter.years(transactions).forEach((y) => yearOptions.push(
+      <h3 className="budget_dropdown-option" onClick={() => this.handleClick(y, 'year')}>
+        { y }
+      </h3>
+    ));
+    transactionConverter.monthYears(transactions).forEach((m) => monthOptions.push(
+      <h3 className="budget_dropdown-option" onClick={() => this.handleClick(m, 'month')}>
+        { m }
+      </h3>
+    ));
+
+    const dropdownOptions: JSX.Element[] = yearOptions.concat(monthOptions);
+    
     return (
       <div className="budget">
         <Header title="Budget" />
         <div className="budget_content">
-          <h3 className="budget_label">Budget Settings</h3>
+          <div className="budget_content-header">
+            <h3 className="budget_label">Expenses vs. Budget</h3>
+          </div>
           <div className="budget_header">
             <h2 className="budget_header-title">Budget Table</h2>
-            <CSVLink
-              className="budget_export"
-              data={this.budgetData().data}
-              filename="budget.csv"
-              headers={this.budgetData().headers}
-            >
-              Export
-            </CSVLink>
+            <div className="budget_header-buttons">
+              <Dropdown
+                buttonText={budgetInfo.date || transactionConverter.monthYears(transactions)[0]}
+                contentClass="budget_dropdown"
+                options={dropdownOptions}
+              />
+              <CSVLink
+                className="budget_export"
+                data={this.budgetData().data}
+                filename={`${budgetInfo.date}_budget.csv`}
+                headers={this.budgetData().headers}
+              >
+                Export
+              </CSVLink>
           </div>
+        </div>
           <div className="budget_tables">
             <div className="budget_tables-actual">
               <Table content={this.budgetData()} type="budget" />
@@ -65,6 +94,11 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
         </div>
       </div>
     )
+  }
+
+  private handleClick = (date: string, dateType: 'month' | 'year') => {
+    const { dispatch } = this.props;
+    dispatch(sessionStateStore.setBudgetInfo({date, dateType}));
   }
 
   private loadCategories = async () => {
@@ -112,8 +146,10 @@ const authCondition = (authUser: any) => !!authUser;
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
+  budgetInfo: state.sessionState.budgetInfo,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  transactions: state.transactionState.transactions,
 });
 
 export const BudgetPage = compose(

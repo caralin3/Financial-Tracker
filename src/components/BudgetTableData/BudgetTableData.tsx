@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
-import { ActionTypes, AppState } from '../../store';
-import { Account, Category, Job, Subcategory, Transaction, User } from '../../types';
+import { ActionTypes, AppState, categoryStateStore } from '../../store';
+import { BudgetInfo, Category, Transaction, User } from '../../types';
 import { calculations, formatter } from '../../utility';
 
 interface BudgetTableDataProps {
@@ -16,12 +16,9 @@ interface DispatchMappedProps {
 }
 
 interface StateMappedProps {
-  accounts: Account[];
+  budgetInfo: BudgetInfo;
   categories: Category[];
   currentUser: User | null;
-  editingTransaction: boolean;
-  jobs: Job[];
-  subcategories: Subcategory[];
   transactions: Transaction[];
 }
 
@@ -36,26 +33,24 @@ interface BudgetTableDataState {
 }
 
 export class DisconnectedBudgetTableData extends React.Component<BudgetTableDataMergedProps, BudgetTableDataState> {
-  public readonly state = {
+  public readonly state: BudgetTableDataState = {
     amount: this.props.data || 0,
     editing: false,
   }
 
   public componentWillMount() {
-    this.setActualsVariances();
+    this.updateFirebase();
+  }
+
+  public componentDidUpdate(prevProps: BudgetTableDataMergedProps) {
+    if (prevProps.budgetInfo !== this.props.budgetInfo) {
+      this.updateBudgetView(prevProps.budgetInfo.dateType);
+    }
   }
   
   public render () {
     const { data, dataKey } = this.props;
     const { amount, editing } = this.state;
-
-    const value: number = data;
-    // const actual = calculations.actualByMonth(categoryId, transactions, '10');
-    // if (dataKey === 'actual') {
-    //   value = actual;
-    // } else if (dataKey === 'variance') {
-    //   value = calculations.variance(actual, categoryId, categories);
-    // }
 
     return (
       <td className="budgetTableData">
@@ -63,16 +58,16 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
           <span
             className={`budgetTableData_data ${dataKey !== 'name' && 'budgetTableData_data-number'}
             ${(dataKey === 'budget' || dataKey === 'budgetPercent') && 'budgetTableData_data-budget'}
-            ${dataKey === 'variance' && value > 0 && 'budgetTableData_data-over'}`}
+            ${dataKey === 'variance' && data > 0 && 'budgetTableData_data-over'}`}
             onClick={(dataKey === 'budget' ||  dataKey === 'budgetPercent') ? this.toggleEdit : () => null}
           >
             { dataKey === 'name' ?
               data : dataKey === 'budgetPercent' ?
               formatter.formatPercent(data) :
-              formatter.formatMoney(value)
+              formatter.formatMoney(data)
             }
           </span> :
-          (dataKey === 'budget' ||  dataKey === 'budgetPercent') &&
+          ((dataKey === 'budget' ||  dataKey === 'budgetPercent')) &&
           <input
             className="budgetTableData_input budgetTableData_input-number"
             onBlur={this.handleBlur}
@@ -120,10 +115,13 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
     this.toggleEdit();
   }
 
-  private setActualsVariances = () => {
-    const { categories, categoryId, dispatch, transactions } = this.props;
+  private updateFirebase = async () => {
+    const { budgetInfo, categories, categoryId, dispatch, transactions } = this.props;
     const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
-    const actual = calculations.actualByMonth(categoryId, transactions, '10');
+    let actual = calculations.actualByMonth(categoryId, transactions, budgetInfo.date);
+    if (budgetInfo.dateType === 'year') {
+      actual = calculations.actualByYear(categoryId, transactions, budgetInfo.date);
+    }
     const variance = calculations.variance(actual, categoryId, categories);
     if (currentCategory) {
       const updatedCategory: Category = {
@@ -131,7 +129,35 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
         actual,
         variance,
       }
-      db.requests.categories.edit(updatedCategory, dispatch);
+      await db.requests.categories.edit(updatedCategory, dispatch);
+    }
+  }
+
+  private updateBudgetView = (prevBudgetType: 'month' | 'year') => {
+    const { budgetInfo, categories, categoryId, dispatch, transactions } = this.props;
+    const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
+    let actual = calculations.actualByMonth(categoryId, transactions, budgetInfo.date);
+    let budget = currentCategory && currentCategory.budget ? currentCategory.budget : 0;
+    
+    if (budgetInfo.dateType === 'year') {
+      actual = calculations.actualByYear(categoryId, transactions, budgetInfo.date);
+      if (prevBudgetType === 'month') {
+        budget *= 12;
+      }
+    } else {
+      if (prevBudgetType === 'year') {
+        budget /= 12;
+      }
+    }
+    const variance = calculations.variance(actual, categoryId, categories);
+    if (currentCategory) {
+      const updatedCategory: Category = {
+        ...currentCategory,
+        actual,
+        budget,
+        variance,
+      }
+      dispatch(categoryStateStore.editCategory(updatedCategory));
     }
   }
 }
@@ -139,12 +165,9 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
-  accounts: state.accountsState.accounts,
+  budgetInfo: state.sessionState.budgetInfo,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
-  editingTransaction: state.sessionState.editingTransaction,
-  jobs: state.jobsState.jobs,
-  subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionState.transactions,
 });
 

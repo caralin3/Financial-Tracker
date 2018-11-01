@@ -1,4 +1,5 @@
 import { Account, Category, Job, Subcategory, Transaction } from '../types';
+import { formatter, sorter } from './';
 
 export const to = (transaction: Transaction, accounts: Account[]) => {
   if (transaction.type === 'Expense') {
@@ -38,4 +39,14 @@ export const tags = (transactions: Transaction[]) => {
 export const items = (transactions: Transaction[]) => {
   return transactions.filter((trans: Transaction, index, self) =>
     self.findIndex((t: Transaction) => trans.type === 'Expense' && t.to === trans.to) === index);
+}
+
+export const years = (transactions: Transaction[]) => {
+  return sorter.sortValues(transactions.map((tr) => formatter.formatYYYY(tr.date))
+    .filter((year, index, self) => self.findIndex((y) => year === y) === index), 'desc');
+}
+
+export const monthYears = (transactions: Transaction[]) => {
+  return sorter.sortValues(transactions.map((tr) => formatter.formatMMYYYY(tr.date))
+    .filter((year, index, self) => self.findIndex((y) => year === y) === index), 'asc');
 }

@@ -1414,15 +1414,45 @@ select {
   margin-bottom: 1rem;
   padding: 1rem 1rem 0;
 }
+@media only screen and (max-width: 640px) {
+  .budget_header {
+    font-size: 0.9rem;
+    padding: 1rem 0 0;
+  }
+}
+.budget_header-buttons {
+  align-items: center;
+  display: flex;
+}
 .budget_export {
   background-color: #0C98AC;
   color: #FFFFFF;
   font-size: 1rem;
   padding: 0.5rem 1rem;
+  margin-left: 1rem;
 }
 .budget_export:focus,
 .budget_export:hover {
   background-color: #0fc2dc;
+  cursor: pointer;
+}
+@media only screen and (max-width: 640px) {
+  .budget_export {
+    margin-left: 0.5rem;
+    padding: 0.5rem;
+  }
+}
+.budget_dropdown {
+  min-width: auto !important;
+}
+.budget_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.budget_dropdown-option:focus,
+.budget_dropdown-option:hover {
+  color: #0C98AC;
   cursor: pointer;
 }
 .budget_tables {
@@ -1434,7 +1464,7 @@ select {
 .budget_tables-actual {
   align-self: flex-start;
 }
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 1170px) {
   .budget_tables {
     display: block;
     flex-direction: column;

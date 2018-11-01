@@ -38,6 +38,20 @@ export const formatMM = (date: string) => {
   return date.toString().substring(5,7);
 };
 
+export const formatMMYYYY = (date: string) => {
+  const months: string[] = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month: number = parseInt(date.toString().substring(5,7), 10);
+  const year: string = date.toString().substring(0,4);
+  return (months[month - 1] + ' - ' + year);
+};
+
+export const formatMMYY = (date: string) => {
+  const months: string[] = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const month: number = parseInt(date.toString().substring(5,7), 10);
+  const year: string = date.toString().substring(2,4);
+  return (months[month - 1] + ' ' + year);
+};
+
 export const formatYYYY = (date: string) => {
   return date.toString().substring(0,4);
 };

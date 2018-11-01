@@ -1,10 +1,11 @@
 
-import { Range, TransactionFilter, User } from '../../types';
+import { BudgetInfo, Range, TransactionFilter, User } from '../../types';
 import { SessionActions } from './actions';
 import {
   ADD_TRANS_FILTER,
   REMOVE_TRANS_FILTER,
   RESET_TRANS_FILTERS,
+  SET_BUDGET_INFO,
   SET_CURRENT_USER,
   SET_EDITING_TRANSACTION,
   SET_SHOW_SIDEBAR,
@@ -12,6 +13,7 @@ import {
 } from './constants';
 
 export interface SessionState {
+  budgetInfo: BudgetInfo;
   currentUser: User | null;
   editingTransaction: boolean;
   showSidebar: boolean;
@@ -20,6 +22,10 @@ export interface SessionState {
 }
 
 const initialState: SessionState = {
+  budgetInfo: {
+    date: '',
+    dateType: 'month',
+  },
   currentUser: null,
   editingTransaction: false,
   showSidebar: false,
@@ -74,6 +80,12 @@ export const reducer = (state: SessionState = initialState, action: SessionActio
       return {
         ...state,
         topExpenses: action.range,
+      }
+    }
+    case SET_BUDGET_INFO: {
+      return {
+        ...state,
+        budgetInfo: action.budgetInfo,
       }
     }
     default:

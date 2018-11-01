@@ -66,7 +66,7 @@ export const actualByMonth = (categoryId: string, transactions: Transaction[], m
   let actual: number = 0;
   transactions.forEach((trans) => {
     if (trans.type === 'Expense' && trans.category === categoryId && 
-      formatter.formatMM(trans.date) === month) {
+      formatter.formatMMYYYY(trans.date) === month) {
       actual += trans.amount;
     }
   });

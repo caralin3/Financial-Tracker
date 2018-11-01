@@ -85,3 +85,8 @@ export interface Range {
   end: string;
   start: string;
 }
+
+export interface BudgetInfo {
+  date: string;
+  dateType: 'month' | 'year';
+}

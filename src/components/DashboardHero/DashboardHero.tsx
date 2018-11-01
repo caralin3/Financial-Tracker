@@ -4,7 +4,7 @@ import { Dropdown } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Transaction, User } from '../../types';
-import { calculations, formatter, sorter } from '../../utility';
+import { calculations, formatter, transactionConverter } from '../../utility';
 
 interface DashboardHeroProps {}
 
@@ -40,7 +40,7 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
     const { year } = this.state;
 
     const dropdownOptions: JSX.Element[] = [];
-    this.years().forEach((y) => dropdownOptions.push(
+    transactionConverter.years(transactions).forEach((y) => dropdownOptions.push(
       <h3 className="dashboardHero_date-year" onClick={() => this.setState({ year: y })}>
         { y }
       </h3>
@@ -85,12 +85,6 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
     } catch (e) {
       console.log(e);
     }
-  }
-
-  private years = () => {
-    const { transactions } = this.props;
-    return sorter.sortValues(transactions.map((tr) => formatter.formatYYYY(tr.date))
-      .filter((year, index, self) => self.findIndex((y) => year === y) === index), 'desc');
   }
 }
 

@@ -23,10 +23,42 @@
     justify-content: space-between;
     margin-bottom: 1rem;
     padding: 1rem 1rem 0;
+
+    @media only screen and (max-width: 640px) {
+      font-size: 0.9rem;
+      padding: 1rem 0 0;
+    }
+
+    &-buttons {
+      align-items: center;
+      display: flex;
+    }
   }
 
   &_export {
     .button;
+    margin-left: 1rem;
+
+    @media only screen and (max-width: 640px) {
+      margin-left: 0.5rem;
+      padding: 0.5rem;
+    }
+  }
+
+  &_dropdown {
+    min-width: auto !important;
+
+    &-option {
+      color: @black;
+      font-family: @font-oswald;
+      margin: 0;
+
+      &:focus,
+      &:hover {
+        color: @blue-green;
+        cursor: pointer;
+      }
+    }
   }
 
   &_tables {
@@ -39,7 +71,7 @@
       align-self: flex-start;
     }
 
-    @media only screen and (max-width: 640px) {
+    @media only screen and (max-width: 1170px) {
       display: block;
       flex-direction: column;
       overflow-x: auto;
