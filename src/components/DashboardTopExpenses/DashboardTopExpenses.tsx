@@ -46,7 +46,7 @@ export class DisconnectedDashboardTopExpenses extends React.Component<DashboardM
 
     let topExpenses: Transaction[];
     topExpenses = sorter.sort(transactions.filter((tr) => tr.type === 'Expense'), 'asc', 'amount').slice(0, 5);
-    if (expenseRange.start !== '') {
+    if (expenseRange && expenseRange.start !== '') {
       topExpenses = sorter.sort(transactions.filter((tr) => tr.type === 'Expense'
         && tr.date >= expenseRange.start && tr.date <= expenseRange.end), 'asc', 'amount').slice(0, 5);
     }
