@@ -1,4 +1,4 @@
-import { Account, Transaction } from '../types';
+import { Account, Category, Transaction } from '../types';
 import { formatter } from './';
 
 export const income = (transactions: Transaction[], year: string) => {
@@ -49,4 +49,32 @@ export const creditSum = (accounts: Account[]) => {
     }
   });
   return sum;
+}
+
+export const actualByYear = (categoryId: string, transactions: Transaction[], year: string) => {
+  let actual: number = 0;
+  transactions.forEach((trans) => {
+    if (trans.type === 'Expense' && trans.category === categoryId && 
+      formatter.formatYYYY(trans.date) === year) {
+      actual += trans.amount;
+    }
+  });
+  return actual;
+}
+
+export const actualByMonth = (categoryId: string, transactions: Transaction[], month: string) => {
+  let actual: number = 0;
+  transactions.forEach((trans) => {
+    if (trans.type === 'Expense' && trans.category === categoryId && 
+      formatter.formatMM(trans.date) === month) {
+      actual += trans.amount;
+    }
+  });
+  return actual;
+}
+
+export const variance = (actual: number, categoryId: string, categories: Category[]) => {
+  const category = categories.filter((cat) => cat.id === categoryId)[0];
+  const budget: number = (category && category.budget) || 0;
+  return actual - budget;
 }

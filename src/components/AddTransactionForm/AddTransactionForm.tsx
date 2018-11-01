@@ -4,6 +4,7 @@ import { Form } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, Category, Job, Subcategory, Transaction, TransactionType, User } from '../../types';
+import { transactionConverter } from '../../utility';
 
 interface AddTransactionFormProps {
   class?: string;
@@ -61,11 +62,15 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
   }
 
   public render() {
+    const { transactions } = this.props;
     const {active, amount, category, date, from, note, subcategory, tags, to } = this.state;
 
     const isInvalid = from === 'Select Account' || from === 'Select Job' || to === 'Select Account'
       || !to || !date || !amount || (active === 'Expense' && category === 'Select Category') || 
       (active === 'Expense' && subcategory === 'Select Subcategory');
+
+    const tagsList = transactionConverter.tags(transactions);
+    const items = transactionConverter.items(transactions);
 
     return (
       <div className="addTransactionForm">
@@ -131,7 +136,7 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
                   value={to}
                 />
                 <datalist id="items">
-                  {this.expenses().map((exp: Transaction) => (
+                  {items.map((exp: Transaction) => (
                     <option key={exp.id} value={exp.to}>{ exp.to }</option>
                   ))}
                 </datalist>
@@ -216,7 +221,7 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
                 value={tags}
               />
               <datalist id="tags">
-                {this.tags().map((tag: string, index: number) => (
+                {tagsList.map((tag: string, index: number) => (
                   <option key={index} value={tag}>{ tag }</option>
                 ))}
               </datalist>
@@ -295,25 +300,6 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
     }
     return subcategories.filter((sub: Subcategory) =>
       currentUser && sub.userId === currentUser.id);
-  }
-
-  private expenses = () => {
-    const { currentUser, transactions } = this.props;
-    return transactions.filter((trans: Transaction, index, self) =>
-      self.findIndex((t: Transaction) => trans.type === 'Expense' && t.to === trans.to) === index &&
-      (currentUser && currentUser.id === trans.userId));
-  }
-
-  private tags = () => {
-    const { currentUser, transactions } = this.props;
-    const trans: Transaction[] = transactions.filter((tran: Transaction) => currentUser && currentUser.id === tran.userId);
-    const tags: string[] = [];
-    trans.forEach((tr: Transaction) => {
-      if (tr.tags) {
-        tags.push.apply(tags, tr.tags);
-      }
-    });
-    return tags.filter((tag: string, index, self) => self.findIndex((t: string) => t === tag) === index);
   }
 
   private handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, propertyName: string) => {

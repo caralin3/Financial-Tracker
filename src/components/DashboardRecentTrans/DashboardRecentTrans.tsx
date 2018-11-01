@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, Job, Transaction, User } from '../../types';
-import { formatter, sorter, transactions as tranConverter } from '../../utility';
+import { formatter, sorter, transactionConverter } from '../../utility';
 
 interface DashboardRecentTransProps {}
 
@@ -45,7 +45,7 @@ export class DisconnectedDashboardRecentTrans extends React.Component<DashboardM
           <div className="dashboardRecentTrans_trans" key={trans.id}>
             <div className="dashboardRecentTrans_row">
               <h3 className="dashboardRecentTrans_to">
-                { tranConverter.to(trans, accounts) }
+                { transactionConverter.to(trans, accounts) }
               </h3>
               <h3 className={`dashboardRecentTrans_amount
                 ${trans.type === 'Expense' && 'dashboardRecentTrans_neg'}
@@ -57,7 +57,7 @@ export class DisconnectedDashboardRecentTrans extends React.Component<DashboardM
             </div>
             <div className="dashboardRecentTrans_row">
               <h3 className="dashboardRecentTrans_text">
-                { tranConverter.from(trans, accounts, jobs) }
+                { transactionConverter.from(trans, accounts, jobs) }
               </h3>
               <h3 className="dashboardRecentTrans_date">
                 { formatter.formatMD(trans.date) }

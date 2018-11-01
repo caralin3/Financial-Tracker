@@ -4,7 +4,7 @@ import * as categories from './categories';
 import * as formatter from './formatter';
 import * as sorter from './sorter';
 import * as subcategories from './subcategories';
-import * as transactions from './transactions';
+import * as transactionConverter from './transactions';
 
 export {
   accounts,
@@ -13,5 +13,5 @@ export {
   formatter,
   sorter,
   subcategories,
-  transactions,
+  transactionConverter,
 }

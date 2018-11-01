@@ -1,8 +1,14 @@
 export const formatMoney = (amount: number) => {
   return new Intl.NumberFormat('en', {
-      currency: 'USD',
-      style: 'currency',
+    currency: 'USD',
+    style: 'currency',
   }).format(amount);
+};
+
+export const formatPercent = (amount: number) => {
+  return new Intl.NumberFormat('en', {
+    style: 'percent',
+  }).format(amount / 100);
 };
 
 export const formatRoundTwo = (amount: number) => {
@@ -26,6 +32,10 @@ export const formatMD = (date: string) => {
   const month: number = parseInt(date.toString().substring(5,7), 10);
   const day: string = date.toString().substring(8,10);
   return (months[month - 1] + ' ' + day);
+};
+
+export const formatMM = (date: string) => {
+  return date.toString().substring(5,7);
 };
 
 export const formatYYYY = (date: string) => {

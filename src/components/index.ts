@@ -4,6 +4,7 @@ import { AddCategoryDialog } from './AddCategoryDialog';
 import { AddJobDialog } from './AddJobDialog';
 import { AddTransactionDialog } from './AddTransactionDialog';
 import { AddTransactionForm } from './AddTransactionForm';
+import { BudgetTableData } from './BudgetTableData';
 import { CategoriesSection } from './CategoriesSection';
 import { CategoryItem } from './CategoryItem';
 import { ContentCard } from './ContentCard';
@@ -39,6 +40,7 @@ export {
   AddJobDialog,
   AddTransactionDialog,
   AddTransactionForm,
+  BudgetTableData,
   CategoriesSection,
   CategoryItem,
   ContentCard,

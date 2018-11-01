@@ -1,14 +1,14 @@
 import * as React from 'react';
+import { CSVLink } from 'react-csv';
 import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { Header, Table } from '../../components';
 import { db } from '../../firebase';
-// import * as routes from '../../routes';
 import { ActionTypes, AppState } from '../../store';
-
 import { Category, HeaderData, TableDataType, User } from '../../types';
+import { categories as utilityCategories, sorter } from '../../utility';
 
 export interface BudgetPageProps {}
 
@@ -37,16 +37,6 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
   }
 
   public render() {
-    // const dropdownOptions: JSX.Element[] = [
-    //   (<CSVLink
-    //     className="activity_export"
-    //     data={this.getAllTransactions().data}
-    //     filename="allTransactions.csv"
-    //     headers={this.getAllTransactions().headers}
-    //   >
-    //     Download All Transactions
-    //   </CSVLink>),
-    // ];
     return (
       <div className="budget">
         <Header title="Budget" />
@@ -54,10 +44,23 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
           <h3 className="budget_label">Budget Settings</h3>
           <div className="budget_header">
             <h2 className="budget_header-title">Budget Table</h2>
-            {/* <Dropdown buttonText="Export" options={dropdownOptions} /> */}
+            <CSVLink
+              className="budget_export"
+              data={this.budgetData().data}
+              filename="budget.csv"
+              headers={this.budgetData().headers}
+            >
+              Export
+            </CSVLink>
           </div>
-          <div className="budget_table">
-            <Table content={this.budgetData()} type="budget" />
+          <div className="budget_tables">
+            <div className="budget_tables-actual">
+              <Table content={this.budgetData()} type="budget" />
+            </div>
+            <div className="budget_tables-ideal">
+              <h3 className="budget_label">Ideal Budget</h3>
+              <Table content={this.idealBudget()} type="ideal" />
+            </div>
           </div>
         </div>
       </div>
@@ -85,7 +88,19 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
       {key: 'variance', label: 'Variance ($)'},
     ];
     const tableData: TableDataType = {
-      data: categories,
+      data: sorter.sort(categories, 'desc', 'name'),
+      headers,
+    }
+    return tableData;
+  }
+
+  private idealBudget = () => {
+    const headers: HeaderData[] = [
+      {key: 'name', label: 'Category'},
+      {key: 'budgetPercent', label: 'Budget (%)'},
+    ];
+    const tableData: TableDataType = {
+      data: sorter.sort(utilityCategories.defaultCategories, 'desc', 'name'),
       headers,
     }
     return tableData;

@@ -1,3 +1,4 @@
+@import (reference) '../../less/button.less';
 @import (reference) '../../less/variables.less';
 
 .budget {
@@ -9,6 +10,11 @@
     }
   }
 
+  &_label {
+    font-family: @font-archivo;
+    margin: 0 0 1rem 0;
+  }
+
   &_header {
     align-items: center;
     border-bottom: 1px solid @very-light-gray;
@@ -17,20 +23,30 @@
     justify-content: space-between;
     margin-bottom: 1rem;
     padding: 1rem 1rem 0;
-
-    // @media only screen and (max-width: 640px) {
-    //   display: grid;
-    //   grid-template: 
-    //     "title add"
-    //     auto
-    //     "export export" 
-    //     auto
-    //   ~'/' [export-start] 100% [export-end];
-    //   padding-bottom: 1rem;
-    // }
   }
 
-  &_table {
+  &_export {
+    .button;
+  }
+
+  &_tables {
+    align-items: flex-end;
+    display: flex;
+    justify-content: space-between;
     padding: 0 1rem;
+
+    &-actual {
+      align-self: flex-start;
+    }
+
+    @media only screen and (max-width: 640px) {
+      display: block;
+      flex-direction: column;
+      overflow-x: auto;
+
+      &-ideal {
+        padding-top: 2rem;
+      }
+    }
   }
 }

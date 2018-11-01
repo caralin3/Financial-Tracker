@@ -4,18 +4,38 @@ export const to = (transaction: Transaction, accounts: Account[]) => {
   if (transaction.type === 'Expense') {
     return transaction.to;
   }
-  return accounts.filter((acc) => acc.id === transaction.to)[0].name;
+  return accounts.filter((acc) => acc.id === transaction.to)[0] ?
+    accounts.filter((acc) => acc.id === transaction.to)[0].name : '';
 }
 
 export const from = (transaction: Transaction, accounts: Account[], jobs: Job[]) => {
   if (transaction.type === 'Income') {
-    return jobs.filter((job) => job.id === transaction.from)[0].name;
+    return jobs.filter((job) => job.id === transaction.from)[0] ?
+    jobs.filter((job) => job.id === transaction.from)[0].name : '';
   }
-  return accounts.filter((acc) => acc.id === transaction.from)[0].name;
+  return accounts.filter((acc) => acc.id === transaction.from)[0] ?
+    accounts.filter((acc) => acc.id === transaction.from)[0].name : '';
 }
 
-export const category = (transaction: Transaction, categories: Category[]) =>
-  categories.filter((cat) => cat.id === transaction.category)[0].name
+export const categoryName = (categoryId: string, categories: Category[]) =>
+  categories.filter((cat) => cat.id === categoryId)[0] ?
+  categories.filter((cat) => cat.id === categoryId)[0].name : ''
 
-export const subcategory = (transaction: Transaction, subcategories: Subcategory[]) =>
-  subcategories.filter((sub) => sub.id === transaction.subcategory)[0].name
+export const subcategoryName = (subcategoryId: string, subcategories: Subcategory[]) =>
+  subcategories.filter((sub) => sub.id === subcategoryId)[0] ?
+  subcategories.filter((sub) => sub.id === subcategoryId)[0].name : ''
+
+export const tags = (transactions: Transaction[]) => {
+  const tagsList: string[] = [];
+  transactions.forEach((tr: Transaction) => {
+    if (tr.tags) {
+      tagsList.push.apply(tagsList, tr.tags);
+    }
+  });
+  return tagsList.filter((tag: string, index, self) => self.findIndex((t: string) => t === tag) === index);
+}
+
+export const items = (transactions: Transaction[]) => {
+  return transactions.filter((trans: Transaction, index, self) =>
+    self.findIndex((t: Transaction) => trans.type === 'Expense' && t.to === trans.to) === index);
+}

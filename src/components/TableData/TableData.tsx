@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { Account, Category, Job, Subcategory, Transaction, TransactionType, User } from '../../types';
-import { formatter, sorter } from '../../utility';
+import { formatter, sorter, transactionConverter } from '../../utility';
 
 interface TableDataProps {
   data: any;
@@ -67,8 +67,11 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
   }
   
   public render () {
-    const { data, editingTransaction, heading, transType } = this.props;
+    const { data, editingTransaction, heading, transactions, transType } = this.props;
     const { amount, date, editing, note, tags, to } = this.state;
+
+    const tagsList = transactionConverter.tags(transactions);
+    const items = transactionConverter.items(transactions);
 
     return (
       <td className="tableData">
@@ -93,7 +96,7 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
               value={to}
             />
             <datalist id="items">
-              {this.expenses().map((exp: Transaction) => (
+              {items.map((exp: Transaction) => (
                 <option key={exp.id} value={exp.to}>{ exp.to }</option>
               ))}
             </datalist>
@@ -185,7 +188,7 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
               value={tags}
             />
             <datalist id="tags">
-              {this.tags().map((tag: string, index: number) => (
+              {tagsList.map((tag: string, index: number) => (
                 <option key={index} value={tag}>{ tag }</option>
               ))}
             </datalist>
@@ -337,7 +340,6 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
       }
       db.requests.transactions.edit(transaction, dispatch);
     }
-    // this.setState({ editing: false })
     dispatch(sessionStateStore.setEditingTransaction(false));
   }
 
@@ -371,25 +373,6 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
     }
     return sorter.sort(subcategories.filter((sub: Subcategory) => 
       currentUser && sub.userId === currentUser.id), 'desc', 'name');
-  }
-
-  private expenses = () => {
-    const { currentUser, transactions } = this.props;
-    return transactions.filter((trans: Transaction, index, self) =>
-      self.findIndex((t: Transaction) => trans.type === 'Expense' && t.to === trans.to) === index &&
-      (currentUser && currentUser.id === trans.userId));
-  }
-
-  private tags = () => {
-    const { currentUser, transactions } = this.props;
-    const trans: Transaction[] = transactions.filter((tran: Transaction) => currentUser && currentUser.id === tran.userId);
-    const tags: string[] = [];
-    trans.forEach((tr: Transaction) => {
-      if (tr.tags) {
-        tags.push.apply(tags, tr.tags);
-      }
-    });
-    return tags.filter((tag: string, index, self) => self.findIndex((t: string) => t === tag) === index);
   }
 }
 

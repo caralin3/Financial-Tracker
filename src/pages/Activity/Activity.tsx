@@ -8,7 +8,7 @@ import { AddTransactionDialog, Dropdown, Header, Table } from '../../components'
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, Category, HeaderData, Job, Subcategory, TableDataType, Transaction, User } from '../../types';
-import { transactions as tranConverter } from '../../utility';
+import { sorter, transactionConverter } from '../../utility';
 
 export interface ActivityPageProps {}
 
@@ -239,7 +239,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) =>
         tr.userId === currentUser.id);
-      data = this.convertData(data);
+      data = sorter.sort(this.convertData(data), 'desc', 'date');
       const tableData: TableDataType = {
         data,
         headers,
@@ -252,24 +252,24 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
   private convertData = (data: Transaction[]) => {
     const { accounts, categories, jobs, subcategories } = this.props;
     return data.map((trans) => {
-      if (trans.type === 'Expense') {
+      if (trans.type === 'Expense' && trans.category && trans.subcategory) {
         return {
           ...trans,
-          category: tranConverter.category(trans, categories),
-          from: tranConverter.from(trans, accounts, jobs),
-          subcategory: tranConverter.subcategory(trans, subcategories),
+          category: transactionConverter.categoryName(trans.category, categories),
+          from: transactionConverter.from(trans, accounts, jobs),
+          subcategory: transactionConverter.subcategoryName(trans.subcategory, subcategories),
         }
       } else if (trans.type === 'Transfer') {
         return {
           ...trans,
-          from: tranConverter.from(trans, accounts, jobs),
-          to: tranConverter.to(trans, accounts),
+          from: transactionConverter.from(trans, accounts, jobs),
+          to: transactionConverter.to(trans, accounts),
         }
       }
       return {
         ...trans,
-        from: tranConverter.from(trans, accounts, jobs),
-        to: tranConverter.to(trans, accounts),
+        from: transactionConverter.from(trans, accounts, jobs),
+        to: transactionConverter.to(trans, accounts),
       }
     })
   }
@@ -289,7 +289,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Expense'
         && tr.userId === currentUser.id);
-      data = this.convertData(data);
+      data = sorter.sort(this.convertData(data), 'desc', 'date');
       const tableData: TableDataType = {
         data,
         headers,
@@ -312,7 +312,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Income'
         && tr.userId === currentUser.id);
-      data = this.convertData(data);
+      data = sorter.sort(this.convertData(data), 'desc', 'date');
       const tableData: TableDataType = {
         data,
         headers,
@@ -335,7 +335,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Transfer'
         && tr.userId === currentUser.id);
-      data = this.convertData(data);
+      data = sorter.sort(this.convertData(data), 'desc', 'date');
       const tableData: TableDataType = {
         data,
         headers,

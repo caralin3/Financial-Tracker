@@ -208,6 +208,29 @@ select {
 .addTransactionForm_input-date {
   text-align: right;
 }
+.budgetTableData {
+  padding: 0.5rem 1rem;
+}
+.budgetTableData_data {
+  padding: 0.3rem;
+}
+.budgetTableData_data-number {
+  display: block;
+  text-align: right;
+}
+.budgetTableData_data-budget:focus,
+.budgetTableData_data-budget:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.budgetTableData_data-over {
+  color: #FF0000;
+}
+.budgetTableData_input {
+  padding: 0.3rem;
+  text-align: right;
+  width: 5rem;
+}
 .categoriesSection_header {
   align-items: center;
   border-bottom: 1px solid #CCCCCC;
@@ -1090,7 +1113,7 @@ select {
   color: #FFFFFF;
 }
 .table_heading {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
 }
 .table_heading-header {
   align-items: center;
@@ -1378,6 +1401,10 @@ select {
     padding: 1rem;
   }
 }
+.budget_label {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0 0 1rem 0;
+}
 .budget_header {
   align-items: center;
   border-bottom: 1px solid #CCCCCC;
@@ -1387,8 +1414,35 @@ select {
   margin-bottom: 1rem;
   padding: 1rem 1rem 0;
 }
-.budget_table {
+.budget_export {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+.budget_export:focus,
+.budget_export:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
+}
+.budget_tables {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
   padding: 0 1rem;
+}
+.budget_tables-actual {
+  align-self: flex-start;
+}
+@media only screen and (max-width: 640px) {
+  .budget_tables {
+    display: block;
+    flex-direction: column;
+    overflow-x: auto;
+  }
+  .budget_tables-ideal {
+    padding-top: 2rem;
+  }
 }
 .charts_content {
   padding: 2rem;

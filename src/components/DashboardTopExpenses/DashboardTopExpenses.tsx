@@ -4,7 +4,7 @@ import { RangeDialog } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { Account, Job, Range, Transaction, User } from '../../types';
-import { formatter, sorter, transactions as tranConverter } from '../../utility';
+import { formatter, sorter, transactionConverter } from '../../utility';
 
 interface DashboardTopExpensesProps {}
 
@@ -73,7 +73,7 @@ export class DisconnectedDashboardTopExpenses extends React.Component<DashboardM
           <div className="dashboardTopExpenses_trans" key={trans.id}>
             <div className="dashboardTopExpenses_row">
               <h3 className="dashboardTopExpenses_to">
-                { tranConverter.to(trans, accounts) }
+                { transactionConverter.to(trans, accounts) }
               </h3>
               <h3 className="dashboardTopExpenses_amount dashboardTopExpenses_neg">
                 {trans.type === 'Expense' && '-'}
@@ -82,7 +82,7 @@ export class DisconnectedDashboardTopExpenses extends React.Component<DashboardM
             </div>
             <div className="dashboardTopExpenses_row">
               <h3 className="dashboardTopExpenses_text">
-                { tranConverter.from(trans, accounts, jobs) }
+                { transactionConverter.from(trans, accounts, jobs) }
               </h3>
               <h3 className="dashboardTopExpenses_date">
                 { formatter.formatMD(trans.date) }

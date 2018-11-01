@@ -42,8 +42,10 @@ export class DisconnectedTableFilters extends React.Component<TableFiltersMerged
           <span className="tableFilters_filter" key={index}>
             {formatter.capitalize(filter.key)}: {filter.filter === 'Range' ?
               filter.key === 'date' ? 
-              `${formatter.formatMMDDYYYY(filter.range.start)} - ${formatter.formatMMDDYYYY(filter.range.end)}` 
-              : `${formatter.formatMoney(filter.range.start)} - ${formatter.formatMoney(filter.range.end)}` : 
+              `${formatter.formatMMDDYYYY(filter.range.start)} - ${formatter.formatMMDDYYYY(filter.range.end)}`
+              : filter.key === 'budgetPercent' ?
+              `${formatter.formatPercent(filter.range.start)} - ${formatter.formatPercent(filter.range.end)}` :
+              `${formatter.formatMoney(filter.range.start)} - ${formatter.formatMoney(filter.range.end)}` : 
               filter.key === 'date' ? formatter.formatMMDDYYYY(filter.filter) : filter.filter}
             <i className="fas fa-times tableFilters_remove" onClick={() => this.removeFilter(filter)} />
           </span>

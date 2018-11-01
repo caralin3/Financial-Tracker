@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { DeleteDialog, TableData, TableFilters } from '../';
+import { BudgetTableData, DeleteDialog, TableData, TableFilters } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { HeaderData, TableDataType, TransactionFilter } from '../../types';
-import { sorter } from '../../utility';
+import { formatter, sorter } from '../../utility';
 
 interface TableProps {
   content: TableDataType;
@@ -40,7 +40,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
     deleting: false,
     editId: '',
     id: '',
-    sortedBy: {dir: 'desc', key: this.props.type === 'budget' ? 'name' : 'date'},
+    sortedBy: {dir: 'desc', key: (this.props.type === 'budget' || this.props.type === 'ideal') ? 'name' : 'date'},
   }
   
   public render () {
@@ -56,7 +56,13 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
             toggleDialog={this.toggleDeleteDialog}
           />
         }
-        <TableFilters data={this.filterData(content.data)} headers={content.headers} table={this.props.type} />
+        {type !== 'ideal' &&
+          <TableFilters
+            data={this.filterData(content.data)}
+            headers={content.headers}
+            table={this.props.type}
+          />
+        }
         <table className="table">
           <thead className="table_header">
             <tr className="table_row">
@@ -69,17 +75,22 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
                   </span>
                 </th>
               ))}
-              {type !== 'budget' && <th className="table_heading">Actions</th>}
+              {(type === 'budget' || type === 'ideal') ? <></> : <th className="table_heading">Actions</th>}
             </tr>
           </thead>
           <tbody className="table_body">
             {this.filterData(content.data).map((d: any, index: number) => (
               <tr className="table_row" key={index}>
                 {content.headers.map((header: HeaderData, ind: number) => (
+                  type === 'budget' || type === 'ideal' ?
+                  <BudgetTableData
+                    categoryId={d.id}
+                    data={d[header.key] || 0}
+                    dataKey={header.key}
+                    key={ind}
+                  /> :
                   <TableData
-                    data={d[header.key] || ((header.key === 'budget' || header.key === 'actual'
-                      || header.key === 'variance') ? '0' : 'N/A')
-                    }
+                    data={d[header.key] || 'N/A'}
                     editing={this.state.editId === d.id}
                     heading={header.label}
                     id={d.id}
@@ -89,7 +100,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
                   />
                 ))
                 }
-              {type !== 'budget' && 
+              {(type === 'budget' || type === 'ideal') ? <></> :
                 <td className="table_icons">
                   <i className="fas fa-edit table_icon" onClick={() => this.toggleEdit(d.id)} />
                   <i className="fas fa-trash-alt table_icon" onClick={() => this.onPressDelete(d.id)} />
@@ -156,6 +167,18 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
               d[filter.key] >= filter.range.start && d[filter.key] <= filter.range.end)
           } else if (filter.key === 'tags') {
             conditions.push((d: any) => d[filter.key].indexOf(filter.filter) !== -1);
+          } else if (filter.key === 'variance') {
+            if (filter.filter.startsWith('less')) {
+              conditions.push((d: any) => d[filter.key] < d.budget);
+            } else if (filter.filter.startsWith('greater')) {
+              conditions.push((d: any) => d[filter.key] > d.budget);
+            } else {
+              conditions.push((d: any) => d[filter.key] === d.budget);
+            }
+          } else if (filter.key === 'amount' || filter.key === 'actual' || filter. key === 'budget') {
+            conditions.push((d: any) => formatter.formatMoney(d[filter.key]) === filter.filter);
+          } else if (filter.key === 'budgetPercent') {
+            conditions.push((d: any) => formatter.formatPercent(d[filter.key]) === filter.filter);
           } else {
             conditions.push((d: any) => d[filter.key] === filter.filter);
           }

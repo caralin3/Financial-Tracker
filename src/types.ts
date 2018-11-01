@@ -29,11 +29,13 @@ export interface Job {
 
 export interface Category {
   id: string;
+  actual?: number;
   budget?: number;
   budgetPercent?: number;
   name: string;
   subcategories: string[];
   userId: string;
+  variance?: number;
 }
 
 export interface Subcategory {
