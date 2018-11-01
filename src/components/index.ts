@@ -32,6 +32,7 @@ import { Table } from './Table';
 import { TableData } from './TableData';
 import { TableFilters } from './TableFilters';
 import { UserProfile } from './UserProfile';
+import { PieChart } from './Visualizations';
 
 export {
   AccountSection,
@@ -62,6 +63,7 @@ export {
   LoadingWrapper,
   LoginForm,
   LogoutButton,
+  PieChart,
   RangeDialog,
   Sidebar,
   SignUpForm,

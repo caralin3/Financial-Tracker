@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
+import { PieChart } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, User } from '../../types';
@@ -59,7 +60,8 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
         </div>
         <div className="dashboardAccounts_chart">
           <h3 className="dashboardAccounts_chart-title">Expenses By Accounts</h3>
-          <div className="dashboardAccounts_chart-chart">Pie Chart</div>
+          {/* <div className="dashboardAccounts_chart-chart">Pie Chart</div> */}
+          <PieChart />
         </div>
       </div>
     )
