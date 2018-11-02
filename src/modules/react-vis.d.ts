@@ -20,8 +20,10 @@ declare module 'react-vis' {
     colorDomain?: number[];
     colorRange?: number[];
     data: GraphData[];
+    getAngle?: Function;
     getColor?: Function;
     getLabel?: Function;
+    getRadius?: Function;
     height: number;
     labelsAboveChildren?: boolean;
     labelsRadiusMultiplier?: number;

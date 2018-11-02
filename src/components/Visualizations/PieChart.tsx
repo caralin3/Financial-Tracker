@@ -7,21 +7,35 @@ interface PieChartProps {
   data: GraphData[];
 }
 
-export const PieChart: React.SFC<PieChartProps> = (props) => (
-  <RadialChart
-    className={props.className}
-    colorType={'literal'}
-    colorDomain={[0, 100]}
-    colorRange={[0, 10]}
-    getLabel={(d: GraphData) => d.name}
-    // getLabel={(gd: GraphData) => props.data.map((d) => gd.name === d.name && d.angle > 0 && d.name)}
-    data={props.data}
-    labelsRadiusMultiplier={0.8}
-    labelsStyle={{fontSize: 16, fill: '#222'}}
-    showLabels={true}
-    width={250}
-    height={250}
-  />
+export class PieChart extends React.Component<PieChartProps> {
+
+  public getLabels = (name: string | undefined) => {
+    const { data } = this.props;
+    const labels = data.map((d) => d.angle > 0 ? d.name: '').filter((label) => label);
+    return labels.filter((l) => l === name)[0] || ''; 
+  }
+
+  public render() {
+    const { className, data } = this.props;
+    return (
+      <RadialChart
+        className={className}
+        colorType={'literal'}
+        colorDomain={[0, 100]}
+        colorRange={[0, 10]}
+        getLabel={(d: GraphData) => this.getLabels(d.name)}
+        data={data}
+        labelsRadiusMultiplier={0.8}
+        labelsStyle={{fontSize: 16, fill: '#222'}}
+        showLabels={true}
+        width={250}
+        height={250}
+      />
+    )
+  }
+}
+
+// export const PieChart: React.SFC<PieChartProps> = (props) => (
   // <RadialChart
   //   colorType={'literal'}
   //   colorDomain={[0, 100]}
@@ -55,4 +69,4 @@ export const PieChart: React.SFC<PieChartProps> = (props) => (
   //   </linearGradient>
   // </GradientDefs>
   // </RadialChart>
-)
+// )
