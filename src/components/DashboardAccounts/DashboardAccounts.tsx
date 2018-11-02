@@ -66,7 +66,7 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
         <div className="dashboardAccounts_chart">
           <h3 className="dashboardAccounts_chart-title">Expenses By Accounts</h3>
           {/* <div className="dashboardAccounts_chart-chart">Pie Chart</div> */}
-          <PieChart data={this.pieData()} />
+          <PieChart className="dashboardAccounts_chart-pie" data={this.pieData()} />
         </div>
       </div>
     )
@@ -100,9 +100,9 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
     const cashExpTotal = calculations.cashExpenses(transactions,accounts);
     const creditExpTotal = calculations.creditExpenses(transactions,accounts);
     const data: GraphData[] = [
-      { angle: bankExpTotal, label: 'Bank Accounts', color: '#DA70BF' },
-      { angle: cashExpTotal, label: 'Cash', color: '#1E96BE' },
-      { angle: creditExpTotal, label: 'Credit', color: 'green' },
+      { angle: bankExpTotal, name: 'Bank Accounts', color: '#DA70BF' },
+      { angle: cashExpTotal, name: 'Cash', color: '#1E96BE' },
+      { angle: creditExpTotal, name: 'Credit', color: 'green' },
     ]
     return data;
   }

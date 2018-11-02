@@ -3,27 +3,23 @@ import { GraphData, RadialChart } from 'react-vis';
 // import { GradientDefs, RadialChart } from 'react-vis';
 
 interface PieChartProps {
+  className?: string;
   data: GraphData[];
 }
 
 export const PieChart: React.SFC<PieChartProps> = (props) => (
   <RadialChart
+    className={props.className}
     colorType={'literal'}
     colorDomain={[0, 100]}
     colorRange={[0, 10]}
-    // getLabel={(d: any )=> d.name}
-    // data={[
-    //   {angle: 1, color: '#89DAC1', name: 'green'},
-    //   {angle: 2, color: '#F6D18A', name: 'yellow'},
-    //   {angle: 5, color: '#1E96BE', name: 'cyan'},
-    //   {angle: 3, color: '#DA70BF', name: 'magenta'},
-    //   {angle: 5, color: '#F6D18A', name: 'yellow again'}
-    // ]}
+    getLabel={(d: GraphData) => d.name}
+    // getLabel={(gd: GraphData) => props.data.map((d) => gd.name === d.name && d.angle > 0 && d.name)}
     data={props.data}
     labelsRadiusMultiplier={0.8}
     labelsStyle={{fontSize: 16, fill: '#222'}}
     showLabels={true}
-    width={300}
+    width={250}
     height={250}
   />
   // <RadialChart

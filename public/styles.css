@@ -393,7 +393,7 @@ select {
   margin: 0;
   padding: 1rem 0;
 }
-.dashboardAccounts_chart-chart {
+.dashboardAccounts_chart-pie {
   align-self: center;
 }
 .dashboardHero {
@@ -1488,7 +1488,7 @@ select {
   grid-template: "hero hero hero hero" auto "form form form form" auto "recent accounts accounts topExpenses" auto "budget budget expInc expInc" auto / 1fr 0.5fr 0.5fr 1fr;
   padding: 2rem;
 }
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 900px) {
   .dashboard_content {
     display: flex;
     flex-direction: column;
