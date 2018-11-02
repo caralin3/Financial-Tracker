@@ -25,14 +25,12 @@ interface DashboardMergedProps extends
   DispatchMappedProps,
   DashboardCategoryGraphProps {}
 
-interface DashboardCategoryGraphState {
-  mobile: boolean;
-}
+interface DashboardCategoryGraphState {}
 
 export class DisconnectedDashboardCategoryGraph extends React.Component<DashboardMergedProps, DashboardCategoryGraphState> {
-  public readonly state: DashboardCategoryGraphState = {
-    mobile: false,
-  }
+  public readonly state: DashboardCategoryGraphState = {}
+
+  public mobile: boolean = false;
 
   public componentWillMount() {
     this.loadCategories();
@@ -45,12 +43,11 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
   }
 
   public resize = () => {
-    this.setState({ mobile: window.innerWidth <= 1100 });
+    this.mobile = window.innerWidth <= 1100;
   }
 
   public render() {
     const { budgetInfo, transactions } = this.props;
-    const { mobile } = this.state;
 
     const monthOptions: JSX.Element[] = [];
     const yearOptions: JSX.Element[] = [];
@@ -82,8 +79,8 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
           className="dashboardCategoryGraph_chart"
           data={this.barData()}
           height={300}
-          leftMargin={mobile ? 125 : 150}
-          width={mobile ? 300 : 550}
+          leftMargin={this.mobile ? 125 : 150}
+          width={this.mobile ? 300 : 550}
         />
       </div>
     )
