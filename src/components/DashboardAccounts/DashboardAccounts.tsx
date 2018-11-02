@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { GraphData } from 'react-vis';
+import { RadialChartData } from 'react-vis';
 import { PieChart } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
@@ -40,8 +40,6 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
     const cashSum = calculations.cashSum(accounts);
     const creditSum = calculations.creditSum(accounts);
 
-    this.pieData();
-
     return (
       <div className="dashboardAccounts">
         <div className="dashboardAccounts_account">
@@ -65,7 +63,6 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
         </div>
         <div className="dashboardAccounts_chart">
           <h3 className="dashboardAccounts_chart-title">Expenses By Accounts</h3>
-          {/* <div className="dashboardAccounts_chart-chart">Pie Chart</div> */}
           <PieChart className="dashboardAccounts_chart-pie" data={this.pieData()} />
         </div>
       </div>
@@ -99,10 +96,13 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
     const bankExpTotal = calculations.bankExpenses(transactions,accounts);
     const cashExpTotal = calculations.cashExpenses(transactions,accounts);
     const creditExpTotal = calculations.creditExpenses(transactions,accounts);
-    const data: GraphData[] = [
-      { angle: bankExpTotal, name: 'Bank Accounts', color: '#DA70BF' },
-      { angle: cashExpTotal, name: 'Cash', color: '#1E96BE' },
-      { angle: creditExpTotal, name: 'Credit', color: 'green' },
+    const data: RadialChartData[] = [
+      // { angle: bankExpTotal, name: 'Bank Accounts', color: '#62D4D9' },
+      // { angle: cashExpTotal, name: 'Cash', color: '#1E96BE' },
+      // { angle: creditExpTotal, name: 'Credit', color: '#0C98AC' },
+      { angle: bankExpTotal, name: 'Bank Accounts', gradientLabel: 'grad1' },
+      { angle: cashExpTotal, name: 'Cash', gradientLabel: 'grad2' },
+      { angle: creditExpTotal, name: 'Credit', gradientLabel: 'grad3' },
     ]
     return data;
   }

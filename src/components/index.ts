@@ -9,6 +9,7 @@ import { CategoriesSection } from './CategoriesSection';
 import { CategoryItem } from './CategoryItem';
 import { ContentCard } from './ContentCard';
 import { DashboardAccounts } from './DashboardAccounts';
+import { DashboardCategoryGraph } from './DashboardCategoryGraph';
 import { DashboardHero } from './DashboardHero';
 import { DashboardRecentTrans } from './DashboardRecentTrans';
 import { DashboardTopExpenses } from './DashboardTopExpenses';
@@ -32,7 +33,7 @@ import { Table } from './Table';
 import { TableData } from './TableData';
 import { TableFilters } from './TableFilters';
 import { UserProfile } from './UserProfile';
-import { PieChart } from './Visualizations';
+import { BarChart, PieChart } from './Visualizations';
 
 export {
   AccountSection,
@@ -41,11 +42,13 @@ export {
   AddJobDialog,
   AddTransactionDialog,
   AddTransactionForm,
+  BarChart,
   BudgetTableData,
   CategoriesSection,
   CategoryItem,
   ContentCard,
   DashboardAccounts,
+  DashboardCategoryGraph,
   DashboardHero,
   DashboardRecentTrans,
   DashboardTopExpenses,

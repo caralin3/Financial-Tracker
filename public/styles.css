@@ -396,6 +396,41 @@ select {
 .dashboardAccounts_chart-pie {
   align-self: center;
 }
+.dashboardCategoryGraph {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.dashboardCategoryGraph_header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.5rem 1rem;
+  width: 100%;
+}
+.dashboardCategoryGraph_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.dashboardCategoryGraph_dropdown {
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardCategoryGraph_dropdown {
+    left: auto !important;
+  }
+}
+.dashboardCategoryGraph_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardCategoryGraph_dropdown-option:focus,
+.dashboardCategoryGraph_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
 .dashboardHero {
   display: grid;
   gap: 1rem;
@@ -455,10 +490,31 @@ select {
   margin: 0;
 }
 .dashboardHero_dropdown {
-  min-width: auto !important;
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardHero_dropdown {
+    left: auto !important;
+  }
+}
+.dashboardHero_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardHero_dropdown-option:focus,
+.dashboardHero_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
 }
 .dashboardHero_neg {
   color: #FF0000;
+}
+.dashboardHero_progress {
+  display: flex;
+  height: 1.5rem;
+  margin: 1rem 0 0;
+  background: hsl(220, 10%, 80%);
 }
 .dashboardRecentTrans_trans {
   display: flex;
@@ -1443,7 +1499,12 @@ select {
   }
 }
 .budget_dropdown {
-  min-width: auto !important;
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .budget_dropdown {
+    left: auto !important;
+  }
 }
 .budget_dropdown-option {
   color: #000000;
@@ -1485,7 +1546,7 @@ select {
 .dashboard_content {
   display: grid;
   gap: 1rem;
-  grid-template: "hero hero hero hero" auto "form form form form" auto "recent accounts accounts topExpenses" auto "budget budget expInc expInc" auto / 1fr 0.5fr 0.5fr 1fr;
+  grid-template: "hero hero hero hero" auto "form form form form" auto "recent accounts accounts topExpenses" auto "budget budget budget goals" auto / 1fr 0.5fr 0.5fr 1fr;
   padding: 2rem;
 }
 @media only screen and (max-width: 900px) {
@@ -1550,12 +1611,12 @@ select {
     margin: 1rem 0;
   }
 }
-.dashboard_expInc {
-  grid-area: expInc;
+.dashboard_goals {
+  grid-area: goals;
   padding: 1rem;
 }
 @media only screen and (max-width: 640px) {
-  .dashboard_expInc {
+  .dashboard_goals {
     margin: 1rem 0;
   }
 }

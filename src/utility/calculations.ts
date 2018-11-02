@@ -1,21 +1,37 @@
-import { Account, Category, Transaction } from '../types';
+import { Account, BudgetInfo, Category, Transaction } from '../types';
 import { formatter } from './';
 
-export const income = (transactions: Transaction[], year: string) => {
+export const incomeSum = (transactions: Transaction[], budgetInfo: BudgetInfo) => {
   let inc: number = 0;
   transactions.forEach((trans) => {
-    if (trans.type === 'Income' && formatter.formatYYYY(trans.date) === year) {
-      inc += trans.amount;
+    if (trans.type === 'Income') {
+      if (budgetInfo.dateType === 'year') {
+        if (formatter.formatYYYY(trans.date) === budgetInfo.date) {
+          inc += trans.amount;
+        }
+      } else if (budgetInfo.dateType === 'month') {
+        if (formatter.formatMMYYYY(trans.date) === budgetInfo.date) {
+          inc += trans.amount;
+        }
+      }
     }
   });
   return inc;
 }
 
-export const expenses = (transactions: Transaction[], year: string) => {
+export const expensesSum = (transactions: Transaction[], budgetInfo: BudgetInfo) => {
   let exp: number = 0;
   transactions.forEach((trans) => {
-    if (trans.type === 'Expense' && formatter.formatYYYY(trans.date) === year) {
-      exp += trans.amount;
+    if (trans.type === 'Expense') {
+      if (budgetInfo.dateType === 'year') {
+        if (formatter.formatYYYY(trans.date) === budgetInfo.date) {
+          exp += trans.amount;
+        }
+      } else if (budgetInfo.dateType === 'month') {
+        if (formatter.formatMMYYYY(trans.date) === budgetInfo.date) {
+          exp += trans.amount;
+        }
+      }
     }
   });
   return exp;

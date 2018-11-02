@@ -47,6 +47,10 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
       this.updateBudgetView(prevProps.budgetInfo.dateType);
     }
   }
+
+  public componentWillUnmount() {
+    this.updateFirebase();
+  }
   
   public render () {
     const { data, dataKey } = this.props;
