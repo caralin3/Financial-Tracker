@@ -3,7 +3,7 @@ import { GraphData, RadialChart } from 'react-vis';
 // import { GradientDefs, RadialChart } from 'react-vis';
 
 interface PieChartProps {
-  data?: GraphData;
+  data: GraphData[];
 }
 
 export const PieChart: React.SFC<PieChartProps> = (props) => (
@@ -11,21 +11,20 @@ export const PieChart: React.SFC<PieChartProps> = (props) => (
     colorType={'literal'}
     colorDomain={[0, 100]}
     colorRange={[0, 10]}
-    margin={{top: 100}}
-    getLabel={(d: any )=> d.name}
-    data={[
-      {angle: 1, color: '#89DAC1', name: 'green'},
-      {angle: 2, color: '#F6D18A', name: 'yellow'},
-      {angle: 5, color: '#1E96BE', name: 'cyan'},
-      {angle: 3, color: '#DA70BF', name: 'magenta'},
-      {angle: 5, color: '#F6D18A', name: 'yellow again'}
-    ]}
+    // getLabel={(d: any )=> d.name}
+    // data={[
+    //   {angle: 1, color: '#89DAC1', name: 'green'},
+    //   {angle: 2, color: '#F6D18A', name: 'yellow'},
+    //   {angle: 5, color: '#1E96BE', name: 'cyan'},
+    //   {angle: 3, color: '#DA70BF', name: 'magenta'},
+    //   {angle: 5, color: '#F6D18A', name: 'yellow again'}
+    // ]}
+    data={props.data}
     labelsRadiusMultiplier={0.8}
     labelsStyle={{fontSize: 16, fill: '#222'}}
     showLabels={true}
-    style={{stroke: '#fff', strokeWidth: 2}}
-    width={400}
-    height={300}
+    width={300}
+    height={250}
   />
   // <RadialChart
   //   colorType={'literal'}

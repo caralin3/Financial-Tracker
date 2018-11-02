@@ -63,7 +63,7 @@ export class DisconnectedDashboardTopExpenses extends React.Component<DashboardM
             onContextMenu={this.handleRightClick}
             type="button"
           >
-            {expenseRange.start !== '' ? 
+            {expenseRange && expenseRange.start !== '' ? 
               `${formatter.formatMMDDYYYY(expenseRange.start)}-${formatter.formatMMDDYYYY(expenseRange.end)}`
               : 'Range'
             }

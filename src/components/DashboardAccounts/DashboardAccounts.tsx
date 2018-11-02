@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
+import { GraphData } from 'react-vis';
 import { PieChart } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Account, User } from '../../types';
+import { Account, Transaction, User } from '../../types';
 import { calculations, formatter } from '../../utility';
 
 interface DashboardAccountsProps {}
@@ -15,6 +16,7 @@ interface DispatchMappedProps {
 interface StateMappedProps {
   accounts: Account[];
   currentUser: User | null;
+  transactions: Transaction[];
 }
 
 interface DashboardMergedProps extends
@@ -29,6 +31,7 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
 
   public componentWillMount() {
     this.loadAccounts();
+    this.loadTransactions();
   }
 
   public render() {
@@ -36,6 +39,8 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
     const bankSum = calculations.bankSum(accounts);
     const cashSum = calculations.cashSum(accounts);
     const creditSum = calculations.creditSum(accounts);
+
+    this.pieData();
 
     return (
       <div className="dashboardAccounts">
@@ -61,7 +66,7 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
         <div className="dashboardAccounts_chart">
           <h3 className="dashboardAccounts_chart-title">Expenses By Accounts</h3>
           {/* <div className="dashboardAccounts_chart-chart">Pie Chart</div> */}
-          <PieChart />
+          <PieChart data={this.pieData()} />
         </div>
       </div>
     )
@@ -77,6 +82,30 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
       console.log(e);
     }
   }
+
+  private loadTransactions = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.transactions.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private pieData = () => {
+    const { accounts, transactions } = this.props;
+    const bankExpTotal = calculations.bankExpenses(transactions,accounts);
+    const cashExpTotal = calculations.cashExpenses(transactions,accounts);
+    const creditExpTotal = calculations.creditExpenses(transactions,accounts);
+    const data: GraphData[] = [
+      { angle: bankExpTotal, label: 'Bank Accounts', color: '#DA70BF' },
+      { angle: cashExpTotal, label: 'Cash', color: '#1E96BE' },
+      { angle: creditExpTotal, label: 'Credit', color: 'green' },
+    ]
+    return data;
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
@@ -84,6 +113,7 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
   currentUser: state.sessionState.currentUser,
+  transactions: state.transactionState.transactions,
 });
 
 export const DashboardAccounts = connect<

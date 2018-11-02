@@ -78,3 +78,43 @@ export const variance = (actual: number, categoryId: string, categories: Categor
   const budget: number = (category && category.budget) || 0;
   return actual - budget;
 }
+
+export const expensesCount = (transactions: Transaction[]) => {
+  return transactions.filter((trans) => trans.type === 'Expense').length;
+}
+
+export const bankExpenses = (transactions: Transaction[], accounts: Account[]) => {
+  let total: number = 0;
+  const exps = transactions.filter((trans) => trans.type === 'Expense');
+  exps.forEach((exp) => {
+    const acc = accounts.filter((ac) => ac.id === exp.from)[0];
+    if (acc && acc.type === 'Bank Account') {
+      total += 1;
+    }
+  });
+  return total;
+}
+
+export const cashExpenses = (transactions: Transaction[], accounts: Account[]) => {
+  let total: number = 0;
+  const exps = transactions.filter((trans) => trans.type === 'Expense');
+  exps.forEach((exp) => {
+    const acc = accounts.filter((ac) => ac.id === exp.from)[0];
+    if (acc && acc.type === 'Cash') {
+      total += 1;
+    }
+  });
+  return total;
+}
+
+export const creditExpenses = (transactions: Transaction[], accounts: Account[]) => {
+  let total: number = 0;
+  const exps = transactions.filter((trans) => trans.type === 'Expense');
+  exps.forEach((exp) => {
+    const acc = accounts.filter((ac) => ac.id === exp.from)[0];
+    if (acc && acc.type === 'Credit') {
+      total += 1;
+    }
+  });
+  return total;
+}
