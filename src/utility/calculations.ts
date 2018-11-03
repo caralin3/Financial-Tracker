@@ -1,6 +1,16 @@
 import { Account, BudgetInfo, Category, Transaction } from '../types';
 import { formatter, transactionConverter } from './';
 
+export const totals = (arr: any[], field: string) => {
+  let total: number = 0;
+  arr.forEach((val) => {
+    if (val[field]) {
+      total += val[field];
+    }
+  })
+  return total;
+}
+
 export const incomeSum = (transactions: Transaction[], budgetInfo: BudgetInfo) => {
   let inc: number = 0;
   transactions.forEach((trans) => {

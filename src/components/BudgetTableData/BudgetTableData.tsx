@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
-import { ActionTypes, AppState, categoryStateStore } from '../../store';
+import { ActionTypes, AppState, categoryStateStore, sessionStateStore } from '../../store';
 import { BudgetInfo, Category, Transaction, User } from '../../types';
 import { calculations, formatter, transactionConverter } from '../../utility';
 
@@ -45,6 +45,16 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
   public componentDidUpdate(prevProps: BudgetTableDataMergedProps) {
     if (prevProps.budgetInfo !== this.props.budgetInfo) {
       this.updateBudgetView(prevProps.budgetInfo.dateType);
+    }
+  }
+
+  public componentDidMount() {
+    const { budgetInfo, dispatch, transactions } = this.props;
+    if (budgetInfo && budgetInfo.income === 0) {
+      dispatch(sessionStateStore.setBudgetInfo({
+        ...budgetInfo,
+        income: calculations.incomeSum(transactions, budgetInfo),
+      }));
     }
   }
 
@@ -121,7 +131,7 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
       const updatedCategory: Category = {
         ...currentCategory,
         [dataKey]: amount,
-        budgetPercent: (amount * budgetInfo.income) / 100,
+        budgetPercent: (amount / budgetInfo.income) * 100,
         variance,
       }
       db.requests.categories.edit(updatedCategory, dispatch);

@@ -3,8 +3,8 @@ import { connect, Dispatch } from 'react-redux';
 import { BudgetTableData, DeleteDialog, TableData, TableFilters } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
-import { HeaderData, TableDataType, TransactionFilter } from '../../types';
-import { formatter, sorter } from '../../utility';
+import { Category, HeaderData, TableDataType, TransactionFilter } from '../../types';
+import { calculations, formatter, sorter } from '../../utility';
 
 interface TableProps {
   content: TableDataType;
@@ -16,6 +16,7 @@ interface DispatchMappedProps {
 }
 
 interface StateMappedProps {
+  categories: Category[];
   editingTransaction: boolean;
   filters: TransactionFilter[];
 }
@@ -44,8 +45,13 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
   }
   
   public render () {
-    const { content, type } = this.props;
+    const { categories, content, type } = this.props;
     const { sortedBy } = this.state;
+
+    const percentTotal: number = calculations.totals(categories, 'budgetPercent');
+    const budgetTotal: number = calculations.totals(categories, 'budget');
+    const actualTotal: number = calculations.totals(categories, 'actual');
+    const varianceTotal: number = actualTotal - budgetTotal;
 
     return (
       <div className="table_wrapper">
@@ -108,6 +114,23 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
               }
               </tr>
             ))}
+            {type === 'budget' &&
+              <tr className="table_row">
+                <td className="table_totals">Totals</td>
+                <td className="table_totals table_totals-number">
+                  { formatter.formatPercent(percentTotal) }
+                </td>
+                <td className="table_totals table_totals-number">
+                  { formatter.formatMoney(budgetTotal) }
+                </td>
+                <td className="table_totals table_totals-number">
+                  { formatter.formatMoney(actualTotal) }
+                </td>
+                <td className="table_totals table_totals-number">
+                  { formatter.formatMoney(varianceTotal) }
+                </td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
@@ -193,6 +216,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
+  categories: state.categoriesState.categories,
   editingTransaction: state.sessionState.editingTransaction,
   filters: state.sessionState.transactionFilters,
 });

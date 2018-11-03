@@ -17,7 +17,8 @@
     border-collapse: collapse;
   }
 
-  &_header {
+  &_header,
+  &_totals {
     background-color: @blue-green;
     color: @white;
   }
@@ -54,6 +55,14 @@
     &:focus,
     &:hover {
       cursor: pointer;
+    }
+  }
+
+  &_totals {
+    padding: 0.5rem 1rem;
+
+    &-number {
+      text-align: right;
     }
   }
 }

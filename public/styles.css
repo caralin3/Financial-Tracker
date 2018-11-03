@@ -1215,7 +1215,8 @@ select {
   border: 1px solid #0C98AC;
   border-collapse: collapse;
 }
-.table_header {
+.table_header,
+.table_totals {
   background-color: #0C98AC;
   color: #FFFFFF;
 }
@@ -1246,6 +1247,12 @@ select {
 .table_icon:focus,
 .table_icon:hover {
   cursor: pointer;
+}
+.table_totals {
+  padding: 0.5rem 1rem;
+}
+.table_totals-number {
+  text-align: right;
 }
 .tableData {
   padding: 0.5rem 1rem;
