@@ -1,5 +1,6 @@
 
 import { BudgetInfo, Range, TransactionFilter, User } from '../../types';
+import { formatter } from '../../utility';
 import { SessionActions } from './actions';
 import {
   ADD_TRANS_FILTER,
@@ -23,8 +24,9 @@ export interface SessionState {
 
 const initialState: SessionState = {
   budgetInfo: {
-    date: '',
+    date: formatter.formatMMYYYY(new Date().toISOString()),
     dateType: 'month',
+    income: 0,
   },
   currentUser: null,
   editingTransaction: false,

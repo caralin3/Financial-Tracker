@@ -104,8 +104,12 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
   }
 
   private handleClick = (date: string, dateType: 'month' | 'year') => {
-    const { dispatch } = this.props;
-    dispatch(sessionStateStore.setBudgetInfo({date, dateType}));
+    const { budgetInfo, dispatch, transactions } = this.props;
+    dispatch(sessionStateStore.setBudgetInfo({
+      date,
+      dateType,
+      income: budgetInfo ? budgetInfo.income : calculations.incomeSum(transactions, budgetInfo) || 0,
+    }));
   }
 }
 

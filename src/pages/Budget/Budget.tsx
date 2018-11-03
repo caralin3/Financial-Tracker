@@ -8,7 +8,13 @@ import { Dropdown, Header, Table } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { BudgetInfo, Category, HeaderData, TableDataType, Transaction, User } from '../../types';
-import { categories as utilityCategories, sorter, transactionConverter } from '../../utility';
+import {
+  calculations,
+  categories as utilityCategories,
+  formatter,
+  sorter,
+  transactionConverter,
+} from '../../utility';
 
 export interface BudgetPageProps {}
 
@@ -29,10 +35,16 @@ interface BudgetMergedProps extends
   DispatchMappedProps,
   BudgetPageProps {}
 
-export interface BudgetPageState {}
+export interface BudgetPageState {
+  budgetIncome: number;
+  editIncome: boolean;
+}
 
 class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPageState> {
-  public readonly state: BudgetPageState = {}
+  public readonly state: BudgetPageState = {
+    budgetIncome: this.props.budgetInfo.income,
+    editIncome: false,
+  }
 
   public componentWillMount() {
     this.loadCategories();
@@ -40,10 +52,10 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
 
   public render() {
     const { budgetInfo, transactions } = this.props;
+    const { budgetIncome, editIncome } = this.state;
 
     const monthOptions: JSX.Element[] = [];
     const yearOptions: JSX.Element[] = [];
-
     transactionConverter.years(transactions).forEach((y) => yearOptions.push(
       <h3 className="budget_dropdown-option" onClick={() => this.handleClick(y, 'year')}>
         { y }
@@ -54,7 +66,6 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
         { m }
       </h3>
     ));
-
     const dropdownOptions: JSX.Element[] = yearOptions.concat(monthOptions);
     
     return (
@@ -62,7 +73,32 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
         <Header title="Budget" />
         <div className="budget_content">
           <div className="budget_content-header">
-            <h3 className="budget_label">Expenses vs. Budget</h3>
+            <div className="budget_content-text">
+              <h3 className="budget_label">Budget Income</h3>
+              {editIncome ?
+                <input
+                  className="budget_input"
+                  onBlur={this.handleBlur}
+                  onChange={this.handleChange}
+                  onKeyPress={this.handleKeyPress}
+                  step='0.01'
+                  type='number'
+                  value={budgetIncome}
+                /> :
+                <h2
+                  className="budget_number budget_number-edit"
+                  onClick={this.toggleEdit}
+                >
+                  { formatter.formatMoney(budgetIncome) }
+                </h2>
+              }
+            </div>
+            <div className="budget_content-text">
+              <h3 className="budget_label">Actual Income</h3>
+              <h2 className="budget_number">
+                { formatter.formatMoney(calculations.incomeSum(transactions, budgetInfo)) }
+              </h2>
+            </div>
           </div>
           <div className="budget_header">
             <h2 className="budget_header-title">Budget Table</h2>
@@ -96,9 +132,52 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
     )
   }
 
+  private toggleEdit = () => this.setState({ editIncome: !this.state.editIncome });
+
+  // Listen for enter key
+  private handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.charCode === 13) {
+      this.handleBlur();
+    }
+  }
+
+  private handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const budgetIncome = parseFloat(e.target.value);
+    if (!isNaN(budgetIncome)) {
+      this.setState({ budgetIncome })
+    }
+  }
+
+  private handleBlur = () => {
+    const { budgetInfo, categories, dispatch } = this.props;
+    const { budgetIncome } = this.state;
+    const isInvalid = isNaN(budgetIncome);
+    const calculatedIncome = calculations.incomeSum(this.props.transactions, this.props.budgetInfo);
+    const hasChanged = budgetIncome !== calculatedIncome;
+    if (!isInvalid && hasChanged) {
+      dispatch(sessionStateStore.setBudgetInfo({
+        ...budgetInfo,
+        income: budgetIncome,
+      }));
+      categories.forEach((cat) => {
+        const budgetPercent: number = ( cat.budget / budgetIncome) * 100;
+        const updatedCat: Category = {
+          ...cat,
+          budgetPercent,
+        }
+        db.requests.categories.edit(updatedCat, dispatch);
+      });
+    }
+    this.toggleEdit();
+  }
+
   private handleClick = (date: string, dateType: 'month' | 'year') => {
-    const { dispatch } = this.props;
-    dispatch(sessionStateStore.setBudgetInfo({date, dateType}));
+    const { budgetInfo, dispatch, transactions } = this.props;
+    dispatch(sessionStateStore.setBudgetInfo({
+      date,
+      dateType,
+      income: budgetInfo ? budgetInfo.income : calculations.incomeSum(transactions, budgetInfo) || 0,
+    }));
   }
 
   private loadCategories = async () => {

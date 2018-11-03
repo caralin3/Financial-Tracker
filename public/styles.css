@@ -1508,9 +1508,36 @@ select {
     padding: 1rem;
   }
 }
+.budget_content-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 1rem;
+}
+.budget_content-text {
+  align-items: center;
+  display: flex;
+}
 .budget_label {
   font-family: 'Archivo Narrow', sans-serif;
-  margin: 0 0 1rem 0;
+  margin: 0;
+  padding-right: 1rem;
+}
+.budget_number {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.budget_number-edit:focus,
+.budget_number-edit:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.budget_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  text-align: right;
+  width: 5rem;
 }
 .budget_header {
   align-items: center;

@@ -8,11 +8,45 @@
     @media only screen and (max-width: 640px) {
       padding: 1rem;
     }
+
+    &-header {
+      align-items: center;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 1rem;
+    }
+
+    &-text {
+      align-items: center;
+      display: flex;
+    }
   }
 
   &_label {
     font-family: @font-archivo;
-    margin: 0 0 1rem 0;
+    margin: 0;
+    padding-right: 1rem;
+  }
+
+  &_number {
+    font-family: @font-oswald;
+    font-weight: normal;
+    margin: 0;
+
+    &-edit {
+      &:focus,
+      &:hover {
+        border: 1px solid @blue-green;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &_input {
+    margin: 1rem 0;
+    padding: 0.5rem 0;
+    text-align: right;
+    width: 5rem;
   }
 
   &_header {
