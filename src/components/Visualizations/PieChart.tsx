@@ -29,7 +29,7 @@ export const PieChart: React.SFC<PieChartProps> = (props) => (
       labelsStyle={{
         fill: '#FFF',
         fontFamily: 'Archivo Narrow, sans-serif',
-        fontSize: getLabelCount(props.data) === 1 ? 16: 18,
+        fontSize: 16,
       }}
       showLabels={true}
       width={250}
