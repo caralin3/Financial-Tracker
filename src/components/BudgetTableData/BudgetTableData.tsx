@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
-import { ActionTypes, AppState, categoryStateStore } from '../../store';
+import { ActionTypes, AppState, categoryStateStore, sessionStateStore } from '../../store';
 import { BudgetInfo, Category, Transaction, User } from '../../types';
 import { calculations, formatter, transactionConverter } from '../../utility';
 
@@ -45,6 +45,16 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
   public componentDidUpdate(prevProps: BudgetTableDataMergedProps) {
     if (prevProps.budgetInfo !== this.props.budgetInfo) {
       this.updateBudgetView(prevProps.budgetInfo.dateType);
+    }
+  }
+
+  public componentDidMount() {
+    const { budgetInfo, dispatch, transactions } = this.props;
+    if (budgetInfo && budgetInfo.income === 0) {
+      dispatch(sessionStateStore.setBudgetInfo({
+        ...budgetInfo,
+        income: calculations.incomeSum(transactions, budgetInfo),
+      }));
     }
   }
 
@@ -121,6 +131,7 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
       const updatedCategory: Category = {
         ...currentCategory,
         [dataKey]: amount,
+        budgetPercent: (amount / budgetInfo.income) * 100,
         variance,
       }
       db.requests.categories.edit(updatedCategory, dispatch);
@@ -151,15 +162,17 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
     const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
     let actual = calculations.actualByMonth(categoryId, transactions, budgetInfo.date);
     let budget = currentCategory && currentCategory.budget ? currentCategory.budget : 0;
-    
+    let budgetPercent = (budget / budgetInfo.income) * 100;
     if (budgetInfo.dateType === 'year') {
       actual = calculations.actualByYear(categoryId, transactions, budgetInfo.date);
       if (prevBudgetType === 'month') {
+        budgetPercent = (budget / budgetInfo.income) * 100;
         budget *= 12;
       }
     } else {
       if (prevBudgetType === 'year') {
         budget /= 12;
+        budgetPercent = (budget / budgetInfo.income) * 100;
       }
     }
     budget = parseFloat(budget.toFixed(2));
@@ -169,7 +182,7 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
         ...currentCategory,
         actual,
         budget,
-        budgetPercent: (budget / budgetInfo.income) * 100,
+        budgetPercent,
         variance,
       }
       dispatch(categoryStateStore.editCategory(updatedCategory));

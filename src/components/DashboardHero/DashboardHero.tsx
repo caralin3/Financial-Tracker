@@ -54,7 +54,10 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
     const income: number = calculations.incomeSum(transactions, budgetInfo);
     const expenses: number = calculations.expensesSum(transactions, budgetInfo);
     const netWorth: number = income - expenses;
-    const percentage: number = income > 0 ? (expenses / income) * 100 : 0;
+    let percentage: number = income > 0 ? (expenses / income) * 100 : 0;
+    if (percentage > 100) {
+      percentage = 100;
+    }
     const bgColor = this.percentageToHsl(percentage / 100);
 
     return (

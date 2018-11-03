@@ -396,7 +396,7 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
       amount: 0,
       category: 'Select Category',
       date: '',
-      from: 'Select Account',
+      from: active === 'Income' ? 'Select Job' : 'Select Account',
       note: '',
       subcategory: 'Select Subcategory',
       tags: '',
