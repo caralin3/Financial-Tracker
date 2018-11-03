@@ -2,6 +2,7 @@ import * as React from 'react';
 
 interface DropdownProps {
   buttonText: string;
+  contentClass?: string;
   options: JSX.Element[];
 }
 
@@ -15,7 +16,7 @@ export class Dropdown extends React.Component<DropdownProps, DropdownState> {
   }
 
   public render() {
-    const { buttonText, options } = this.props;
+    const { buttonText, contentClass, options } = this.props;
     const { showOptions } = this.state;
     return (
       <div className="dropdown">
@@ -26,9 +27,12 @@ export class Dropdown extends React.Component<DropdownProps, DropdownState> {
         >
           { buttonText }
         </button>
-        <div className={`dropdown_content ${showOptions && 'dropdown_content-show'}`}>
+        <div className={`dropdown_content ${contentClass} ${showOptions && 'dropdown_content-show'}`}>
           {showOptions && options.map((option: JSX.Element, index: number) =>
-            <div className="dropdown_item" key={index}>
+            <div
+              className="dropdown_item" key={index}
+              onClick={() => this.setState({ showOptions: !this.state.showOptions })}
+            >
               { option }
             </div>
           )}

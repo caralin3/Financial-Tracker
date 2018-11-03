@@ -7,7 +7,7 @@ import { AccountSection, AddAccountDialog, ContentCard, DeleteDialog, Header } f
 import { db } from '../../firebase';
 import { accountStateStore, ActionTypes, AppState } from '../../store';
 import { Account, User } from '../../types';
-import { formatter } from '../../utility';
+import { accounts as accountType, calculations, formatter } from '../../utility';
 
 export interface AccountsPageProps {}
 
@@ -51,10 +51,15 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
   public toggleDialog = () => this.setState({ showDialog: !this.state.showDialog });
 
   public render() {
-    const { accounts, currentUser } = this.props;
-    const bankAccounts = accounts.filter((ba: Account) => ba.type === 'Bank Account' && currentUser && ba.userId === currentUser.id);
-    const cash = accounts.filter((ca: Account) => ca.type === 'Cash' && currentUser && ca.userId === currentUser.id);
-    const creditCards = accounts.filter((cr: Account) => cr.type === 'Credit' && currentUser && cr.userId === currentUser.id);
+    const { accounts } = this.props;
+
+    const bankAccounts = accountType.bankAccounts(accounts);
+    const cash = accountType.cashAccounts(accounts);
+    const creditCards = accountType.creditCards(accounts);
+
+    const bankSum = calculations.bankSum(accounts);
+    const cashSum = calculations.cashSum(accounts);
+    const creditSum = calculations.creditSum(accounts);
 
     return (
       <div className="accounts">
@@ -72,17 +77,16 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
         <div className="accounts_content">
           <ContentCard class="accounts_bank">
             <h3 className="accounts_label">Bank Accounts</h3>
-            <h2 className="accounts_amount">{ formatter.formatMoney(this.getSum(bankAccounts)) }</h2>
+            <h2 className="accounts_amount">{ formatter.formatMoney(bankSum) }</h2>
           </ContentCard>
           <ContentCard class="accounts_cash">
             <h3 className="accounts_label">Cash</h3>
-            <h2 className="accounts_amount">{ formatter.formatMoney(this.getSum(cash)) }</h2>
+            <h2 className="accounts_amount">{ formatter.formatMoney(cashSum) }</h2>
           </ContentCard>
           <ContentCard class="accounts_credit">
             <h3 className="accounts_label">Credit Cards</h3>
-            <h2 className={`accounts_amount ${this.getSum(creditCards) !== 0 && 'accounts_amount-credit'}`}>
-              { this.getSum(creditCards) !== 0 && '-' }
-              { formatter.formatMoney(this.getSum(creditCards)) }
+            <h2 className={`accounts_amount ${creditSum !== 0 && 'accounts_amount-credit'}`}>
+              { formatter.formatMoney(creditSum) }
             </h2>
           </ContentCard>
 
@@ -141,9 +145,11 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
   }
 
   private loadAccounts = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.accounts.load(dispatch);
+      if (currentUser) {
+        await db.requests.accounts.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -155,6 +161,8 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
     const { deletedAccounts } = this.props;
     if (deletedAccounts.length > 0) {
       this.setState({ showDeleteDialog: !this.state.showDeleteDialog });
+    } else {
+      this.toggleDelete();
     }
   };
 
@@ -169,14 +177,6 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
     this.toggleDeleteDialog();
     dispatch(accountStateStore.resetDeletedAccounts());
   };
-
-  private getSum = (accounts: Account[]) => {
-    let sum: number = 0;
-    accounts.forEach((acc: Account) => {
-      sum += acc.balance;
-    });
-    return sum;
-  }
 }
 
 const authCondition = (authUser: any) => !!authUser;

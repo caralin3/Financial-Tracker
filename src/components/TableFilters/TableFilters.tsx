@@ -29,24 +29,30 @@ export class DisconnectedTableFilters extends React.Component<TableFiltersMerged
 
   public render() {
     const { data, headers, filters, table } = this.props;
-    const sortedFilters = sorter.sort(filters.filter((f) => f.table === table), 'desc', 'key');
+    let sortedFilters;
+    if (filters && filters.length > 0) {
+      sortedFilters = sorter.sort(filters.filter((f) => f.table === table), 'desc', 'key');
+    }
 
     return (
       <div className="tableFilters">
         <i className="tableFilters_filterIcon fas fa-filter" />
         <h3 className="tableFilters_title">Filters:</h3>
-        {sortedFilters.map((filter, index: number) => (
+        {sortedFilters && sortedFilters.map((filter, index: number) => (
           <span className="tableFilters_filter" key={index}>
             {formatter.capitalize(filter.key)}: {filter.filter === 'Range' ?
               filter.key === 'date' ? 
-              `${formatter.formatMMDDYYYY(filter.range.start)} - ${formatter.formatMMDDYYYY(filter.range.end)}` 
-              : `${formatter.formatMoney(filter.range.start)} - ${formatter.formatMoney(filter.range.end)}` : 
+              `${formatter.formatMMDDYYYY(filter.range.start)} - ${formatter.formatMMDDYYYY(filter.range.end)}`
+              : filter.key === 'budgetPercent' ?
+              `${formatter.formatPercent(filter.range.start)} - ${formatter.formatPercent(filter.range.end)}` :
+              `${formatter.formatMoney(filter.range.start)} - ${formatter.formatMoney(filter.range.end)}` : 
               filter.key === 'date' ? formatter.formatMMDDYYYY(filter.filter) : filter.filter}
             <i className="fas fa-times tableFilters_remove" onClick={() => this.removeFilter(filter)} />
           </span>
         ))}
         <FilterDropdown data={data} headers={headers} table={table} />
-        {sortedFilters.length > 0 && <i className="fas fa-trash-alt tableFilters_icon" onClick={this.resetFilters} />}
+        {sortedFilters && sortedFilters.length > 0 && 
+          <i className="fas fa-trash-alt tableFilters_icon" onClick={this.resetFilters} />}
       </div>
     )
   }

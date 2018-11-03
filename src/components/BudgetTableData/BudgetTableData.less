@@ -1,0 +1,32 @@
+@import (reference) '../../less/variables.less';
+
+.budgetTableData {
+  padding: 0.5rem 1rem;
+
+  &_data {
+    padding: 0.3rem;
+
+    &-number {
+      display: block;
+      text-align: right;
+    }
+
+    &-budget {
+      &:focus,
+      &:hover {
+        border: 1px solid @blue-green;
+        cursor: pointer;
+      }
+    }
+
+    &-over {
+      color: @red;
+    }
+  }
+
+  &_input {
+    padding: 0.3rem;
+    text-align: right;
+    width: 5rem;
+  }
+}

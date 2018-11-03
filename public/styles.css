@@ -137,72 +137,99 @@ select {
 .addJobDialog_number {
   text-align: right;
 }
-.addTransactionDialog_options {
+.addTransactionForm {
+  font-family: 'Francois One', sans-serif;
+}
+.addTransactionForm_options {
   align-items: center;
   display: flex;
   justify-content: center;
   padding-bottom: 1rem;
 }
-.addTransactionDialog_button {
-  border-bottom: 1px solid #CCCCCC;
+.addTransactionForm_button {
+  border-bottom: 1px solid rgba(12, 152, 172, 0.5);
+  font-family: 'Francois One', sans-serif;
   font-size: 1rem;
   width: 100%;
 }
 @media only screen and (max-width: 640px) {
-  .addTransactionDialog_button {
+  .addTransactionForm_button {
     font-size: 0.9rem;
   }
 }
-.addTransactionDialog_button:focus,
-.addTransactionDialog_button:hover,
-.addTransactionDialog_button-active {
+.addTransactionForm_button:focus,
+.addTransactionForm_button:hover,
+.addTransactionForm_button-active {
   border-bottom: 1.5px solid #0C98AC;
   color: #0C98AC;
   cursor: pointer;
 }
-.addTransactionDialog_form {
+.addTransactionForm_form {
   display: grid;
   gap: 1rem;
   grid-template: "from to" auto "date amount" auto "category subcategory" auto "note tags" auto / 1fr 1fr;
 }
 @media only screen and (max-width: 800px) {
-  .addTransactionDialog_form {
+  .addTransactionForm_form {
     display: flex;
     flex-direction: column;
   }
 }
-.addTransactionDialog_section-from {
+.addTransactionForm_section-from {
   grid-area: from;
 }
-.addTransactionDialog_section-to {
+.addTransactionForm_section-to {
   grid-area: to;
 }
-.addTransactionDialog_section-date {
+.addTransactionForm_section-date {
   grid-area: date;
 }
-.addTransactionDialog_section-amount {
+.addTransactionForm_section-amount {
   grid-area: amount;
 }
-.addTransactionDialog_section-category {
+.addTransactionForm_section-category {
   grid-area: category;
 }
-.addTransactionDialog_section-subcategory {
+.addTransactionForm_section-subcategory {
   grid-area: subcategory;
 }
-.addTransactionDialog_section-note {
+.addTransactionForm_section-note {
   grid-area: note;
 }
-.addTransactionDialog_section-tags {
+.addTransactionForm_section-tags {
   grid-area: tags;
 }
-.addTransactionDialog_input {
+.addTransactionForm_input {
   margin: 1rem 0;
   padding: 0.5rem 0;
   width: 100%;
 }
-.addTransactionDialog_input-amount,
-.addTransactionDialog_input-date {
+.addTransactionForm_input-amount,
+.addTransactionForm_input-date {
   text-align: right;
+}
+.budgetTableData {
+  padding: 0.5rem 1rem;
+}
+.budgetTableData_data {
+  padding: 0.3rem;
+}
+.budgetTableData_data-number {
+  display: block;
+  text-align: right;
+}
+.budgetTableData_data-budget:focus,
+.budgetTableData_data-budget:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.budgetTableData_data-over {
+  color: #FF0000;
+}
+.budgetTableData_input {
+  padding: 0.3rem;
+  text-align: right;
+  width: 5rem;
 }
 .categoriesSection_header {
   align-items: center;
@@ -333,7 +360,295 @@ select {
   padding: 0.5rem 0;
 }
 .contentCard {
-  background-image: linear-gradient(#62D4D9, #0C98AC);
+  border: 1px solid #0C98AC;
+}
+.dashboardAccounts {
+  display: flex;
+  flex-direction: column;
+}
+.dashboardAccounts_account {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+.dashboardAccounts_label {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+}
+.dashboardAccounts_sum {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardAccounts_neg {
+  color: #FF0000;
+}
+.dashboardAccounts_dropdown {
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardAccounts_dropdown {
+    left: auto !important;
+  }
+}
+.dashboardAccounts_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardAccounts_dropdown-option:focus,
+.dashboardAccounts_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.dashboardAccounts_chart {
+  display: flex;
+  flex-direction: column;
+}
+.dashboardAccounts_chart-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
+}
+.dashboardAccounts_chart-title {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+  padding: 1rem 0;
+}
+.dashboardAccounts_chart-pie {
+  align-self: center;
+}
+.dashboardCategoryGraph {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.dashboardCategoryGraph_header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.5rem 1rem;
+  width: 100%;
+}
+.dashboardCategoryGraph_header-buttons {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.dashboardCategoryGraph_header-button {
+  margin-right: 1rem;
+}
+.dashboardCategoryGraph_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.dashboardCategoryGraph_dropdown {
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardCategoryGraph_dropdown {
+    left: auto !important;
+  }
+}
+.dashboardCategoryGraph_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardCategoryGraph_dropdown-option:focus,
+.dashboardCategoryGraph_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.dashboardCategoryGraph_sortDropdown {
+  min-width: 9rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardCategoryGraph_sortDropdown {
+    left: auto !important;
+  }
+}
+.dashboardCategoryGraph_sortDropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.5rem;
+  margin: 0;
+}
+.dashboardCategoryGraph_sortDropdown-option:focus,
+.dashboardCategoryGraph_sortDropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.dashboardHero {
+  display: grid;
+  gap: 1rem;
+  grid-template: "income worth expense" auto / 0.5fr 0.5fr 2fr;
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardHero {
+    grid-template: "income worth date" auto "expense expense expense" auto / 1fr 1fr 0.5fr;
+    padding: 1rem;
+  }
+}
+.dashboardHero_income {
+  grid-area: income;
+}
+.dashboardHero_worth {
+  grid-area: worth;
+}
+.dashboardHero_expense {
+  grid-area: expense;
+}
+.dashboardHero_date {
+  position: absolute;
+  display: flex;
+  right: 4rem;
+  padding: 1rem 0;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardHero_date {
+    position: relative;
+    grid-area: date;
+    right: 0;
+    padding: 0;
+  }
+}
+.dashboardHero_date-text {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+  padding-right: 0.3rem;
+}
+.dashboardHero_date-year {
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardHero_date-year:focus,
+.dashboardHero_date-year:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.dashboardHero_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.dashboardHero_amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardHero_dropdown {
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardHero_dropdown {
+    left: auto !important;
+  }
+}
+.dashboardHero_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardHero_dropdown-option:focus,
+.dashboardHero_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.dashboardHero_neg {
+  color: #FF0000;
+}
+.dashboardHero_progress {
+  display: flex;
+  height: 1.5rem;
+  margin: 1rem 0 0;
+  background: hsl(220, 10%, 80%);
+}
+.dashboardRecentTrans_trans {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+}
+.dashboardRecentTrans_row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.dashboardRecentTrans_text {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardRecentTrans_to {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+}
+.dashboardRecentTrans_amount,
+.dashboardRecentTrans_date {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardRecentTrans_neg {
+  color: #FF0000;
+}
+.dashboardRecentTrans_pos {
+  color: #007C0C;
+}
+.dashboardTopExpenses_header {
+  display: flex;
+  justify-content: space-between;
+}
+.dashboardTopExpenses_button {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  padding: 0.5rem;
+}
+.dashboardTopExpenses_button:focus,
+.dashboardTopExpenses_button:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
+}
+.dashboardTopExpenses_title {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.dashboardTopExpenses_trans {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+}
+.dashboardTopExpenses_row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.dashboardTopExpenses_text {
+  font-family: 'Archivo Narrow', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardTopExpenses_to {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+}
+.dashboardTopExpenses_amount,
+.dashboardTopExpenses_date {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.dashboardTopExpenses_neg {
+  color: #FF0000;
+}
+.dashboardTopExpenses_pos {
+  color: #007C0C;
 }
 .deleteDialog_subtitle {
   font-weight: normal;
@@ -531,20 +846,6 @@ select {
 .filterDropdown_option:hover {
   color: #0C98AC;
   cursor: pointer;
-}
-.rangeDialog {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 1rem;
-}
-.rangeDialog_label {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem 0;
-}
-.rangeDialog_input {
-  padding: 0.5rem 0;
-  text-align: right;
 }
 .forgotPasswordForm {
   align-items: center;
@@ -785,6 +1086,20 @@ select {
   padding: 0.5rem 0;
   width: 15rem;
 }
+.rangeDialog {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+}
+.rangeDialog_label {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+.rangeDialog_input {
+  padding: 0.5rem 0;
+  text-align: right;
+}
 .signupForm_input {
   margin: 1rem 0;
   padding: 0.5rem 0;
@@ -905,7 +1220,7 @@ select {
   color: #FFFFFF;
 }
 .table_heading {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
 }
 .table_heading-header {
   align-items: center;
@@ -1185,12 +1500,117 @@ select {
   margin: 0;
   padding-left: 1rem;
 }
-.budgets_content {
+.budget_content {
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
-  .budgets_content {
+  .budget_content {
     padding: 1rem;
+  }
+}
+.budget_content-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 1rem;
+}
+.budget_content-text {
+  align-items: center;
+  display: flex;
+}
+.budget_label {
+  font-family: 'Archivo Narrow', sans-serif;
+  margin: 0;
+  padding-right: 1rem;
+}
+.budget_number {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.budget_number-edit:focus,
+.budget_number-edit:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.budget_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  text-align: right;
+  width: 5rem;
+}
+.budget_header {
+  align-items: center;
+  border-bottom: 1px solid #CCCCCC;
+  color: #0C98AC;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 1rem 1rem 0;
+}
+@media only screen and (max-width: 640px) {
+  .budget_header {
+    font-size: 0.9rem;
+    padding: 1rem 0 0;
+  }
+}
+.budget_header-buttons {
+  align-items: center;
+  display: flex;
+}
+.budget_export {
+  background-color: #0C98AC;
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  margin-left: 1rem;
+}
+.budget_export:focus,
+.budget_export:hover {
+  background-color: #0fc2dc;
+  cursor: pointer;
+}
+@media only screen and (max-width: 640px) {
+  .budget_export {
+    margin-left: 0.5rem;
+    padding: 0.5rem;
+  }
+}
+.budget_dropdown {
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .budget_dropdown {
+    left: auto !important;
+  }
+}
+.budget_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.budget_dropdown-option:focus,
+.budget_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.budget_tables {
+  align-items: flex-end;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+}
+.budget_tables-actual {
+  align-self: flex-start;
+}
+@media only screen and (max-width: 1170px) {
+  .budget_tables {
+    display: block;
+    flex-direction: column;
+    overflow-x: auto;
+  }
+  .budget_tables-ideal {
+    padding-top: 2rem;
   }
 }
 .charts_content {
@@ -1204,10 +1624,10 @@ select {
 .dashboard_content {
   display: grid;
   gap: 1rem;
-  grid-template: "hero hero hero hero" auto "recent accounts accounts topExpenses" auto "budget budget expInc expInc" auto / 1fr 0.5fr 0.5fr 1fr;
+  grid-template: "hero hero hero hero" auto "form form form form" auto "recent accounts accounts topExpenses" auto "budget budget budget goals" auto / 1fr 0.5fr 0.5fr 1fr;
   padding: 2rem;
 }
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 900px) {
   .dashboard_content {
     display: flex;
     flex-direction: column;
@@ -1215,35 +1635,23 @@ select {
   }
 }
 .dashboard_hero {
-  display: grid;
-  gap: 1rem;
   grid-area: hero;
-  grid-template: "income worth expense" / 0.5fr 0.5fr 2fr;
-  padding: 2rem;
-}
-@media only screen and (max-width: 640px) {
-  .dashboard_hero {
-    grid-template: "income worth" auto "expense expense" auto / 1fr 1fr;
-    padding: 1rem;
-  }
-}
-.dashboard_income {
-  grid-area: income;
-}
-.dashboard_worth {
-  grid-area: worth;
-}
-.dashboard_expense {
-  grid-area: expense;
 }
 .dashboard_label {
   font-family: 'Francois One', sans-serif;
   margin: 0;
 }
-.dashboard_amount {
-  font-family: 'Oswald', sans-serif;
-  font-weight: normal;
-  margin: 0;
+.dashboard_label-log {
+  padding-bottom: 1rem;
+}
+.dashboard_form {
+  grid-area: form;
+  padding: 2rem;
+}
+@media only screen and (max-width: 640px) {
+  .dashboard_form {
+    margin: 1rem 0;
+  }
 }
 .dashboard_recent {
   grid-area: recent;
@@ -1281,12 +1689,12 @@ select {
     margin: 1rem 0;
   }
 }
-.dashboard_expInc {
-  grid-area: expInc;
+.dashboard_goals {
+  grid-area: goals;
   padding: 1rem;
 }
 @media only screen and (max-width: 640px) {
-  .dashboard_expInc {
+  .dashboard_goals {
     margin: 1rem 0;
   }
 }

@@ -8,6 +8,7 @@ import { AddTransactionDialog, Dropdown, Header, Table } from '../../components'
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, Category, HeaderData, Job, Subcategory, TableDataType, Transaction, User } from '../../types';
+import { sorter, transactionConverter } from '../../utility';
 
 export interface ActivityPageProps {}
 
@@ -166,45 +167,55 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
   }
 
   private loadAccounts = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.accounts.load(dispatch);
+      if (currentUser) {
+        await db.requests.accounts.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
   }
 
   private loadCategories = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.categories.load(dispatch);
+      if (currentUser) {
+        await db.requests.categories.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
   }
 
   private loadJobs = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.jobs.load(dispatch);
+      if (currentUser) {
+        await db.requests.jobs.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
   }
 
   private loadSubcategories = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.subcategories.load(dispatch);
+      if (currentUser) {
+        await db.requests.subcategories.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
   }
 
   private loadTransactions = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.transactions.load(dispatch);
+      if (currentUser) {
+        await db.requests.transactions.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -228,7 +239,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) =>
         tr.userId === currentUser.id);
-      data = this.convertData(data);
+      data = sorter.sort(this.convertData(data), 'desc', 'date');
       const tableData: TableDataType = {
         data,
         headers,
@@ -241,31 +252,24 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
   private convertData = (data: Transaction[]) => {
     const { accounts, categories, jobs, subcategories } = this.props;
     return data.map((trans) => {
-      if (trans.type === 'Expense') {
+      if (trans.type === 'Expense' && trans.category && trans.subcategory) {
         return {
           ...trans,
-          category: categories.filter((cat) => cat.id === trans.category)[0] ? 
-            categories.filter((cat) => cat.id === trans.category)[0].name : 'N/A',
-          from: accounts.filter((acc) => acc.id === trans.from)[0] ?
-            accounts.filter((acc) => acc.id === trans.from)[0].name : 'N/A',
-          subcategory: subcategories.filter((sub) => sub.id === trans.subcategory)[0] ?
-            subcategories.filter((sub) => sub.id === trans.subcategory)[0].name : 'N/A',
+          category: transactionConverter.categoryName(trans.category, categories),
+          from: transactionConverter.from(trans, accounts, jobs),
+          subcategory: transactionConverter.subcategoryName(trans.subcategory, subcategories),
         }
       } else if (trans.type === 'Transfer') {
         return {
           ...trans,
-          from: accounts.filter((acc) => acc.id === trans.from)[0] ?
-            accounts.filter((acc) => acc.id === trans.from)[0].name : '',
-          to: accounts.filter((acc) => acc.id === trans.to)[0] ?
-            accounts.filter((acc) => acc.id === trans.to)[0].name : 'N/A',
+          from: transactionConverter.from(trans, accounts, jobs),
+          to: transactionConverter.to(trans, accounts),
         }
       }
       return {
         ...trans,
-        from: jobs.filter((job) => job.id === trans.from)[0] ?
-          jobs.filter((job) => job.id === trans.from)[0].name : 'N/A',
-        to: accounts.filter((acc) => acc.id === trans.to)[0] ?
-          accounts.filter((acc) => acc.id === trans.to)[0].name : 'N/A',
+        from: transactionConverter.from(trans, accounts, jobs),
+        to: transactionConverter.to(trans, accounts),
       }
     })
   }
@@ -285,7 +289,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Expense'
         && tr.userId === currentUser.id);
-      data = this.convertData(data);
+      data = sorter.sort(this.convertData(data), 'desc', 'date');
       const tableData: TableDataType = {
         data,
         headers,
@@ -308,7 +312,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Income'
         && tr.userId === currentUser.id);
-      data = this.convertData(data);
+      data = sorter.sort(this.convertData(data), 'desc', 'date');
       const tableData: TableDataType = {
         data,
         headers,
@@ -331,7 +335,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Transfer'
         && tr.userId === currentUser.id);
-      data = this.convertData(data);
+      data = sorter.sort(this.convertData(data), 'desc', 'date');
       const tableData: TableDataType = {
         data,
         headers,

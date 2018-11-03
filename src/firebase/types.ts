@@ -15,11 +15,13 @@ export interface FirebaseJob {
 }
 
 export interface FirebaseCategory {
+  actual?: number;
   budget?: number;
   budgetPercent?: number;
   name: string;
   subcategories: string[];
   userId: string;
+  variance?: number;
 }
 
 export interface FirebaseSubcategory {

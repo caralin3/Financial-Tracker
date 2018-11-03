@@ -4,8 +4,9 @@ import { Transaction } from '../../types';
 import { transactionsCollection } from './';
 
 // LOAD TRANSACTIONS
-export const load = (dispatch: Dispatch<ActionTypes>) => {
-  transactionsCollection.orderBy('date', 'desc').get().then((querySnapshot: any) => {
+export const load = (userId: string, dispatch: Dispatch<ActionTypes>) => {
+  transactionsCollection.where('userId', '==', userId)
+    .orderBy('date', 'desc').get().then((querySnapshot: any) => {
     const transactionList: Transaction[] = [];
     querySnapshot.forEach((doc: any) => {
       const transaction: Transaction = doc.data();

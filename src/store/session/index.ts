@@ -2,9 +2,11 @@ import {
   addTransactionFilter,
   removeTransactionFilter,
   resetTransactionFilters,
+  setBudgetInfo,
   setCurrentUser,
   setEditingTransaction,
-  setShowSidebar
+  setShowSidebar,
+  setTopExpenses
 } from './actions';
 import { reducer } from './reducer';
 
@@ -13,9 +15,11 @@ export const sessionStateStore = {
   reducer,
   removeTransactionFilter,
   resetTransactionFilters,
+  setBudgetInfo,
   setCurrentUser,
   setEditingTransaction,
   setShowSidebar,
+  setTopExpenses,
 };
 
 export { SessionActions } from './actions';

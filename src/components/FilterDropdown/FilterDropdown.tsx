@@ -76,7 +76,8 @@ export class DisconnectedFilterDropdown extends React.Component<FilterDropdownMe
                         op || header.key === 'note' && 'None'}
                     </li>
                   ))}
-                  {(header.key === 'amount' || header.key === 'date') && 
+                  {(header.key === 'amount' || header.key === 'date' || header.key === 'budget'
+                    || header.key === 'budgetPercent' || header.key === 'actual' || header.key === 'variance') && 
                     <li
                       className="filterDropdown_option"
                       onClick={() => this.handleSelectRange(header.key)}
@@ -203,14 +204,28 @@ export class DisconnectedFilterDropdown extends React.Component<FilterDropdownMe
             fixedTags.push.apply(fixedTags, tag);
           }
         });
-        return fixedTags.filter((tag: string, index: number, self: any[]) => self.findIndex((t: string) => t === tag) === index);
+        const tagOptions = fixedTags.filter((tag: string, index: number, self: any[]) =>
+          self.findIndex((t: string) => t === tag) === index);
+        return tagOptions.length > 0 ? tagOptions : ['None'];
       }
-    } else if (key === 'amount') {
-      return data.map((d) => formatter.formatMoney(d[key])).filter((dt: string, index, self) => self.findIndex((t: string) => t === dt) === index);
+    } else if (key === 'variance') {
+      return ['less than budget', 'greater than budget', 'equal to budget'];
+    } else if (key === 'budgetPercent') {
+      const options = data.map((d) => !isNaN(d[key]) && formatter.formatPercent(d[key])).filter((dt: string, index, self) =>
+        self.findIndex((t: string) => t === dt) === index);
+      return options.length > 0 ? options : ['None'];
+    } else if (key === 'amount' || key === 'actual' || key === 'budget') {
+      const options = data.map((d) => !isNaN(d[key]) && formatter.formatMoney(d[key])).filter((dt: string, index, self) =>
+        self.findIndex((t: string) => t === dt) === index);
+      return options.length > 0 ? options : ['None'];
     } else if (key === 'date') {
-      return data.map((d) => d[key]).filter((dt: string, index, self) => self.findIndex((t: string) => t === dt) === index);
+      const options = data.map((d) => d[key]).filter((dt: string, index, self) =>
+        self.findIndex((t: string) => t === dt) === index);
+      return options.length > 0 ? options : ['None'];
     }
-    return data.map((d) => d[key]).filter((dt: string, index, self) => self.findIndex((t: string) => t === dt) === index);
+    const subOptions = data.map((d) => d[key]).filter((dt: string, index, self) =>
+       self.findIndex((t: string) => t === dt) === index);
+    return subOptions.length > 0 ? subOptions : ['None'];
   }
 }
 

@@ -49,27 +49,33 @@ class DisconnectedSettingsPage extends React.Component<SettingsMergedProps, Sett
   }
 
   private loadCategories = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.categories.load(dispatch);
+      if (currentUser) {
+        await db.requests.categories.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
   }
 
   private loadJobs = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.jobs.load(dispatch);
+      if (currentUser) {
+        await db.requests.jobs.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
   }
 
   private loadSubcategories = async () => {
-    const { dispatch } = this.props;
+    const { currentUser, dispatch } = this.props;
     try {
-      await db.requests.subcategories.load(dispatch);
+      if (currentUser) {
+        await db.requests.subcategories.load(currentUser.id, dispatch);
+      }
     } catch (e) {
       console.log(e);
     }
