@@ -72,8 +72,7 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
         </div>
         <div className="dashboardAccounts_account">
           <h3 className="dashboardAccounts_label">Credit Cards</h3>
-          <h3 className={`dashboardAccounts_sum ${creditSum > 0 && 'dashboardAccounts_neg'}`}>
-            {creditSum > 0 && '-'}
+          <h3 className={`dashboardAccounts_sum ${creditSum !== 0 && 'dashboardAccounts_neg'}`}>
             { formatter.formatMoney(creditSum) }
           </h3>
         </div>
