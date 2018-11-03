@@ -121,6 +121,7 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
       const updatedCategory: Category = {
         ...currentCategory,
         [dataKey]: amount,
+        budgetPercent: (amount * budgetInfo.income) / 100,
         variance,
       }
       db.requests.categories.edit(updatedCategory, dispatch);
