@@ -138,7 +138,7 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
     categories.forEach((cat) => {
       if (cat.budget !== undefined) {
         if (cat.actual !== undefined) {
-          if (cat.budget - cat.actual > 0) {
+          if (cat.budget - cat.actual >= 0) {
             budgetData.push({x: cat.budget - cat.actual, y: cat.name.toString()});
           } else {
             budgetData.push({x: cat.budget, y: cat.name.toString()});
