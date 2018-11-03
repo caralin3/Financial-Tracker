@@ -12,12 +12,12 @@
       auto
       "recent accounts accounts topExpenses"
       auto
-      "budget budget expInc expInc"
+      "budget budget budget goals"
       auto
       ~'/' 1fr 0.5fr 0.5fr 1fr;
     padding: 2rem;
 
-    @media only screen and (max-width: 640px) {
+    @media only screen and (max-width: 900px) {
       display: flex;
       flex-direction: column;
       padding: 1rem;
@@ -82,8 +82,8 @@
     }
   }
 
-  &_expInc {
-    grid-area: expInc;
+  &_goals {
+    grid-area: goals;
     padding: 1rem;
 
     @media only screen and (max-width: 640px) {

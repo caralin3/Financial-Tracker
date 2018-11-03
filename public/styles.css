@@ -384,17 +384,103 @@ select {
 .dashboardAccounts_neg {
   color: #FF0000;
 }
+.dashboardAccounts_dropdown {
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardAccounts_dropdown {
+    left: auto !important;
+  }
+}
+.dashboardAccounts_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardAccounts_dropdown-option:focus,
+.dashboardAccounts_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
 .dashboardAccounts_chart {
   display: flex;
   flex-direction: column;
+}
+.dashboardAccounts_chart-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
 }
 .dashboardAccounts_chart-title {
   font-family: 'Francois One', sans-serif;
   margin: 0;
   padding: 1rem 0;
 }
-.dashboardAccounts_chart-chart {
+.dashboardAccounts_chart-pie {
   align-self: center;
+}
+.dashboardCategoryGraph {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.dashboardCategoryGraph_header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1.5rem 1rem;
+  width: 100%;
+}
+.dashboardCategoryGraph_header-buttons {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.dashboardCategoryGraph_header-button {
+  margin-right: 1rem;
+}
+.dashboardCategoryGraph_label {
+  font-family: 'Francois One', sans-serif;
+  margin: 0;
+}
+.dashboardCategoryGraph_dropdown {
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardCategoryGraph_dropdown {
+    left: auto !important;
+  }
+}
+.dashboardCategoryGraph_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardCategoryGraph_dropdown-option:focus,
+.dashboardCategoryGraph_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
+.dashboardCategoryGraph_sortDropdown {
+  min-width: 9rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardCategoryGraph_sortDropdown {
+    left: auto !important;
+  }
+}
+.dashboardCategoryGraph_sortDropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.5rem;
+  margin: 0;
+}
+.dashboardCategoryGraph_sortDropdown-option:focus,
+.dashboardCategoryGraph_sortDropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
 }
 .dashboardHero {
   display: grid;
@@ -455,10 +541,31 @@ select {
   margin: 0;
 }
 .dashboardHero_dropdown {
-  min-width: auto !important;
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardHero_dropdown {
+    left: auto !important;
+  }
+}
+.dashboardHero_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardHero_dropdown-option:focus,
+.dashboardHero_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
 }
 .dashboardHero_neg {
   color: #FF0000;
+}
+.dashboardHero_progress {
+  display: flex;
+  height: 1.5rem;
+  margin: 1rem 0 0;
+  background: hsl(220, 10%, 80%);
 }
 .dashboardRecentTrans_trans {
   display: flex;
@@ -1401,9 +1508,36 @@ select {
     padding: 1rem;
   }
 }
+.budget_content-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 1rem;
+}
+.budget_content-text {
+  align-items: center;
+  display: flex;
+}
 .budget_label {
   font-family: 'Archivo Narrow', sans-serif;
-  margin: 0 0 1rem 0;
+  margin: 0;
+  padding-right: 1rem;
+}
+.budget_number {
+  font-family: 'Oswald', sans-serif;
+  font-weight: normal;
+  margin: 0;
+}
+.budget_number-edit:focus,
+.budget_number-edit:hover {
+  border: 1px solid #0C98AC;
+  cursor: pointer;
+}
+.budget_input {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  text-align: right;
+  width: 5rem;
 }
 .budget_header {
   align-items: center;
@@ -1443,7 +1577,12 @@ select {
   }
 }
 .budget_dropdown {
-  min-width: auto !important;
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .budget_dropdown {
+    left: auto !important;
+  }
 }
 .budget_dropdown-option {
   color: #000000;
@@ -1485,10 +1624,10 @@ select {
 .dashboard_content {
   display: grid;
   gap: 1rem;
-  grid-template: "hero hero hero hero" auto "form form form form" auto "recent accounts accounts topExpenses" auto "budget budget expInc expInc" auto / 1fr 0.5fr 0.5fr 1fr;
+  grid-template: "hero hero hero hero" auto "form form form form" auto "recent accounts accounts topExpenses" auto "budget budget budget goals" auto / 1fr 0.5fr 0.5fr 1fr;
   padding: 2rem;
 }
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 900px) {
   .dashboard_content {
     display: flex;
     flex-direction: column;
@@ -1550,12 +1689,12 @@ select {
     margin: 1rem 0;
   }
 }
-.dashboard_expInc {
-  grid-area: expInc;
+.dashboard_goals {
+  grid-area: goals;
   padding: 1rem;
 }
 @media only screen and (max-width: 640px) {
-  .dashboard_expInc {
+  .dashboard_goals {
     margin: 1rem 0;
   }
 }

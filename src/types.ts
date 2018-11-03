@@ -30,8 +30,8 @@ export interface Job {
 export interface Category {
   id: string;
   actual?: number;
-  budget?: number;
-  budgetPercent?: number;
+  budget: number;
+  budgetPercent: number;
   name: string;
   subcategories: string[];
   userId: string;
@@ -89,4 +89,5 @@ export interface Range {
 export interface BudgetInfo {
   date: string;
   dateType: 'month' | 'year';
+  income: number;
 }

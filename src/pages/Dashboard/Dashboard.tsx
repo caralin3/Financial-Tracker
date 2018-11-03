@@ -7,13 +7,14 @@ import {
   AddTransactionForm,
   ContentCard,
   DashboardAccounts,
+  DashboardCategoryGraph,
   DashboardHero,
   DashboardRecentTrans,
   DashboardTopExpenses,
   Header,
 } from '../../components';
 import { ActionTypes, AppState } from '../../store';
-import { User } from '../../types';
+import { Category, Transaction, User } from '../../types';
 // import * as routes from '../../routes';
 
 export interface DashboardPageProps { }
@@ -23,7 +24,9 @@ interface DispatchMappedProps {
 }
 
 interface StateMappedProps {
+  categories: Category[];
   currentUser: User | null;
+  transactions: Transaction[];
 }
 
 interface DashboardMergedProps extends
@@ -63,12 +66,13 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
             <DashboardTopExpenses />
           </ContentCard>
           <ContentCard class="dashboard_budget">
-            <h3 className="dashboard_label">Budget by Category</h3>
+            <DashboardCategoryGraph />
           </ContentCard>
-          <ContentCard class="dashboard_expInc">
-            <h3 className="dashboard_label">Expense vs. Income</h3>
+          <ContentCard class="dashboard_goals">
+            <h3 className="dashboard_label">Goals</h3>
           </ContentCard>
         </div>
+        <a href="https://fontawesome.com/license">Font Awesome License</a>
       </div>
     )
   }
@@ -79,7 +83,9 @@ const authCondition = (authUser: any) => !!authUser;
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
+  categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  transactions: state.transactionState.transactions,
 });
 
 export const DashboardPage = compose(

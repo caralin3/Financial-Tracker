@@ -3,7 +3,7 @@ import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, categoryStateStore } from '../../store';
 import { BudgetInfo, Category, Transaction, User } from '../../types';
-import { calculations, formatter } from '../../utility';
+import { calculations, formatter, transactionConverter } from '../../utility';
 
 interface BudgetTableDataProps {
   data: any;
@@ -47,6 +47,10 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
       this.updateBudgetView(prevProps.budgetInfo.dateType);
     }
   }
+
+  public componentWillUnmount() {
+    this.updateFirebase();
+  }
   
   public render () {
     const { data, dataKey } = this.props;
@@ -57,9 +61,9 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
         {!editing ?
           <span
             className={`budgetTableData_data ${dataKey !== 'name' && 'budgetTableData_data-number'}
-            ${(dataKey === 'budget' || dataKey === 'budgetPercent') && 'budgetTableData_data-budget'}
+            ${dataKey === 'budget' && 'budgetTableData_data-budget'}
             ${dataKey === 'variance' && data > 0 && 'budgetTableData_data-over'}`}
-            onClick={(dataKey === 'budget' ||  dataKey === 'budgetPercent') ? this.toggleEdit : () => null}
+            onClick={dataKey === 'budget' ? this.toggleEdit : () => null}
           >
             { dataKey === 'name' ?
               data : dataKey === 'budgetPercent' ?
@@ -67,7 +71,7 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
               formatter.formatMoney(data)
             }
           </span> :
-          ((dataKey === 'budget' ||  dataKey === 'budgetPercent')) &&
+          (dataKey === 'budget') &&
           <input
             className="budgetTableData_input budgetTableData_input-number"
             onBlur={this.handleBlur}
@@ -96,11 +100,20 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
   }
 
   private handleBlur = () => {
-    const { categories, categoryId, data, dataKey, dispatch,transactions } = this.props;
+    const { budgetInfo, categories, categoryId, data, dataKey, dispatch,transactions } = this.props;
     const { amount } = this.state;
     const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
-    const actual = calculations.actualByMonth(categoryId, transactions, '10');
-    const variance = amount - actual;
+    let date: string;
+    if (budgetInfo) {
+      date = budgetInfo.date;
+    } else {
+      date = transactionConverter.monthYears(transactions)[0];
+    }
+    let actual = calculations.actualByMonth(categoryId, transactions, date);
+    if (budgetInfo && budgetInfo.dateType === 'year') {
+      actual = calculations.actualByYear(categoryId, transactions, date);
+    }
+    const variance = actual - amount;
 
     const isInvalid = isNaN(amount);
     const hasChanged = data !== amount;
@@ -149,15 +162,20 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
         budget /= 12;
       }
     }
-    const variance = calculations.variance(actual, categoryId, categories);
+    budget = parseFloat(budget.toFixed(2));
+    const variance = actual - budget;
     if (currentCategory) {
       const updatedCategory: Category = {
         ...currentCategory,
         actual,
         budget,
+        budgetPercent: (budget / budgetInfo.income) * 100,
         variance,
       }
       dispatch(categoryStateStore.editCategory(updatedCategory));
+      this.setState({
+        amount: budget,
+      });
     }
   }
 }

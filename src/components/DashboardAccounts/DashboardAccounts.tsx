@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
+import { RadialChartData } from 'react-vis';
+import { Dropdown, PieChart } from '../';
 import { db } from '../../firebase';
-import { ActionTypes, AppState } from '../../store';
-import { Account, User } from '../../types';
-import { calculations, formatter } from '../../utility';
+import { ActionTypes, AppState, sessionStateStore } from '../../store';
+import { Account, BudgetInfo, Transaction, User } from '../../types';
+import { calculations, formatter, transactionConverter } from '../../utility';
 
 interface DashboardAccountsProps {}
 
@@ -13,7 +15,9 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   accounts: Account[];
+  budgetInfo: BudgetInfo;
   currentUser: User | null;
+  transactions: Transaction[];
 }
 
 interface DashboardMergedProps extends
@@ -28,13 +32,29 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
 
   public componentWillMount() {
     this.loadAccounts();
+    this.loadTransactions();
   }
 
   public render() {
-    const { accounts } = this.props;
+    const { accounts, budgetInfo, transactions } = this.props;
     const bankSum = calculations.bankSum(accounts);
     const cashSum = calculations.cashSum(accounts);
     const creditSum = calculations.creditSum(accounts);
+    const monthOptions: JSX.Element[] = [];
+    const yearOptions: JSX.Element[] = [];
+
+    transactionConverter.years(transactions).forEach((y) => yearOptions.push(
+      <h3 className="budget_dropdown-option" onClick={() => this.handleClick(y, 'year')}>
+        { y }
+      </h3>
+    ));
+    transactionConverter.monthYears(transactions).forEach((m) => monthOptions.push(
+      <h3 className="budget_dropdown-option" onClick={() => this.handleClick(m, 'month')}>
+        { m }
+      </h3>
+    ));
+
+    const dropdownOptions: JSX.Element[] = yearOptions.concat(monthOptions);
 
     return (
       <div className="dashboardAccounts">
@@ -58,8 +78,15 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
           </h3>
         </div>
         <div className="dashboardAccounts_chart">
-          <h3 className="dashboardAccounts_chart-title">Expenses By Accounts</h3>
-          <div className="dashboardAccounts_chart-chart">Pie Chart</div>
+          <div className="dashboardAccounts_chart-header">
+            <h3 className="dashboardAccounts_chart-title">Expenses By Accounts</h3>
+            <Dropdown
+              buttonText={budgetInfo && budgetInfo.date || transactionConverter.monthYears(transactions)[0]}
+              contentClass="dashboardAccounts_dropdown"
+              options={dropdownOptions}
+            />
+          </div>
+          <PieChart className="dashboardAccounts_chart-pie" data={this.pieData()} />
         </div>
       </div>
     )
@@ -75,13 +102,48 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
       console.log(e);
     }
   }
+
+  private loadTransactions = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.transactions.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private handleClick = (date: string, dateType: 'month' | 'year') => {
+    const { budgetInfo, dispatch, transactions } = this.props;
+    dispatch(sessionStateStore.setBudgetInfo({
+      date,
+      dateType,
+      income: budgetInfo ? budgetInfo.income : calculations.incomeSum(transactions, budgetInfo) || 0,
+    }));
+  }
+
+  private pieData = () => {
+    const { accounts, budgetInfo, transactions } = this.props;
+    const bankExpTotal = calculations.bankExpenses(transactions, accounts, budgetInfo);
+    const cashExpTotal = calculations.cashExpenses(transactions, accounts, budgetInfo);
+    const creditExpTotal = calculations.creditExpenses(transactions, accounts, budgetInfo);
+    const data: RadialChartData[] = [
+      { angle: bankExpTotal, name: 'Bank Accounts', gradientLabel: 'grad1' },
+      { angle: cashExpTotal, name: 'Cash', gradientLabel: 'grad2' },
+      { angle: creditExpTotal, name: 'Credit', gradientLabel: 'grad3' },
+    ]
+    return data;
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
+  budgetInfo: state.sessionState.budgetInfo,
   currentUser: state.sessionState.currentUser,
+  transactions: state.transactionState.transactions,
 });
 
 export const DashboardAccounts = connect<
