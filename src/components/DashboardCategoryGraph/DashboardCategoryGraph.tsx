@@ -27,11 +27,15 @@ interface DashboardMergedProps extends
 
 interface DashboardCategoryGraphState {
   mobile: boolean;
+  sortDir: 'asc' | 'desc';
+  sortField: 'x' | 'y';
 }
 
 export class DisconnectedDashboardCategoryGraph extends React.Component<DashboardMergedProps, DashboardCategoryGraphState> {
   public readonly state: DashboardCategoryGraphState = {
     mobile: false,
+    sortDir: 'asc',
+    sortField: 'y',
   }
 
   public componentWillMount() {
@@ -67,16 +71,39 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
     ));
 
     const dropdownOptions: JSX.Element[] = yearOptions.concat(monthOptions);
+    const sortOptions: JSX.Element[] = [
+      (<h3 className="budget_dropdown-option" onClick={() => this.handleSort('asc', 'y')}>
+        Category (A - Z)
+      </h3>),
+      (<h3 className="budget_dropdown-option" onClick={() => this.handleSort('desc', 'y')}>
+        Category (Z - A)
+      </h3>),
+      (<h3 className="budget_dropdown-option" onClick={() => this.handleSort('desc', 'x')}>
+        Amount (High - Low)
+      </h3>),
+      (<h3 className="budget_dropdown-option" onClick={() => this.handleSort('asc', 'x')}>
+        Amount (Low - High)
+      </h3>),
+    ];
 
     return (
       <div className="dashboardCategoryGraph">
         <div className="dashboardCategoryGraph_header">
           <h3 className="dashboardCategoryGraph_label">Expenses by Category</h3>
-          <Dropdown
-            buttonText={budgetInfo && budgetInfo.date || transactionConverter.monthYears(transactions)[0]}
-            contentClass="dashboardCategoryGraph_dropdown"
-            options={dropdownOptions}
-          />
+          <div className="dashboardCategoryGraph_header-buttons">
+            <div className="dashboardCategoryGraph_header-button">
+            <Dropdown
+              buttonText="Sort"
+              contentClass="dashboardCategoryGraph_sortDropdown"
+              options={sortOptions}
+            />
+            </div>
+            <Dropdown
+              buttonText={budgetInfo && budgetInfo.date || transactionConverter.monthYears(transactions)[0]}
+              contentClass="dashboardCategoryGraph_dropdown"
+              options={dropdownOptions}
+            />
+          </div>
         </div>
         <BarChart
           className="dashboardCategoryGraph_chart"
@@ -91,6 +118,7 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
 
   private barData = () => {
     const { budgetInfo, categories, transactions } = this.props;
+    const { sortDir, sortField } = this.state;
     const expensesData: BarSeriesData[] = [];
     const budgetData: BarSeriesData[] = [];
 
@@ -120,12 +148,19 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
         budgetData.push({x: 0, y: cat.name.toString()});
       }
     });
-    return [sorter.sort(expensesData, 'asc', 'y'), sorter.sort(budgetData, 'asc', 'y')];
+    return [sorter.sort(expensesData, sortDir, sortField), sorter.sort(budgetData, sortDir, sortField)];
   }
 
   private handleClick = (date: string, dateType: 'month' | 'year') => {
     const { dispatch } = this.props;
     dispatch(sessionStateStore.setBudgetInfo({date, dateType}));
+  }
+
+  private handleSort = (dir: 'asc'| 'desc', field: 'x' | 'y') => {
+    this.setState({
+      sortDir: dir,
+      sortField: field,
+    });
   }
   
   private loadCategories = async () => {

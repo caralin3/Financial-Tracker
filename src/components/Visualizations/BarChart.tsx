@@ -62,13 +62,13 @@ export class BarChart extends React.Component<BarChartProps, BarChartState> {
         <XAxis title={xAxisTitle ? xAxisTitle : 'Amount ($)'} />
         <YAxis />
         <HorizontalBarSeries
-          color='red'
+          color='#0C98AC'
           data={data[0]}
           onValueMouseOver={(d: BarSeriesData) => this.setState({ v1: d })}
           onValueMouseOut={() => this.setState({ v1: null })}
         />
         <HorizontalBarSeries
-          color='blue'
+          color='#62D4D9'
           data={data[1]}
           onValueMouseOver={(d: BarSeriesData) => this.setState({ v2: d })}
           onValueMouseOut={() => this.setState({ v2: null })}

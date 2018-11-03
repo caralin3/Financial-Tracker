@@ -12,6 +12,16 @@
     justify-content: space-between;
     padding: 0 1.5rem 1rem;
     width: 100%;
+
+    &-buttons {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &-button {
+      margin-right: 1rem;
+    }
   }
 
   &_label {
@@ -29,6 +39,27 @@
     &-option {
       color: @black;
       font-family: @font-oswald;
+      margin: 0;
+
+      &:focus,
+      &:hover {
+        color: @blue-green;
+        cursor: pointer;
+      }
+    }
+  }
+
+  &_sortDropdown {
+    min-width: 9rem !important;
+
+    @media only screen and (max-width: 640px) {
+      left: auto !important;
+    }
+
+    &-option {
+      color: @black;
+      font-family: @font-oswald;
+      font-size: 0.5rem;
       margin: 0;
 
       &:focus,

@@ -25,11 +25,15 @@ export const PieChart: React.SFC<PieChartProps> = (props) => (
       getColor={(d: RadialChartData) => `url(#${d.gradientLabel})`}
       getLabel={(d: RadialChartData) => getLabels(props.data, d.name)}
       data={props.data}
-      labelsRadiusMultiplier={getLabelCount(props.data) === 1 ? 0.1 : 0.8}
-      labelsStyle={{fontFamily: 'Archivo Narrow, sans-serif', fontSize: 18, fill: '#FFF'}}
+      labelsRadiusMultiplier={getLabelCount(props.data) === 1 ? 0.05 : 0.9}
+      labelsStyle={{
+        fill: '#FFF',
+        fontFamily: 'Archivo Narrow, sans-serif',
+        fontSize: getLabelCount(props.data) === 1 ? 16: 18,
+      }}
       showLabels={true}
       width={250}
-      height={250}
+      height={225}
     >
       <GradientDefs>
         <linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1">
