@@ -5,7 +5,7 @@ import { BarChart, Dropdown } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { BudgetInfo, Category, Transaction, User } from '../../types';
-import { formatter, sorter, transactionConverter } from '../../utility';
+import { calculations, sorter, transactionConverter } from '../../utility';
 
 interface DashboardCategoryGraphProps {}
 
@@ -99,23 +99,25 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
       date = budgetInfo.date;
     }
 
-    let expenses = transactions.filter((tran) => tran.type === 'Expense' &&
-      formatter.formatMMYY(tran.date) === date);
-    if (budgetInfo && budgetInfo.dateType === 'year') {
-      expenses = transactions.filter((tran) => tran.type === 'Expense' &&
-      formatter.formatYYYY(tran.date) === date);
-    }
-
-    expenses.forEach((exp) => {
-      if (exp.category) {
-        const category = transactionConverter.categoryName(exp.category, categories).toString();
-        expensesData.push({ x: exp.amount, y: category });
+    categories.forEach((cat) => {
+      let actual = calculations.actualByMonth(cat.id, transactions, date);
+      if (budgetInfo && budgetInfo.dateType === 'year') {
+        actual = calculations.actualByYear(cat.id, transactions, date);
       }
+      expensesData.push({x: actual, y: cat.name.toString()})
     });
 
     categories.forEach((cat) => {
       if (cat.budget !== undefined) {
-        budgetData.push({x: cat.budget, y: cat.name.toString()});
+        if (cat.actual !== undefined) {
+          if (cat.budget - cat.actual > 0) {
+            budgetData.push({x: cat.budget - cat.actual, y: cat.name.toString()});
+          } else {
+            budgetData.push({x: cat.budget, y: cat.name.toString()});
+          }
+        }
+      } else {
+        budgetData.push({x: 0, y: cat.name.toString()});
       }
     });
     return [sorter.sort(expensesData, 'asc', 'y'), sorter.sort(budgetData, 'asc', 'y')];
