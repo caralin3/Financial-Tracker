@@ -72,6 +72,7 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
             <h3 className="dashboard_label">Goals</h3>
           </ContentCard>
         </div>
+        <a href="https://fontawesome.com/license">Font Awesome License</a>
       </div>
     )
   }

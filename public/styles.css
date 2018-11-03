@@ -384,9 +384,33 @@ select {
 .dashboardAccounts_neg {
   color: #FF0000;
 }
+.dashboardAccounts_dropdown {
+  min-width: 5rem !important;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardAccounts_dropdown {
+    left: auto !important;
+  }
+}
+.dashboardAccounts_dropdown-option {
+  color: #000000;
+  font-family: 'Oswald', sans-serif;
+  margin: 0;
+}
+.dashboardAccounts_dropdown-option:focus,
+.dashboardAccounts_dropdown-option:hover {
+  color: #0C98AC;
+  cursor: pointer;
+}
 .dashboardAccounts_chart {
   display: flex;
   flex-direction: column;
+}
+.dashboardAccounts_chart-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
 }
 .dashboardAccounts_chart-title {
   font-family: 'Francois One', sans-serif;

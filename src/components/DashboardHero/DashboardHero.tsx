@@ -77,7 +77,7 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
         </div>
         <div className="dashboardHero_date">
         <Dropdown
-          buttonText={budgetInfo.date || transactionConverter.monthYears(transactions)[0]}
+          buttonText={budgetInfo && budgetInfo.date || transactionConverter.monthYears(transactions)[0]}
           contentClass="dashboardHero_dropdown"
           options={dropdownOptions}
         />

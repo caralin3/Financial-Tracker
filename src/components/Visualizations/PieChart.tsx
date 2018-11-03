@@ -11,6 +11,11 @@ const getLabels = (data: RadialChartData[], name: string | undefined) => {
   return labels.filter((l) => l === name)[0] || ''; 
 }
 
+const getLabelCount = (data: RadialChartData[]) => {
+  const labels = data.filter((d) => d.angle > 0);
+  return labels.length; 
+}
+
 export const PieChart: React.SFC<PieChartProps> = (props) => (
     <RadialChart
       className={props.className}
@@ -20,20 +25,20 @@ export const PieChart: React.SFC<PieChartProps> = (props) => (
       getColor={(d: RadialChartData) => `url(#${d.gradientLabel})`}
       getLabel={(d: RadialChartData) => getLabels(props.data, d.name)}
       data={props.data}
-      labelsRadiusMultiplier={0.8}
-      labelsStyle={{fontSize: 16, fill: '#222'}}
+      labelsRadiusMultiplier={getLabelCount(props.data) === 1 ? 0.1 : 0.8}
+      labelsStyle={{fontFamily: 'Archivo Narrow, sans-serif', fontSize: 18, fill: '#FFF'}}
       showLabels={true}
       width={250}
       height={250}
     >
       <GradientDefs>
         <linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#0C98AC" />
-          <stop offset="100%" stopColor="#62D4D9" />
+          <stop offset="0%" stopColor="#40ED73" />
+          <stop offset="100%" stopColor="#4BBC7A" />
         </linearGradient>
         <linearGradient id="grad2" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="#62D4D9" />
-          <stop offset="100%" stopColor="#0C98AC" />
+          <stop offset="0%" stopColor="#D989FF" />
+          <stop offset="100%" stopColor="#A044C4" />
         </linearGradient>
         <linearGradient id="grad3" x1="0" x2="0" y1="0" y2="1">
           <stop offset="0%" stopColor="#62D4D9" />

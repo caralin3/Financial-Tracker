@@ -1,16 +1,22 @@
 import { Account, BudgetInfo, Category, Transaction } from '../types';
-import { formatter } from './';
+import { formatter, transactionConverter } from './';
 
 export const incomeSum = (transactions: Transaction[], budgetInfo: BudgetInfo) => {
   let inc: number = 0;
   transactions.forEach((trans) => {
     if (trans.type === 'Income') {
-      if (budgetInfo.dateType === 'year') {
+      if (budgetInfo && budgetInfo.dateType === 'year') {
         if (formatter.formatYYYY(trans.date) === budgetInfo.date) {
           inc += trans.amount;
         }
-      } else if (budgetInfo.dateType === 'month') {
-        if (formatter.formatMMYYYY(trans.date) === budgetInfo.date) {
+      } else {
+        let date: string;
+        if (budgetInfo) {
+          date = budgetInfo.date;
+        } else {
+          date = transactionConverter.monthYears(transactions)[0];
+        }
+        if (formatter.formatMMYYYY(trans.date) === date) {
           inc += trans.amount;
         }
       }
@@ -23,12 +29,18 @@ export const expensesSum = (transactions: Transaction[], budgetInfo: BudgetInfo)
   let exp: number = 0;
   transactions.forEach((trans) => {
     if (trans.type === 'Expense') {
-      if (budgetInfo.dateType === 'year') {
+      if (budgetInfo && budgetInfo.dateType === 'year') {
         if (formatter.formatYYYY(trans.date) === budgetInfo.date) {
           exp += trans.amount;
         }
-      } else if (budgetInfo.dateType === 'month') {
-        if (formatter.formatMMYYYY(trans.date) === budgetInfo.date) {
+      } else {
+        let date: string;
+        if (budgetInfo) {
+          date = budgetInfo.date;
+        } else {
+          date = transactionConverter.monthYears(transactions)[0];
+        }
+        if (formatter.formatMMYYYY(trans.date) === date) {
           exp += trans.amount;
         }
       }
@@ -99,9 +111,20 @@ export const expensesCount = (transactions: Transaction[]) => {
   return transactions.filter((trans) => trans.type === 'Expense').length;
 }
 
-export const bankExpenses = (transactions: Transaction[], accounts: Account[]) => {
+export const bankExpenses = (transactions: Transaction[], accounts: Account[], budgetInfo: BudgetInfo) => {
   let total: number = 0;
-  const exps = transactions.filter((trans) => trans.type === 'Expense');
+  let date: string;
+  if (budgetInfo) {
+    date = budgetInfo.date;
+  } else {
+    date = transactionConverter.monthYears(transactions)[0];
+  }
+  let exps = transactions.filter((trans) => trans.type === 'Expense' &&
+    formatter.formatMMYYYY(trans.date) === date);
+  if (budgetInfo && budgetInfo.dateType === 'year') {
+    exps = transactions.filter((trans) => trans.type === 'Expense' &&
+    formatter.formatYYYY(trans.date) === date);
+  }
   exps.forEach((exp) => {
     const acc = accounts.filter((ac) => ac.id === exp.from)[0];
     if (acc && acc.type === 'Bank Account') {
@@ -111,9 +134,20 @@ export const bankExpenses = (transactions: Transaction[], accounts: Account[]) =
   return total;
 }
 
-export const cashExpenses = (transactions: Transaction[], accounts: Account[]) => {
+export const cashExpenses = (transactions: Transaction[], accounts: Account[], budgetInfo: BudgetInfo) => {
   let total: number = 0;
-  const exps = transactions.filter((trans) => trans.type === 'Expense');
+  let date: string;
+  if (budgetInfo) {
+    date = budgetInfo.date;
+  } else {
+    date = transactionConverter.monthYears(transactions)[0];
+  }
+  let exps = transactions.filter((trans) => trans.type === 'Expense' &&
+    formatter.formatMMYYYY(trans.date) === date);
+  if (budgetInfo && budgetInfo.dateType === 'year') {
+    exps = transactions.filter((trans) => trans.type === 'Expense' &&
+    formatter.formatYYYY(trans.date) === date);
+  }
   exps.forEach((exp) => {
     const acc = accounts.filter((ac) => ac.id === exp.from)[0];
     if (acc && acc.type === 'Cash') {
@@ -123,9 +157,20 @@ export const cashExpenses = (transactions: Transaction[], accounts: Account[]) =
   return total;
 }
 
-export const creditExpenses = (transactions: Transaction[], accounts: Account[]) => {
+export const creditExpenses = (transactions: Transaction[], accounts: Account[], budgetInfo: BudgetInfo) => {
   let total: number = 0;
-  const exps = transactions.filter((trans) => trans.type === 'Expense');
+  let date: string;
+  if (budgetInfo) {
+    date = budgetInfo.date;
+  } else {
+    date = transactionConverter.monthYears(transactions)[0];
+  }
+  let exps = transactions.filter((trans) => trans.type === 'Expense' &&
+    formatter.formatMMYYYY(trans.date) === date);
+  if (budgetInfo && budgetInfo.dateType === 'year') {
+    exps = transactions.filter((trans) => trans.type === 'Expense' &&
+    formatter.formatYYYY(trans.date) === date);
+  }
   exps.forEach((exp) => {
     const acc = accounts.filter((ac) => ac.id === exp.from)[0];
     if (acc && acc.type === 'Credit') {

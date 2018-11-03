@@ -25,12 +25,14 @@ interface DashboardMergedProps extends
   DispatchMappedProps,
   DashboardCategoryGraphProps {}
 
-interface DashboardCategoryGraphState {}
+interface DashboardCategoryGraphState {
+  mobile: boolean;
+}
 
 export class DisconnectedDashboardCategoryGraph extends React.Component<DashboardMergedProps, DashboardCategoryGraphState> {
-  public readonly state: DashboardCategoryGraphState = {}
-
-  public mobile: boolean = false;
+  public readonly state: DashboardCategoryGraphState = {
+    mobile: false,
+  }
 
   public componentWillMount() {
     this.loadCategories();
@@ -43,11 +45,12 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
   }
 
   public resize = () => {
-    this.mobile = window.innerWidth <= 1100;
+    this.setState({ mobile:  window.innerWidth <= 1100 });
   }
 
   public render() {
     const { budgetInfo, transactions } = this.props;
+    const { mobile } = this.state;
 
     const monthOptions: JSX.Element[] = [];
     const yearOptions: JSX.Element[] = [];
@@ -70,7 +73,7 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
         <div className="dashboardCategoryGraph_header">
           <h3 className="dashboardCategoryGraph_label">Expenses by Category</h3>
           <Dropdown
-            buttonText={budgetInfo.date || transactionConverter.monthYears(transactions)[0]}
+            buttonText={budgetInfo && budgetInfo.date || transactionConverter.monthYears(transactions)[0]}
             contentClass="dashboardCategoryGraph_dropdown"
             options={dropdownOptions}
           />
@@ -79,8 +82,8 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
           className="dashboardCategoryGraph_chart"
           data={this.barData()}
           height={300}
-          leftMargin={this.mobile ? 125 : 150}
-          width={this.mobile ? 300 : 550}
+          leftMargin={mobile ? 125 : 150}
+          width={mobile ? 300 : 550}
         />
       </div>
     )
@@ -91,11 +94,16 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
     const expensesData: BarSeriesData[] = [];
     const budgetData: BarSeriesData[] = [];
 
+    let date = transactionConverter.monthYears(transactions)[0];
+    if (budgetInfo) {
+      date = budgetInfo.date;
+    }
+
     let expenses = transactions.filter((tran) => tran.type === 'Expense' &&
-      formatter.formatMMYY(tran.date) === budgetInfo.date);
-    if (budgetInfo.dateType === 'year') {
+      formatter.formatMMYY(tran.date) === date);
+    if (budgetInfo && budgetInfo.dateType === 'year') {
       expenses = transactions.filter((tran) => tran.type === 'Expense' &&
-      formatter.formatYYYY(tran.date) === budgetInfo.date);
+      formatter.formatYYYY(tran.date) === date);
     }
 
     expenses.forEach((exp) => {
