@@ -162,15 +162,17 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
     const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
     let actual = calculations.actualByMonth(categoryId, transactions, budgetInfo.date);
     let budget = currentCategory && currentCategory.budget ? currentCategory.budget : 0;
-    
+    let budgetPercent = (budget / budgetInfo.income) * 100;
     if (budgetInfo.dateType === 'year') {
       actual = calculations.actualByYear(categoryId, transactions, budgetInfo.date);
       if (prevBudgetType === 'month') {
+        budgetPercent = (budget / budgetInfo.income) * 100;
         budget *= 12;
       }
     } else {
       if (prevBudgetType === 'year') {
         budget /= 12;
+        budgetPercent = (budget / budgetInfo.income) * 100;
       }
     }
     budget = parseFloat(budget.toFixed(2));
@@ -180,7 +182,7 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
         ...currentCategory,
         actual,
         budget,
-        budgetPercent: (budget / budgetInfo.income) * 100,
+        budgetPercent,
         variance,
       }
       dispatch(categoryStateStore.editCategory(updatedCategory));
