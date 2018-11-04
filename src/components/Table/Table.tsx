@@ -3,7 +3,15 @@ import { connect, Dispatch } from 'react-redux';
 import { BudgetTableData, DeleteDialog, TableData, TableFilters } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
-import { Category, HeaderData, TableDataType, TransactionFilter } from '../../types';
+import {
+  Account,
+  Category,
+  HeaderData,
+  Job,
+  TableDataType,
+  Transaction,
+  TransactionFilter
+} from '../../types';
 import { calculations, formatter, sorter } from '../../utility';
 
 interface TableProps {
@@ -16,9 +24,12 @@ interface DispatchMappedProps {
 }
 
 interface StateMappedProps {
+  accounts: Account[];
   categories: Category[];
   editingTransaction: boolean;
   filters: TransactionFilter[];
+  jobs: Job[];
+  transactions: Transaction[];
 }
 
 interface TableMergedProps extends
@@ -150,10 +161,51 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
     this.toggleDeleteDialog();
   }
 
+  private updateAccounts = () => {
+    const { accounts, dispatch, jobs, transactions } = this.props;
+    const { id } = this.state;
+    const transaction = transactions.filter((trans) => trans.id === id)[0];
+    if (transaction.type === 'Expense') {
+      const fromAccount = accounts.filter((acc) => acc.id === transaction.from)[0];
+      const updatedAccount: Account = {
+        ...fromAccount,
+        balance: fromAccount.balance + transaction.amount,
+      }
+      db.requests.accounts.edit(updatedAccount, dispatch);
+    } else if (transaction.type === 'Income') {
+      const toAccount = accounts.filter((acc) => acc.id === transaction.to)[0];
+      const job = jobs.filter((j) => j.id === transaction.from)[0];
+      const updatedToAccount: Account = {
+        ...toAccount,
+        balance: toAccount.balance - transaction.amount,
+      }
+      const updatedJob: Job = {
+        ...job,
+        ytd: job.ytd - transaction.amount,
+      }
+      db.requests.accounts.edit(updatedToAccount, dispatch);
+      db.requests.jobs.edit(updatedJob, dispatch);
+    } else {
+      const fromAccount = accounts.filter((acc) => acc.id === transaction.from)[0];
+      const toAccount = accounts.filter((acc) => acc.id === transaction.to)[0];
+      const updatedFromAccount: Account = {
+        ...fromAccount,
+        balance: fromAccount.balance + transaction.amount,
+      }
+      const updatedToAccount: Account = {
+        ...toAccount,
+        balance: toAccount.balance - transaction.amount,
+      }
+      db.requests.accounts.edit(updatedFromAccount, dispatch);
+      db.requests.accounts.edit(updatedToAccount, dispatch);
+    }
+  }
+
   private onDelete = () => {
     const { dispatch, type } = this.props;
     if (type !== 'budget') {
       db.requests.transactions.remove(this.state.id, dispatch);
+      this.updateAccounts();
     }
     this.toggleDeleteDialog();
   }
@@ -216,9 +268,12 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
+  accounts: state.accountsState.accounts,
   categories: state.categoriesState.categories,
   editingTransaction: state.sessionState.editingTransaction,
   filters: state.sessionState.transactionFilters,
+  jobs: state.jobsState.jobs,
+  transactions: state.transactionState.transactions,
 });
 
 export const Table = connect<
