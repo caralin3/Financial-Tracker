@@ -394,14 +394,10 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
     toggleDialog();
     this.setState({
       amount: 0,
-      category: 'Select Category',
       date: '',
-      from: active === 'Income' ? 'Select Job' : 'Select Account',
       note: '',
-      subcategory: 'Select Subcategory',
       tags: '',
-      to: '',
-    })
+    });
   }
 }
 

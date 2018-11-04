@@ -52,7 +52,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
     deleting: false,
     editId: '',
     id: '',
-    sortedBy: {dir: 'desc', key: (this.props.type === 'budget' || this.props.type === 'ideal') ? 'name' : 'date'},
+    sortedBy: {dir: 'asc', key: (this.props.type === 'budget' || this.props.type === 'ideal') ? 'name' : 'date'},
   }
   
   public render () {

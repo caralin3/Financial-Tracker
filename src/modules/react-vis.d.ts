@@ -1,5 +1,16 @@
 declare module 'react-vis' {
 
+  interface DiscreteColorLegendProps {
+    className?: string;
+    height?: number;
+    items?: object[];
+    orientation?: 'horizontal' | 'vertical';
+    style?: object;
+    width?: number;
+  }
+
+  export class DiscreteColorLegend extends React.Component<DiscreteColorLegendProps> {}
+
   interface GraphData {
     className?: string;
     color?: string | number;
