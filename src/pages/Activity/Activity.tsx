@@ -239,7 +239,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) =>
         tr.userId === currentUser.id);
-      data = sorter.sort(this.convertData(data), 'desc', 'date');
+      data = sorter.sort(this.convertData(data), 'asc', 'date');
       const tableData: TableDataType = {
         data,
         headers,
@@ -289,7 +289,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Expense'
         && tr.userId === currentUser.id);
-      data = sorter.sort(this.convertData(data), 'desc', 'date');
+      data = sorter.sort(this.convertData(data), 'asc', 'date');
       const tableData: TableDataType = {
         data,
         headers,
@@ -312,7 +312,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
     if (currentUser) {
       let data: Transaction[] = transactions.filter((tr: Transaction) => tr.type === 'Income'
         && tr.userId === currentUser.id);
-      data = sorter.sort(this.convertData(data), 'desc', 'date');
+      data = sorter.sort(this.convertData(data), 'asc', 'date');
       const tableData: TableDataType = {
         data,
         headers,

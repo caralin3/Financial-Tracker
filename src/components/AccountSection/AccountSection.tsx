@@ -94,7 +94,7 @@ export class DisconnectedAccountSection extends React.Component<AccountSectionMe
                 onKeyPress={this.handleKeyPress}
                 placeholder='Account Balance'
                 step='0.01'
-                type='number'
+                type={this.props.type === 'Credit' ? 'text' : 'number'}
                 value={balance}
               /> :
               <h2

@@ -170,7 +170,7 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
                 onChange={(e) => this.handleChange(e, 'amount')}
                 step='0.01'
                 type='number'
-                value={amount}
+                value={amount === 0 ? '' : amount}
               />
             </div>
             {active === 'Expense' &&
@@ -394,14 +394,10 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
     toggleDialog();
     this.setState({
       amount: 0,
-      category: 'Select Category',
       date: '',
-      from: active === 'Income' ? 'Select Job' : 'Select Account',
       note: '',
-      subcategory: 'Select Subcategory',
       tags: '',
-      to: '',
-    })
+    });
   }
 }
 

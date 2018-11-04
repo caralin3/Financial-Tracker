@@ -121,6 +121,7 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
     const { sortDir, sortField } = this.state;
     const expensesData: BarSeriesData[] = [];
     const budgetData: BarSeriesData[] = [];
+    const exceedData: BarSeriesData[] = [];
 
     let date = transactionConverter.monthYears(transactions)[0];
     if (budgetInfo) {
@@ -132,7 +133,12 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
       if (budgetInfo && budgetInfo.dateType === 'year') {
         actual = calculations.actualByYear(cat.id, transactions, date);
       }
-      expensesData.push({x: actual, y: cat.name.toString()})
+      if (cat.budget < actual) {
+        expensesData.push({x: cat.budget, y: cat.name.toString()});
+        exceedData.push({x: actual - cat.budget, y: cat.name.toString()});
+      } else {
+        expensesData.push({x: actual, y: cat.name.toString()});
+      }
     });
 
     categories.forEach((cat) => {
@@ -140,15 +146,21 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
         if (cat.actual !== undefined) {
           if (cat.budget - cat.actual >= 0) {
             budgetData.push({x: cat.budget - cat.actual, y: cat.name.toString()});
+          } else if (cat.budget < cat.actual) {
+            budgetData.push({x: 0, y: cat.name.toString()});
           } else {
-            budgetData.push({x: cat.budget, y: cat.name.toString()});
+            budgetData.push({x: 0, y: cat.name.toString()});
           }
         }
       } else {
         budgetData.push({x: 0, y: cat.name.toString()});
       }
     });
-    return [sorter.sort(expensesData, sortDir, sortField), sorter.sort(budgetData, sortDir, sortField)];
+    return [
+      sorter.sort(expensesData, sortDir, sortField),
+      sorter.sort(budgetData, sortDir, sortField),
+      sorter.sort(exceedData, sortDir, sortField),
+    ];
   }
 
   private handleClick = (date: string, dateType: 'month' | 'year') => {
