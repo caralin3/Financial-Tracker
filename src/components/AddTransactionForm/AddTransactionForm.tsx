@@ -170,7 +170,7 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
                 onChange={(e) => this.handleChange(e, 'amount')}
                 step='0.01'
                 type='number'
-                value={amount}
+                value={amount === 0 ? '' : amount}
               />
             </div>
             {active === 'Expense' &&
@@ -315,6 +315,45 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
     }
   }
 
+  private updateAccounts = () => {
+    const { accounts, dispatch, jobs } = this.props;
+    const { from, active, amount, to } = this.state;
+    if (active === 'Expense') {
+      const account: Account = accounts.filter((acc) => acc.id === from)[0];
+      const updatedAccount: Account = {
+        ...account,
+        balance: account.balance - amount,
+      };
+      db.requests.accounts.edit(updatedAccount, dispatch);
+    } else if (active === 'Income') {
+      const job: Job = jobs.filter((j) => j.id === from)[0];
+      const toAccount: Account = accounts.filter((acc) => acc.id === to)[0];
+      const updatedJob: Job = {
+        ...job,
+        ytd: job.ytd + amount,
+      }
+      const updateToAccount: Account = {
+        ...toAccount,
+        balance: toAccount.balance + amount,
+      };
+      db.requests.jobs.edit(updatedJob, dispatch);
+      db.requests.accounts.edit(updateToAccount, dispatch);
+    } else {
+      const fromAccount: Account = accounts.filter((acc) => acc.id === from)[0];
+      const toAccount: Account = accounts.filter((acc) => acc.id === to)[0];
+      const updateFromAccount: Account = {
+        ...fromAccount,
+        balance: fromAccount.balance - amount,
+      };
+      const updateToAccount: Account = {
+        ...toAccount,
+        balance: toAccount.balance + amount,
+      };
+      db.requests.accounts.edit(updateFromAccount, dispatch);
+      db.requests.accounts.edit(updateToAccount, dispatch);
+    }
+  }
+
   private onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const {from, active, amount, category, date, note, subcategory, to } = this.state;
     const { currentUser, dispatch, toggleDialog } = this.props;
@@ -350,18 +389,15 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
         }
       }
       db.requests.transactions.add(transaction, dispatch);
+      this.updateAccounts();
     }
     toggleDialog();
     this.setState({
       amount: 0,
-      category: 'Select Category',
       date: '',
-      from: 'Select Account',
       note: '',
-      subcategory: 'Select Subcategory',
       tags: '',
-      to: '',
-    })
+    });
   }
 }
 

@@ -111,7 +111,7 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
               <CSVLink
                 className="budget_export"
                 data={this.budgetData().data}
-                filename={`${budgetInfo.date}_budget.csv`}
+                filename={`${budgetInfo.date.replace(' - ', '_')}_budget.csv`}
                 headers={this.budgetData().headers}
               >
                 Export

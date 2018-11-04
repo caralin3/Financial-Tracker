@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   BarSeriesData,
+  DiscreteColorLegend,
   Hint,
   HorizontalBarSeries,
   HorizontalGridLines,
@@ -10,7 +11,6 @@ import {
   YAxis,
 } from 'react-vis';
 import 'react-vis/dist/style.css';
-// import { formatter } from 'src/utility';
 
 interface BarChartProps {
   className?: string;
@@ -24,12 +24,14 @@ interface BarChartProps {
 interface BarChartState {
   v1: BarSeriesData | null;
   v2: BarSeriesData | null;
+  v3: BarSeriesData | null;
 }
 
 export class BarChart extends React.Component<BarChartProps, BarChartState> {
   public readonly state: BarChartState = {
     v1: null,
     v2: null,
+    v3: null,
   }
 
   public render() {
@@ -43,20 +45,29 @@ export class BarChart extends React.Component<BarChartProps, BarChartState> {
         stackBy="x"
         yType="ordinal"
       >
-        {/* <DiscreteColorLegend
-          style={{position: 'absolute', left: '50px', top: '10px'}}
-          orientation="horizontal"
+        <DiscreteColorLegend
+          style={{
+            backgroundColor: 'rgba(244, 244, 244, 0.75)',
+            bottom: '75px',
+            position: 'absolute',
+            right: '10px',
+          }}
+          orientation="vertical"
           items={[
             {
-              title: 'Apples',
-              color: '#12939A'
+              color: '#0C98AC',
+              title: 'Actual',
             },
             {
-              title: 'Oranges',
-              color: '#79C7E3'
+              color: '#62D4D9',
+              title: 'Budget',
+            },
+            {
+              color: '#FF0000',
+              title: 'Over Budget',
             }
           ]}
-        /> */}
+        />
         <VerticalGridLines />
         <HorizontalGridLines />
         <XAxis title={xAxisTitle ? xAxisTitle : 'Amount ($)'} />
@@ -73,11 +84,18 @@ export class BarChart extends React.Component<BarChartProps, BarChartState> {
           onValueMouseOver={(d: BarSeriesData) => this.setState({ v2: d })}
           onValueMouseOut={() => this.setState({ v2: null })}
         />
+        <HorizontalBarSeries
+          color='#FF0000'
+          data={data[2]}
+          onValueMouseOver={(d: BarSeriesData) => this.setState({ v3: d })}
+          onValueMouseOut={() => this.setState({ v3: null })}
+        />
         {/* {this.state.v1 && <Hint value={this.state.v1}><div style={{background: 'black'}}>
             <p>{formatter.formatMoney(this.state.v1.x)}</p>
           </div></Hint>} */}
         {this.state.v1 && <Hint value={this.state.v1} />}
         {this.state.v2 && <Hint value={this.state.v2} />}
+        {this.state.v3 && <Hint value={this.state.v3} />}
       </XYPlot>
     )
   }

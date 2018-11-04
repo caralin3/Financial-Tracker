@@ -47,6 +47,7 @@ export const years = (transactions: Transaction[]) => {
 }
 
 export const monthYears = (transactions: Transaction[]) => {
-  return sorter.sortValues(transactions.map((tr) => formatter.formatMMYYYY(tr.date))
-    .filter((year, index, self) => self.findIndex((y) => year === y) === index), 'asc');
+  const sortedTransactions = sorter.sort(transactions, 'desc', 'date');
+  return sortedTransactions.map((tr) => formatter.formatMMYYYY(tr.date))
+    .filter((year, index, self) => self.findIndex((y) => year === y) === index);
 }

@@ -86,7 +86,6 @@ class DisconnectedAccountsPage extends React.Component<AccountsMergedProps, Acco
           <ContentCard class="accounts_credit">
             <h3 className="accounts_label">Credit Cards</h3>
             <h2 className={`accounts_amount ${creditSum !== 0 && 'accounts_amount-credit'}`}>
-              { creditSum !== 0 && '-' }
               { formatter.formatMoney(creditSum) }
             </h2>
           </ContentCard>

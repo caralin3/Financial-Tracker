@@ -94,7 +94,7 @@ export class DisconnectedAccountSection extends React.Component<AccountSectionMe
                 onKeyPress={this.handleKeyPress}
                 placeholder='Account Balance'
                 step='0.01'
-                type='number'
+                type={this.props.type === 'Credit' ? 'text' : 'number'}
                 value={balance}
               /> :
               <h2
@@ -102,7 +102,6 @@ export class DisconnectedAccountSection extends React.Component<AccountSectionMe
                 ${this.props.type === 'Credit' && this.props.balance !== 0 && 'accountSection_amount-credit'}`}
                 onClick={() => this.toggleEdit('balance')}
               >
-                { this.props.type === 'Credit' && this.props.balance !== 0 && '-' }
                 { formatter.formatMoney(this.props.balance) }
               </h2>
             }
