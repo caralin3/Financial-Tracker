@@ -170,7 +170,7 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
                 onChange={(e) => this.handleChange(e, 'amount')}
                 step='0.01'
                 type='number'
-                value={amount}
+                value={amount === 0 ? '' : amount}
               />
             </div>
             {active === 'Expense' &&
