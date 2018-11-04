@@ -320,6 +320,105 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
     }
   }
 
+  private updateAccounts = (transaction: Transaction) => {
+    const { accounts, data, dispatch, jobs } = this.props;
+    const { amount, from , to } = this.state;
+    if (this.change() === 'amount') {
+      const diff = Math.abs(data - amount);
+      if (transaction.type === 'Expense') {
+        const account: Account = accounts.filter((acc) => acc.id === transaction.from)[0];
+        let balance = account.balance - diff;
+        if (data > amount) {
+          balance = account.balance + diff;
+        }
+        const updatedAccount: Account = {
+          ...account,
+          balance,
+        };
+        db.requests.accounts.edit(updatedAccount, dispatch);
+      }
+      if (transaction.type === 'Income') {
+        const account: Account = accounts.filter((acc) => acc.id === transaction.to)[0];
+        const job: Job = jobs.filter((j) => j.id === transaction.from)[0];
+        let balance = account.balance + diff;
+        if (data > amount) {
+          balance = account.balance - diff;
+        }
+        const updatedAccount: Account = {
+          ...account,
+          balance,
+        };
+        let ytd = job.ytd + diff;
+        if (data > amount) {
+          ytd = job.ytd - diff;
+        }
+        const updatedJob: Job = {
+          ...job,
+          ytd,
+        }
+        db.requests.accounts.edit(updatedAccount, dispatch);
+        db.requests.jobs.edit(updatedJob, dispatch);
+      } else if (transaction.type === 'Transfer') {
+        const fromAccount: Account = accounts.filter((acc) => acc.id === transaction.from)[0];
+        const toAccount: Account = accounts.filter((acc) => acc.id === transaction.to)[0];
+        let fromBalance = fromAccount.balance - diff;
+        if (data > amount) {
+          fromBalance = fromAccount.balance + diff;
+        }
+        const updatedFromAccount: Account = {
+          ...fromAccount,
+          balance: fromBalance,
+        };
+        let toBalance = toAccount.balance + diff;
+        if (data > amount) {
+          toBalance = toAccount.balance - diff;
+        }
+        const updatedToAccount: Account = {
+          ...toAccount,
+          balance: toBalance,
+        };
+        db.requests.accounts.edit(updatedFromAccount, dispatch);
+        db.requests.accounts.edit(updatedToAccount, dispatch);
+      }
+    } else if (this.change() === 'from') {
+      const diff = transaction.amount;
+      if (transaction.type === 'Income') {
+        // const originalJob: Job = jobs.filter((j) => j.id === data)[0];
+        // const job: Job = jobs.filter((j) => j.id === from)[0];
+
+      } else {
+        const originalAccount: Account = accounts.filter((acc) => acc.name === data)[0];
+        const account: Account = accounts.filter((acc) => acc.id === from)[0];
+        const updatedOriginal: Account = {
+          ...originalAccount,
+          balance: originalAccount.balance + diff,
+        }
+        const updateFromAccount: Account = {
+          ...account,
+          balance: account.balance - diff,
+        };
+        db.requests.accounts.edit(updatedOriginal, dispatch);
+        db.requests.accounts.edit(updateFromAccount, dispatch);
+      }
+    } else if (this.change() === 'to') {
+      if (transaction.type !== 'Expense') {
+        const diff = transaction.amount;
+        const originalAccount: Account = accounts.filter((acc) => acc.name === data)[0];
+        const account: Account = accounts.filter((acc) => acc.id === to)[0];
+        const updatedOriginal: Account = {
+          ...originalAccount,
+          balance: originalAccount.balance - diff,
+        }
+        const updateToAccount: Account = {
+          ...account,
+          balance: account.balance + diff,
+        };
+        db.requests.accounts.edit(updatedOriginal, dispatch);
+        db.requests.accounts.edit(updateToAccount, dispatch);
+      }
+    }
+  }
+
   private handleBlur = () => {
     const { currentUser, dispatch, id, transactions } = this.props;
     let transaction: Transaction = transactions.filter((trans: Transaction) => trans.id === id && 
@@ -339,6 +438,7 @@ export class DisconnectedTableData extends React.Component<TableDataMergedProps,
         }
       }
       db.requests.transactions.edit(transaction, dispatch);
+      this.updateAccounts(transaction);
     }
     dispatch(sessionStateStore.setEditingTransaction(false));
   }
