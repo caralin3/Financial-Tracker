@@ -1,5 +1,6 @@
+import { BarSeriesData, RadialChartData } from 'react-vis';
 import { Account, BudgetInfo, Category, Transaction } from '../types';
-import { formatter, transactionConverter } from './';
+import { formatter, sorter, transactionConverter } from './';
 
 export const totals = (arr: any[], field: string) => {
   let total: number = 0;
@@ -188,4 +189,61 @@ export const creditExpenses = (transactions: Transaction[], accounts: Account[],
     }
   });
   return total;
+}
+
+export const expensesByAccounts = (accounts: Account[], budgetInfo: BudgetInfo, transactions: Transaction[]) => {
+  const bankExpTotal = bankExpenses(transactions, accounts, budgetInfo);
+  const cashExpTotal = cashExpenses(transactions, accounts, budgetInfo);
+  const creditExpTotal = creditExpenses(transactions, accounts, budgetInfo);
+  const data: RadialChartData[] = [
+    { angle: bankExpTotal, name: 'Bank Accounts', gradientLabel: 'grad1' },
+    { angle: cashExpTotal, name: 'Cash', gradientLabel: 'grad2' },
+    { angle: creditExpTotal, name: 'Credit', gradientLabel: 'grad3' },
+  ]
+  return data;
+}
+
+export const expensesByCategory = (budgetInfo: BudgetInfo, categories: Category[], transactions: Transaction[], sort: {dir: 'asc' | 'desc', field: string}) => {
+  const expensesData: BarSeriesData[] = [];
+  const budgetData: BarSeriesData[] = [];
+  const exceedData: BarSeriesData[] = [];
+
+  let date = transactionConverter.monthYears(transactions)[0];
+  if (budgetInfo) {
+    date = budgetInfo.date;
+  }
+
+  categories.forEach((cat) => {
+    let actual = actualByMonth(cat.id, transactions, date);
+    if (budgetInfo && budgetInfo.dateType === 'year') {
+      actual = actualByYear(cat.id, transactions, date);
+    }
+    if (cat.budget < actual) {
+      expensesData.push({x: cat.budget, y: cat.name.toString()});
+      exceedData.push({x: actual - cat.budget, y: cat.name.toString()});
+    } else {
+      expensesData.push({x: actual, y: cat.name.toString()});
+    }
+  });
+
+  categories.forEach((cat) => {
+    if (cat.budget !== undefined) {
+      if (cat.actual !== undefined) {
+        if (cat.budget - cat.actual >= 0) {
+          budgetData.push({x: cat.budget - cat.actual, y: cat.name.toString()});
+        } else if (cat.budget < cat.actual) {
+          budgetData.push({x: 0, y: cat.name.toString()});
+        } else {
+          budgetData.push({x: 0, y: cat.name.toString()});
+        }
+      }
+    } else {
+      budgetData.push({x: 0, y: cat.name.toString()});
+    }
+  });
+  return [
+    sorter.sort(expensesData, sort.dir, sort.field),
+    sorter.sort(budgetData, sort.dir, sort.field),
+    sorter.sort(exceedData, sort.dir, sort.field),
+  ];
 }
