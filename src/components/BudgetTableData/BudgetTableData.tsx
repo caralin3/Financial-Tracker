@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
-import { ActionTypes, AppState, categoryStateStore, sessionStateStore } from '../../store';
-import { BudgetInfo, Category, Transaction, User } from '../../types';
+import { ActionTypes, AppState, categoryStateStore } from '../../store';
+import { Budget, BudgetInfo, Category, Transaction, User } from '../../types';
 import { calculations, formatter, transactionConverter } from '../../utility';
 
 interface BudgetTableDataProps {
@@ -17,6 +17,7 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   budgetInfo: BudgetInfo;
+  budgets: Budget[];
   categories: Category[];
   currentUser: User | null;
   transactions: Transaction[];
@@ -39,22 +40,13 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
   }
 
   public componentWillMount() {
+    this.loadBudgets();
     this.updateFirebase();
   }
 
   public componentDidUpdate(prevProps: BudgetTableDataMergedProps) {
     if (prevProps.budgetInfo !== this.props.budgetInfo) {
       this.updateBudgetView(prevProps.budgetInfo.dateType);
-    }
-  }
-
-  public componentDidMount() {
-    const { budgetInfo, dispatch, transactions } = this.props;
-    if (budgetInfo && budgetInfo.income === 0) {
-      dispatch(sessionStateStore.setBudgetInfo({
-        ...budgetInfo,
-        income: calculations.incomeSum(transactions, budgetInfo),
-      }));
     }
   }
 
@@ -110,8 +102,9 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
   }
 
   private handleBlur = () => {
-    const { budgetInfo, categories, categoryId, data, dataKey, dispatch,transactions } = this.props;
+    const { budgets, budgetInfo, categories, categoryId, data, dataKey, dispatch,transactions } = this.props;
     const { amount } = this.state;
+    const budget = budgets.filter((bud) => bud.date === budgetInfo.date)[0];
     const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
     let date: string;
     if (budgetInfo) {
@@ -127,11 +120,17 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
 
     const isInvalid = isNaN(amount);
     const hasChanged = data !== amount;
+
+    let projectedAmount: number = 0;
+    if (budget) {
+      projectedAmount = budget.amount;
+    }
+
     if (!isInvalid && hasChanged) {
       const updatedCategory: Category = {
         ...currentCategory,
         [dataKey]: amount,
-        budgetPercent: (amount / budgetInfo.income) * 100,
+        budgetPercent: projectedAmount > 0 ? (amount / projectedAmount) * 100 : 0,
         variance,
       }
       db.requests.categories.edit(updatedCategory, dispatch);
@@ -158,21 +157,26 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
   }
 
   private updateBudgetView = (prevBudgetType: 'month' | 'year') => {
-    const { budgetInfo, categories, categoryId, dispatch, transactions } = this.props;
+    const { budgets, budgetInfo, categories, categoryId, dispatch, transactions } = this.props;
+    const currentBudget = budgets.filter((bud) => bud.date === budgetInfo.date)[0];
     const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
     let actual = calculations.actualByMonth(categoryId, transactions, budgetInfo.date);
     let budget = currentCategory && currentCategory.budget ? currentCategory.budget : 0;
-    let budgetPercent = (budget / budgetInfo.income) * 100;
+    let projectedAmount: number = 0;
+    if (currentBudget) {
+      projectedAmount = currentBudget.amount;
+    }
+    let budgetPercent = projectedAmount > 0 ? (budget / projectedAmount) * 100 : 0;
     if (budgetInfo.dateType === 'year') {
       actual = calculations.actualByYear(categoryId, transactions, budgetInfo.date);
       if (prevBudgetType === 'month') {
-        budgetPercent = (budget / budgetInfo.income) * 100;
         budget *= 12;
+        budgetPercent = projectedAmount > 0 ? (budget / projectedAmount) * 100 : 0;
       }
     } else {
       if (prevBudgetType === 'year') {
         budget /= 12;
-        budgetPercent = (budget / budgetInfo.income) * 100;
+        budgetPercent = projectedAmount > 0 ? (budget / projectedAmount) * 100 : 0;
       }
     }
     budget = parseFloat(budget.toFixed(2));
@@ -191,12 +195,24 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
       });
     }
   }
+
+  private loadBudgets = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.budgets.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
   budgetInfo: state.sessionState.budgetInfo,
+  budgets: state.budgetsState.budgets,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
   transactions: state.transactionState.transactions,

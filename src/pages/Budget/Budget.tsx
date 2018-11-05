@@ -7,7 +7,7 @@ import { withAuthorization } from '../../auth/withAuthorization';
 import { Dropdown, Header, Table } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
-import { BudgetInfo, Category, HeaderData, TableDataType, Transaction, User } from '../../types';
+import { Budget, BudgetInfo, Category, HeaderData, TableDataType, Transaction, User } from '../../types';
 import {
   calculations,
   categories as utilityCategories,
@@ -20,6 +20,7 @@ export interface BudgetPageProps {}
 
 interface StateMappedProps {
   budgetInfo: BudgetInfo;
+  budgets: Budget[];
   categories: Category[];
   currentUser: User | null;
   transactions: Transaction[];
@@ -42,11 +43,14 @@ export interface BudgetPageState {
 
 class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPageState> {
   public readonly state: BudgetPageState = {
-    budgetIncome: this.props.budgetInfo.income,
+    budgetIncome: this.props.budgets.length > 0 ?
+      this.props.budgets.filter((bud) => bud.date === this.props.budgetInfo.date)[0] ?
+      this.props.budgets.filter((bud) => bud.date === this.props.budgetInfo.date)[0].amount : 0 : 0,
     editIncome: false,
   }
 
   public componentWillMount() {
+    this.loadBudgets();
     this.loadCategories();
   }
 
@@ -83,7 +87,7 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
                   onKeyPress={this.handleKeyPress}
                   step='0.01'
                   type='number'
-                  value={budgetIncome}
+                  value={budgetIncome === 0 ? '' : budgetIncome}
                 /> :
                 <h2
                   className="budget_number budget_number-edit"
@@ -149,16 +153,31 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
   }
 
   private handleBlur = () => {
-    const { budgetInfo, categories, dispatch } = this.props;
+    const { budgets, budgetInfo, categories, currentUser, dispatch } = this.props;
     const { budgetIncome } = this.state;
     const isInvalid = isNaN(budgetIncome);
     const calculatedIncome = calculations.incomeSum(this.props.transactions, this.props.budgetInfo);
     const hasChanged = budgetIncome !== calculatedIncome;
     if (!isInvalid && hasChanged) {
-      dispatch(sessionStateStore.setBudgetInfo({
-        ...budgetInfo,
-        income: budgetIncome,
-      }));
+      const budget = budgets.filter((bud) => bud.date === budgetInfo.date)[0];
+      if (budget) {
+        const updatedBudget: Budget = {
+          ...budget,
+          amount: budgetIncome,          
+        }
+        db.requests.budgets.edit(updatedBudget, dispatch);
+      } else {
+        if (currentUser) {
+          db.requests.budgets.add({
+            amount: budgetIncome,
+            date: budgetInfo.date,
+            id: '',
+            type: budgetInfo.dateType,
+            userId: currentUser.id,
+          }, dispatch);
+        }
+      }
+
       categories.forEach((cat) => {
         const budgetPercent: number = ( cat.budget / budgetIncome) * 100;
         const updatedCat: Category = {
@@ -172,12 +191,50 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
   }
 
   private handleClick = (date: string, dateType: 'month' | 'year') => {
-    const { budgetInfo, dispatch, transactions } = this.props;
-    dispatch(sessionStateStore.setBudgetInfo({
-      date,
-      dateType,
-      income: budgetInfo ? budgetInfo.income : calculations.incomeSum(transactions, budgetInfo) || 0,
-    }));
+    const { budgets, dispatch } = this.props;
+    const budget = budgets.filter((bud) => bud.date === date)[0];
+    dispatch(sessionStateStore.setBudgetInfo({ date, dateType }));
+    this.addBudget({ date, dateType });
+    this.setState({
+      budgetIncome: budget ? budget.amount : 0,
+    });
+  }
+
+  private addBudget = (budgetInfo: BudgetInfo) => {
+    const { budgets, currentUser, dispatch } = this.props;
+    if (budgets.length > 0 && currentUser) {
+      const budget = budgets.filter((bud) => bud.date === budgetInfo.date)[0];
+      if (!budget) {
+        db.requests.budgets.add({
+          amount: 0,
+          date: budgetInfo.date,
+          id: '',
+          type: budgetInfo.dateType,
+          userId: currentUser.id,
+        }, dispatch);
+      }
+    } else {
+      if (currentUser) {
+        db.requests.budgets.add({
+          amount: 0,
+          date: budgetInfo.date,
+          id: '',
+          type: budgetInfo.dateType,
+          userId: currentUser.id,
+        }, dispatch);
+      }
+    }
+  }
+
+  private loadBudgets = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.budgets.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   private loadCategories = async () => {
@@ -226,6 +283,7 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
   budgetInfo: state.sessionState.budgetInfo,
+  budgets: state.budgetsState.budgets,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
   transactions: state.transactionState.transactions,

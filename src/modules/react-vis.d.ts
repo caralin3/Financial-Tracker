@@ -1,5 +1,11 @@
 declare module 'react-vis' {
 
+  export interface CrosshairProps {
+    values?: any[];
+  }
+
+  export class Crosshair extends React.Component<CrosshairProps> {}
+
   interface DiscreteColorLegendProps {
     className?: string;
     height?: number;
@@ -24,6 +30,14 @@ declare module 'react-vis' {
   }
   
   export class GradientDefs extends React.Component {}
+
+  interface HighlightProps {
+    onBrushEnd?: Function;
+    onDrag?: Function;
+    style?: object;
+  }
+
+  export class Highlight extends React.Component<HighlightProps> {}
 
   interface HintProps {
     align?: object;
@@ -67,6 +81,34 @@ declare module 'react-vis' {
 
   export class HorizontalGridLines extends React.Component {}
 
+  export interface LineSeriesData {
+    x: string | number;
+    y: number;
+  }
+
+  interface LineSeriesProps {
+    animation?: { duration: number } | boolean;
+    className?: string;
+    color?: string | number;
+    curve?:  string | Function;
+    data: LineSeriesData[];
+    getNull?: Function;
+    onNearestX?: Function;
+    onNearestXY?: Function;
+    onSeriesClick?: Function;
+    onSeriesMouseOut?: Function;
+    onSeriesMouseOver?: Function;
+    onSeriesRightClick?: Function;
+    opacity?: string | number;
+    stroke?: string | number;
+    strokeDasharray?: string;
+    strokeStyle?: string;
+    strokeWidth?: string | number;
+    style?: object;
+  }
+
+  export class LineSeries extends React.Component<LineSeriesProps> {}
+
   interface RadialChartData extends GraphData {
     angle: number,
     label?: string,
@@ -87,9 +129,13 @@ declare module 'react-vis' {
     getLabel?: Function;
     getRadius?: Function;
     height: number;
+    innerRadius?: number;
     labelsAboveChildren?: boolean;
     labelsRadiusMultiplier?: number;
     labelsStyle?: object;
+    onValueMouseOver?: Function;
+    onSeriesMouseOut?: Function;
+    padAngle?: number;
     margin?: object;
     radius?: number;
     showLabels?: boolean;
@@ -111,7 +157,7 @@ declare module 'react-vis' {
     orientation?: 'top' | 'left' | 'bottom' | 'right';
     position?: 'end' | 'middle' | 'start';
     style?: object;
-    tickFormat?: (value: string, index?: number, scale?: number, tickTotal?: number) => JSX.Element;
+    tickFormat?: Function;
     tickLabelAngle?: number;
     tickPadding?: number;
     tickSize?: number;
@@ -153,7 +199,9 @@ declare module 'react-vis' {
     stackBy?: string;
     style?: object;
     width: number;
+    xDomain?: number[] | null;
     xType?: 'linear' | 'ordinal' | 'category' | 'literal' | 'log' | 'time' | 'time-utc';
+    yDomain?: number[] | null;
     yType?: 'linear' | 'ordinal' | 'category' | 'literal' | 'log' | 'time' | 'time-utc';
   }
 

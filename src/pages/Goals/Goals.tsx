@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-// import { Dispatch } from 'redux';
 import { withAuthorization } from '../../auth/withAuthorization';
 import { Header } from '../../components';
-// import * as routes from '../../routes';
+import { ActionTypes, AppState } from '../../store';
 import { User } from '../../types';
 
 export interface GoalsPageProps {}
 
 interface StateMappedProps {
-  currentUser: User;
+  currentUser: User | null;
 }
 
-interface DispatchMappedProps {}
+interface DispatchMappedProps {
+  dispatch: Dispatch<ActionTypes>;
+}
 
 interface GoalsMergedProps extends
   RouteComponentProps<RouteProps>,
@@ -33,7 +34,9 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
       <div className="goals">
         <Header title="Goals" />
         <div className="goals_content">
-          Goals
+          <div>
+            <h3>Goal</h3>
+          </div>
         </div>
       </div>
     )
@@ -42,12 +45,17 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapStateToProps = (state: any) => ({
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
+
+const mapStateToProps = (state: AppState) => ({
   currentUser: state.sessionState.currentUser,
 });
 
 export const GoalsPage = compose(
   withRouter,
   withAuthorization(authCondition),
-  connect<StateMappedProps, DispatchMappedProps, GoalsPageProps>(mapStateToProps)
-)(DisconnectedGoalsPage);
+  connect<
+    StateMappedProps,
+    DispatchMappedProps,
+    GoalsPageProps
+>(mapStateToProps, mapDispatchToProps))(DisconnectedGoalsPage);

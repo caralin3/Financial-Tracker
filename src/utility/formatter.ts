@@ -20,6 +20,8 @@ export const formatNegative = (amount: number) => {
   return -Math.abs(amount);
 };
 
+export const months: string[] = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
 export const formatMMDDYYYY = (date: string) => {
   const year: string = date.toString().substring(0,4);
   const month: string = date.toString().substring(5,7);
@@ -28,7 +30,6 @@ export const formatMMDDYYYY = (date: string) => {
 };
 
 export const formatMD = (date: string) => {
-  const months: string[] = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const month: number = parseInt(date.toString().substring(5,7), 10);
   const day: string = date.toString().substring(8,10);
   return (months[month - 1] + ' ' + day);
@@ -39,14 +40,12 @@ export const formatMM = (date: string) => {
 };
 
 export const formatMMYYYY = (date: string) => {
-  const months: string[] = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const month: number = parseInt(date.toString().substring(5,7), 10);
   const year: string = date.toString().substring(0,4);
   return (months[month - 1] + ' - ' + year);
 };
 
 export const formatMMYY = (date: string) => {
-  const months: string[] = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const month: number = parseInt(date.toString().substring(5,7), 10);
   const year: string = date.toString().substring(2,4);
   return (months[month - 1] + ' ' + year);

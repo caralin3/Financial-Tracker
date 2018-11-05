@@ -119,11 +119,10 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
   }
 
   private handleClick = (date: string, dateType: 'month' | 'year') => {
-    const { budgetInfo, dispatch, transactions } = this.props;
+    const { dispatch } = this.props;
     dispatch(sessionStateStore.setBudgetInfo({
       date,
       dateType,
-      income: budgetInfo ? budgetInfo.income : calculations.incomeSum(transactions, budgetInfo) || 0,
     }));
   }
 

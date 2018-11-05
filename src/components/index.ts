@@ -33,7 +33,7 @@ import { Table } from './Table';
 import { TableData } from './TableData';
 import { TableFilters } from './TableFilters';
 import { UserProfile } from './UserProfile';
-import { BarChart, PieChart } from './Visualizations';
+import { BarChart, DonutChart, LineChart, PieChart } from './Visualizations';
 
 export {
   AccountSection,
@@ -54,6 +54,7 @@ export {
   DashboardTopExpenses,
   DeleteDialog,
   Dialog,
+  DonutChart,
   Dropdown,
   EditSubcategoryDialog,
   FilterDropdown,
@@ -62,6 +63,7 @@ export {
   Header,
   JobItem,
   JobsSection,
+  LineChart,
   Loading,
   LoadingWrapper,
   LoginForm,

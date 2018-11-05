@@ -20,6 +20,16 @@ export interface Account {
   userId: string;
 }
 
+export type BudgetType = 'month' | 'year';
+
+export interface Budget {
+  amount: number;
+  date: string;
+  id: string;
+  type: BudgetType;
+  userId: string;
+}
+
 export interface Job {
   id: string;
   name: string;
@@ -88,6 +98,5 @@ export interface Range {
 
 export interface BudgetInfo {
   date: string;
-  dateType: 'month' | 'year';
-  income: number;
+  dateType: BudgetType;
 }

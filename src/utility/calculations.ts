@@ -1,5 +1,5 @@
-import { BarSeriesData, RadialChartData } from 'react-vis';
-import { Account, BudgetInfo, Category, Transaction } from '../types';
+import { BarSeriesData, LineSeriesData, RadialChartData } from 'react-vis';
+import { Account, Budget, BudgetInfo, Category, Transaction } from '../types';
 import { formatter, sorter, transactionConverter } from './';
 
 export const totals = (arr: any[], field: string) => {
@@ -246,4 +246,53 @@ export const expensesByCategory = (budgetInfo: BudgetInfo, categories: Category[
     sorter.sort(budgetData, sort.dir, sort.field),
     sorter.sort(exceedData, sort.dir, sort.field),
   ];
+}
+
+export const budgetVsActualMonthly = (budgets: Budget[], transactions: Transaction[], year: string) => {
+  const budgetList = budgets.filter((b) => b.date.slice(6) === year);
+  const orderedMonths: string[] = [`Jan - ${year}`, `Feb - ${year}`, `Mar - ${year}`, `Apr - ${year}`, `May - ${year}`,
+    `Jun - ${year}`, `Jul - ${year}`, `Aug - ${year}`, `Sep - ${year}`, `Oct - ${year}`, `Nov - ${year}`, `Dec - ${year}`
+  ];
+  budgetList.sort((month1: Budget, month2: Budget) => orderedMonths.indexOf(month1.date) - orderedMonths.indexOf(month2.date));
+  const monthlyBudgets: LineSeriesData[] = [];
+  orderedMonths.forEach((m, index) => {
+    let monthSum = 0;
+    budgetList.forEach((bud) => {
+      if (bud.date === m) {
+        monthSum += bud.amount;
+      }
+    });
+    monthlyBudgets.push({x: index, y: monthSum});
+  });
+  const expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatYYYY(t.date) === year);
+  const monthlyExpenses: LineSeriesData[] = [];
+  orderedMonths.forEach((m, index) => {
+    let monthSum = 0;
+    expenses.forEach((exp) => {
+      if (formatter.formatMMYYYY(exp.date) === m) {
+        monthSum += exp.amount;
+      }
+    });
+    monthlyExpenses.push({x: index, y: monthSum});
+  });
+  const income = transactions.filter((t) => t.type === 'Income' && formatter.formatYYYY(t.date) === year);
+  const monthlyIncome: LineSeriesData[] = [];
+  orderedMonths.forEach((m, index) => {
+    let monthSum = 0;
+    income.forEach((inc) => {
+      if (formatter.formatMMYYYY(inc.date) === m) {
+        monthSum += inc.amount;
+      }
+    });
+    monthlyIncome.push({x: index, y: monthSum});
+  });
+  return [monthlyBudgets, monthlyExpenses, monthlyIncome];
+}
+
+export const budgetVsActualYearly = (budgetInfo: BudgetInfo, transactions: Transaction[], years: string[]) => {
+  // const expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatYYYY(t.date) === year);
+  // const income = transactions.filter((t) => t.type === 'Income' && formatter.formatYYYY(t.date) === year);
+  // const expenseTotal = totals(expenses, 'amount');
+  // const incomeTotal = totals(income, 'amount');
+  // console.log(expenseTotal, incomeTotal);
 }

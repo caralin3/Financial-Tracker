@@ -26,7 +26,6 @@ const initialState: SessionState = {
   budgetInfo: {
     date: formatter.formatMMYYYY(new Date().toISOString()),
     dateType: 'month',
-    income: 0,
   },
   currentUser: null,
   editingTransaction: false,
