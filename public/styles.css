@@ -485,12 +485,12 @@ select {
 .dashboardHero {
   display: grid;
   gap: 1rem;
-  grid-template: "income worth expense" auto / 0.5fr 0.5fr 2fr;
+  grid-template: "expense income worth bar" auto / 0.5fr 0.5fr 0.5fr 2fr;
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
   .dashboardHero {
-    grid-template: "income worth date" auto "expense expense expense" auto / 1fr 1fr 0.5fr;
+    grid-template: "expense income date" auto "bar bar worth" auto / 1fr 1fr 0.5fr;
     padding: 1rem;
   }
 }
@@ -502,6 +502,9 @@ select {
 }
 .dashboardHero_expense {
   grid-area: expense;
+}
+.dashboardHero_bar {
+  grid-area: bar;
 }
 .dashboardHero_date {
   position: absolute;
@@ -534,6 +537,11 @@ select {
 .dashboardHero_label {
   font-family: 'Francois One', sans-serif;
   margin: 0;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardHero_label-extra {
+    display: none;
+  }
 }
 .dashboardHero_amount {
   font-family: 'Oswald', sans-serif;
