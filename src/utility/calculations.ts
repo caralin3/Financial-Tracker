@@ -1,5 +1,6 @@
 import { BarSeriesData, LineSeriesData, RadialChartData } from 'react-vis';
-import { Account, Budget, BudgetInfo, Category, Transaction } from '../types';
+import { DonutChartData } from '../components/Visualizations';
+import { Account, Budget, BudgetInfo, Category, Subcategory, Transaction } from '../types';
 import { formatter, sorter, transactionConverter } from './';
 
 export const totals = (arr: any[], field: string) => {
@@ -295,4 +296,50 @@ export const budgetVsActualYearly = (budgetInfo: BudgetInfo, transactions: Trans
   // const expenseTotal = totals(expenses, 'amount');
   // const incomeTotal = totals(income, 'amount');
   // console.log(expenseTotal, incomeTotal);
+}
+
+export const colors = [
+  '#ffbfd0', '#62468c', '#1d5673', '#40ff73', '#ccaa66', '#992626', '#d93677', '#2a2633', '#00ccff', '#00730f', '#593a16', '#e50000', '#594352', '#4040ff', '#567173', '#ccff00', '#995200', '#ff40f2', '#001859', '#bffff2', '#f2ffbf', '#cc8166', '#530059', '#bfd9ff', '#3df2ce', '#4c4700', '#ff0000', '#d9bfff', '#0088ff', '#00593c', '#ffd940', '#330000'
+]
+
+export const expenseCategoryBreakdown = (
+  budgetInfo: BudgetInfo,
+  category: Category,
+  subcategories: Subcategory[],
+  transactions: Transaction[]
+  ) => {
+  const title = category.name;
+  const data: DonutChartData[] = [];
+  const subs: Subcategory[] = [];
+  let expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatMMYYYY(t.date) === budgetInfo.date &&
+    t.category && t.category === category.id);
+  if (budgetInfo.dateType === 'year') {
+    expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatYYYY(t.date) === budgetInfo.date &&
+    t.category && t.category === category.id);
+  }
+  const total = totals(expenses, 'amount');
+  category.subcategories.forEach((subId) => {
+    subs.push(subcategories.filter((s) => s.id === subId)[0]);
+  });
+  subs.forEach((sub, index) => {
+    const subExps = expenses.filter((ex) => ex.subcategory && ex.subcategory === sub.id);
+    const subTotal = totals(subExps, 'amount');
+    let percent = 0;
+    if (total > 0) {
+      percent = (subTotal / total) * 100;
+    }
+    if (percent > 0) {
+      data.push({
+        color: colors[index],
+        percent,
+        title: sub.name,
+        value: subTotal,
+      });
+    }
+  });
+  return {
+    data,
+    subtitle: total,
+    title,
+  }
 }

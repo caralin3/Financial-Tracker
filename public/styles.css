@@ -778,6 +778,50 @@ select {
 .dropdown_item:hover {
   cursor: pointer;
 }
+.donut_chart-text {
+  font: 1rem 'Oswald', sans-serif, sans-serif;
+  fill: #000;
+  -moz-transform: translateY(0.2rem);
+  -ms-transform: translateY(0.2rem);
+  -webkit-transform: translateY(0.2rem);
+  transform: translateY(0.2rem);
+}
+.donut_chart-title {
+  font: 1rem 'Oswald', sans-serif, sans-serif;
+  fill: #000;
+  -moz-transform: translateY(0.4rem);
+  -ms-transform: translateY(0.4rem);
+  -webkit-transform: translateY(0.4rem);
+  transform: translateY(0.4rem);
+}
+.donut_chart-number {
+  font-size: 0.4rem;
+  line-height: 1;
+  text-anchor: middle;
+  -moz-transform: translateY(0.3rem);
+  -ms-transform: translateY(0.3rem);
+  -webkit-transform: translateY(0.3rem);
+  transform: translateY(0.3rem);
+}
+.donut_chart-label {
+  font-size: 0.4rem;
+  text-transform: uppercase;
+  text-anchor: middle;
+  -moz-transform: translateY(-0.25rem);
+  -ms-transform: translateY(-0.25rem);
+  -webkit-transform: translateY(-0.25rem);
+  transform: translateY(-0.25rem);
+}
+.donut_segment:hover {
+  cursor: pointer;
+  stroke-width: 8;
+}
+.donut_tooltip {
+  fill: #FFFFFF;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.2rem;
+  text-anchor: middle;
+}
 .editSubcategoryDialog_input {
   margin: 1rem 0;
   padding: 0.5rem 0;
@@ -1634,6 +1678,19 @@ select {
     padding: 1rem;
   }
 }
+.charts_donut {
+  display: flex;
+  flex-direction: column;
+}
+.charts_donut-chart {
+  width: 25%;
+}
+@media only screen and (max-width: 640px) {
+  .charts_donut-chart {
+    align-self: center;
+    width: 100%;
+  }
+}
 .dashboard_content {
   display: grid;
   gap: 1rem;
@@ -1729,6 +1786,19 @@ select {
 @media only screen and (max-width: 640px) {
   .goals_content {
     padding: 1rem;
+  }
+}
+.goals_donut {
+  display: flex;
+  flex-direction: column;
+}
+.goals_donut-chart {
+  width: 25%;
+}
+@media only screen and (max-width: 640px) {
+  .goals_donut-chart {
+    align-self: center;
+    width: 100%;
   }
 }
 .landing {

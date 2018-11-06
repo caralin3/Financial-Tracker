@@ -33,7 +33,7 @@ import { Table } from './Table';
 import { TableData } from './TableData';
 import { TableFilters } from './TableFilters';
 import { UserProfile } from './UserProfile';
-import { BarChart, DonutChart, LineChart, PieChart } from './Visualizations';
+import { BarChart, DonutChart, LineChart, PieChart, RadialDonutChart } from './Visualizations';
 
 export {
   AccountSection,
@@ -52,9 +52,9 @@ export {
   DashboardHero,
   DashboardRecentTrans,
   DashboardTopExpenses,
+  DonutChart,
   DeleteDialog,
   Dialog,
-  DonutChart,
   Dropdown,
   EditSubcategoryDialog,
   FilterDropdown,
@@ -69,6 +69,7 @@ export {
   LoginForm,
   LogoutButton,
   PieChart,
+  RadialDonutChart,
   RangeDialog,
   Sidebar,
   SignUpForm,

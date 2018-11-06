@@ -3,19 +3,21 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { DonutChart, Header, LineChart } from '../../components';
+import { DonutChart, Header, LineChart, RadialDonutChart } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Budget, BudgetInfo, Transaction, User } from '../../types';
-import { calculations } from '../../utility';
+import { Budget, BudgetInfo, Category, Subcategory, Transaction, User } from '../../types';
+import { calculations, formatter } from '../../utility';
 
 export interface ChartsPageProps {}
 
 interface StateMappedProps {
   budgetInfo: BudgetInfo;
   budgets: Budget[];
+  categories: Category[];
   currentUser: User | null;
-  transcations: Transaction[];
+  subcategories: Subcategory[];
+  transactions: Transaction[];
 }
 
 interface DispatchMappedProps {
@@ -53,9 +55,16 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
   }
 
   public render() {
-    const { budgets, transcations } = this.props;
+    const { budgetInfo, budgets, categories, subcategories, transactions } = this.props;
     const { mobile, year } = this.state;
-    const data = calculations.budgetVsActualMonthly(budgets, transcations, year);
+    const data = calculations.budgetVsActualMonthly(budgets, transactions, year);
+    const category = categories.filter((c) => c.id === 'LCx1tm61kV1e7o3C21Ue')[0];
+    const donutData = calculations.expenseCategoryBreakdown(
+      budgetInfo,
+      category,
+      subcategories,
+      transactions
+    );
 
     return (
       <div className="charts">
@@ -70,8 +79,17 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
             />
           </div>
           <div>
+            <h3>Radial</h3>
+            <RadialDonutChart data={[]} />
+          </div>
+          <div className="charts_donut">
             <h3>Donut</h3>
-            <DonutChart data={[]} />
+            <DonutChart
+              className="charts_donut-chart"
+              data={donutData.data}
+              subtitle={formatter.formatMoney(donutData.subtitle)}
+              title={donutData.title.slice(0, 5)}
+            />
           </div>
         </div>
       </div>
@@ -97,8 +115,10 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 const mapStateToProps = (state: AppState) => ({
   budgetInfo: state.sessionState.budgetInfo,
   budgets: state.budgetsState.budgets,
+  categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
-  transcations: state.transactionState.transactions,
+  subcategories: state.subcategoriesState.subcategories,
+  transactions: state.transactionState.transactions,
 });
 
 export const ChartsPage = compose(
