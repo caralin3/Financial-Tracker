@@ -55,6 +55,16 @@ export interface Subcategory {
   userId: string;
 }
 
+export type GoalType = 'acc' | 'cat' | 'sub';
+
+export interface Goal {
+  dataId: string;
+  goal: number;
+  id: string;
+  type: GoalType;
+  userId: string;
+}
+
 export type TransactionType = 'Expense' | 'Income' | 'Transfer';
 
 export interface Transaction {

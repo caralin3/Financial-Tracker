@@ -4,7 +4,7 @@ import { BarChart, Dropdown } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { BudgetInfo, Category, Transaction, User } from '../../types';
-import { calculations, transactionConverter } from '../../utility';
+import { charts, transactionConverter } from '../../utility';
 
 interface DashboardCategoryGraphProps {}
 
@@ -85,7 +85,7 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
       </h3>),
     ];
 
-    const data = calculations.expensesByCategory(budgetInfo, categories,
+    const data = charts.expensesByCategory(budgetInfo, categories,
       transactions, {dir: sortDir, field: sortField});
 
     return (

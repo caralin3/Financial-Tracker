@@ -1,25 +1,32 @@
 @import (reference) '../../less/variables.less';
 
 .goals {
+
   &_content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(auto-fill, auto);
     padding: 2rem;
 
     @media only screen and (max-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(auto-fill, auto);
       padding: 1rem;
     }
   }
 
+  &_add {
+
+    &-button {
+      position: absolute;
+    }
+  }
+
   &_donut {
-    display: flex;
-    flex-direction: column;
     
-    &-chart {
-      width: 25%;
-      
-      @media only screen and (max-width: 640px) {
-        align-self: center;
-        width: 100%;
-      }
+    @media only screen and (max-width: 640px) {
+      align-self: center;
+      width: 100%;
     }
   }
 }

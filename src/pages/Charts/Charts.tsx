@@ -7,7 +7,7 @@ import { DonutChart, Header, LineChart, RadialDonutChart } from '../../component
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Budget, BudgetInfo, Category, Subcategory, Transaction, User } from '../../types';
-import { calculations, formatter } from '../../utility';
+import { charts, formatter } from '../../utility';
 
 export interface ChartsPageProps {}
 
@@ -57,9 +57,9 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
   public render() {
     const { budgetInfo, budgets, categories, subcategories, transactions } = this.props;
     const { mobile, year } = this.state;
-    const data = calculations.budgetVsActualMonthly(budgets, transactions, year);
+    const data = charts.budgetVsActualMonthly(budgets, transactions, year);
     const category = categories.filter((c) => c.id === 'LCx1tm61kV1e7o3C21Ue')[0];
-    const donutData = calculations.expenseCategoryBreakdown(
+    const donutData = charts.expenseCategoryBreakdown(
       budgetInfo,
       category,
       subcategories,
@@ -85,7 +85,7 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
           <div className="charts_donut">
             <h3>Donut</h3>
             <DonutChart
-              className="charts_donut-chart"
+              id="charts_donut-chart"
               data={donutData.data}
               subtitle={formatter.formatMoney(donutData.subtitle)}
               title={donutData.title.slice(0, 5)}

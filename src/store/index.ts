@@ -6,6 +6,7 @@ import { accountStateStore } from './accounts';
 import { ActionTypes }from './actions';
 import { budgetStateStore } from './budgets';
 import { categoryStateStore } from './categories';
+import { goalStateStore } from './goals';
 import { jobStateStore } from './jobs';
 import { AppState, rootReducer } from './reducers';
 import { sessionStateStore } from './session';
@@ -34,6 +35,7 @@ export {
   AppState,
   budgetStateStore,
   categoryStateStore,
+  goalStateStore,
   jobStateStore,
   persistor,
   sessionStateStore,

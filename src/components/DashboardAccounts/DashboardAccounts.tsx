@@ -4,7 +4,7 @@ import { Dropdown, PieChart } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { Account, BudgetInfo, Transaction, User } from '../../types';
-import { calculations, formatter, transactionConverter } from '../../utility';
+import { calculations, charts, formatter, transactionConverter } from '../../utility';
 
 interface DashboardAccountsProps {}
 
@@ -54,7 +54,7 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
     ));
     const dropdownOptions: JSX.Element[] = yearOptions.concat(monthOptions);
 
-    const pieData = calculations.expensesByAccounts(accounts, budgetInfo, transactions); 
+    const pieData = charts.expensesByAccounts(accounts, budgetInfo, transactions); 
 
     return (
       <div className="dashboardAccounts">

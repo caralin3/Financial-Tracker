@@ -1789,22 +1789,23 @@ select {
   margin: auto 0;
 }
 .goals_content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(auto-fill, auto);
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
   .goals_content {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(auto-fill, auto);
     padding: 1rem;
   }
 }
-.goals_donut {
-  display: flex;
-  flex-direction: column;
-}
-.goals_donut-chart {
-  width: 25%;
+.goals_add-button {
+  position: absolute;
 }
 @media only screen and (max-width: 640px) {
-  .goals_donut-chart {
+  .goals_donut {
     align-self: center;
     width: 100%;
   }

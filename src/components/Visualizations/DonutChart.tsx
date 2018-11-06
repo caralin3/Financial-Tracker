@@ -10,6 +10,7 @@ export interface DonutChartData {
 interface DonutChartProps {
   className?: string;
   data: DonutChartData[];
+  id: string;
   labelBackgroundColor?: string;
   subtitle?: string;
   title: string;
@@ -29,11 +30,11 @@ export class DonutChart extends React.Component<DonutChartProps, DonutChartState
   }
 
   public render() {
-    const { className, data, labelBackgroundColor, subtitle, title } = this.props;
+    const { className, data, id, labelBackgroundColor, subtitle, title } = this.props;
     const { label, xPos, yPos } = this.state;
 
     return (
-      <svg width="100%" height="100%" viewBox="0 0 42 42" id="svg" className={`donut ${className}`}>
+      <svg width="100%" height="100%" viewBox="0 0 42 42" id={id} className={`donut ${className}`}>
         <circle
           className="donut_ring"
           cx="21"
@@ -102,13 +103,13 @@ export class DonutChart extends React.Component<DonutChartProps, DonutChartState
   }
 
   private mouseEventHandler = (e: React.MouseEvent<SVGCircleElement>, label: DonutChartData) => {
-    const svgElement = document.getElementById('svg') as any;
+    const svgElement = document.getElementById(this.props.id) as any;
     if (svgElement) {
       const pt = svgElement.createSVGPoint();
       pt.x = e.clientX;
       pt.y = e.clientY;
       const svgGlobal = pt.matrixTransform(svgElement.getScreenCTM().inverse());
-      let xPos = svgGlobal.x + 5;
+      let xPos = svgGlobal.x + 10;
       let yPos = svgGlobal.y - 10;
       if (svgGlobal.x > 21) {
         xPos = svgGlobal.x - 5;
