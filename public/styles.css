@@ -1529,6 +1529,9 @@ select {
   font-weight: normal;
   margin: 0;
 }
+.activity_hero {
+  padding: 1rem;
+}
 .activity_content {
   padding: 2rem;
 }
@@ -1833,14 +1836,14 @@ select {
 }
 .goals_content {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(auto-fill, auto);
+  grid-template-areas: "detail detail detail detail detail" "detail detail detail detail detail" "detail detail detail detail detail";
+  grid-template-columns: repeat(5, 1fr);
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
   .goals_content {
+    grid-template-areas: "detail detail";
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(auto-fill, auto);
     padding: 1rem;
   }
 }
@@ -1865,6 +1868,11 @@ select {
     align-self: center;
     width: 100%;
   }
+}
+.goals_detail {
+  border: 1px solid #0C98AC;
+  grid-area: detail;
+  height: 20rem;
 }
 .landing {
   background-image: linear-gradient(#0C98AC, #62D4D9);

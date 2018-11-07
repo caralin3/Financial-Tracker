@@ -4,7 +4,7 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { AddTransactionDialog, Dropdown, Header, Table } from '../../components';
+import { AddTransactionDialog, DashboardHero, Dropdown, Header, Table } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, Category, HeaderData, Job, Subcategory, TableDataType, Transaction, User } from '../../types';
@@ -99,7 +99,7 @@ class DisconnectedActivityPage extends React.Component<ActivityMergedProps, Acti
         }
         <Header title="Activity" />
         <div className="activity_content">
-          <h3 className="activity_label">Expenses vs Income</h3>
+          <DashboardHero className="activity_hero" />
           <div className="activity_header">
             <h2 className="activity_header-title">Transaction History</h2>
             <Dropdown buttonText="Export" options={dropdownOptions} />

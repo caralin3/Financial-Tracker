@@ -6,7 +6,9 @@ import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { BudgetInfo, Transaction, User } from '../../types';
 import { calculations, formatter, transactionConverter } from '../../utility';
 
-interface DashboardHeroProps {}
+interface DashboardHeroProps {
+  className?: string;
+}
 
 interface DispatchMappedProps {
   dispatch: Dispatch<ActionTypes>;
@@ -33,7 +35,7 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
   }
 
   public render() {
-    const { budgetInfo, transactions } = this.props;
+    const { className, budgetInfo, transactions } = this.props;
 
     const monthOptions: JSX.Element[] = [];
     const yearOptions: JSX.Element[] = [];
@@ -61,7 +63,7 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
     const bgColor = this.percentageToHsl(percentage / 100);
 
     return (
-      <div className="dashboardHero">
+      <div className={`dashboardHero ${className}`}>
         <div className="dashboardHero_income">
           <h3 className="dashboardHero_label">Income</h3>
           <h2 className="dashboardHero_amount">{ formatter.formatMoney(income) }</h2>

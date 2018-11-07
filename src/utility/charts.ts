@@ -1,6 +1,6 @@
 import { BarSeriesData, LineSeriesData, RadialChartData } from 'react-vis';
 import { DonutChartData } from '../components/Visualizations';
-import { Account, Budget, BudgetInfo, Category, CategoryBudget, Subcategory, Transaction } from '../types';
+import { Account, Budget, BudgetInfo, Category, CategoryBudget, Goal, Subcategory, Transaction } from '../types';
 import { formatter, sorter, transactionConverter } from './';
 import { actualByMonth, actualByYear, bankExpenses, cashExpenses, creditExpenses, totals } from './calculations';
 
@@ -206,7 +206,7 @@ export const expenseCategoryBreakdown = (
 }
 
 export const subcategoryGoal = (
-  goal: number,
+  goal: Goal,
   budgetInfo: BudgetInfo,
   subcategory: Subcategory,
   transactions: Transaction[]
@@ -221,8 +221,8 @@ export const subcategoryGoal = (
   }
   const subTotal = totals(expenses, 'amount');
   let percent = 0;
-  if (goal >= subTotal && goal > 0) {
-    percent = (subTotal / goal) * 100;
+  if (goal.goal >= subTotal && goal.goal > 0) {
+    percent = (subTotal / goal.goal) * 100;
   }
   if (percent > 0) {
     data.push({
@@ -234,14 +234,14 @@ export const subcategoryGoal = (
   }
   return {
     data,
-    id: subcategory.id,
-    subtitle: goal,
+    id: goal.id,
+    subtitle: goal.goal,
     title,
   }
 }
 
 export const categoryGoal = (
-  goal: number,
+  goal: Goal,
   budgetInfo: BudgetInfo,
   category: Category,
   transactions: Transaction[]
@@ -256,8 +256,8 @@ export const categoryGoal = (
   }
   const subTotal = totals(expenses, 'amount');
   let percent = 0;
-  if (goal >= subTotal && goal > 0) {
-    percent = (subTotal / goal) * 100;
+  if (goal.goal >= subTotal && goal.goal > 0) {
+    percent = (subTotal / goal.goal) * 100;
   }
   if (percent > 0) {
     data.push({
@@ -269,14 +269,14 @@ export const categoryGoal = (
   }
   return {
     data,
-    id: category.id,
-    subtitle: goal,
+    id: goal.id,
+    subtitle: goal.goal,
     title,
   }
 }
 
 export const accountGoal = (
-  goal: number,
+  goal: Goal,
   budgetInfo: BudgetInfo,
   account: Account,
   transactions: Transaction[]
@@ -291,8 +291,8 @@ export const accountGoal = (
   }
   const subTotal = totals(expenses, 'amount');
   let percent = 0;
-  if (goal >= subTotal && goal > 0) {
-    percent = (subTotal / goal) * 100;
+  if (goal.goal >= subTotal && goal.goal > 0) {
+    percent = (subTotal / goal.goal) * 100;
   }
   if (percent > 0) {
     data.push({
@@ -304,8 +304,8 @@ export const accountGoal = (
   }
   return {
     data,
-    id: account.id,
-    subtitle: goal,
+    id: goal.id,
+    subtitle: goal.goal,
     title,
   }
 }

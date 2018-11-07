@@ -32,13 +32,17 @@ interface GoalsMergedProps extends
   GoalsPageProps {}
 
 export interface GoalsPageState {
+  detailId: string;
   hover: boolean;
+  index: number;
   showAdd: boolean;
 }
 
 class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageState> {
-  public readonly state = {
+  public readonly state: GoalsPageState = {
+    detailId: '',
     hover: false,
+    index: 0,
     showAdd: false,
   }
 
@@ -51,20 +55,20 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
   }
 
   public render() {
-    const { hover, showAdd } = this.state;
+    const { detailId, hover, showAdd } = this.state;
 
     return (
       <div className="goals">
         {showAdd && <AddGoalDialog toggleDialog={this.toggleDialog} />}
         <Header title="Goals" />
         <div className="goals_content">
-          {this.data().map((d, index) => (
-            <div key={`${d.id}${index}`}>
+          {this.data().map((d, idx) => (
+            <div key={d.id}>
               <DonutChart
                 className="goals_donut"
-                id={`${d.id}${index}`}
+                id={d.id}
                 data={d.data}
-                onDoubleClick={() => console.log(d.id)}
+                onClick={() => this.handleClick(d.id, idx)}
                 subtitle={formatter.formatMoney(d.subtitle)}
                 title={d.title.slice(0, 5)}
               />
@@ -82,6 +86,14 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
               title="+"
             />
           </div>
+          {detailId &&
+            <div className="goals_detail"
+              style={{ gridRowStart: this.getGridRowStart() }}
+            
+            >
+              <h3>Details {detailId}</h3>
+              <br /> <br /> <br /> <br /> <br /> <br />
+            </div>}
         </div>
       </div>
     )
@@ -89,22 +101,55 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
 
   private toggleDialog = () => this.setState({ showAdd: !this.state.showAdd });
 
+  private handleClick = (id: string, idx: number) => {
+    const { detailId } = this.state;
+    if (detailId === id) {
+      this.setState({
+        detailId: '',
+        index: 0,
+      });
+    } else {
+      this.setState({
+        detailId: id,
+        index: idx,
+      })
+    }
+  }
+
+  private getGridRowStart = () => {
+    const { index } = this.state;
+    const length = 2;
+    if (index % length === index || index === 0) {
+      return 2;
+    } else if (index % length === 0) {
+      console.log(index, (index / length) + 2);
+      return (index / length) + 2;
+    }
+    return 0;
+  }
+
   private data = () => {
     const { accounts, budgetInfo, categories, goals, subcategories, transactions } = this.props;
     const data: any[] = [];
     goals.forEach((goal: Goal) => {
       if (goal.type === 'acc') {
         const account = accounts.filter((a) => a.id === goal.dataId)[0];
-        const accData = charts.accountGoal(goal.goal, budgetInfo, account, transactions);
-        data.push(accData);
+        if (account) {
+          const accData = charts.accountGoal(goal, budgetInfo, account, transactions);
+          data.push(accData);
+        }
       } else if (goal.type === 'cat') {
         const category = categories.filter((c) => c.id === goal.dataId)[0];
-        const catData = charts.categoryGoal(goal.goal, budgetInfo, category, transactions);
-        data.push(catData);
+        if (category){
+          const catData = charts.categoryGoal(goal, budgetInfo, category, transactions);
+          data.push(catData);
+        }
       } else {
         const subcategory = subcategories.filter((s) => s.id === goal.dataId)[0];
-        const subData = charts.subcategoryGoal(goal.goal, budgetInfo, subcategory, transactions);
-        data.push(subData);
+        if (subcategory) {
+          const subData = charts.subcategoryGoal(goal, budgetInfo, subcategory, transactions);
+          data.push(subData);
+        }
       }
     });
     return data;

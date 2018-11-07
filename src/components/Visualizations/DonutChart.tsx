@@ -12,7 +12,7 @@ interface DonutChartProps {
   data: DonutChartData[];
   id: string;
   labelBackgroundColor?: string;
-  onDoubleClick?: () => void;
+  onClick?: () => void;
   onMouseOver?: () => void;
   onMouseOut?: () => void;
   ringColor?: string;
@@ -41,7 +41,7 @@ export class DonutChart extends React.Component<DonutChartProps, DonutChartState
       data,
       id,
       labelBackgroundColor,
-      onDoubleClick,
+      onClick,
       onMouseOver,
       onMouseOut,
       ringColor,
@@ -93,9 +93,9 @@ export class DonutChart extends React.Component<DonutChartProps, DonutChartState
           cy="21"
           r="15.91549430918954"
           fill="#FFF"
-          onDoubleClick={onDoubleClick}
+          onClick={onClick}
         />
-        <g className={subtitle ? 'donut_chart-text' : 'donut_chart-title'} onDoubleClick={onDoubleClick}>
+        <g className={subtitle ? 'donut_chart-text' : 'donut_chart-title'} onClick={onClick}>
           <text x="50%" y="50%" className={`donut_chart-label ${titleClass}`}>
             {title}
           </text>
@@ -121,9 +121,9 @@ export class DonutChart extends React.Component<DonutChartProps, DonutChartState
           x={xPos}
           y={yPos}
         >
-          <tspan dy="0%">{ label.title }</tspan>
-          <tspan dx="-20%" dy="8%">{ `${label.percent.toFixed(1)}%` }</tspan>
-          {label.value && <tspan dx="-20%" dy="8%">{ `$${label.value.toFixed(2)}` }</tspan>}
+          <tspan x={xPos} dy=".5em">{ label.title }</tspan>
+          <tspan x={xPos} dy="1em">{ `${label.percent.toFixed(1)}%` }</tspan>
+          {label.value && <tspan x={xPos} dy="1em">{ `$${label.value.toFixed(2)}` }</tspan>}
         </text>
         }
       </svg>

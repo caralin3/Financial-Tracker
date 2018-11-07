@@ -4,13 +4,17 @@
 
   &_content {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(auto-fill, auto);
+    grid-template-areas:
+      "detail detail detail detail detail"
+      "detail detail detail detail detail"
+      "detail detail detail detail detail";
+    grid-template-columns: repeat(5, 1fr);
     padding: 2rem;
 
     @media only screen and (max-width: 640px) {
+      grid-template-areas:
+        "detail detail";
       grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(auto-fill, auto);
       padding: 1rem;
     }
   }
@@ -35,10 +39,15 @@
   }
 
   &_donut {
-    
     @media only screen and (max-width: 640px) {
       align-self: center;
       width: 100%;
     }
+  }
+
+  &_detail {
+    border: 1px solid @blue-green;
+    grid-area: detail;
+    height: 20rem;
   }
 }
