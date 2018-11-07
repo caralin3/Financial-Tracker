@@ -12,7 +12,13 @@ interface DonutChartProps {
   data: DonutChartData[];
   id: string;
   labelBackgroundColor?: string;
+  onDoubleClick?: () => void;
+  onMouseOver?: () => void;
+  onMouseOut?: () => void;
+  ringColor?: string;
   subtitle?: string;
+  subtitleClass?: string;
+  titleClass?: string;
   title: string;
 }
 
@@ -30,18 +36,39 @@ export class DonutChart extends React.Component<DonutChartProps, DonutChartState
   }
 
   public render() {
-    const { className, data, id, labelBackgroundColor, subtitle, title } = this.props;
+    const {
+      className,
+      data,
+      id,
+      labelBackgroundColor,
+      onDoubleClick,
+      onMouseOver,
+      onMouseOut,
+      ringColor,
+      subtitle,
+      subtitleClass,
+      title, 
+      titleClass
+    } = this.props;
     const { label, xPos, yPos } = this.state;
 
     return (
-      <svg width="100%" height="100%" viewBox="0 0 42 42" id={id} className={`donut ${className}`}>
+      <svg
+        className={`donut ${className}`}
+        height="100%"
+        id={id}
+        onMouseOver={onMouseOver}
+        onMouseOut={onMouseOut}
+        viewBox="0 0 42 42"
+        width="100%"
+      >
         <circle
           className="donut_ring"
           cx="21"
           cy="21"
           r="15.91549430918954"
           fill="transparent"
-          stroke="#d2d3d4"
+          stroke={ringColor ? ringColor : '#d2d3d4'}
           strokeWidth="7"
         />
         {data.map((d: DonutChartData, index: number) =>
@@ -66,12 +93,13 @@ export class DonutChart extends React.Component<DonutChartProps, DonutChartState
           cy="21"
           r="15.91549430918954"
           fill="#FFF"
+          onDoubleClick={onDoubleClick}
         />
-        <g className={subtitle ? 'donut_chart-text' : 'donut_chart-title'}>
-          <text x="50%" y="50%" className="donut_chart-label">
+        <g className={subtitle ? 'donut_chart-text' : 'donut_chart-title'} onDoubleClick={onDoubleClick}>
+          <text x="50%" y="50%" className={`donut_chart-label ${titleClass}`}>
             {title}
           </text>
-          <text x="50%" y="50%" className="donut_chart-number">
+          <text x="50%" y="50%" className={`donut_chart-number ${subtitleClass}`}>
             {subtitle}
           </text>
         </g>

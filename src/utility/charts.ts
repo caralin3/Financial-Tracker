@@ -232,6 +232,7 @@ export const subcategoryGoal = (
   }
   return {
     data,
+    id: subcategory.id,
     subtitle: goal,
     title,
   }
@@ -266,6 +267,7 @@ export const categoryGoal = (
   }
   return {
     data,
+    id: category.id,
     subtitle: goal,
     title,
   }
@@ -300,6 +302,7 @@ export const accountGoal = (
   }
   return {
     data,
+    id: account.id,
     subtitle: goal,
     title,
   }

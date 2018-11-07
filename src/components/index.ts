@@ -1,6 +1,7 @@
 import { AccountSection } from './AccountSection';
 import { AddAccountDialog } from './AddAccountDialog';
 import { AddCategoryDialog } from './AddCategoryDialog';
+import { AddGoalDialog } from './AddGoalDialog';
 import { AddJobDialog } from './AddJobDialog';
 import { AddTransactionDialog } from './AddTransactionDialog';
 import { AddTransactionForm } from './AddTransactionForm';
@@ -39,6 +40,7 @@ export {
   AccountSection,
   AddAccountDialog,
   AddCategoryDialog,
+  AddGoalDialog,
   AddJobDialog,
   AddTransactionDialog,
   AddTransactionForm,

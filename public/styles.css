@@ -122,6 +122,22 @@ select {
   padding: 0.5rem 0;
   width: 100%;
 }
+.addGoalDialog_section {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.addGoalDialog_input,
+.addGoalDialog_select {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+.addGoalDialog_input-amount,
+.addGoalDialog_select-amount {
+  text-align: right;
+}
 .addJobDialog_section {
   align-items: flex-start;
   display: flex;
@@ -786,6 +802,10 @@ select {
 .dropdown_item:hover {
   cursor: pointer;
 }
+.donut_hole:focus,
+.donut_hole:hover {
+  cursor: pointer;
+}
 .donut_chart-text {
   font: 1rem 'Oswald', sans-serif, sans-serif;
   fill: #000;
@@ -793,6 +813,16 @@ select {
   -ms-transform: translateY(0.2rem);
   -webkit-transform: translateY(0.2rem);
   transform: translateY(0.2rem);
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+}
+.donut_chart-text:focus,
+.donut_chart-text:hover {
+  cursor: pointer;
 }
 .donut_chart-title {
   font: 1rem 'Oswald', sans-serif, sans-serif;
@@ -801,6 +831,16 @@ select {
   -ms-transform: translateY(0.4rem);
   -webkit-transform: translateY(0.4rem);
   transform: translateY(0.4rem);
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+}
+.donut_chart-title:focus,
+.donut_chart-title:hover {
+  cursor: pointer;
 }
 .donut_chart-number {
   font-size: 0.4rem;
@@ -1002,6 +1042,12 @@ select {
 }
 .authHeader_title {
   color: #0C98AC;
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
 }
 @media only screen and (max-width: 640px) {
   .authHeader_title {
@@ -1801,8 +1847,21 @@ select {
     padding: 1rem;
   }
 }
-.goals_add-button {
-  position: absolute;
+.goals_add-title {
+  font-size: 2rem;
+  fill: #d2d3d4;
+  -moz-transform: translateY(0.4rem);
+  -ms-transform: translateY(0.4rem);
+  -webkit-transform: translateY(0.4rem);
+  transform: translateY(0.4rem);
+}
+.goals_add:focus,
+.goals_add:hover {
+  cursor: pointer;
+}
+.goals_add:focus .goals_add-title,
+.goals_add:hover .goals_add-title {
+  fill: #0C98AC;
 }
 @media only screen and (max-width: 640px) {
   .goals_donut {

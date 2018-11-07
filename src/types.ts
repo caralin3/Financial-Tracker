@@ -55,7 +55,7 @@ export interface Subcategory {
   userId: string;
 }
 
-export type GoalType = 'acc' | 'cat' | 'sub';
+export type GoalType = 'acc' | 'cat' | 'sub' | 'Select Type';
 
 export interface Goal {
   dataId: string;

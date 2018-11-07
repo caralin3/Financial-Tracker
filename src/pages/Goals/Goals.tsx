@@ -3,10 +3,10 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { DonutChart,  Header } from '../../components';
+import { AddGoalDialog, DonutChart,  Header } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Account, Budget, BudgetInfo, Category, Subcategory, Transaction, User } from '../../types';
+import { Account, BudgetInfo, Category, Goal, Subcategory, Transaction, User } from '../../types';
 import { charts, formatter } from '../../utility';
 
 export interface GoalsPageProps {}
@@ -14,9 +14,9 @@ export interface GoalsPageProps {}
 interface StateMappedProps {
   accounts: Account[];
   budgetInfo: BudgetInfo;
-  budgets: Budget[];
   categories: Category[];
   currentUser: User | null;
+  goals: Goal[];
   subcategories: Subcategory[];
   transactions: Transaction[];
 }
@@ -31,10 +31,15 @@ interface GoalsMergedProps extends
   DispatchMappedProps,
   GoalsPageProps {}
 
-export interface GoalsPageState {}
+export interface GoalsPageState {
+  hover: boolean;
+  showAdd: boolean;
+}
 
 class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageState> {
   public readonly state = {
+    hover: false,
+    showAdd: false,
   }
 
   public componentWillMount() {
@@ -46,57 +51,63 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
   }
 
   public render() {
-    const { accounts, budgetInfo, categories, subcategories, transactions } = this.props;
-    const account = accounts.filter((a) => a.id === 'Ov9PyjTAmXapOTnuU0lz')[0];
-    const category = categories.filter((c) => c.id === 'VEIs5LHpFFK4UUBjTCWG')[0];
-    const subcategory = subcategories.filter((s) => s.id === 'p3ynYCCppN9X91KclyCd')[0];
-    const goalData = charts.subcategoryGoal(60, budgetInfo, subcategory, transactions);
-    const eduData = charts.categoryGoal(100, budgetInfo, category, transactions);
-    const accData = charts.accountGoal(130, budgetInfo, account, transactions);
+    const { hover, showAdd } = this.state;
 
     return (
       <div className="goals">
+        {showAdd && <AddGoalDialog toggleDialog={this.toggleDialog} />}
         <Header title="Goals" />
         <div className="goals_content">
-          <div>
-            <DonutChart
-              className="goals_donut"
-              id="goals_donut-gas"
-              data={goalData.data}
-              subtitle={formatter.formatMoney(goalData.subtitle)}
-              title={goalData.title.slice(0, 5)}
-            />
-          </div>
-          <div>
-            <DonutChart
-              className="goals_donut"
-              id="goals_donut-edu"
-              data={eduData.data}
-              subtitle={formatter.formatMoney(eduData.subtitle)}
-              title={eduData.title.slice(0, 5)}
-            />
-          </div>
-          <div>
-            <DonutChart
-              className="goals_donut"
-              id="goals_donut-acc"
-              data={accData.data}
-              subtitle={formatter.formatMoney(accData.subtitle)}
-              title={accData.title.slice(0, 5)}
-            />
-          </div>
-          <div className="goals_add">
+          {this.data().map((d, index) => (
+            <div key={`${d.id}${index}`}>
+              <DonutChart
+                className="goals_donut"
+                id={`${d.id}${index}`}
+                data={d.data}
+                onDoubleClick={() => console.log(d.id)}
+                subtitle={formatter.formatMoney(d.subtitle)}
+                title={d.title.slice(0, 5)}
+              />
+            </div>
+          ))}
+          <div className="goals_add" onClick={this.toggleDialog}>
             <DonutChart
               className="goals_donut"
               id="add"
               data={[]}
-              title=""
+              onMouseOver={() => this.setState({ hover: true })}
+              onMouseOut={() => this.setState({ hover: false })}
+              ringColor={hover ? '#0C98AC': ''}
+              titleClass="goals_add-title"
+              title="+"
             />
-            <i className="fas fa-plus goals_add-button" />
           </div>
         </div>
       </div>
     )
+  }
+
+  private toggleDialog = () => this.setState({ showAdd: !this.state.showAdd });
+
+  private data = () => {
+    const { accounts, budgetInfo, categories, goals, subcategories, transactions } = this.props;
+    const data: any[] = [];
+    goals.forEach((goal: Goal) => {
+      if (goal.type === 'acc') {
+        const account = accounts.filter((a) => a.id === goal.dataId)[0];
+        const accData = charts.accountGoal(goal.goal, budgetInfo, account, transactions);
+        data.push(accData);
+      } else if (goal.type === 'cat') {
+        const category = categories.filter((c) => c.id === goal.dataId)[0];
+        const catData = charts.categoryGoal(goal.goal, budgetInfo, category, transactions);
+        data.push(catData);
+      } else {
+        const subcategory = subcategories.filter((s) => s.id === goal.dataId)[0];
+        const subData = charts.subcategoryGoal(goal.goal, budgetInfo, subcategory, transactions);
+        data.push(subData);
+      }
+    });
+    return data;
   }
 
   private loadAccounts = async () => {
@@ -162,9 +173,9 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
   budgetInfo: state.sessionState.budgetInfo,
-  budgets: state.budgetsState.budgets,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  goals: state.goalsState.goals,
   subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionState.transactions,
 });
