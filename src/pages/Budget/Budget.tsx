@@ -156,11 +156,9 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
     const { budgets, budgetInfo, categories, currentUser, dispatch } = this.props;
     const { budgetIncome } = this.state;
     const isInvalid = isNaN(budgetIncome);
-    const calculatedIncome = calculations.incomeSum(this.props.transactions, this.props.budgetInfo);
-    const hasChanged = budgetIncome !== calculatedIncome;
-    if (!isInvalid && hasChanged) {
+    if (!isInvalid) {
       const budget = budgets.filter((bud) => bud.date === budgetInfo.date)[0];
-      if (budget) {
+      if (budget && budgetIncome !== budget.amount) {
         const updatedBudget: Budget = {
           ...budget,
           amount: budgetIncome,          
@@ -179,7 +177,13 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
       }
 
       categories.forEach((cat) => {
-        const budgetPercent: number = ( cat.budget / budgetIncome) * 100;
+        const catBudget = cat.budgets.filter((b) => 
+          b.date === budgetInfo.date)[0];
+        let budgetAmount = 0;
+        if (catBudget) {
+          budgetAmount = catBudget.amount;
+        }
+        const budgetPercent: number = ( budgetAmount / budgetIncome) * 100;
         const updatedCat: Category = {
           ...cat,
           budgetPercent,
@@ -253,7 +257,7 @@ class DisconnectedBudgetPage extends React.Component<BudgetMergedProps, BudgetPa
     const headers: HeaderData[] = [
       {key: 'name', label: 'Category'},
       {key: 'budgetPercent', label: 'Budget (%)'},
-      {key: 'budget', label: 'Budget ($)'},
+      {key: 'budgets', label: 'Budget ($)'},
       {key: 'actual', label: 'Actual ($)'},
       {key: 'variance', label: 'Variance ($)'},
     ];

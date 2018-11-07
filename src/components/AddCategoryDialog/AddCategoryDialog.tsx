@@ -80,6 +80,7 @@ export class DisconnectedAddCategoryDialog extends React.Component<AddCategoryDi
     e.preventDefault();
     if (currentUser) {
       const newCategory: FirebaseCategory = {
+        budgets: [],
         name,
         subcategories: [],
         userId: currentUser.id,

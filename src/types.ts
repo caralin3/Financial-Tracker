@@ -37,10 +37,15 @@ export interface Job {
   ytd: number;
 }
 
+export interface CategoryBudget {
+  amount: number;
+  date: string;
+}
+
 export interface Category {
   id: string;
   actual?: number;
-  budget: number;
+  budgets: CategoryBudget[];
   budgetPercent: number;
   name: string;
   subcategories: string[];

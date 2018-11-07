@@ -1,4 +1,4 @@
-import { AccountType, Category, Job, Subcategory, TransactionType } from '../types';
+import { AccountType, Category, CategoryBudget, Job, Subcategory, TransactionType } from '../types';
 
 
 export interface FirebaseAccount {
@@ -16,8 +16,8 @@ export interface FirebaseJob {
 
 export interface FirebaseCategory {
   actual?: number;
-  budget?: number;
   budgetPercent?: number;
+  budgets: CategoryBudget[];
   name: string;
   subcategories: string[];
   userId: string;

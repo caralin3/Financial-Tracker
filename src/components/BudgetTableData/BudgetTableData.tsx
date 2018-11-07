@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, categoryStateStore } from '../../store';
-import { Budget, BudgetInfo, Category, Transaction, User } from '../../types';
+import { Budget, BudgetInfo, Category, CategoryBudget, Transaction, User } from '../../types';
 import { calculations, formatter, transactionConverter } from '../../utility';
 
 interface BudgetTableDataProps {
@@ -63,9 +63,9 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
         {!editing ?
           <span
             className={`budgetTableData_data ${dataKey !== 'name' && 'budgetTableData_data-number'}
-            ${dataKey === 'budget' && 'budgetTableData_data-budget'}
+            ${dataKey === 'budgets' && 'budgetTableData_data-budget'}
             ${dataKey === 'variance' && data > 0 && 'budgetTableData_data-over'}`}
-            onClick={dataKey === 'budget' ? this.toggleEdit : () => null}
+            onClick={dataKey === 'budgets' ? this.toggleEdit : () => null}
           >
             { dataKey === 'name' ?
               data : dataKey === 'budgetPercent' ?
@@ -73,7 +73,7 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
               formatter.formatMoney(data)
             }
           </span> :
-          (dataKey === 'budget') &&
+          (dataKey === 'budgets') &&
           <input
             className="budgetTableData_input budgetTableData_input-number"
             onBlur={this.handleBlur}
@@ -83,7 +83,7 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
             type="number"
             value={amount}
           />
-        }          
+        }
       </td>
     )
   }
@@ -102,7 +102,7 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
   }
 
   private handleBlur = () => {
-    const { budgets, budgetInfo, categories, categoryId, data, dataKey, dispatch,transactions } = this.props;
+    const { budgets, budgetInfo, categories, categoryId, data, dispatch,transactions } = this.props;
     const { amount } = this.state;
     const budget = budgets.filter((bud) => bud.date === budgetInfo.date)[0];
     const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
@@ -127,13 +127,37 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
     }
 
     if (!isInvalid && hasChanged) {
-      const updatedCategory: Category = {
-        ...currentCategory,
-        [dataKey]: amount,
-        budgetPercent: projectedAmount > 0 ? (amount / projectedAmount) * 100 : 0,
-        variance,
+      let currentCatBudgets: CategoryBudget[] = [ ...currentCategory.budgets];
+      const currentBudget: CategoryBudget = currentCatBudgets.filter((b) => b.date === budgetInfo.date)[0];
+      if (currentBudget) {
+        const newBudget: CategoryBudget = {
+          ...currentBudget,
+          amount,
+        }
+        currentCatBudgets = [
+          ...currentCatBudgets.filter((b) => b.date !== budgetInfo.date),
+          newBudget,
+        ]
+        const updatedCategory: Category = {
+          ...currentCategory,
+          budgetPercent: projectedAmount > 0 ? (amount / projectedAmount) * 100 : 0,
+          budgets: currentCatBudgets,
+          variance,
+        }
+        db.requests.categories.edit(updatedCategory, dispatch);
+      } else {
+        currentCatBudgets = [
+          ...currentCatBudgets,
+          {amount, date: budgetInfo.date},
+        ]
+        const updatedCategory: Category = {
+          ...currentCategory,
+          budgetPercent: projectedAmount > 0 ? (amount / projectedAmount) * 100 : 0,
+          budgets: currentCatBudgets,
+          variance,
+        }
+        db.requests.categories.edit(updatedCategory, dispatch);
       }
-      db.requests.categories.edit(updatedCategory, dispatch);
     }
     this.toggleEdit();
   }
@@ -141,11 +165,17 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
   private updateFirebase = async () => {
     const { budgetInfo, categories, categoryId, dispatch, transactions } = this.props;
     const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
+    const catBudget = currentCategory && currentCategory.budgets.filter((b) => 
+      b.date === budgetInfo.date)[0];
     let actual = calculations.actualByMonth(categoryId, transactions, budgetInfo.date);
     if (budgetInfo.dateType === 'year') {
       actual = calculations.actualByYear(categoryId, transactions, budgetInfo.date);
     }
-    const variance = calculations.variance(actual, categoryId, categories);
+    let budget = 0;
+    if (catBudget) {
+      budget = catBudget.amount;
+    }
+    const variance = actual - budget;
     if (currentCategory) {
       const updatedCategory: Category = {
         ...currentCategory,
@@ -161,31 +191,25 @@ export class DisconnectedBudgetTableData extends React.Component<BudgetTableData
     const currentBudget = budgets.filter((bud) => bud.date === budgetInfo.date)[0];
     const currentCategory: Category = categories.filter((cat) => cat.id === categoryId)[0];
     let actual = calculations.actualByMonth(categoryId, transactions, budgetInfo.date);
-    let budget = currentCategory && currentCategory.budget ? currentCategory.budget : 0;
+    let budget = 0;
+    const catBudget = currentCategory && currentCategory.budgets.filter((b) => 
+      b.date === budgetInfo.date)[0];
     let projectedAmount: number = 0;
     if (currentBudget) {
       projectedAmount = currentBudget.amount;
     }
-    let budgetPercent = projectedAmount > 0 ? (budget / projectedAmount) * 100 : 0;
+    if (catBudget) {
+      budget = catBudget.amount;
+    }
+    const budgetPercent = projectedAmount > 0 ? (budget / projectedAmount) * 100 : 0;
     if (budgetInfo.dateType === 'year') {
       actual = calculations.actualByYear(categoryId, transactions, budgetInfo.date);
-      if (prevBudgetType === 'month') {
-        budget *= 12;
-        budgetPercent = projectedAmount > 0 ? (budget / projectedAmount) * 100 : 0;
-      }
-    } else {
-      if (prevBudgetType === 'year') {
-        budget /= 12;
-        budgetPercent = projectedAmount > 0 ? (budget / projectedAmount) * 100 : 0;
-      }
     }
-    budget = parseFloat(budget.toFixed(2));
     const variance = actual - budget;
     if (currentCategory) {
       const updatedCategory: Category = {
         ...currentCategory,
         actual,
-        budget,
         budgetPercent,
         variance,
       }

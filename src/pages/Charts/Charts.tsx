@@ -3,11 +3,11 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { DonutChart, Header, LineChart, RadialDonutChart } from '../../components';
+import { Header, LineChart, RadialDonutChart } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Budget, BudgetInfo, Category, Subcategory, Transaction, User } from '../../types';
-import { charts, formatter } from '../../utility';
+import { charts } from '../../utility';
 
 export interface ChartsPageProps {}
 
@@ -55,16 +55,16 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
   }
 
   public render() {
-    const { budgetInfo, budgets, categories, subcategories, transactions } = this.props;
+    const { budgets, transactions } = this.props;
     const { mobile, year } = this.state;
     const data = charts.budgetVsActualMonthly(budgets, transactions, year);
-    const category = categories.filter((c) => c.id === 'LCx1tm61kV1e7o3C21Ue')[0];
-    const donutData = charts.expenseCategoryBreakdown(
-      budgetInfo,
-      category,
-      subcategories,
-      transactions
-    );
+    // const category = categories.filter((c) => c.id === 'LCx1tm61kV1e7o3C21Ue')[0];
+    // const donutData = charts.expenseCategoryBreakdown(
+    //   budgetInfo,
+    //   category,
+    //   subcategories,
+    //   transactions
+    // );
 
     return (
       <div className="charts">
@@ -82,7 +82,7 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
             <h3>Radial</h3>
             <RadialDonutChart data={[]} />
           </div>
-          <div className="charts_donut">
+          {/* <div className="charts_donut">
             <h3>Donut</h3>
             <DonutChart
               id="charts_donut-chart"
@@ -90,7 +90,7 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
               subtitle={formatter.formatMoney(donutData.subtitle)}
               title={donutData.title.slice(0, 5)}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     )

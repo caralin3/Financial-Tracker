@@ -105,23 +105,19 @@
   }
 
   &_tables {
-    align-items: flex-end;
+    align-items: flex-start;
     display: flex;
     justify-content: space-between;
     padding: 0 1rem;
 
-    &-actual {
-      align-self: flex-start;
+    &-ideal {
+      padding-top: 2rem;
     }
 
-    @media only screen and (max-width: 1170px) {
+    @media only screen and (max-width: 1180px) {
       display: block;
       flex-direction: column;
       overflow-x: auto;
-
-      &-ideal {
-        padding-top: 2rem;
-      }
     }
   }
 }

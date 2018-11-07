@@ -1706,22 +1706,19 @@ select {
   cursor: pointer;
 }
 .budget_tables {
-  align-items: flex-end;
+  align-items: flex-start;
   display: flex;
   justify-content: space-between;
   padding: 0 1rem;
 }
-.budget_tables-actual {
-  align-self: flex-start;
+.budget_tables-ideal {
+  padding-top: 2rem;
 }
-@media only screen and (max-width: 1170px) {
+@media only screen and (max-width: 1180px) {
   .budget_tables {
     display: block;
     flex-direction: column;
     overflow-x: auto;
-  }
-  .budget_tables-ideal {
-    padding-top: 2rem;
   }
 }
 .charts_content {

@@ -1,6 +1,6 @@
 import { BarSeriesData, LineSeriesData, RadialChartData } from 'react-vis';
 import { DonutChartData } from '../components/Visualizations';
-import { Account, Budget, BudgetInfo, Category, Subcategory, Transaction } from '../types';
+import { Account, Budget, BudgetInfo, Category, CategoryBudget, Subcategory, Transaction } from '../types';
 import { formatter, sorter, transactionConverter } from './';
 import { actualByMonth, actualByYear, bankExpenses, cashExpenses, creditExpenses, totals } from './calculations';
 
@@ -36,24 +36,26 @@ export const expensesByCategory = (
   }
 
   categories.forEach((cat) => {
+    const catBudget: CategoryBudget = cat.budgets.filter((b) => b.date === budgetInfo.date)[0];
     let actual = actualByMonth(cat.id, transactions, date);
     if (budgetInfo && budgetInfo.dateType === 'year') {
       actual = actualByYear(cat.id, transactions, date);
     }
-    if (cat.budget < actual) {
-      expensesData.push({x: cat.budget, y: cat.name.toString()});
-      exceedData.push({x: actual - cat.budget, y: cat.name.toString()});
+    if (catBudget && catBudget.amount < actual) {
+      expensesData.push({x: catBudget.amount, y: cat.name.toString()});
+      exceedData.push({x: actual - catBudget.amount, y: cat.name.toString()});
     } else {
       expensesData.push({x: actual, y: cat.name.toString()});
     }
   });
 
   categories.forEach((cat) => {
-    if (cat.budget !== undefined) {
+    const catBudget: CategoryBudget = cat.budgets.filter((b) => b.date === budgetInfo.date)[0];
+    if (catBudget !== undefined) {
       if (cat.actual !== undefined) {
-        if (cat.budget - cat.actual >= 0) {
-          budgetData.push({x: cat.budget - cat.actual, y: cat.name.toString()});
-        } else if (cat.budget < cat.actual) {
+        if (catBudget.amount - cat.actual >= 0) {
+          budgetData.push({x: catBudget.amount - cat.actual, y: cat.name.toString()});
+        } else if (catBudget.amount < cat.actual) {
           budgetData.push({x: 0, y: cat.name.toString()});
         } else {
           budgetData.push({x: 0, y: cat.name.toString()});

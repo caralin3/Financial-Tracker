@@ -262,6 +262,11 @@ export const defaultSubcategories: FirebaseSubcategory[] = [
     userId: '',
   },
   {
+    name: 'Hygiene',
+    parent: 'Personal',
+    userId: '',
+  },
+  {
     name: 'Hair Salon',
     parent: 'Personal',
     userId: '',
@@ -273,6 +278,11 @@ export const defaultSubcategories: FirebaseSubcategory[] = [
   },
   {
     name: 'Movies',
+    parent: 'Entertainment',
+    userId: '',
+  },
+  {
+    name: 'Hobbies',
     parent: 'Entertainment',
     userId: '',
   },

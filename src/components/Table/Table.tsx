@@ -5,12 +5,14 @@ import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import {
   Account,
+  BudgetInfo,
   Category,
+  CategoryBudget,
   HeaderData,
   Job,
   TableDataType,
   Transaction,
-  TransactionFilter
+  TransactionFilter,
 } from '../../types';
 import { calculations, formatter, sorter } from '../../utility';
 
@@ -25,6 +27,7 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   accounts: Account[];
+  budgetInfo: BudgetInfo,
   categories: Category[];
   editingTransaction: boolean;
   filters: TransactionFilter[];
@@ -102,7 +105,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
                   type === 'budget' || type === 'ideal' ?
                   <BudgetTableData
                     categoryId={d.id}
-                    data={d[header.key] || 0}
+                    data={header.key === 'budgets' ? this.getBudget(d) : (d[header.key] || 0)}
                     dataKey={header.key}
                     key={ind}
                   /> :
@@ -146,6 +149,12 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
         </table>
       </div>
     )
+  }
+
+  private getBudget = (d: any) => {
+    const { budgetInfo } = this.props;
+    const budget: CategoryBudget = d.budgets.filter((b: CategoryBudget) => b.date === budgetInfo.date)[0];
+    return budget ? budget.amount : 0;
   }
 
   private toggleEdit = (id: string) => {
@@ -269,6 +278,7 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProp
 
 const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
+  budgetInfo: state.sessionState.budgetInfo,
   categories: state.categoriesState.categories,
   editingTransaction: state.sessionState.editingTransaction,
   filters: state.sessionState.transactionFilters,

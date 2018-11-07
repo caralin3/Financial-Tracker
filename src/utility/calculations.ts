@@ -1,4 +1,4 @@
-import { Account, BudgetInfo, Category, Transaction } from '../types';
+import { Account, BudgetInfo, Transaction } from '../types';
 import { formatter, transactionConverter } from './';
 
 export const totals = (arr: any[], field: string) => {
@@ -109,12 +109,6 @@ export const actualByMonth = (categoryId: string, transactions: Transaction[], m
     }
   });
   return actual;
-}
-
-export const variance = (actual: number, categoryId: string, categories: Category[]) => {
-  const category = categories.filter((cat) => cat.id === categoryId)[0];
-  const budget: number = (category && category.budget) || 0;
-  return actual - budget;
 }
 
 export const expensesCount = (transactions: Transaction[]) => {
