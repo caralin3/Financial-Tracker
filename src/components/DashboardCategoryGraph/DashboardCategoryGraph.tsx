@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { BarSeriesData } from 'react-vis';
 import { BarChart, Dropdown } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { BudgetInfo, Category, Transaction, User } from '../../types';
-import { calculations, sorter, transactionConverter } from '../../utility';
+import { charts, transactionConverter } from '../../utility';
 
 interface DashboardCategoryGraphProps {}
 
@@ -53,8 +52,8 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
   }
 
   public render() {
-    const { budgetInfo, transactions } = this.props;
-    const { mobile } = this.state;
+    const { budgetInfo, categories, transactions } = this.props;
+    const { mobile, sortDir, sortField } = this.state;
 
     const monthOptions: JSX.Element[] = [];
     const yearOptions: JSX.Element[] = [];
@@ -86,6 +85,9 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
       </h3>),
     ];
 
+    const data = charts.expensesByCategory(budgetInfo, categories,
+      transactions, {dir: sortDir, field: sortField});
+
     return (
       <div className="dashboardCategoryGraph">
         <div className="dashboardCategoryGraph_header">
@@ -107,7 +109,7 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
         </div>
         <BarChart
           className="dashboardCategoryGraph_chart"
-          data={this.barData()}
+          data={data}
           height={300}
           leftMargin={mobile ? 125 : 150}
           width={mobile ? 300 : 550}
@@ -116,59 +118,11 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
     )
   }
 
-  private barData = () => {
-    const { budgetInfo, categories, transactions } = this.props;
-    const { sortDir, sortField } = this.state;
-    const expensesData: BarSeriesData[] = [];
-    const budgetData: BarSeriesData[] = [];
-    const exceedData: BarSeriesData[] = [];
-
-    let date = transactionConverter.monthYears(transactions)[0];
-    if (budgetInfo) {
-      date = budgetInfo.date;
-    }
-
-    categories.forEach((cat) => {
-      let actual = calculations.actualByMonth(cat.id, transactions, date);
-      if (budgetInfo && budgetInfo.dateType === 'year') {
-        actual = calculations.actualByYear(cat.id, transactions, date);
-      }
-      if (cat.budget < actual) {
-        expensesData.push({x: cat.budget, y: cat.name.toString()});
-        exceedData.push({x: actual - cat.budget, y: cat.name.toString()});
-      } else {
-        expensesData.push({x: actual, y: cat.name.toString()});
-      }
-    });
-
-    categories.forEach((cat) => {
-      if (cat.budget !== undefined) {
-        if (cat.actual !== undefined) {
-          if (cat.budget - cat.actual >= 0) {
-            budgetData.push({x: cat.budget - cat.actual, y: cat.name.toString()});
-          } else if (cat.budget < cat.actual) {
-            budgetData.push({x: 0, y: cat.name.toString()});
-          } else {
-            budgetData.push({x: 0, y: cat.name.toString()});
-          }
-        }
-      } else {
-        budgetData.push({x: 0, y: cat.name.toString()});
-      }
-    });
-    return [
-      sorter.sort(expensesData, sortDir, sortField),
-      sorter.sort(budgetData, sortDir, sortField),
-      sorter.sort(exceedData, sortDir, sortField),
-    ];
-  }
-
   private handleClick = (date: string, dateType: 'month' | 'year') => {
-    const { budgetInfo, dispatch, transactions } = this.props;
+    const { dispatch } = this.props;
     dispatch(sessionStateStore.setBudgetInfo({
       date,
       dateType,
-      income: budgetInfo ? budgetInfo.income : calculations.incomeSum(transactions, budgetInfo) || 0,
     }));
   }
 

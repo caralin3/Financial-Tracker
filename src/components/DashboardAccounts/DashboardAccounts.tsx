@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { RadialChartData } from 'react-vis';
 import { Dropdown, PieChart } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { Account, BudgetInfo, Transaction, User } from '../../types';
-import { calculations, formatter, transactionConverter } from '../../utility';
+import { calculations, charts, formatter, transactionConverter } from '../../utility';
 
 interface DashboardAccountsProps {}
 
@@ -53,8 +52,9 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
         { m }
       </h3>
     ));
-
     const dropdownOptions: JSX.Element[] = yearOptions.concat(monthOptions);
+
+    const pieData = charts.expensesByAccounts(accounts, budgetInfo, transactions); 
 
     return (
       <div className="dashboardAccounts">
@@ -85,7 +85,7 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
               options={dropdownOptions}
             />
           </div>
-          <PieChart className="dashboardAccounts_chart-pie" data={this.pieData()} />
+          <PieChart className="dashboardAccounts_chart-pie" data={pieData} />
         </div>
       </div>
     )
@@ -114,25 +114,11 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
   }
 
   private handleClick = (date: string, dateType: 'month' | 'year') => {
-    const { budgetInfo, dispatch, transactions } = this.props;
+    const { dispatch } = this.props;
     dispatch(sessionStateStore.setBudgetInfo({
       date,
       dateType,
-      income: budgetInfo ? budgetInfo.income : calculations.incomeSum(transactions, budgetInfo) || 0,
     }));
-  }
-
-  private pieData = () => {
-    const { accounts, budgetInfo, transactions } = this.props;
-    const bankExpTotal = calculations.bankExpenses(transactions, accounts, budgetInfo);
-    const cashExpTotal = calculations.cashExpenses(transactions, accounts, budgetInfo);
-    const creditExpTotal = calculations.creditExpenses(transactions, accounts, budgetInfo);
-    const data: RadialChartData[] = [
-      { angle: bankExpTotal, name: 'Bank Accounts', gradientLabel: 'grad1' },
-      { angle: cashExpTotal, name: 'Cash', gradientLabel: 'grad2' },
-      { angle: creditExpTotal, name: 'Credit', gradientLabel: 'grad3' },
-    ]
-    return data;
   }
 }
 

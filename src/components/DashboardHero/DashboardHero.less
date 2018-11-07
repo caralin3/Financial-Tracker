@@ -3,14 +3,14 @@
 .dashboardHero {
   display: grid;
   gap: 1rem;
-  grid-template: "income worth expense" auto ~'/' 0.5fr 0.5fr 2fr;
+  grid-template: "expense income worth bar" auto ~'/' 0.5fr 0.5fr 0.5fr 2fr;
   padding: 2rem;
 
   @media only screen and (max-width: 640px) {
     grid-template:
-      "income worth date"
+      "expense income date"
       auto
-      "expense expense expense"
+      "bar bar worth"
       auto
       ~'/' 1fr 1fr 0.5fr;
     padding: 1rem;
@@ -26,6 +26,10 @@
 
   &_expense {
     grid-area: expense;
+  }
+
+  &_bar {
+    grid-area: bar;
   }
 
   &_date {
@@ -62,6 +66,12 @@
   &_label {
     font-family: @font-francois;
     margin: 0;
+
+    @media only screen and (max-width: 640px) {
+      &-extra {
+        display: none;
+      }
+    }
   }
 
   &_amount {

@@ -1,6 +1,7 @@
 import { AccountSection } from './AccountSection';
 import { AddAccountDialog } from './AddAccountDialog';
 import { AddCategoryDialog } from './AddCategoryDialog';
+import { AddGoalDialog } from './AddGoalDialog';
 import { AddJobDialog } from './AddJobDialog';
 import { AddTransactionDialog } from './AddTransactionDialog';
 import { AddTransactionForm } from './AddTransactionForm';
@@ -33,12 +34,13 @@ import { Table } from './Table';
 import { TableData } from './TableData';
 import { TableFilters } from './TableFilters';
 import { UserProfile } from './UserProfile';
-import { BarChart, PieChart } from './Visualizations';
+import { BarChart, DonutChart, LineChart, PieChart, RadialDonutChart } from './Visualizations';
 
 export {
   AccountSection,
   AddAccountDialog,
   AddCategoryDialog,
+  AddGoalDialog,
   AddJobDialog,
   AddTransactionDialog,
   AddTransactionForm,
@@ -52,6 +54,7 @@ export {
   DashboardHero,
   DashboardRecentTrans,
   DashboardTopExpenses,
+  DonutChart,
   DeleteDialog,
   Dialog,
   Dropdown,
@@ -62,11 +65,13 @@ export {
   Header,
   JobItem,
   JobsSection,
+  LineChart,
   Loading,
   LoadingWrapper,
   LoginForm,
   LogoutButton,
   PieChart,
+  RadialDonutChart,
   RangeDialog,
   Sidebar,
   SignUpForm,

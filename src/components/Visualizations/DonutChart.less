@@ -1,0 +1,79 @@
+@import (reference) '../../less/variables.less';
+
+.donut {
+
+  &_hole {
+    &:focus,
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &_chart {
+    &-text {
+      font: 1rem @font-oswald, sans-serif;
+      fill: #000;
+      -moz-transform: translateY(0.2rem);
+      -ms-transform: translateY(0.2rem);
+      -webkit-transform: translateY(0.2rem);
+      transform: translateY(0.2rem);
+      -webkit-user-select: none; /* Chrome/Safari */        
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* IE10+ */
+
+      &:focus,
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    &-title {
+      font: 1rem @font-oswald, sans-serif;
+      fill: #000;
+      -moz-transform: translateY(0.4rem);
+      -ms-transform: translateY(0.4rem);
+      -webkit-transform: translateY(0.4rem);
+      transform: translateY(0.4rem);
+      -webkit-user-select: none; /* Chrome/Safari */        
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* IE10+ */
+
+      &:focus,
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    &-number {
+      font-size: 0.4rem;
+      line-height: 1;
+      text-anchor: middle;
+      -moz-transform: translateY(0.3rem);
+      -ms-transform: translateY(0.3rem);
+      -webkit-transform: translateY(0.3rem);
+      transform: translateY(0.3rem);
+    }
+
+    &-label {
+      font-size: 0.4rem;
+      text-transform: uppercase;
+      text-anchor: middle;
+      -moz-transform: translateY(-0.25rem);
+      -ms-transform: translateY(-0.25rem);
+      -webkit-transform: translateY(-0.25rem);
+      transform: translateY(-0.25rem);
+    }
+  }
+
+  &_segment:hover {
+    cursor: pointer;
+    stroke-width: 8;
+  }
+
+  &_tooltip {
+    fill: @white;
+    font-family: @font-oswald;
+    font-size: 0.2rem;
+    text-anchor: middle;
+  }
+}

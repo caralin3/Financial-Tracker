@@ -122,6 +122,22 @@ select {
   padding: 0.5rem 0;
   width: 100%;
 }
+.addGoalDialog_section {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.addGoalDialog_input,
+.addGoalDialog_select {
+  margin: 1rem 0;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+.addGoalDialog_input-amount,
+.addGoalDialog_select-amount {
+  text-align: right;
+}
 .addJobDialog_section {
   align-items: flex-start;
   display: flex;
@@ -485,12 +501,12 @@ select {
 .dashboardHero {
   display: grid;
   gap: 1rem;
-  grid-template: "income worth expense" auto / 0.5fr 0.5fr 2fr;
+  grid-template: "expense income worth bar" auto / 0.5fr 0.5fr 0.5fr 2fr;
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
   .dashboardHero {
-    grid-template: "income worth date" auto "expense expense expense" auto / 1fr 1fr 0.5fr;
+    grid-template: "expense income date" auto "bar bar worth" auto / 1fr 1fr 0.5fr;
     padding: 1rem;
   }
 }
@@ -502,6 +518,9 @@ select {
 }
 .dashboardHero_expense {
   grid-area: expense;
+}
+.dashboardHero_bar {
+  grid-area: bar;
 }
 .dashboardHero_date {
   position: absolute;
@@ -534,6 +553,11 @@ select {
 .dashboardHero_label {
   font-family: 'Francois One', sans-serif;
   margin: 0;
+}
+@media only screen and (max-width: 640px) {
+  .dashboardHero_label-extra {
+    display: none;
+  }
 }
 .dashboardHero_amount {
   font-family: 'Oswald', sans-serif;
@@ -778,6 +802,74 @@ select {
 .dropdown_item:hover {
   cursor: pointer;
 }
+.donut_hole:focus,
+.donut_hole:hover {
+  cursor: pointer;
+}
+.donut_chart-text {
+  font: 1rem 'Oswald', sans-serif, sans-serif;
+  fill: #000;
+  -moz-transform: translateY(0.2rem);
+  -ms-transform: translateY(0.2rem);
+  -webkit-transform: translateY(0.2rem);
+  transform: translateY(0.2rem);
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+}
+.donut_chart-text:focus,
+.donut_chart-text:hover {
+  cursor: pointer;
+}
+.donut_chart-title {
+  font: 1rem 'Oswald', sans-serif, sans-serif;
+  fill: #000;
+  -moz-transform: translateY(0.4rem);
+  -ms-transform: translateY(0.4rem);
+  -webkit-transform: translateY(0.4rem);
+  transform: translateY(0.4rem);
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+}
+.donut_chart-title:focus,
+.donut_chart-title:hover {
+  cursor: pointer;
+}
+.donut_chart-number {
+  font-size: 0.4rem;
+  line-height: 1;
+  text-anchor: middle;
+  -moz-transform: translateY(0.3rem);
+  -ms-transform: translateY(0.3rem);
+  -webkit-transform: translateY(0.3rem);
+  transform: translateY(0.3rem);
+}
+.donut_chart-label {
+  font-size: 0.4rem;
+  text-transform: uppercase;
+  text-anchor: middle;
+  -moz-transform: translateY(-0.25rem);
+  -ms-transform: translateY(-0.25rem);
+  -webkit-transform: translateY(-0.25rem);
+  transform: translateY(-0.25rem);
+}
+.donut_segment:hover {
+  cursor: pointer;
+  stroke-width: 8;
+}
+.donut_tooltip {
+  fill: #FFFFFF;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.2rem;
+  text-anchor: middle;
+}
 .editSubcategoryDialog_input {
   margin: 1rem 0;
   padding: 0.5rem 0;
@@ -950,6 +1042,12 @@ select {
 }
 .authHeader_title {
   color: #0C98AC;
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
 }
 @media only screen and (max-width: 640px) {
   .authHeader_title {
@@ -1634,6 +1732,19 @@ select {
     padding: 1rem;
   }
 }
+.charts_donut {
+  display: flex;
+  flex-direction: column;
+}
+.charts_donut-chart {
+  width: 25%;
+}
+@media only screen and (max-width: 640px) {
+  .charts_donut-chart {
+    align-self: center;
+    width: 100%;
+  }
+}
 .dashboard_content {
   display: grid;
   gap: 1rem;
@@ -1724,11 +1835,38 @@ select {
   margin: auto 0;
 }
 .goals_content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(auto-fill, auto);
   padding: 2rem;
 }
 @media only screen and (max-width: 640px) {
   .goals_content {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(auto-fill, auto);
     padding: 1rem;
+  }
+}
+.goals_add-title {
+  font-size: 2rem;
+  fill: #d2d3d4;
+  -moz-transform: translateY(0.4rem);
+  -ms-transform: translateY(0.4rem);
+  -webkit-transform: translateY(0.4rem);
+  transform: translateY(0.4rem);
+}
+.goals_add:focus,
+.goals_add:hover {
+  cursor: pointer;
+}
+.goals_add:focus .goals_add-title,
+.goals_add:hover .goals_add-title {
+  fill: #0C98AC;
+}
+@media only screen and (max-width: 640px) {
+  .goals_donut {
+    align-self: center;
+    width: 100%;
   }
 }
 .landing {

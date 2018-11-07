@@ -66,13 +66,19 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
           <h3 className="dashboardHero_label">Income</h3>
           <h2 className="dashboardHero_amount">{ formatter.formatMoney(income) }</h2>
         </div>
+        <div className="dashboardHero_expense">
+          <h3 className="dashboardHero_label">Expenses</h3>
+          <h2 className="dashboardHero_amount">{ formatter.formatMoney(expenses) }</h2>
+        </div>
         <div className="dashboardHero_worth">
-          <h3 className="dashboardHero_label">Net Worth</h3>
+          <h3 className="dashboardHero_label">
+            Net <span className="dashboardHero_label-extra">Worth</span>
+          </h3>
           <h2 className={`dashboardHero_amount ${netWorth < 0 && 'dashboardHero_neg'}`}>
             { formatter.formatMoney(netWorth) }
           </h2>
         </div>
-        <div className="dashboardHero_expense">
+        <div className="dashboardHero_bar">
           <h3 className="dashboardHero_label">Expenses vs. Income</h3>
           <div className="dashboardHero_progress">
             <div className="dashboardHero_progress-filler" style={{background: bgColor, width: `${percentage}%`}} />
@@ -107,11 +113,10 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
   }
 
   private handleClick = (date: string, dateType: 'month' | 'year') => {
-    const { budgetInfo, dispatch, transactions } = this.props;
+    const { dispatch } = this.props;
     dispatch(sessionStateStore.setBudgetInfo({
       date,
       dateType,
-      income: budgetInfo ? budgetInfo.income : calculations.incomeSum(transactions, budgetInfo) || 0,
     }));
   }
 }
