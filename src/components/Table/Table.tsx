@@ -63,9 +63,8 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
     const { sortedBy } = this.state;
 
     const percentTotal: number = calculations.totals(categories, 'budgetPercent');
-    const budgetTotal: number = calculations.totals(categories, 'budget');
     const actualTotal: number = calculations.totals(categories, 'actual');
-    const varianceTotal: number = actualTotal - budgetTotal;
+    const varianceTotal: number = actualTotal - this.budgetTotal();
 
     return (
       <div className="table_wrapper">
@@ -135,7 +134,7 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
                   { formatter.formatPercent(percentTotal) }
                 </td>
                 <td className="table_totals table_totals-number">
-                  { formatter.formatMoney(budgetTotal) }
+                  { formatter.formatMoney(this.budgetTotal()) }
                 </td>
                 <td className="table_totals table_totals-number">
                   { formatter.formatMoney(actualTotal) }
@@ -149,6 +148,19 @@ export class DisconnectedTable extends React.Component<TableMergedProps, TableSt
         </table>
       </div>
     )
+  }
+
+  private budgetTotal = () => {
+    const { budgetInfo, categories } = this.props;
+    let total = 0;
+    categories.forEach((cat) => {
+      cat.budgets.forEach((bud) => {
+        if (bud.date === budgetInfo.date) {
+          total += bud.amount;
+        }
+      });
+    });
+    return total;
   }
 
   private getBudget = (d: any) => {
