@@ -1836,14 +1836,17 @@ select {
 }
 .goals_content {
   display: grid;
-  grid-template-areas: "detail detail detail detail detail" "detail detail detail detail detail" "detail detail detail detail detail";
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, [col-start] 1fr);
   padding: 2rem;
+}
+@media only screen and (max-width: 900px) {
+  .goals_content {
+    grid-template-columns: repeat(4, [col-start] 1fr);
+  }
 }
 @media only screen and (max-width: 640px) {
   .goals_content {
-    grid-template-areas: "detail detail";
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, [col-start] 1fr);
     padding: 1rem;
   }
 }
@@ -1863,6 +1866,9 @@ select {
 .goals_add:hover .goals_add-title {
   fill: #0C98AC;
 }
+.goals_donut {
+  grid-column: col-start / col-start 2;
+}
 @media only screen and (max-width: 640px) {
   .goals_donut {
     align-self: center;
@@ -1871,8 +1877,18 @@ select {
 }
 .goals_detail {
   border: 1px solid #0C98AC;
-  grid-area: detail;
+  grid-column: col-start 1 / span 5;
   height: 20rem;
+}
+@media only screen and (max-width: 900px) {
+  .goals_detail {
+    grid-column: col-start 1 / span 4;
+  }
+}
+@media only screen and (max-width: 640px) {
+  .goals_detail {
+    grid-column: col-start 1 / span 2;
+  }
 }
 .landing {
   background-image: linear-gradient(#0C98AC, #62D4D9);

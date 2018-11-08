@@ -35,6 +35,7 @@ export interface GoalsPageState {
   detailId: string;
   hover: boolean;
   index: number;
+  screenWidth: number;
   showAdd: boolean;
 }
 
@@ -43,6 +44,7 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
     detailId: '',
     hover: false,
     index: 0,
+    screenWidth: window.innerWidth,
     showAdd: false,
   }
 
@@ -54,6 +56,15 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
     this.loadTransactions();
   }
 
+  public componentDidMount() {
+    window.addEventListener('resize', this.resize);
+    this.resize();
+  }
+
+  public resize = () => {
+    this.setState({ screenWidth:  window.innerWidth });
+  }
+
   public render() {
     const { detailId, hover, showAdd } = this.state;
 
@@ -63,7 +74,7 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
         <Header title="Goals" />
         <div className="goals_content">
           {this.data().map((d, idx) => (
-            <div key={d.id}>
+            <div key={`${d.id}${idx}`}>
               <DonutChart
                 className="goals_donut"
                 id={d.id}
@@ -87,13 +98,11 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
             />
           </div>
           {detailId &&
-            <div className="goals_detail"
-              style={{ gridRowStart: this.getGridRowStart() }}
-            
-            >
+            <div className="goals_detail" style={{ gridRowStart: this.getGridRowStart()}}>
               <h3>Details {detailId}</h3>
               <br /> <br /> <br /> <br /> <br /> <br />
-            </div>}
+            </div>
+          }
         </div>
       </div>
     )
@@ -117,17 +126,21 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
   }
 
   private getGridRowStart = () => {
-    const { index } = this.state;
-    const length = 2;
-    if (index % length === index || index === 0) {
-      return 2;
-    } else if (index % length === 0) {
-      console.log(index, (index / length) + 2);
-      return (index / length) + 2;
+    const { index, screenWidth } = this.state;
+    let max = 5;
+    if (screenWidth <= 640) {
+      max = 2;
+    } else if (screenWidth <= 900) {
+      max = 4;
     }
-    return 0;
+    if (index % max === index || index === 0) { // first row
+      return 2;
+    } else if (index % max === 0) { // first column
+      return (index / max) + 2;
+    }
+    return Math.floor((((index + max) - 1) / max) + 1);
   }
-
+  
   private data = () => {
     const { accounts, budgetInfo, categories, goals, subcategories, transactions } = this.props;
     const data: any[] = [];
