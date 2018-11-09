@@ -13,6 +13,14 @@ export const randomColor = () => {
   return colors[i];
 }
 
+const compare = {
+  '<': (a: number, b: number) => a < b,
+  '<=': (a: number, b: number) => a <= b,
+  '===': (a: number, b: number) => a === b,
+  '>': (a: number, b: number) => a > b,
+  '>=': (a: number, b: number) => a >= b,
+}
+
 export const expensesByAccounts = (accounts: Account[], budgetInfo: BudgetInfo, transactions: Transaction[]) => {
   const bankExpTotal = bankExpenses(transactions, accounts, budgetInfo);
   const cashExpTotal = cashExpenses(transactions, accounts, budgetInfo);
@@ -212,22 +220,21 @@ export const expenseCategoryBreakdown = (
 
 export const subcategoryGoal = (
   goal: Goal,
-  budgetInfo: BudgetInfo,
   subcategory: Subcategory,
   transactions: Transaction[]
   ) => {
   const title = subcategory.name;
   const data: DonutChartData[] = [];
-  let expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatMMYYYY(t.date) === budgetInfo.date &&
+  const expenses = transactions.filter((t) => t.type === 'Expense' &&
+    Date.parse(formatter.formatMMYYYY(t.date)) >= Date.parse(goal.range.start) &&
+    Date.parse(formatter.formatMMYYYY(t.date)) <= Date.parse(goal.range.end) &&
     t.subcategory && t.subcategory === subcategory.id);
-  if (budgetInfo.dateType === 'year') {
-    expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatYYYY(t.date) === budgetInfo.date &&
-    t.subcategory && t.subcategory === subcategory.id);
-  }
   const subTotal = totals(expenses, 'amount');
   let percent = 0;
-  if (goal.goal >= subTotal && goal.goal > 0) {
-    percent = (subTotal / goal.goal) * 100;
+  if (goal.goal > 0) {
+    if (compare[goal.operator]) {
+      percent = (subTotal / goal.goal) * 100;
+    }
   }
   if (percent > 0) {
     data.push({
@@ -247,22 +254,21 @@ export const subcategoryGoal = (
 
 export const categoryGoal = (
   goal: Goal,
-  budgetInfo: BudgetInfo,
   category: Category,
   transactions: Transaction[]
   ) => {
   const title = category.name;
   const data: DonutChartData[] = [];
-  let expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatMMYYYY(t.date) === budgetInfo.date &&
+  const expenses = transactions.filter((t) => t.type === 'Expense' && 
+    Date.parse(formatter.formatMMYYYY(t.date)) >= Date.parse(goal.range.start) &&
+    Date.parse(formatter.formatMMYYYY(t.date)) <= Date.parse(goal.range.end) &&
     t.category && t.category === category.id);
-  if (budgetInfo.dateType === 'year') {
-    expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatYYYY(t.date) === budgetInfo.date &&
-    t.category && t.category === category.id);
-  }
   const subTotal = totals(expenses, 'amount');
   let percent = 0;
-  if (goal.goal >= subTotal && goal.goal > 0) {
-    percent = (subTotal / goal.goal) * 100;
+  if (goal.goal > 0) {
+    if (compare[goal.operator]) {
+      percent = (subTotal / goal.goal) * 100;
+    }
   }
   if (percent > 0) {
     data.push({
@@ -282,22 +288,21 @@ export const categoryGoal = (
 
 export const accountGoal = (
   goal: Goal,
-  budgetInfo: BudgetInfo,
   account: Account,
   transactions: Transaction[]
   ) => {
   const title = account.name;
   const data: DonutChartData[] = [];
-  let expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatMMYYYY(t.date) === budgetInfo.date &&
+  const expenses = transactions.filter((t) => t.type === 'Expense' &&
+    Date.parse(formatter.formatMMYYYY(t.date)) >= Date.parse(goal.range.start) &&
+    Date.parse(formatter.formatMMYYYY(t.date)) <= Date.parse(goal.range.end) &&
     t.from && t.from === account.id);
-  if (budgetInfo.dateType === 'year') {
-    expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatYYYY(t.date) === budgetInfo.date &&
-    t.from && t.from === account.id);
-  }
   const subTotal = totals(expenses, 'amount');
   let percent = 0;
-  if (goal.goal >= subTotal && goal.goal > 0) {
-    percent = (subTotal / goal.goal) * 100;
+  if (goal.goal > 0) {
+    if (compare[goal.operator]) {
+      percent = (subTotal / goal.goal) * 100;
+    }
   }
   if (percent > 0) {
     data.push({

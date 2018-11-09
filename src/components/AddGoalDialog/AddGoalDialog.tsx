@@ -133,7 +133,7 @@ export class DisconnectedAddGoalDialog extends React.Component<AddGoalDialogMerg
             <label className="addGoalDialog_input-label">Compared to Goal</label>
             <select className='addGoalDialog_input' onChange={(e) => this.handleChange(e, 'operator')}>
               <option value="Select Type">Select Comparison</option>
-              <option value="=">Equal to</option>
+              <option value="===">Equal to</option>
               <option value="<">Less than</option>
               <option value=">">Greater than</option>
               <option value="<=">Less than or equal to</option>

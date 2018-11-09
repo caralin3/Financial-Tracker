@@ -61,7 +61,7 @@ export interface Subcategory {
 }
 
 export type GoalType = 'acc' | 'cat' | 'sub' | 'Select Type';
-export type GoalOperator = '<' | '>' | '==' | '<=' | '>=' | 'Select Comparison';
+export type GoalOperator = '<' | '>' | '===' | '<=' | '>=' | 'Select Comparison';
 
 export interface Goal {
   color: string;

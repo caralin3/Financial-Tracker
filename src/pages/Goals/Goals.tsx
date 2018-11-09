@@ -7,14 +7,13 @@ import { AddGoalDialog, DonutChart, GoalDetail, Header } from '../../components'
 import { DonutChartData } from '../../components/Visualizations';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Account, BudgetInfo, Category, Goal, Subcategory, Transaction, User } from '../../types';
+import { Account, Category, Goal, Subcategory, Transaction, User } from '../../types';
 import { charts, formatter } from '../../utility';
 
 export interface GoalsPageProps {}
 
 interface StateMappedProps {
   accounts: Account[];
-  budgetInfo: BudgetInfo;
   categories: Category[];
   currentUser: User | null;
   goals: Goal[];
@@ -147,25 +146,25 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
   }
   
   private data = () => {
-    const { accounts, budgetInfo, categories, goals, subcategories, transactions } = this.props;
+    const { accounts, categories, goals, subcategories, transactions } = this.props;
     const data: any[] = [];
     goals.forEach((goal: Goal) => {
       if (goal.type === 'acc') {
         const account = accounts.filter((a) => a.id === goal.dataId)[0];
         if (account) {
-          const accData = charts.accountGoal(goal, budgetInfo, account, transactions);
+          const accData = charts.accountGoal(goal, account, transactions);
           data.push(accData);
         }
       } else if (goal.type === 'cat') {
         const category = categories.filter((c) => c.id === goal.dataId)[0];
         if (category){
-          const catData = charts.categoryGoal(goal, budgetInfo, category, transactions);
+          const catData = charts.categoryGoal(goal, category, transactions);
           data.push(catData);
         }
       } else {
         const subcategory = subcategories.filter((s) => s.id === goal.dataId)[0];
         if (subcategory) {
-          const subData = charts.subcategoryGoal(goal, budgetInfo, subcategory, transactions);
+          const subData = charts.subcategoryGoal(goal, subcategory, transactions);
           data.push(subData);
         }
       }
@@ -235,7 +234,6 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
-  budgetInfo: state.sessionState.budgetInfo,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
   goals: state.goalsState.goals,
