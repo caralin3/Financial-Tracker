@@ -6,24 +6,40 @@
   font-weight: normal;
   padding: 0.5rem 0 0.5rem 1rem;
 
+  &_header {
+    color: @white;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    &-title {
+      font-family: @font-francois;
+      font-size: 1.5rem;
+      font-weight: normal;
+      margin: 0;
+      padding: 0.5rem 0;
+    }
+  }
+
+  &_button {
+    color: @white;
+    padding-right: 1rem;
+
+    &:focus,
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   &_row {
     display: flex;
     padding: 0.5rem 0;
-
-    @media only screen and (max-width: 640px) {
-      flex-direction: column-reverse;
-    }
   }
 
   &_first {
     align-items: center;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-
-    @media only screen and (max-width: 640px) {
-      align-items: flex-end;
-    }
   }
 
   &_goal {
@@ -31,17 +47,12 @@
     flex-wrap: wrap;
   }
 
-  &_edit {
-    padding-right: 1rem;
-    &:focus,
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
   &_label,
   &_number,
   &_text {
+    color: @white;
+    font-family: @font-archivo;
+    font-size: 1.2rem;
     font-weight: normal;
     margin: 0;
     padding-right: 0.2rem;

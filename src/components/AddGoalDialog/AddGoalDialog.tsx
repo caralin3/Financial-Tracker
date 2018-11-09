@@ -3,7 +3,8 @@ import { connect, Dispatch } from 'react-redux';
 import { Dialog, Form } from '..';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Account, Category, Goal, GoalType, Subcategory, User } from '../../types';
+import { Account, Category, Goal, GoalOperator, GoalType, Range, Subcategory, User } from '../../types';
+import { charts } from '../../utility';
 
 interface AddGoalDialogProps {
   class?: string;
@@ -29,18 +30,29 @@ interface AddGoalDialogMergedProps extends
 
 interface AddGoalDialogState {
   accountId: string;
+  allYear: boolean;
   categoryId: string;
+  checked: boolean;
   goal: number;
   goalType: GoalType;
+  operator: GoalOperator;
+  range: Range;
   subcategoryId: string;
 }
 
 export class DisconnectedAddGoalDialog extends React.Component<AddGoalDialogMergedProps, AddGoalDialogState> {
   public readonly state: AddGoalDialogState = {
     accountId: '',
+    allYear: false,
     categoryId: '',
+    checked: false,
     goal: 0,
     goalType: 'Select Type',
+    operator: 'Select Comparison',
+    range: {
+      end: '',
+      start: '',
+    },
     subcategoryId: '',
   }
 
@@ -53,11 +65,11 @@ export class DisconnectedAddGoalDialog extends React.Component<AddGoalDialogMerg
 
   public render() {
     const { accounts, categories, subcategories } = this.props;
-    const { accountId, categoryId, goal, goalType, subcategoryId } = this.state;
+    const { accountId, allYear, categoryId, checked, goal, goalType, operator, range, subcategoryId } = this.state;
 
-    const isInvalid = goalType === 'Select Type' || isNaN(goal) ||
-      (goalType === 'acc' && !accountId) || (goalType === 'cat' && !categoryId) ||
-      (goalType === 'sub' && !subcategoryId);
+    const isInvalid = goalType === 'Select Type' || isNaN(goal) || operator === 'Select Comparison' ||
+      range.start === '' || range.end === '' || (goalType === 'acc' && !accountId) || 
+      (goalType === 'cat' && !categoryId) ||(goalType === 'sub' && !subcategoryId);
 
     return (
       <Dialog title="Add Goal" toggleDialog={this.props.toggleDialog}>
@@ -130,22 +142,55 @@ export class DisconnectedAddGoalDialog extends React.Component<AddGoalDialogMerg
           </div>}
           {goalType !== 'Select Type' && <div className="addGoalDialog_section">
             <label className="addGoalDialog_input-label">Date Range</label>
-            <input
-              className="addGoalDialog_input addGoalDialog_input-amount"
-              onChange={(e) => this.handleChange(e, 'goal')}
-              type="date"
-              value={goal}
-            />
-            <input
-              className="addGoalDialog_input addGoalDialog_input-amount"
-              onChange={(e) => this.handleChange(e, 'goal')}
-              type="date"
-              value={goal}
-            />
+            <div className="addGoalDialog_section">
+              {!checked ? 
+              <i className="far fa-square addGoalDialog_checkbox" onClick={this.check} /> :
+              <i className="far fa-check-square addGoalDialog_checkbox" onClick={this.uncheck} />}
+              <label className="addGoalDialog_input-label">All Year</label>
+            </div>
+            {!allYear && <div className="addGoalDialog_section">
+              <label className="addGoalDialog_input-label">Start Date</label>
+              <input
+                className="addGoalDialog_input addGoalDialog_input-amount"
+                onChange={(e) => this.handleChange(e, 'start')}
+                type="date"
+                value={range.start}
+              />
+            </div>}
+            {!allYear && <div className="addGoalDialog_section">
+              <label className="addGoalDialog_input-label">End Date</label>
+              <input
+                className="addGoalDialog_input addGoalDialog_input-amount"
+                onChange={(e) => this.handleChange(e, 'end')}
+                type="date"
+                value={range.end}
+              />
+            </div>}
           </div>}
         </Form>
       </Dialog>
     )
+  }
+
+  private toggleChecked = () => this.setState({ checked: !this.state.checked });
+
+  private check = () => {
+    const year = new Date().getFullYear();
+    const start = new Date(year, 0, 1).toISOString().slice(0, 10);
+    const end = new Date(year, 11, 31).toISOString().slice(0, 10);
+    this.setState({
+      allYear: true,
+      range: { start, end },
+    });
+    this.toggleChecked();
+  }
+
+  private uncheck = () => {
+    this.setState({
+      allYear: false,
+      range: { start: '', end: '' },
+    });
+    this.toggleChecked();
   }
 
   private handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, property: string) => {
@@ -153,16 +198,22 @@ export class DisconnectedAddGoalDialog extends React.Component<AddGoalDialogMerg
       case 'goal':
         this.setState({ goal: parseFloat(e.target.value)});
         return;
+      case 'start':
+        this.setState({ range: { ...this.state.range, start: e.target.value }});
+        return;
+      case 'end':
+        this.setState({ range: { ...this.state.range, end: e.target.value }});
+        return;
       default:
       this.setState({
-        [property]: e.target.value as string | number,
+        [property]: e.target.value as any,
       } as Pick<AddGoalDialogState, keyof AddGoalDialogState>);      
       return;
     }
   }
 
   private onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const { accountId, categoryId, goal, goalType, subcategoryId } = this.state;
+    const { accountId, categoryId, goal, goalType, operator, range, subcategoryId } = this.state;
     const { currentUser, dispatch, toggleDialog } = this.props;
     e.preventDefault();
     if (currentUser) {
@@ -175,9 +226,12 @@ export class DisconnectedAddGoalDialog extends React.Component<AddGoalDialogMerg
         dataId = subcategoryId;
       }
       const newGoal: Goal = {
+        color: charts.randomColor(),
         dataId,
         goal,
         id: '',
+        operator,
+        range,
         type: goalType,
         userId: currentUser.id,
       }

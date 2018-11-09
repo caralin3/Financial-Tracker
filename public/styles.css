@@ -128,14 +128,12 @@ select {
   flex-direction: column;
   justify-content: flex-start;
 }
-.addGoalDialog_input,
-.addGoalDialog_select {
+.addGoalDialog_input {
   margin: 1rem 0;
   padding: 0.5rem 0;
-  width: 100%;
+  width: 10rem;
 }
-.addGoalDialog_input-amount,
-.addGoalDialog_select-amount {
+.addGoalDialog_input-amount {
   text-align: right;
 }
 .addJobDialog_section {
@@ -1019,40 +1017,46 @@ select {
   font-weight: normal;
   padding: 0.5rem 0 0.5rem 1rem;
 }
+.goalDetail_header {
+  color: #FFFFFF;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+.goalDetail_header-title {
+  font-family: 'Francois One', sans-serif;
+  font-size: 1.5rem;
+  font-weight: normal;
+  margin: 0;
+  padding: 0.5rem 0;
+}
+.goalDetail_button {
+  color: #FFFFFF;
+  padding-right: 1rem;
+}
+.goalDetail_button:focus,
+.goalDetail_button:hover {
+  cursor: pointer;
+}
 .goalDetail_row {
   display: flex;
   padding: 0.5rem 0;
-}
-@media only screen and (max-width: 640px) {
-  .goalDetail_row {
-    flex-direction: column-reverse;
-  }
 }
 .goalDetail_first {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-}
-@media only screen and (max-width: 640px) {
-  .goalDetail_first {
-    align-items: flex-end;
-  }
 }
 .goalDetail_goal {
   display: flex;
   flex-wrap: wrap;
 }
-.goalDetail_edit {
-  padding-right: 1rem;
-}
-.goalDetail_edit:focus,
-.goalDetail_edit:hover {
-  cursor: pointer;
-}
 .goalDetail_label,
 .goalDetail_number,
 .goalDetail_text {
+  color: #FFFFFF;
+  font-family: 'Archivo Narrow', sans-serif;
+  font-size: 1.2rem;
   font-weight: normal;
   margin: 0;
   padding-right: 0.2rem;
@@ -1956,7 +1960,6 @@ select {
 .goals_detail {
   background-color: #0C98AC;
   border-radius: 1rem;
-  color: #FFFFFF;
   grid-column: col-start 1 / span 5;
 }
 @media only screen and (max-width: 900px) {

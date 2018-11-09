@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
+import { DeleteDialog } from '../';
+import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, BudgetInfo, Category, Goal, Subcategory, Transaction } from '../../types';
 import { formatter } from '../../utility';
@@ -29,27 +31,45 @@ interface GoalDetailMergedProps extends
   DispatchMappedProps,
   GoalDetailProps {}
 
-export interface GoalsPageState {}
+export interface GoalsPageState {
+  showDeleteDialog: boolean;
+}
 
 class DisconnectedGoalDetail extends React.Component<GoalDetailMergedProps, GoalsPageState> {
-  public readonly state: GoalsPageState = {}
+  public readonly state: GoalsPageState = {
+    showDeleteDialog: false,
+  }
 
   public render() {
     const { data } = this.props;
+    const { showDeleteDialog } = this.state;
     const goal = this.getGoal();
     const item = this.getItem();
 
     return (
       <div className="goalDetail">
+        {showDeleteDialog && 
+          <DeleteDialog
+            confirmDelete={this.onDelete}
+            text="Are you sure you want to delete this goal?"
+            toggleDialog={this.toggleDeleteDialog}
+          />
+        }
+        <div className="goalDetail_header">
+          <h3 className="goalDetail_header-title">{ item.name }</h3>
+          <div className="goalDetail_buttons">
+            <i className="fas fa-edit goalDetail_button" />
+            <i className="fas fa-trash-alt goalDetail_button" onClick={this.toggleDeleteDialog} />
+          </div>
+        </div>
         <div className="goalDetail_row goalDetail_first">
           <div className="goalDetail_goal">
-            <h3 className="goalDetail_label goalDetail_bold">Goal:</h3>
-            <h3 className="goalDetail_text goalDetail_bold">Spend {'less than'}</h3>
+            <h3 className="goalDetail_label">Goal:</h3>
+            <h3 className="goalDetail_text">Spend {'less than'}</h3>
             <h3 className="goalDetail_number goalDetail_bold">{ formatter.formatMoney(goal.goal) }</h3>
-            <h3 className="goalDetail_text goalDetail_bold"> on { item.name }</h3>
-            <h3 className="goalDetail_text goalDetail_bold">between {'date and date'}</h3>
-          </div>
-          <i className="fas fa-edit goalDetail_edit" />
+            <h3 className="goalDetail_text"> on { item.name }</h3>
+            <h3 className="goalDetail_text">between {'date and date'}</h3>
+            </div>
         </div>
         <div className="goalDetail_row">
           <h3 className="goalDetail_label">Amount Spent:</h3>
@@ -60,11 +80,20 @@ class DisconnectedGoalDetail extends React.Component<GoalDetailMergedProps, Goal
           <h3 className="goalDetail_number">{data && formatter.formatPercent(data.percent) || '0%'}</h3>
         </div>
         <div className="goalDetail_row">
+          {/* TODO: Link to relative transactions */}
           <h3 className="goalDetail_label">View Transactions</h3>
         </div>
       </div>
     )
   }
+
+  private toggleDeleteDialog = () => this.setState({ showDeleteDialog: !this.state.showDeleteDialog });
+
+  private onDelete = () => {
+    const { dispatch, id } = this.props;
+    db.requests.goals.remove(id, dispatch);
+    this.toggleDeleteDialog();
+  };
 
   private getGoal = () => {
     const { goals, id } = this.props;

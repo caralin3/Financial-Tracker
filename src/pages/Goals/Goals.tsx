@@ -69,6 +69,7 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
   }
 
   public render() {
+    const { goals } = this.props;
     const { detail, detailId, hover, showAdd } = this.state;
 
     return (
@@ -100,7 +101,7 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
               title="+"
             />
           </div>
-          {detailId &&
+          {detailId && goals.findIndex((g: Goal) => g.id === detailId) >= 0 &&
             <div className="goals_detail" style={{ gridRowStart: this.getGridRowStart()}}>
               <GoalDetail data={detail} id={detailId} />
             </div>

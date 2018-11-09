@@ -8,6 +8,11 @@ export const colors = [ '#ffbfd0', '#62468c', '#1d5673', '#40ff73', '#ccaa66', '
 '#593a16', '#e50000', '#594352', '#4040ff', '#567173', '#ccff00', '#995200', '#ff40f2', '#001859', '#bffff2', '#f2ffbf', '#cc8166',
 '#530059', '#bfd9ff', '#3df2ce', '#4c4700', '#ff0000', '#d9bfff', '#0088ff', '#00593c', '#ffd940', '#330000']
 
+export const randomColor = () => {
+  const i = Math.floor(Math.random() * colors.length);
+  return colors[i];
+}
+
 export const expensesByAccounts = (accounts: Account[], budgetInfo: BudgetInfo, transactions: Transaction[]) => {
   const bankExpTotal = bankExpenses(transactions, accounts, budgetInfo);
   const cashExpTotal = cashExpenses(transactions, accounts, budgetInfo);
@@ -226,7 +231,7 @@ export const subcategoryGoal = (
   }
   if (percent > 0) {
     data.push({
-      color: colors[0],
+      color: goal.color || colors[0],
       percent,
       title,
       value: subTotal,
@@ -261,7 +266,7 @@ export const categoryGoal = (
   }
   if (percent > 0) {
     data.push({
-      color: colors[1],
+      color: goal.color || colors[1],
       percent,
       title,
       value: subTotal,
@@ -296,7 +301,7 @@ export const accountGoal = (
   }
   if (percent > 0) {
     data.push({
-      color: colors[2],
+      color: goal.color || colors[2],
       percent,
       title,
       value: subTotal,
