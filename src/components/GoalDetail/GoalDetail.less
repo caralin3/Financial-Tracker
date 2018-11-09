@@ -1,0 +1,63 @@
+@import (reference) '../../less/variables.less';
+
+.goalDetail {
+  display: flex;
+  flex-direction: column;
+  font-weight: normal;
+  padding: 0.5rem 0 0.5rem 1rem;
+
+  &_row {
+    display: flex;
+    padding: 0.5rem 0;
+
+    @media only screen and (max-width: 640px) {
+      flex-direction: column;
+    }
+  }
+
+  &_first {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    @media only screen and (max-width: 640px) {
+      align-items: flex-end;
+    }
+
+    &:focus,
+    &:hover {
+      cursor: pointer;
+
+      .goalDetail_edit {
+        display: block;
+      }
+    }
+  }
+
+  &_goal {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &_edit {
+    padding-right: 1rem;
+    display: none;
+  }
+
+  &_label,
+  &_number,
+  &_text {
+    font-weight: normal;
+    margin: 0;
+    padding-right: 0.2rem;
+  }
+
+  &_label {
+    padding-right: 0.5rem;
+  }
+
+  &_bold {
+    font-weight: bold;
+  }
+}

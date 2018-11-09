@@ -117,6 +117,32 @@ export class DisconnectedAddGoalDialog extends React.Component<AddGoalDialogMerg
               value={goal === 0 ? '' : goal}
             />
           </div>}
+          {goalType !== 'Select Type' && <div className="addGoalDialog_section">
+            <label className="addGoalDialog_input-label">Compared to Goal</label>
+            <select className='addGoalDialog_input' onChange={(e) => this.handleChange(e, 'operator')}>
+              <option value="Select Type">Select Comparison</option>
+              <option value="=">Equal to</option>
+              <option value="<">Less than</option>
+              <option value=">">Greater than</option>
+              <option value="<=">Less than or equal to</option>
+              <option value=">=">Greater than or equal to</option>
+            </select>
+          </div>}
+          {goalType !== 'Select Type' && <div className="addGoalDialog_section">
+            <label className="addGoalDialog_input-label">Date Range</label>
+            <input
+              className="addGoalDialog_input addGoalDialog_input-amount"
+              onChange={(e) => this.handleChange(e, 'goal')}
+              type="date"
+              value={goal}
+            />
+            <input
+              className="addGoalDialog_input addGoalDialog_input-amount"
+              onChange={(e) => this.handleChange(e, 'goal')}
+              type="date"
+              value={goal}
+            />
+          </div>}
         </Form>
       </Dialog>
     )

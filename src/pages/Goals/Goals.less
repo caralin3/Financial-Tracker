@@ -36,6 +36,34 @@
     }
   }
 
+  &_arrow {
+    position: relative;
+
+    &:after,
+    &:before {
+      top: 83%;
+      left: 38%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    &:after {
+      border-color: rgba(136, 183, 213, 0);
+      border-bottom-color: @blue-green;
+      border-width: 20px;
+    }
+
+    &:before {
+      border-color: rgba(194, 225, 245, 0);
+      border-bottom-color: @blue-green;
+      border-width: 20px;
+    }
+  }
+
   &_donut {
     grid-column: col-start / col-start 2;
 
@@ -46,9 +74,9 @@
   }
 
   &_detail {
-    border: 1px solid @blue-green;
+    background-color: @blue-green;
+    color: @white;
     grid-column: col-start 1 / span 5;
-    height: 20rem;
 
     @media only screen and (max-width: 900px) {
       grid-column: col-start 1 / span 4;

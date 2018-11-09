@@ -3,7 +3,8 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { AddGoalDialog, DonutChart,  Header } from '../../components';
+import { AddGoalDialog, DonutChart, GoalDetail, Header } from '../../components';
+import { DonutChartData } from '../../components/Visualizations';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, BudgetInfo, Category, Goal, Subcategory, Transaction, User } from '../../types';
@@ -32,6 +33,7 @@ interface GoalsMergedProps extends
   GoalsPageProps {}
 
 export interface GoalsPageState {
+  detail: DonutChartData;
   detailId: string;
   hover: boolean;
   index: number;
@@ -41,6 +43,7 @@ export interface GoalsPageState {
 
 class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageState> {
   public readonly state: GoalsPageState = {
+    detail: {} as DonutChartData,
     detailId: '',
     hover: false,
     index: 0,
@@ -66,7 +69,7 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
   }
 
   public render() {
-    const { detailId, hover, showAdd } = this.state;
+    const { detail, detailId, hover, showAdd } = this.state;
 
     return (
       <div className="goals">
@@ -74,12 +77,12 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
         <Header title="Goals" />
         <div className="goals_content">
           {this.data().map((d, idx) => (
-            <div key={`${d.id}${idx}`}>
+            <div className={detailId === d.id ? 'goals_arrow' : ''} key={`${d.id}${idx}`}>
               <DonutChart
                 className="goals_donut"
                 id={d.id}
                 data={d.data}
-                onClick={() => this.handleClick(d.id, idx)}
+                onClick={() => this.handleClick(d.id, d.data, idx)}
                 subtitle={formatter.formatMoney(d.subtitle)}
                 title={d.title.slice(0, 5)}
               />
@@ -99,8 +102,7 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
           </div>
           {detailId &&
             <div className="goals_detail" style={{ gridRowStart: this.getGridRowStart()}}>
-              <h3>Details {detailId}</h3>
-              <br /> <br /> <br /> <br /> <br /> <br />
+              <GoalDetail data={detail} id={detailId} />
             </div>
           }
         </div>
@@ -110,15 +112,17 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
 
   private toggleDialog = () => this.setState({ showAdd: !this.state.showAdd });
 
-  private handleClick = (id: string, idx: number) => {
+  private handleClick = (id: string, data: DonutChartData, idx: number) => {
     const { detailId } = this.state;
     if (detailId === id) {
       this.setState({
+        detail: {} as DonutChartData,
         detailId: '',
         index: 0,
       });
     } else {
       this.setState({
+        detail: data[0],
         detailId: id,
         index: idx,
       })

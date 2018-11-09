@@ -21,6 +21,7 @@ import { EditSubcategoryDialog } from './EditSubcategoryDialog';
 import { FilterDropdown } from './FilterDropdown';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { Form } from './Form';
+import { GoalDetail } from './GoalDetail';
 import { Header } from './Header';
 import { JobItem } from './JobItem';
 import { JobsSection } from './JobsSection';
@@ -62,6 +63,7 @@ export {
   FilterDropdown,
   ForgotPasswordForm,
   Form,
+  GoalDetail,
   Header,
   JobItem,
   JobsSection,

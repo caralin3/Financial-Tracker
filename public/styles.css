@@ -1013,6 +1013,61 @@ select {
   background-color: #62D4D9;
   cursor: default;
 }
+.goalDetail {
+  display: flex;
+  flex-direction: column;
+  font-weight: normal;
+  padding: 0.5rem 0 0.5rem 1rem;
+}
+.goalDetail_row {
+  display: flex;
+  padding: 0.5rem 0;
+}
+@media only screen and (max-width: 640px) {
+  .goalDetail_row {
+    flex-direction: column;
+  }
+}
+.goalDetail_first {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 640px) {
+  .goalDetail_first {
+    align-items: flex-end;
+  }
+}
+.goalDetail_first:focus,
+.goalDetail_first:hover {
+  cursor: pointer;
+}
+.goalDetail_first:focus .goalDetail_edit,
+.goalDetail_first:hover .goalDetail_edit {
+  display: block;
+}
+.goalDetail_goal {
+  display: flex;
+  flex-wrap: wrap;
+}
+.goalDetail_edit {
+  padding-right: 1rem;
+  display: none;
+}
+.goalDetail_label,
+.goalDetail_number,
+.goalDetail_text {
+  font-weight: normal;
+  margin: 0;
+  padding-right: 0.2rem;
+}
+.goalDetail_label {
+  padding-right: 0.5rem;
+}
+.goalDetail_bold {
+  font-weight: bold;
+}
 .authHeader {
   align-items: center;
   border-bottom: 1px solid #CCCCCC;
@@ -1866,6 +1921,30 @@ select {
 .goals_add:hover .goals_add-title {
   fill: #0C98AC;
 }
+.goals_arrow {
+  position: relative;
+}
+.goals_arrow:after,
+.goals_arrow:before {
+  top: 83%;
+  left: 38%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.goals_arrow:after {
+  border-color: rgba(136, 183, 213, 0);
+  border-bottom-color: #0C98AC;
+  border-width: 20px;
+}
+.goals_arrow:before {
+  border-color: rgba(194, 225, 245, 0);
+  border-bottom-color: #0C98AC;
+  border-width: 20px;
+}
 .goals_donut {
   grid-column: col-start / col-start 2;
 }
@@ -1876,9 +1955,9 @@ select {
   }
 }
 .goals_detail {
-  border: 1px solid #0C98AC;
+  background-color: #0C98AC;
+  color: #FFFFFF;
   grid-column: col-start 1 / span 5;
-  height: 20rem;
 }
 @media only screen and (max-width: 900px) {
   .goals_detail {
