@@ -46,6 +46,14 @@ class DisconnectedGoalDetail extends React.Component<GoalDetailMergedProps, Goal
     const goal = this.getGoal();
     const item = this.getItem();
 
+    const compare = {
+      '<': 'less than',
+      '<=': 'at most',
+      '===': 'exactly',
+      '>': 'more than',
+      '>=': 'at least',
+    }
+
     return (
       <div className="goalDetail">
         {showDeleteDialog && 
@@ -65,11 +73,17 @@ class DisconnectedGoalDetail extends React.Component<GoalDetailMergedProps, Goal
         <div className="goalDetail_row goalDetail_first">
           <div className="goalDetail_goal">
             <h3 className="goalDetail_label">Goal:</h3>
-            <h3 className="goalDetail_text">Spend {'less than'}</h3>
+            <h3 className="goalDetail_text">Spend</h3>
+            <h3 className="goalDetail_text goalDetail_bold">{compare[goal.operator]}</h3>
             <h3 className="goalDetail_number goalDetail_bold">{ formatter.formatMoney(goal.goal) }</h3>
-            <h3 className="goalDetail_text"> on { item.name }</h3>
-            <h3 className="goalDetail_text">between {'date and date'}</h3>
-            </div>
+            <h3 className="goalDetail_text">on</h3>
+            <h3 className="goalDetail_text goalDetail_bold">{ item.name }</h3>
+            <h3 className="goalDetail_text">between</h3>
+            <h3 className="goalDetail_text goalDetail_bold">
+              {`${formatter.formatMMDDYYYY(goal.range.start)} \
+              and ${formatter.formatMMDDYYYY(goal.range.end)}`}
+            </h3>
+          </div>
         </div>
         <div className="goalDetail_row">
           <h3 className="goalDetail_label">Amount Spent:</h3>
