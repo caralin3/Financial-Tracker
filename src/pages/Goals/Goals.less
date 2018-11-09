@@ -41,8 +41,8 @@
 
     &:after,
     &:before {
-      top: 83%;
-      left: 38%;
+      top: 95%;
+      left: 43%;
       border: solid transparent;
       content: " ";
       height: 0;
@@ -54,13 +54,19 @@
     &:after {
       border-color: rgba(136, 183, 213, 0);
       border-bottom-color: @blue-green;
-      border-width: 20px;
+      border-left-color: @blue-green;
+      // border-radius: 0.5rem;
+      border-width: 15px;
+      transform: rotate(135deg);
     }
 
     &:before {
       border-color: rgba(194, 225, 245, 0);
       border-bottom-color: @blue-green;
-      border-width: 20px;
+      border-left-color: @blue-green;
+      // border-radius: 0.5rem;
+      border-width: 15px;
+      transform: rotate(135deg);
     }
   }
 
@@ -75,6 +81,7 @@
 
   &_detail {
     background-color: @blue-green;
+    border-radius: 1rem;
     color: @white;
     grid-column: col-start 1 / span 5;
 

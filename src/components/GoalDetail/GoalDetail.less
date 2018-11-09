@@ -11,7 +11,7 @@
     padding: 0.5rem 0;
 
     @media only screen and (max-width: 640px) {
-      flex-direction: column;
+      flex-direction: column-reverse;
     }
   }
 
@@ -24,15 +24,6 @@
     @media only screen and (max-width: 640px) {
       align-items: flex-end;
     }
-
-    &:focus,
-    &:hover {
-      cursor: pointer;
-
-      .goalDetail_edit {
-        display: block;
-      }
-    }
   }
 
   &_goal {
@@ -42,7 +33,10 @@
 
   &_edit {
     padding-right: 1rem;
-    display: none;
+    &:focus,
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   &_label,

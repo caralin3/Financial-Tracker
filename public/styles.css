@@ -1025,7 +1025,7 @@ select {
 }
 @media only screen and (max-width: 640px) {
   .goalDetail_row {
-    flex-direction: column;
+    flex-direction: column-reverse;
   }
 }
 .goalDetail_first {
@@ -1039,21 +1039,16 @@ select {
     align-items: flex-end;
   }
 }
-.goalDetail_first:focus,
-.goalDetail_first:hover {
-  cursor: pointer;
-}
-.goalDetail_first:focus .goalDetail_edit,
-.goalDetail_first:hover .goalDetail_edit {
-  display: block;
-}
 .goalDetail_goal {
   display: flex;
   flex-wrap: wrap;
 }
 .goalDetail_edit {
   padding-right: 1rem;
-  display: none;
+}
+.goalDetail_edit:focus,
+.goalDetail_edit:hover {
+  cursor: pointer;
 }
 .goalDetail_label,
 .goalDetail_number,
@@ -1926,8 +1921,8 @@ select {
 }
 .goals_arrow:after,
 .goals_arrow:before {
-  top: 83%;
-  left: 38%;
+  top: 95%;
+  left: 43%;
   border: solid transparent;
   content: " ";
   height: 0;
@@ -1938,12 +1933,16 @@ select {
 .goals_arrow:after {
   border-color: rgba(136, 183, 213, 0);
   border-bottom-color: #0C98AC;
-  border-width: 20px;
+  border-left-color: #0C98AC;
+  border-width: 15px;
+  transform: rotate(135deg);
 }
 .goals_arrow:before {
   border-color: rgba(194, 225, 245, 0);
   border-bottom-color: #0C98AC;
-  border-width: 20px;
+  border-left-color: #0C98AC;
+  border-width: 15px;
+  transform: rotate(135deg);
 }
 .goals_donut {
   grid-column: col-start / col-start 2;
@@ -1956,6 +1955,7 @@ select {
 }
 .goals_detail {
   background-color: #0C98AC;
+  border-radius: 1rem;
   color: #FFFFFF;
   grid-column: col-start 1 / span 5;
 }
