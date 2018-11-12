@@ -74,98 +74,107 @@ export class DisconnectedAddGoalDialog extends React.Component<AddGoalDialogMerg
     return (
       <Dialog title="Add Goal" toggleDialog={this.props.toggleDialog}>
         <Form buttonText="Add" disabled={isInvalid} submit={this.onSubmit}>
-          <div className="addGoalDialog_section">
-            <label className="addGoalDialog_input-label">Create Goal Based On</label>
-            <select className='addGoalDialog_input' onChange={(e) => this.handleChange(e, 'goalType')}>
-              <option value="Select Type">Select Type</option>
-              <option value="acc">Account</option>
-              <option value="cat">Category</option>
-              <option value="sub">Subcategory</option>
-            </select>
-          </div>
-          {goalType === 'acc' && <div className="addGoalDialog_section">
-            <label className="addGoalDialog_input-label">Account</label>
-            <select
-              className="addGoalDialog_input"
-              onChange={(e) => this.handleChange(e, 'accountId')}
-            >
-              <option defaultValue="Select Account">Select Account</option>
-              {accounts.map((acc: Account) => (
-                <option key={acc.id} value={acc.id}>{ acc.name }</option>
-              ))}
-            </select>
-          </div>}
-          {goalType === 'cat' && <div className="addGoalDialog_section">
-            <label className="addGoalDialog_input-label">Category</label>
-            <select
-              className="addGoalDialog_input"
-              onChange={(e) => this.handleChange(e, 'categoryId')}
-            >
-              <option defaultValue="Select Category">Select Category</option>
-              {categories.map((cat: Category) => (
-                <option key={cat.id} value={cat.id}>{ cat.name }</option>
-              ))}
-            </select>
-          </div>}
-          {goalType === 'sub' && <div className="addGoalDialog_section">
-            <label className="addGoalDialog_input-label">Subcategory</label>
-            <select
-              className="addGoalDialog_input"
-              onChange={(e) => this.handleChange(e, 'subcategoryId')}
-            >
-              <option defaultValue="Select Subcategory">Select Subcategory</option>
-              {subcategories.map((sub: Subcategory) => (
-                <option key={sub.id} value={sub.id}>{ sub.name }</option>
-              ))}
-            </select>
-          </div>}
-          {goalType !== 'Select Type' && <div className="addGoalDialog_section">
-            <label className="addGoalDialog_input-label">Goal Amount</label>
-            <input
-              className="addGoalDialog_input addGoalDialog_input-amount"
-              onChange={(e) => this.handleChange(e, 'goal')}
-              step="0.01"
-              type="number"
-              value={goal === 0 ? '' : goal}
-            />
-          </div>}
-          {goalType !== 'Select Type' && <div className="addGoalDialog_section">
-            <label className="addGoalDialog_input-label">Compared to Goal</label>
-            <select className='addGoalDialog_input' onChange={(e) => this.handleChange(e, 'operator')}>
-              <option value="Select Type">Select Comparison</option>
-              <option value="===">Equal to</option>
-              <option value="<">Less than</option>
-              <option value=">">Greater than</option>
-              <option value="<=">Less than or equal to</option>
-              <option value=">=">Greater than or equal to</option>
-            </select>
-          </div>}
-          {goalType !== 'Select Type' && <div className="addGoalDialog_section">
-            <label className="addGoalDialog_input-label">Date Range</label>
-            <div className="addGoalDialog_section">
-              {!checked ? 
-              <i className="far fa-square addGoalDialog_checkbox" onClick={this.check} /> :
-              <i className="far fa-check-square addGoalDialog_checkbox" onClick={this.uncheck} />}
-              <label className="addGoalDialog_input-label">All Year</label>
+          <div className={goalType !== 'Select Type' ? 'addGoalDialog_group': ''}>
+            <div className="addGoalDialog_section addGoalDialog_create">
+              <label className="addGoalDialog_input-label">Create Goal Based On</label>
+              <select className='addGoalDialog_input' onChange={(e) => this.handleChange(e, 'goalType')}>
+                <option value="Select Type">Select Type</option>
+                <option value="acc">Account</option>
+                <option value="cat">Category</option>
+                <option value="sub">Subcategory</option>
+              </select>
             </div>
-            {!allYear && <div className="addGoalDialog_section">
-              <label className="addGoalDialog_input-label">Start Date</label>
-              <input
-                className="addGoalDialog_input addGoalDialog_input-amount"
-                onChange={(e) => this.handleChange(e, 'start')}
-                type="date"
-                value={range.start}
-              />
-            </div>}
-            {!allYear && <div className="addGoalDialog_section">
-              <label className="addGoalDialog_input-label">End Date</label>
-              <input
-                className="addGoalDialog_input addGoalDialog_input-amount"
-                onChange={(e) => this.handleChange(e, 'end')}
-                type="date"
-                value={range.end}
-              />
-            </div>}
+              {goalType === 'acc' && <div className="addGoalDialog_section addGoalDialog_select">
+                <label className="addGoalDialog_input-label">Account</label>
+                <select
+                  className="addGoalDialog_input"
+                  onChange={(e) => this.handleChange(e, 'accountId')}
+                >
+                  <option defaultValue="Select Account">Select Account</option>
+                  {accounts.map((acc: Account) => (
+                    <option key={acc.id} value={acc.id}>{ acc.name }</option>
+                  ))}
+                </select>
+              </div>}
+              {goalType === 'cat' && <div className="addGoalDialog_section addGoalDialog_select">
+                <label className="addGoalDialog_input-label">Category</label>
+                <select
+                  className="addGoalDialog_input"
+                  onChange={(e) => this.handleChange(e, 'categoryId')}
+                >
+                  <option defaultValue="Select Category">Select Category</option>
+                  {categories.map((cat: Category) => (
+                    <option key={cat.id} value={cat.id}>{ cat.name }</option>
+                  ))}
+                </select>
+              </div>}
+              {goalType === 'sub' && <div className="addGoalDialog_section addGoalDialog_select">
+                <label className="addGoalDialog_input-label">Subcategory</label>
+                <select
+                  className="addGoalDialog_input"
+                  onChange={(e) => this.handleChange(e, 'subcategoryId')}
+                >
+                  <option defaultValue="Select Subcategory">Select Subcategory</option>
+                  {subcategories.map((sub: Subcategory) => (
+                    <option key={sub.id} value={sub.id}>{ sub.name }</option>
+                  ))}
+                </select>
+              </div>}
+            </div>
+            <div className="addGoalDialog_group">
+              {goalType !== 'Select Type' && <div className="addGoalDialog_section addGoalDialog_amount">
+                <label className="addGoalDialog_input-label">Goal Amount</label>
+                <input
+                  className="addGoalDialog_input addGoalDialog_input-amount"
+                  onChange={(e) => this.handleChange(e, 'goal')}
+                  step="0.01"
+                  type="number"
+                  value={goal === 0 ? '' : goal}
+                />
+              </div>}
+              {goalType !== 'Select Type' && <div className="addGoalDialog_section addGoalDialog_operator">
+                <label className="addGoalDialog_input-label">Compared to Goal</label>
+                <select className='addGoalDialog_input' onChange={(e) => this.handleChange(e, 'operator')}>
+                  <option value="Select Type">Select Comparison</option>
+                  <option value="===">Equal to</option>
+                  <option value="<">Less than</option>
+                  <option value=">">Greater than</option>
+                  <option value="<=">Less than or equal to</option>
+                  <option value=">=">Greater than or equal to</option>
+                </select>
+              </div>}
+            </div>
+            {goalType !== 'Select Type' &&
+              <div className="addGoalDialog_section">
+            <div className="addGoalDialog_group">
+              <label className="addGoalDialog_input-label addGoalDialog_date">Date Range</label>
+              <div className="addGoalDialog_allYear">
+                {!checked ? 
+                <i className="far fa-square addGoalDialog_checkbox" onClick={this.check} /> :
+                <i className="far fa-check-square addGoalDialog_checkbox" onClick={this.uncheck} />}
+                <label className="addGoalDialog_allYear-label">All Year</label>
+              </div>
+            </div>
+            <div className="addGoalDialog_group">
+              {!allYear && <div className="addGoalDialog_section addGoalDialog_start">
+                <label className="addGoalDialog_input-label">Start Date</label>
+                <input
+                  className="addGoalDialog_input addGoalDialog_input-amount"
+                  onChange={(e) => this.handleChange(e, 'start')}
+                  type="date"
+                  value={range.start}
+                />
+              </div>}
+              {!allYear && <div className="addGoalDialog_section addGoalDialog_end">
+                <label className="addGoalDialog_input-label">End Date</label>
+                <input
+                  className="addGoalDialog_input addGoalDialog_input-amount"
+                  onChange={(e) => this.handleChange(e, 'end')}
+                  type="date"
+                  value={range.end}
+                />
+              </div>}
+            </div>
           </div>}
         </Form>
       </Dialog>

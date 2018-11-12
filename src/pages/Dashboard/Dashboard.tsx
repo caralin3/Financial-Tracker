@@ -8,11 +8,13 @@ import {
   ContentCard,
   DashboardAccounts,
   DashboardCategoryGraph,
+  DashboardGoals,
   DashboardHero,
   DashboardRecentTrans,
   DashboardTopExpenses,
   Header,
 } from '../../components';
+import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Category, Transaction, User } from '../../types';
 // import * as routes from '../../routes';
@@ -39,6 +41,15 @@ export interface DashboardPageState {}
 
 class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, DashboardPageState> {
   public readonly state: DashboardPageState = {}
+
+  public componentWillMount() {
+    this.loadAccounts();
+    this.loadCategories();
+    this.loadGoals();
+    this.loadJobs();
+    this.loadSubcategories();
+    this.loadTransactions();
+  }
 
   public render() {
     return (
@@ -70,11 +81,78 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
           </ContentCard>
           <ContentCard class="dashboard_goals">
             <h3 className="dashboard_label">Goals</h3>
+            <DashboardGoals />
           </ContentCard>
         </div>
         {/* <a href="https://fontawesome.com/license">Font Awesome License</a> */}
       </div>
     )
+  }
+
+  private loadAccounts = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.accounts.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadCategories = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.accounts.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadGoals = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.goals.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadJobs = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.jobs.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadSubcategories = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.subcategories.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private loadTransactions = async () => {
+    const { currentUser, dispatch } = this.props;
+    try {
+      if (currentUser) {
+        await db.requests.transactions.load(currentUser.id, dispatch);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 

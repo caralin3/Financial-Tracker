@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { RangeDialog } from '../';
-import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
-import { Account, Job, Range, Transaction, User } from '../../types';
+import { Account, Job, Range, Transaction } from '../../types';
 import { formatter, sorter, transactionConverter } from '../../utility';
 
 interface DashboardTopExpensesProps {}
@@ -14,7 +13,6 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   accounts: Account[];
-  currentUser: User | null;
   expenseRange: Range;
   jobs: Job[];
   transactions: Transaction[];
@@ -30,14 +28,8 @@ interface DashboardTopExpensesState {
 }
 
 export class DisconnectedDashboardTopExpenses extends React.Component<DashboardMergedProps, DashboardTopExpensesState> {
-  public readonly state = {
+  public readonly state: DashboardTopExpensesState = {
     showDialog: false,
-  }
-
-  public componentWillMount() {
-    this.loadAccounts();
-    this.loadJobs();
-    this.loadTransactions();
   }
 
   public render() {
@@ -96,39 +88,6 @@ export class DisconnectedDashboardTopExpenses extends React.Component<DashboardM
 
   private toggleDialog = () => this.setState({ showDialog: !this.state.showDialog });
 
-  private loadAccounts = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.accounts.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  private loadJobs = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.jobs.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  
-  private loadTransactions = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.transactions.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
   private handleRightClick = (e: React.MouseEvent) => {
     const { dispatch } = this.props;
     e.preventDefault();
@@ -140,7 +99,6 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
-  currentUser: state.sessionState.currentUser,
   expenseRange: state.sessionState.topExpenses,
   jobs: state.jobsState.jobs,
   transactions: state.transactionState.transactions,

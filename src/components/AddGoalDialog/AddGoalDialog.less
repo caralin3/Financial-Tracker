@@ -6,6 +6,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    padding: 1rem;
   }
 
   &_input {
@@ -16,5 +17,28 @@
     &-amount {
       text-align: right;
     }
+  }
+
+  &_group {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    @media only screen and (max-width: 640px) {
+      flex-direction: column;
+    }
+  }
+
+  &_allYear {
+    align-items: center;
+    display: flex;
+
+    &-label {
+      padding-left: 0.5rem;
+    }
+  }
+
+  &_date {
+    padding: 0 1rem;
   }
 }

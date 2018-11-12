@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { BarChart, Dropdown } from '../';
-import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
-import { BudgetInfo, Category, Transaction, User } from '../../types';
+import { BudgetInfo, Category, Transaction } from '../../types';
 import { charts, transactionConverter } from '../../utility';
 
 interface DashboardCategoryGraphProps {}
@@ -15,7 +14,6 @@ interface DispatchMappedProps {
 interface StateMappedProps {
   budgetInfo: BudgetInfo;
   categories: Category[];
-  currentUser: User | null;
   transactions: Transaction[];
 }
 
@@ -35,11 +33,6 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
     mobile: false,
     sortDir: 'asc',
     sortField: 'y',
-  }
-
-  public componentWillMount() {
-    this.loadCategories();
-    this.loadTransactions();
   }
 
   public componentDidMount() {
@@ -132,28 +125,6 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
       sortField: field,
     });
   }
-  
-  private loadCategories = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.accounts.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  private loadTransactions = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.transactions.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
@@ -161,7 +132,6 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 const mapStateToProps = (state: AppState) => ({
   budgetInfo: state.sessionState.budgetInfo,
   categories: state.categoriesState.categories,
-  currentUser: state.sessionState.currentUser,
   transactions: state.transactionState.transactions,
 });
 

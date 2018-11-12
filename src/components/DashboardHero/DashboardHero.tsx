@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Dropdown } from '../';
-import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
-import { BudgetInfo, Transaction, User } from '../../types';
+import { BudgetInfo, Transaction } from '../../types';
 import { calculations, formatter, transactionConverter } from '../../utility';
 
 interface DashboardHeroProps {
@@ -16,7 +15,6 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   budgetInfo: BudgetInfo;
-  currentUser: User | null;
   transactions: Transaction[];
 }
 
@@ -29,10 +27,6 @@ interface DashboardHeroState {}
 
 export class DisconnectedDashboardHero extends React.Component<DashboardMergedProps, DashboardHeroState> {
   public readonly state = {}
-
-  public componentWillMount() {
-    this.loadTransactions();
-  }
 
   public render() {
     const { className, budgetInfo, transactions } = this.props;
@@ -96,17 +90,6 @@ export class DisconnectedDashboardHero extends React.Component<DashboardMergedPr
       </div>
     )
   }
-  
-  private loadTransactions = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.transactions.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   private percentageToHsl = (value: number) => {
     // value from 0 to 1
@@ -127,7 +110,6 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
   budgetInfo: state.sessionState.budgetInfo,
-  currentUser: state.sessionState.currentUser,
   transactions: state.transactionState.transactions,
 });
 

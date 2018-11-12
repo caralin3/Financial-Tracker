@@ -127,6 +127,7 @@ select {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  padding: 1rem;
 }
 .addGoalDialog_input {
   margin: 1rem 0;
@@ -135,6 +136,26 @@ select {
 }
 .addGoalDialog_input-amount {
   text-align: right;
+}
+.addGoalDialog_group {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 640px) {
+  .addGoalDialog_group {
+    flex-direction: column;
+  }
+}
+.addGoalDialog_allYear {
+  align-items: center;
+  display: flex;
+}
+.addGoalDialog_allYear-label {
+  padding-left: 0.5rem;
+}
+.addGoalDialog_date {
+  padding: 0 1rem;
 }
 .addJobDialog_section {
   align-items: flex-start;
@@ -495,6 +516,11 @@ select {
 .dashboardCategoryGraph_sortDropdown-option:hover {
   color: #0C98AC;
   cursor: pointer;
+}
+.dashboardGoals {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  padding: 1rem;
 }
 .dashboardHero {
   display: grid;
@@ -1058,6 +1084,7 @@ select {
   font-family: 'Archivo Narrow', sans-serif;
   font-size: 1.2rem;
   font-weight: normal;
+  line-height: 1;
   margin: 0;
   padding-right: 0.2rem;
 }
@@ -1065,7 +1092,9 @@ select {
   padding-right: 0.5rem;
 }
 .goalDetail_bold {
+  font-family: 'Oswald', sans-serif;
   font-weight: bold;
+  line-height: 0.8;
 }
 .authHeader {
   align-items: center;

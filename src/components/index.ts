@@ -11,6 +11,7 @@ import { CategoryItem } from './CategoryItem';
 import { ContentCard } from './ContentCard';
 import { DashboardAccounts } from './DashboardAccounts';
 import { DashboardCategoryGraph } from './DashboardCategoryGraph';
+import { DashboardGoals } from './DashboardGoals';
 import { DashboardHero } from './DashboardHero';
 import { DashboardRecentTrans } from './DashboardRecentTrans';
 import { DashboardTopExpenses } from './DashboardTopExpenses';
@@ -52,6 +53,7 @@ export {
   ContentCard,
   DashboardAccounts,
   DashboardCategoryGraph,
+  DashboardGoals,
   DashboardHero,
   DashboardRecentTrans,
   DashboardTopExpenses,

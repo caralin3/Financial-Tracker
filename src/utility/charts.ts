@@ -319,3 +319,35 @@ export const accountGoal = (
     title,
   }
 }
+
+export const goalData =(
+  accounts: Account[],
+  categories: Category[],
+  goals: Goal[], 
+  subcategories: Subcategory[],
+  transactions: Transaction[]
+  ) => {
+  const data: any[] = [];
+  goals.forEach((goal: Goal) => {
+    if (goal.type === 'acc') {
+      const account = accounts.filter((a) => a.id === goal.dataId)[0];
+      if (account) {
+        const accData = accountGoal(goal, account, transactions);
+        data.push(accData);
+      }
+    } else if (goal.type === 'cat') {
+      const category = categories.filter((c) => c.id === goal.dataId)[0];
+      if (category){
+        const catData = categoryGoal(goal, category, transactions);
+        data.push(catData);
+      }
+    } else {
+      const subcategory = subcategories.filter((s) => s.id === goal.dataId)[0];
+      if (subcategory) {
+        const subData = subcategoryGoal(goal, subcategory, transactions);
+        data.push(subData);
+      }
+    }
+  });
+  return data;
+}

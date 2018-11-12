@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Account, Job, Transaction, User } from '../../types';
+import { Account, Job, Transaction } from '../../types';
 import { formatter, sorter, transactionConverter } from '../../utility';
 
 interface DashboardRecentTransProps {}
@@ -13,7 +12,6 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   accounts: Account[];
-  currentUser: User | null;
   jobs: Job[];
   transactions: Transaction[];
 }
@@ -27,12 +25,6 @@ interface DashboardRecentTransState {}
 
 export class DisconnectedDashboardRecentTrans extends React.Component<DashboardMergedProps, DashboardRecentTransState> {
   public readonly state = {}
-
-  public componentWillMount() {
-    this.loadAccounts();
-    this.loadJobs();
-    this.loadTransactions();
-  }
 
   public render() {
     const { accounts, jobs, transactions } = this.props;
@@ -68,46 +60,12 @@ export class DisconnectedDashboardRecentTrans extends React.Component<DashboardM
       </div>
     )
   }
-
-  private loadAccounts = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.accounts.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  private loadJobs = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.jobs.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  
-  private loadTransactions = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.transactions.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
-  currentUser: state.sessionState.currentUser,
   jobs: state.jobsState.jobs,
   transactions: state.transactionState.transactions,
 });

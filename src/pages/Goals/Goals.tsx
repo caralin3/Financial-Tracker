@@ -68,15 +68,17 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
   }
 
   public render() {
-    const { goals } = this.props;
+    const { accounts, categories, goals, subcategories, transactions } = this.props;
     const { detail, detailId, hover, showAdd } = this.state;
+
+    const data = charts.goalData(accounts, categories, goals, subcategories, transactions);
 
     return (
       <div className="goals">
         {showAdd && <AddGoalDialog toggleDialog={this.toggleDialog} />}
         <Header title="Goals" />
         <div className="goals_content">
-          {this.data().map((d, idx) => (
+          {data.map((d, idx) => (
             <div className={detailId === d.id ? 'goals_arrow' : ''} key={`${d.id}${idx}`}>
               <DonutChart
                 className="goals_donut"
@@ -143,33 +145,6 @@ class DisconnectedGoalsPage extends React.Component<GoalsMergedProps, GoalsPageS
       return (index / max) + 2;
     }
     return Math.floor((((index + max) - 1) / max) + 1);
-  }
-  
-  private data = () => {
-    const { accounts, categories, goals, subcategories, transactions } = this.props;
-    const data: any[] = [];
-    goals.forEach((goal: Goal) => {
-      if (goal.type === 'acc') {
-        const account = accounts.filter((a) => a.id === goal.dataId)[0];
-        if (account) {
-          const accData = charts.accountGoal(goal, account, transactions);
-          data.push(accData);
-        }
-      } else if (goal.type === 'cat') {
-        const category = categories.filter((c) => c.id === goal.dataId)[0];
-        if (category){
-          const catData = charts.categoryGoal(goal, category, transactions);
-          data.push(catData);
-        }
-      } else {
-        const subcategory = subcategories.filter((s) => s.id === goal.dataId)[0];
-        if (subcategory) {
-          const subData = charts.subcategoryGoal(goal, subcategory, transactions);
-          data.push(subData);
-        }
-      }
-    });
-    return data;
   }
 
   private loadAccounts = async () => {

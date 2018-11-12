@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Dropdown, PieChart } from '../';
-import { db } from '../../firebase';
 import { ActionTypes, AppState, sessionStateStore } from '../../store';
-import { Account, BudgetInfo, Transaction, User } from '../../types';
+import { Account, BudgetInfo, Transaction } from '../../types';
 import { calculations, charts, formatter, transactionConverter } from '../../utility';
 
 interface DashboardAccountsProps {}
@@ -15,7 +14,6 @@ interface DispatchMappedProps {
 interface StateMappedProps {
   accounts: Account[];
   budgetInfo: BudgetInfo;
-  currentUser: User | null;
   transactions: Transaction[];
 }
 
@@ -28,11 +26,6 @@ interface DashboardAccountsState {}
 
 export class DisconnectedDashboardAccounts extends React.Component<DashboardMergedProps, DashboardAccountsState> {
   public readonly state = {}
-
-  public componentWillMount() {
-    this.loadAccounts();
-    this.loadTransactions();
-  }
 
   public render() {
     const { accounts, budgetInfo, transactions } = this.props;
@@ -90,28 +83,6 @@ export class DisconnectedDashboardAccounts extends React.Component<DashboardMerg
       </div>
     )
   }
-  
-  private loadAccounts = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.accounts.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  private loadTransactions = async () => {
-    const { currentUser, dispatch } = this.props;
-    try {
-      if (currentUser) {
-        await db.requests.transactions.load(currentUser.id, dispatch);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   private handleClick = (date: string, dateType: 'month' | 'year') => {
     const { dispatch } = this.props;
@@ -127,7 +98,6 @@ const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 const mapStateToProps = (state: AppState) => ({
   accounts: state.accountsState.accounts,
   budgetInfo: state.sessionState.budgetInfo,
-  currentUser: state.sessionState.currentUser,
   transactions: state.transactionState.transactions,
 });
 
