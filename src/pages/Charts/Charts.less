@@ -12,11 +12,14 @@
   &_donut {
     display: flex;
     flex-direction: column;
-    width: 25%;
-
-    @media only screen and (max-width: 640px) {
-      align-self: center;
-      width: 100%;
+    
+    &-chart {
+      width: 25%;
+      
+      @media only screen and (max-width: 640px) {
+        align-self: center;
+        width: 100%;
+      }
     }
   }
 }

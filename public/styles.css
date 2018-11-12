@@ -1818,10 +1818,12 @@ select {
 .charts_donut {
   display: flex;
   flex-direction: column;
+}
+.charts_donut-chart {
   width: 25%;
 }
 @media only screen and (max-width: 640px) {
-  .charts_donut {
+  .charts_donut-chart {
     align-self: center;
     width: 100%;
   }

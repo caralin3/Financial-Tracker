@@ -92,7 +92,8 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
           <div className="charts_donut">
             <h3>{donutData.title} Breakdown</h3>
             <DonutChart
-              id="charts_donut-chart"
+              className="charts_donut-chart"
+              id={`charts_${donutData.title}`}
               data={donutData.data}
               title={donutData.title.slice(0, 5)}
             />
