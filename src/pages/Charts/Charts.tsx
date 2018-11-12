@@ -3,15 +3,16 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
-import { Header, LineChart, RadialDonutChart } from '../../components';
+import { DashboardCategoryGraph, DonutChart, Header, LineChart, PieChart } from '../../components';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
-import { Budget, BudgetInfo, Category, Subcategory, Transaction, User } from '../../types';
+import { Account, Budget, BudgetInfo, Category, Range, Subcategory, Transaction, User } from '../../types';
 import { charts } from '../../utility';
 
 export interface ChartsPageProps {}
 
 interface StateMappedProps {
+  accounts: Account[];
   budgetInfo: BudgetInfo;
   budgets: Budget[];
   categories: Category[];
@@ -55,16 +56,19 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
   }
 
   public render() {
-    const { budgets, transactions } = this.props;
+    const { accounts, budgetInfo, budgets, categories, subcategories, transactions } = this.props;
     const { mobile, year } = this.state;
     const data = charts.budgetVsActualMonthly(budgets, transactions, year);
-    // const category = categories.filter((c) => c.id === 'LCx1tm61kV1e7o3C21Ue')[0];
-    // const donutData = charts.expenseCategoryBreakdown(
-    //   budgetInfo,
-    //   category,
-    //   subcategories,
-    //   transactions
-    // );
+    const pieData = charts.expensesByAccounts(accounts, budgetInfo, transactions); 
+    const food = categories.filter((cat) => cat.name === 'Food')[0];
+    const range: Range = {
+      end: '2018-11-30',
+      start: '2018-11-01',
+    }
+    let donutData: any = {};
+    if (food) {
+      donutData = charts.subcategoryBreakdown(food, range, subcategories, transactions);
+    }
 
     return (
       <div className="charts">
@@ -79,18 +83,20 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
             />
           </div>
           <div>
-            <h3>Radial</h3>
-            <RadialDonutChart data={[]} />
+            <DashboardCategoryGraph mobileWidth={300} width={800} />
           </div>
-          {/* <div className="charts_donut">
-            <h3>Donut</h3>
+          <div>
+            <h3>Accounts</h3>
+            <PieChart className="chart_pie-chart" data={pieData} />
+          </div>
+          <div className="charts_donut">
+            <h3>{donutData.title} Breakdown</h3>
             <DonutChart
               id="charts_donut-chart"
               data={donutData.data}
-              subtitle={formatter.formatMoney(donutData.subtitle)}
               title={donutData.title.slice(0, 5)}
             />
-          </div> */}
+          </div>
         </div>
       </div>
     )
@@ -113,6 +119,7 @@ const authCondition = (authUser: any) => !!authUser;
 const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => ({ dispatch });
 
 const mapStateToProps = (state: AppState) => ({
+  accounts: state.accountsState.accounts,
   budgetInfo: state.sessionState.budgetInfo,
   budgets: state.budgetsState.budgets,
   categories: state.categoriesState.categories,

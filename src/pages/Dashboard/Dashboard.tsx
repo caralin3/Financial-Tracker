@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps, RouteProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { withAuthorization } from '../../auth/withAuthorization';
 import {
@@ -15,9 +15,9 @@ import {
   Header,
 } from '../../components';
 import { db } from '../../firebase';
+import * as routes from '../../routes';
 import { ActionTypes, AppState } from '../../store';
 import { Category, Transaction, User } from '../../types';
-// import * as routes from '../../routes';
 
 export interface DashboardPageProps { }
 
@@ -66,21 +66,21 @@ class DisconnectedDashboardPage extends React.Component<DashboardMergedProps, Da
             <AddTransactionForm toggleDialog={() => null} />
           </ContentCard>
           <ContentCard class="dashboard_recent">
-            <h3 className="dashboard_label">Recent Transactions</h3>
+          <Link to={routes.ACTIVITY} className="dashboard_link">Recent Transactions</Link>
             <DashboardRecentTrans />
           </ContentCard>
           <ContentCard class="dashboard_accounts">
-            <h3 className="dashboard_label">Accounts</h3>
+            <Link to={routes.ACCOUNTS} className="dashboard_link">Accounts</Link>
             <DashboardAccounts />
           </ContentCard>
           <ContentCard class="dashboard_topExpenses">
             <DashboardTopExpenses />
           </ContentCard>
           <ContentCard class="dashboard_budget">
-            <DashboardCategoryGraph />
+            <DashboardCategoryGraph mobileWidth={300} width={550} />
           </ContentCard>
           <ContentCard class="dashboard_goals">
-            <h3 className="dashboard_label">Goals</h3>
+            <Link to={routes.GOALS} className="dashboard_link">Goals</Link>
             <DashboardGoals />
           </ContentCard>
         </div>

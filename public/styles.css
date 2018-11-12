@@ -1818,12 +1818,10 @@ select {
 .charts_donut {
   display: flex;
   flex-direction: column;
-}
-.charts_donut-chart {
   width: 25%;
 }
 @media only screen and (max-width: 640px) {
-  .charts_donut-chart {
+  .charts_donut {
     align-self: center;
     width: 100%;
   }
@@ -1850,6 +1848,12 @@ select {
 }
 .dashboard_label-log {
   padding-bottom: 1rem;
+}
+.dashboard_link {
+  color: #000000;
+  font-family: 'Francois One', sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 .dashboard_form {
   grid-area: form;

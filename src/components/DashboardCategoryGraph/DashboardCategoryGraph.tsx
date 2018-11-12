@@ -5,7 +5,10 @@ import { ActionTypes, AppState, sessionStateStore } from '../../store';
 import { BudgetInfo, Category, Transaction } from '../../types';
 import { charts, transactionConverter } from '../../utility';
 
-interface DashboardCategoryGraphProps {}
+interface DashboardCategoryGraphProps {
+  mobileWidth: number;
+  width: number;
+}
 
 interface DispatchMappedProps {
   dispatch: Dispatch<ActionTypes>;
@@ -45,7 +48,7 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
   }
 
   public render() {
-    const { budgetInfo, categories, transactions } = this.props;
+    const { budgetInfo, categories, mobileWidth, transactions, width } = this.props;
     const { mobile, sortDir, sortField } = this.state;
 
     const monthOptions: JSX.Element[] = [];
@@ -105,7 +108,7 @@ export class DisconnectedDashboardCategoryGraph extends React.Component<Dashboar
           data={data}
           height={300}
           leftMargin={mobile ? 125 : 150}
-          width={mobile ? 300 : 550}
+          width={mobile ? mobileWidth : width}
         />
       </div>
     )

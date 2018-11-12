@@ -1,6 +1,6 @@
 import { BarSeriesData, LineSeriesData, RadialChartData } from 'react-vis';
 import { DonutChartData } from '../components/Visualizations';
-import { Account, Budget, BudgetInfo, Category, CategoryBudget, Goal, Subcategory, Transaction } from '../types';
+import { Account, Budget, BudgetInfo, Category, CategoryBudget, Goal, Range, Subcategory, Transaction } from '../types';
 import { formatter, sorter, transactionConverter } from './';
 import { actualByMonth, actualByYear, bankExpenses, cashExpenses, creditExpenses, totals } from './calculations';
 
@@ -218,6 +218,45 @@ export const expenseCategoryBreakdown = (
   }
 }
 
+export const subcategoryBreakdown = (category: Category, range: Range, subcategories: Subcategory[], transactions: Transaction[]) => {
+  const title = category.name;
+  const data: DonutChartData[] = [];
+  const expenses = transactions.filter((t) => t.type === 'Expense' &&
+    Date.parse(formatter.formatMMYYYY(t.date)) >= Date.parse(range.start) &&
+    Date.parse(formatter.formatMMYYYY(t.date)) <= Date.parse(range.end) &&
+    t.category && t.category === category.id);
+  const subs: Subcategory[] = [];
+  category.subcategories.forEach((s) => {
+    const catSub = subcategories.filter((sub) => sub.id === s)[0];
+    subs.push(catSub);
+  });
+  const total = totals(expenses, 'amount');
+  subs.forEach((s, index: number) => {
+    const subExps = transactions.filter((t) => t.type === 'Expense' &&
+      Date.parse(formatter.formatMMYYYY(t.date)) >= Date.parse(range.start) &&
+      Date.parse(formatter.formatMMYYYY(t.date)) <= Date.parse(range.end) &&
+      t.subcategory && t.subcategory === s.id);
+    const subTotal = totals(subExps, 'amount');
+    let percent = 0;
+    if (total > 0) {
+      percent = (subTotal / total) * 100;
+    }
+    if (percent > 0) {
+      data.push({
+        color: colors[index],
+        percent,
+        title: s.name,
+        value: subTotal,
+      });
+    }
+  });
+  return {
+    data,
+    id: category.id,
+    title,
+  }
+}
+
 export const subcategoryGoal = (
   goal: Goal,
   subcategory: Subcategory,
@@ -320,7 +359,7 @@ export const accountGoal = (
   }
 }
 
-export const goalData =(
+export const goalData = (
   accounts: Account[],
   categories: Category[],
   goals: Goal[], 
