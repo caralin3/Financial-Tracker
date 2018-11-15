@@ -4,7 +4,7 @@ import { Form } from '../';
 import { db } from '../../firebase';
 import { ActionTypes, AppState } from '../../store';
 import { Account, Category, Job, Subcategory, Transaction, TransactionType, User } from '../../types';
-import { transactionConverter } from '../../utility';
+import { sorter, transactionConverter } from '../../utility';
 
 interface AddTransactionFormProps {
   class?: string;
@@ -278,7 +278,8 @@ export class DisconnectedAddTransactionForm extends React.Component<AddTransacti
 
   private accounts = () => {
     const { accounts, currentUser } = this.props;
-    return accounts.filter((acc: Account) => currentUser && acc.userId === currentUser.id);
+    return sorter.sort(accounts.filter((acc: Account) => currentUser && acc.userId === currentUser.id)
+    , 'desc', 'name');
   }
 
   private categories = () => {

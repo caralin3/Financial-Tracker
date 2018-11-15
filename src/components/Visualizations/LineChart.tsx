@@ -5,7 +5,7 @@ import {
   Highlight,
   HorizontalGridLines,
   LineSeries,
-  LineSeriesData,
+  // LineSeriesData,
   VerticalGridLines,
   XAxis,
   XYPlot,
@@ -16,9 +16,10 @@ import { formatter } from '../../utility';
 
 interface LineChartProps {
   className?: string;
-  data: LineSeriesData[][];
+  data: any[];
   height: number;
   leftMargin?: number;
+  orientation?: 'horizontal' | 'vertical';
   width: number;
   xAxisTitle?: string;
   yAxisTitle?: string;
@@ -41,98 +42,75 @@ export class LineChart extends React.Component<LineChartProps, LineChartState> {
   }
 
   public render() {
-    const { data, height, width, xAxisTitle, yAxisTitle } = this.props;
+    const { data, height, orientation, width, xAxisTitle, yAxisTitle } = this.props;
     const { crosshairValues, lastDrawLocation } = this.state;
 
+    const items = data.map((d) => ({color: d.color, title: d.label}))
+
     return (
-      <div>
-      <XYPlot
-        animation={true}
-        width={width}
-        height={height}
-        xDomain={
-          lastDrawLocation && [
-            lastDrawLocation.left,
-            lastDrawLocation.right
-          ]
-        }
-        yDomain={
-          lastDrawLocation && [
-            lastDrawLocation.bottom,
-            lastDrawLocation.top
-          ]
-        }
-      >
-        <DiscreteColorLegend
-          style={{
-            backgroundColor: 'rgba(244, 244, 244, 0.75)',
-            position: 'absolute',
-            right: '10px',
-            top: '20px',
-          }}
-          orientation="vertical"
-          items={[
-            {
-              color: '#0C98AC',
-              title: 'Budget',
-            },
-            {
-              color: '#FF0000',
-              title: 'Expenses',
-            },
-            {
-              color: '#62D4D9',
-              title: 'Income',
-            }
-          ]}
-        />
-        <VerticalGridLines />
-        <HorizontalGridLines />
-        <XAxis title={xAxisTitle ? xAxisTitle : 'Month'} tickFormat={(d: any) => formatter.months[d]} />
-        <YAxis title={yAxisTitle ? yAxisTitle : 'Amount ($)'} />
-        <LineSeries
-          color='#0C98AC'
-          data={data[0]}
-          // onNearestX={this.onNearestX}
-          // onSeriesMouseOut={this.onMouseLeave}
-        />
-        <LineSeries
-          color='#FF0000'
-          data={data[1]}
-          // onNearestX={this.onNearestX}
-          // onSeriesMouseOut={this.onMouseLeave}
-        />
-        <LineSeries
-          color='#62D4D9'
-          data={data[2]}
-          // onNearestX={this.onNearestX}
-          // onSeriesMouseOut={this.onMouseLeave}
-        />
-        <Highlight
-          onBrushEnd={(area: any) => this.setState({lastDrawLocation: area})}
-          onDrag={(area: any) => {
-            this.setState({
-              lastDrawLocation: {
-                bottom: lastDrawLocation ? lastDrawLocation.bottom + (area.top - area.bottom) :
-                  (area.top - area.bottom),
-                left: lastDrawLocation ? lastDrawLocation.left - (area.right - area.left) :
-                  (area.right - area.left),
-                right: lastDrawLocation ? lastDrawLocation.right - (area.right - area.left) :
-                  (area.right - area.left),
-                top: lastDrawLocation ? lastDrawLocation.top + (area.top - area.bottom) :
-                  (area.top - area.bottom)
-              }
-            });
-          }}
-        />
+      <div style={{display: 'flex', flexDirection: orientation === 'horizontal' ? 'column' : 'row'}}>
+        <XYPlot
+          animation={true}
+          width={width}
+          height={height}
+          xDomain={
+            lastDrawLocation && [
+              lastDrawLocation.left,
+              lastDrawLocation.right
+            ]
+          }
+          yDomain={
+            lastDrawLocation && [
+              lastDrawLocation.bottom,
+              lastDrawLocation.top
+            ]
+          }
+        >        
+          <VerticalGridLines />
+          <HorizontalGridLines />
+          <XAxis title={xAxisTitle ? xAxisTitle : 'Month'} tickFormat={(d: any) => formatter.months[d]} />
+          <YAxis title={yAxisTitle ? yAxisTitle : 'Amount ($)'} />
+          {data.map((d) => (
+            <LineSeries
+              key={d.color}
+              color={d.color}
+              data={d.data}
+              // onNearestX={this.onNearestX}
+              // onSeriesMouseOut={this.onMouseLeave}
+            />
+          ))}
+          <Highlight
+            onBrushEnd={(area: any) => this.setState({lastDrawLocation: area})}
+            onDrag={(area: any) => {
+              this.setState({
+                lastDrawLocation: {
+                  bottom: lastDrawLocation ? lastDrawLocation.bottom + (area.top - area.bottom) :
+                    (area.top - area.bottom),
+                  left: lastDrawLocation ? lastDrawLocation.left - (area.right - area.left) :
+                    (area.right - area.left),
+                  right: lastDrawLocation ? lastDrawLocation.right - (area.right - area.left) :
+                    (area.right - area.left),
+                  top: lastDrawLocation ? lastDrawLocation.top + (area.top - area.bottom) :
+                    (area.top - area.bottom)
+                }
+              });
+            }}
+          />
         <Crosshair values={crosshairValues} />
       </XYPlot>
-      <button
+      <div style={{display: 'flex', flexDirection: orientation === 'horizontal' ? 'row' : 'column'}}>
+        <DiscreteColorLegend
+          className="legend"
+          orientation={'vertical'}
+          items={items}
+        />
+        <button
           className="showcase-button"
           onClick={() => this.setState({lastDrawLocation: null})}
         >
           Reset Zoom
         </button>
+      </div>
       </div>
     )
   }

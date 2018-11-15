@@ -69,6 +69,23 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
     if (food) {
       donutData = charts.subcategoryBreakdown(food, range, subcategories, transactions);
     }
+    // Food Trend
+    const foodSubs = subcategories.filter((sub) => sub.parent === 'Food');
+    const foodTrend = charts.subcategoryMonthlyTrend(foodSubs, transactions, year);
+
+    // Gas Trend
+    const gasSub = subcategories.filter((sub) => sub.name === 'Gas');
+    const gasTrend = charts.subcategoryMonthlyTrend(gasSub, transactions, year);
+
+    // TODO: Gas By Car Tag
+
+    // Utilities Trend
+    const utilSubs = subcategories.filter((sub) => sub.parent === 'Utilities');
+    const utilTrend = charts.subcategoryMonthlyTrend(utilSubs, transactions, year);
+
+    // Medical Trend
+    const medSubs = subcategories.filter((sub) => sub.parent === 'Medical');
+    const medTrend = charts.subcategoryMonthlyTrend(medSubs, transactions, year);
 
     return (
       <div className="charts">
@@ -79,6 +96,42 @@ class DisconnectedChartsPage extends React.Component<ChartsMergedProps, ChartsPa
             <LineChart
               data={data}
               height={300}
+              width={mobile ? 300 : 550}
+            />
+          </div>
+          <div>
+            <h3>Food Trend</h3>
+            <LineChart
+              data={foodTrend}
+              height={300}
+              orientation={mobile ? 'horizontal' : 'vertical'}
+              width={mobile ? 300 : 550}
+            />
+          </div>
+          <div>
+            <h3>Gas Trend</h3>
+            <LineChart
+              data={gasTrend}
+              height={300}
+              orientation={mobile ? 'horizontal' : 'vertical'}
+              width={mobile ? 300 : 550}
+            />
+          </div>
+          <div>
+            <h3>Utilities Trend</h3>
+            <LineChart
+              data={utilTrend}
+              height={300}
+              orientation={mobile ? 'horizontal' : 'vertical'}
+              width={mobile ? 300 : 550}
+            />
+          </div>
+          <div>
+            <h3>Medical Trend</h3>
+            <LineChart
+              data={medTrend}
+              height={300}
+              orientation={mobile ? 'horizontal' : 'vertical'}
               width={mobile ? 300 : 550}
             />
           </div>

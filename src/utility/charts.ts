@@ -4,11 +4,11 @@ import { Account, Budget, BudgetInfo, Category, CategoryBudget, Goal, Range, Sub
 import { formatter, sorter, transactionConverter } from './';
 import { actualByMonth, actualByYear, bankExpenses, cashExpenses, creditExpenses, totals } from './calculations';
 
-export const colors = [ '#ffbfd0', '#62468c', '#1d5673', '#40ff73', '#ccaa66', '#992626', '#d93677', '#2a2633', '#00ccff','#00730f',
+export const colors = [ '#0C98AC', '#FF0000', '#62D4D9', '#ffbfd0', '#62468c', '#1d5673', '#40ff73', '#ccaa66', '#992626', '#d93677', '#2a2633', '#00ccff','#00730f',
 '#593a16', '#e50000', '#594352', '#4040ff', '#567173', '#ccff00', '#995200', '#ff40f2', '#001859', '#bffff2', '#f2ffbf', '#cc8166',
 '#530059', '#bfd9ff', '#3df2ce', '#4c4700', '#ff0000', '#d9bfff', '#0088ff', '#00593c', '#ffd940', '#330000']
 
-export const randomColor = () => {
+export const randomColor = (): string => {
   const i = Math.floor(Math.random() * colors.length);
   return colors[i];
 }
@@ -85,6 +85,33 @@ export const expensesByCategory = (
   ];
 }
 
+export const subcategoryMonthlyTrend = (subcategories: Subcategory[], transactions: Transaction[], year: string) => {
+  const orderedMonths: string[] = [`Jan - ${year}`, `Feb - ${year}`, `Mar - ${year}`, `Apr - ${year}`, `May - ${year}`,
+    `Jun - ${year}`, `Jul - ${year}`, `Aug - ${year}`, `Sep - ${year}`, `Oct - ${year}`, `Nov - ${year}`, `Dec - ${year}`
+  ];
+  const data: any[] = [];
+  subcategories.forEach((sub, i) => {
+    const expenses = transactions.filter((t) => t.type === 'Expense' && formatter.formatYYYY(t.date) === year &&
+      t.subcategory === sub.id);
+    const monthlyExpenses: LineSeriesData[] = [];
+    orderedMonths.forEach((m, index) => {
+      let monthSum = 0;
+      expenses.forEach((exp) => {
+        if (formatter.formatMMYYYY(exp.date) === m) {
+          monthSum += exp.amount;
+        }
+      });
+      monthlyExpenses.push({x: index, y: monthSum});
+    });
+    data.push({
+      color: colors[i],
+      data: monthlyExpenses,
+      label: sub.name
+    });
+  });
+  return data;
+}
+
 export const budgetVsActualMonthly = (budgets: Budget[], transactions: Transaction[], year: string) => {
   const budgetList = budgets.filter((b) => b.date.slice(6) === year);
   const orderedMonths: string[] = [`Jan - ${year}`, `Feb - ${year}`, `Mar - ${year}`, `Apr - ${year}`, `May - ${year}`,
@@ -123,7 +150,23 @@ export const budgetVsActualMonthly = (budgets: Budget[], transactions: Transacti
     });
     monthlyIncome.push({x: index, y: monthSum});
   });
-  return [monthlyBudgets, monthlyExpenses, monthlyIncome];
+  return [
+    {
+      color: colors[0],
+      data: monthlyBudgets,
+      label: 'Budget'
+    },
+    {
+      color: colors[1],
+      data: monthlyExpenses,
+      label: 'Expenses'
+    },
+    {
+      color: colors[2],
+      data: monthlyIncome,
+      label: 'Income'
+    }
+  ];
 }
 
 export const budgetVsActualYearly = (budgetInfo: BudgetInfo, transactions: Transaction[], years: string[]) => {
