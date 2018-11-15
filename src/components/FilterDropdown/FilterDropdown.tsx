@@ -4,7 +4,7 @@ import { Dialog, Form } from '../';
 import { ActionTypes, sessionStateStore } from '../../store';
 import { Transaction, TransactionFilter } from '../../types';
 import { HeaderData } from '../../types';
-import { formatter } from '../../utility';
+import { formatter, sorter } from '../../utility';
 
 interface FilterDropdownProps {
   data: Transaction[];
@@ -225,7 +225,7 @@ export class DisconnectedFilterDropdown extends React.Component<FilterDropdownMe
     }
     const subOptions = data.map((d) => d[key]).filter((dt: string, index, self) =>
        self.findIndex((t: string) => t === dt) === index);
-    return subOptions.length > 0 ? subOptions : ['None'];
+    return subOptions.length > 0 ? sorter.sortValues(subOptions, 'desc') : ['None'];
   }
 }
 

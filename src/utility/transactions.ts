@@ -33,12 +33,14 @@ export const tags = (transactions: Transaction[]) => {
       tagsList.push.apply(tagsList, tr.tags);
     }
   });
-  return tagsList.filter((tag: string, index, self) => self.findIndex((t: string) => t === tag) === index);
+  return sorter.sortValues(tagsList.filter((tag: string, index, self) => self.findIndex((t: string) => t === tag) === index)
+    , 'asc');
 }
 
 export const items = (transactions: Transaction[]) => {
-  return transactions.filter((trans: Transaction, index, self) =>
-    self.findIndex((t: Transaction) => trans.type === 'Expense' && t.to === trans.to) === index);
+  return sorter.sort(transactions.filter((trans: Transaction, index, self) =>
+    self.findIndex((t: Transaction) => trans.type === 'Expense' && t.to === trans.to) === index)
+    , 'desc', 'to');
 }
 
 export const years = (transactions: Transaction[]) => {
