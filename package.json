@@ -22,6 +22,7 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build && yarn run build:css",
     "build:css": "lessc src/less/index.less public/styles.css",
+    "deploy": "yarn run build && firebase deploy",
     "test": "jest",
     "watch:css": "chokidar \"**/*.less\" -c \"npm run build:css\"",
     "eject": "react-scripts-ts eject"
