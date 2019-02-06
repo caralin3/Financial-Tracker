@@ -43,42 +43,42 @@ class DisconnectedSignUpForm extends React.Component<SignUpMergedProps, SignUpFo
     const isInvalid = password !== passwordConfirm || !password || !email || !firstName || !lastName;
 
     return (
-      <div className='signupForm'>
-        <Form buttonText='Sign Up' disabled={isInvalid} submit={this.handleSubmit}>
+      <div className="signupForm">
+        <Form buttonText="Sign Up" disabled={isInvalid} submit={this.handleSubmit}>
           {error && <p>{error.message}</p>}
           <input
-            className='signupForm_input'
+            className="signupForm_input"
             onChange={(e) => this.handleChange(e, 'firstName')}
-            placeholder='First Name'
-            type='text'
+            placeholder="First Name"
+            type="text"
             value={firstName}
           />
           <input
-            className='signupForm_input'
+            className="signupForm_input"
             onChange={(e) => this.handleChange(e, 'lastName')}
-            placeholder='Last Name'
-            type='text'
+            placeholder="Last Name"
+            type="text"
             value={lastName}
           />
           <input
-            className='signupForm_input'
+            className="signupForm_input"
             onChange={(e) => this.handleChange(e, 'email')}
-            placeholder='Email Address'
-            type='text'
+            placeholder="Email Address"
+            type="text"
             value={email}
           />
           <input
-            className='signupForm_input'
+            className="signupForm_input"
             onChange={(e) => this.handleChange(e, 'password')}
-            placeholder='Password'
-            type='password'
+            placeholder="Password"
+            type="password"
             value={password}
           />
           <input
-            className='signupForm_input'
+            className="signupForm_input"
             onChange={(e) => this.handleChange(e, 'passwordConfirm')}
-            placeholder='Confirm Password'
-            type='password'
+            placeholder="Confirm Password"
+            type="password"
             value={passwordConfirm}
           />
         </Form>

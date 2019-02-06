@@ -25,21 +25,21 @@ class DisconnectedLoginForm extends React.Component<LoginFormProps, LoginFormSta
     const isInvalid = !password || !email;
 
     return (
-      <div className='loginForm'>
-        <Form buttonText='Log In' disabled={isInvalid} submit={this.handleSubmit}>
+      <div className="loginForm">
+        <Form buttonText="Log In" disabled={isInvalid} submit={this.handleSubmit}>
           {error && <p>{error.message}</p>}
           <input
-            className='loginForm_input'
+            className="loginForm_input"
             onChange={(e) => this.handleChange(e, 'email')}
-            placeholder='Email Address'
-            type='text'
+            placeholder="Email Address"
+            type="text"
             value={email}
           />
           <input
-            className='loginForm_input'
-            placeholder='Password'
+            className="loginForm_input"
+            placeholder="Password"
             onChange={(e) => this.handleChange(e, 'password')}
-            type='password'
+            type="password"
             value={password}
           />
         </Form>
