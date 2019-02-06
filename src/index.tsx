@@ -8,6 +8,9 @@ import registerServiceWorker from './registerServiceWorker';
 import { createHistory } from './routes';
 import { ApplicationState, createStore } from './store';
 
+// tslint:disable-next-line:no-var-requires
+require('dotenv').config();
+
 const store: Store<ApplicationState> = createStore(createHistory());
 
 ReactDOM.render(
