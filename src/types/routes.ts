@@ -1,4 +1,3 @@
-export interface Route {
-  name: string;
-  path: string;
+export interface RouteMap {
+  [route: string]: React.ComponentClass;
 }

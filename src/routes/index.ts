@@ -1,4 +1,4 @@
 import createHistory from './createHistory';
-import { Router } from './Router';
+import { routeMap, Router, routes } from './Router';
 
-export { createHistory, Router };
+export { createHistory, routeMap, Router, routes };

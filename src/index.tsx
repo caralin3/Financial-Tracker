@@ -10,7 +10,9 @@ import { createHistory } from './routes';
 import { createStore } from './store';
 import { ApplicationState } from './store/createStore';
 
-console.log(config);
+if (config.env === 'development') {
+  console.log(config);
+}
 
 const store: Store<ApplicationState> = createStore(createHistory());
 

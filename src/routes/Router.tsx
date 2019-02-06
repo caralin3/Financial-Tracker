@@ -6,12 +6,23 @@ import {
   HomePage,
   LandingPage
 } from '../pages';
+import { RouteMap } from '../types';
+
+export const routes = {
+  dashboard: '/dashboard',
+  landing: '/',
+}
+
+export const routeMap: RouteMap = {
+  [routes.dashboard]: HomePage,
+  [routes.landing]: LandingPage,
+}
 
 export const Router = ({ history }: { history: History.History }) => (
   <ConnectedRouter history={history}>
     <Switch>
-      <Route exact={true} path={'/'} component={LandingPage} />
-      <Route path={'/Home'} component={HomePage} />
+      <Route exact={true} path={routes.landing} component={routeMap[routes.landing]} />
+      <Route path={routes.dashboard} component={routeMap[routes.dashboard]} />
     </Switch>
   </ConnectedRouter>
 );
