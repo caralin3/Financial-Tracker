@@ -2,12 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { db, firebase } from '../firebase';
-import { ActionTypes, sessionStateStore } from '../store';
+import { sessionState } from '../store';
 
 interface WithAuthProps {}
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<ActionTypes>
+  dispatch: Dispatch<any>
 }
 
 interface StateMappedProps {}
@@ -29,7 +29,7 @@ export const withAuthentication = (Component: any) => {
         if (user) {
           db.requests.users.getCurrentUser(user.uid, dispatch);
         } else {
-          dispatch(sessionStateStore.setCurrentUser(null))
+          dispatch(sessionState.setCurrentUser(null));
         }
       });
     }
@@ -41,11 +41,7 @@ export const withAuthentication = (Component: any) => {
     }
   }
 
-  const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
+  const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({ dispatch });
 
-  return connect<
-    StateMappedProps,
-    DispatchMappedProps,
-    WithAuthProps
-  >(null, mapDispatchToProps)(WithAuthentication);
+  return connect(null, mapDispatchToProps)(WithAuthentication);
 }

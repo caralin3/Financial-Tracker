@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { firebase } from '../firebase';
-import * as routes from '../routes/';
 import { User } from '../types';
 
 // tslint:disable:no-empty-interface
@@ -29,7 +28,7 @@ export const withAuthorization = (authCondition: any) => (Component: any) => {
     public componentDidMount() {
       firebase.auth.onAuthStateChanged((currentUser: any) => {
         if (!authCondition(currentUser)) {
-          this.props.history.push(routes.LANDING);
+          this.props.history.push('/');
         }
       });
     }

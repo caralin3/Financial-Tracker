@@ -1,23 +1,18 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react'
+import { Store } from 'redux';
 import { App } from './App';
-import { Loading } from './components';
+import './index.css';
 import registerServiceWorker from './registerServiceWorker';
-import { persistor, store } from './store';
+import { createHistory } from './routes';
+import { ApplicationState, createStore } from './store';
 
-declare global {
-  interface Window {store: any}
-}
-
-window.store = store;
+const store: Store<ApplicationState> = createStore(createHistory());
 
 ReactDOM.render(
   <Provider store={store}>
-    <PersistGate loading={<Loading />} persistor={persistor}>
-      <App />
-    </PersistGate>
+    <App />
   </Provider>,
   document.getElementById('root') as HTMLElement
 );
