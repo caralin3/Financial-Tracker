@@ -3,13 +3,12 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Store } from 'redux';
 import { App } from './App';
+import config from './config';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 import { createHistory } from './routes';
 import { ApplicationState, createStore } from './store';
-
-// tslint:disable-next-line:no-var-requires
-require('dotenv').config();
+console.log(config);
 
 const store: Store<ApplicationState> = createStore(createHistory());
 
