@@ -21,30 +21,22 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
   }
 
   public render() {
-
-
-
     return (
       <div className="nav">
         <div className="sidebar show-medium">
-          <Link to={routes.dashboard}>Dashboard</Link>
-          <Link to={routes.dashboard}>Transactions</Link>
-          <Link to={routes.dashboard}>Accounts</Link>
-          <Link to={routes.dashboard}>Reports</Link>
-          <Link to={routes.dashboard}>Categories</Link>
-          <Link to={routes.dashboard}>Settings</Link>
-          <Link to={routes.dashboard}>Logout</Link>
+          <NavLink path={routes.dashboard} label="Dashboard" icon="fa-bars" />
+          <NavLink path={routes.dashboard} label="Transactions" icon="fa-bars" />
+          <NavLink path={routes.dashboard} label="Accounts" icon="fa-bars" />
+          <NavLink path={routes.dashboard} label="Reports" icon="fa-bars" />
+          <NavLink path={routes.dashboard} label="Categories" icon="fa-bars" />
+          <NavLink path={routes.dashboard} label="Settings" icon="fa-bars" />
+          <NavLink path={routes.dashboard} label="Logout" icon="fa-bars" />
         </div>
 
         {/* Mobile Menu */}
         <div className="header show-small">
-          <Link to={routes.dashboard}>Dashboard</Link>
-          <Link to={routes.dashboard}>Transactions</Link>
-          <Link to={routes.dashboard}>Accounts</Link>
-          <Link to={routes.dashboard}>Reports</Link>
-          <Link to={routes.dashboard}>Categories</Link>
-          <Link to={routes.dashboard}>Settings</Link>
-          <Link to={routes.dashboard}>Logout</Link>
+          <i className="header__menu--open fas fa-bars" />
+          <i className="header__menu--close fas fa-times" />
         </div>
       </div>
     )
@@ -57,3 +49,16 @@ export const Navigation = compose(
   withRouter,
   connect(null, mapDispatchToProps)
 )(DisconnectedNavigation);
+
+interface NavLinkProps {
+  icon: string;
+  label: string;
+  path: string;
+}
+
+const NavLink: React.SFC<NavLinkProps> = ({icon, label, path}) => (
+  <Link to={path}>
+    <i className="link__icon fas fa-bars" />
+    <span className="link__label">{label}</span>
+  </Link>
+)
