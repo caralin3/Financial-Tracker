@@ -1,10 +1,9 @@
 import * as History from 'history';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import './App.css';
 import { withAuthentication } from './auth/withAuthentication';
 import { createHistory, Router } from './routes';
-import { ApplicationState } from './store';
+import { ApplicationState } from './store/createStore';
 import { User } from './types';
 
 interface AppProps {}

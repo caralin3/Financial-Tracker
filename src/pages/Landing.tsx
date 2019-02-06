@@ -19,7 +19,7 @@ export class LandingPage extends React.Component<LandingPageProps, LandingPageSt
       <div>
         {login ? <LoginForm /> :
         <SignUpForm />}
-        {login ? <div>
+        {login ? <div className="login_link">
           Don't have an account? | <span onClick={() => this.setState({login: false})}>Sign Up</span>
         </div> : <div>
           Already have an account? | <span onClick={() => this.setState({login: true})}>Login</span>

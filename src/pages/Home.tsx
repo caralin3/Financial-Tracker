@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { auth } from '../firebase';
-import { ApplicationState } from '../store';
+import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
 
 export interface HomePageProps { }

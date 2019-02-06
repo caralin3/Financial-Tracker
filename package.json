@@ -7,11 +7,12 @@
     "@types/recompose": "^0.30.3",
     "connected-react-router": "^6.2.2",
     "firebase": "^5.8.2",
+    "node-sass": "^4.11.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
-    "react-scripts-ts": "^3.1.0",
+    "react-scripts-ts": "^4.0.8",
     "recompose": "^0.30.0",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
@@ -34,7 +35,7 @@
     "@types/redux": "^3.6.0",
     "@types/redux-persist": "^4.3.1",
     "dotenv": "^6.2.0",
-    "jest": "^24.1.0",
+    "jest": "^23.6.0",
     "typescript": "^3.3.1"
   },
   "jest": {
@@ -50,5 +51,11 @@
       "json",
       "node"
     ]
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
