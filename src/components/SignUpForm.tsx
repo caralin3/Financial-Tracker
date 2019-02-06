@@ -4,6 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { auth, db } from '../firebase';
+import { routes } from '../routes';
 import { User } from '../types';
 import { Form } from './';
 
@@ -116,7 +117,7 @@ class DisconnectedSignUpForm extends React.Component<SignUpMergedProps, SignUpFo
         password: '',
         passwordConfirm: '',
       });
-      history.push('/Home');
+      history.push(routes.dashboard);
     })
     .catch((error: any) => {
       this.setState({ error });

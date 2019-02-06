@@ -18,6 +18,7 @@ export const routeMap: RouteMap = {
   [routes.landing]: LandingPage,
 }
 
+/** TODO: Handle protected routes */
 export const Router = ({ history }: { history: History.History }) => (
   <ConnectedRouter history={history}>
     <Switch>

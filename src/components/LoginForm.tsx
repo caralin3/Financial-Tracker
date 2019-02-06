@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { auth } from '../firebase';
+import { routes } from '../routes';
 import { Form } from './';
 
 interface LoginFormProps extends RouteComponentProps {}
@@ -64,7 +65,7 @@ class DisconnectedLoginForm extends React.Component<LoginFormProps, LoginFormSta
         error: null,
         password: '',
       });
-      history.push('/Home');
+      history.push(routes.dashboard);
     })
     .catch((error: any) => {
       this.setState({ error });
