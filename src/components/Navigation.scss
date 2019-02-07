@@ -1,0 +1,39 @@
+@import '../appearance/styles/variables.scss';
+
+.nav {
+  align-items: center;
+  background-color: $black;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 12%;
+}
+
+.sidebar {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+
+  &__icon {
+    align-self: center;
+    padding: 1rem 0;
+  }
+
+  &__circle {
+    color: $white;
+  }
+
+  &__symbol {
+    color: $black;
+  }
+}
+
+.navLink {
+  color: $white;
+  font-size: 16px;
+  padding: 1rem;
+
+  &__label {
+    padding-left: 0.5rem;
+  }
+}

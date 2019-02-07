@@ -24,13 +24,17 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
     return (
       <div className="nav">
         <div className="sidebar show-medium">
-          <NavLink path={routes.dashboard} label="Dashboard" icon="fa-bars" />
-          <NavLink path={routes.dashboard} label="Transactions" icon="fa-bars" />
-          <NavLink path={routes.dashboard} label="Accounts" icon="fa-bars" />
-          <NavLink path={routes.dashboard} label="Reports" icon="fa-bars" />
-          <NavLink path={routes.dashboard} label="Categories" icon="fa-bars" />
-          <NavLink path={routes.dashboard} label="Settings" icon="fa-bars" />
-          <NavLink path={routes.dashboard} label="Logout" icon="fa-bars" />
+          <span className="sidebar__icon fa-stack fa-2x">
+            <i className="sidebar__circle fas fa-circle fa-stack-2x" />
+            <i className="sidebar__symbol fas fa-university fa-stack-1x fa-inverse" />
+          </span>
+          <NavLink path={routes.dashboard} label="Dashboard" icon="fa-newspaper" />
+          <NavLink path={routes.dashboard} label="Transactions" icon="fa-credit-card" />
+          <NavLink path={routes.dashboard} label="Accounts" icon="fa-money-check" />
+          <NavLink path={routes.dashboard} label="Reports" icon="fa-chart-line" />
+          <NavLink path={routes.dashboard} label="Categories" icon="fa-list" />
+          <NavLink path={routes.dashboard} label="Settings" icon="fa-cog" />
+          <NavLink path={routes.dashboard} label="Logout" icon="fa-sign-out-alt" />
         </div>
 
         {/* Mobile Menu */}
@@ -57,8 +61,8 @@ interface NavLinkProps {
 }
 
 const NavLink: React.SFC<NavLinkProps> = ({icon, label, path}) => (
-  <Link to={path}>
-    <i className="link__icon fas fa-bars" />
-    <span className="link__label">{label}</span>
+  <Link className="navLink" to={path}>
+    <i className={`navLink__icon fas ${icon}`} />
+    <span className="navLink__label">{label}</span>
   </Link>
 )
