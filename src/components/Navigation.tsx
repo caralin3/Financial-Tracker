@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
@@ -21,12 +22,12 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
+import { auth } from '../firebase';
 import { routes } from '../routes';
 
-interface NavigationProps extends RouteComponentProps {
+  interface NavigationProps extends RouteComponentProps {
   classes: any;
   theme: any;
 }
@@ -38,16 +39,19 @@ interface SignUpMergedProps extends
   NavigationProps {}
 
 interface NavigationState {
+  expanded: boolean;
   open: boolean;
 }
 
 class DisconnectedNavigation extends React.Component<SignUpMergedProps, NavigationState> {
   public readonly state: NavigationState = {
-    open: true
+    expanded: true,
+    open: false
   }
 
   public render() {
     const { classes } = this.props;
+    const { expanded, open } = this.state;
 
     const links = [
       {label: 'Dashboard', route: routes.dashboard, icon: <HomeIcon />},
@@ -55,9 +59,48 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
       {label: 'Accounts', route: routes.dashboard, icon: <AccountBoxIcon />},
       {label: 'Reports', route: routes.dashboard, icon: <BarChartIcon />},
       {label: 'Categories', route: routes.dashboard, icon: <ListAltIcon />},
-      {label: 'Settings', route: routes.dashboard, icon: <SettingsIcon />},
-      {label: 'Logout', route: routes.landing, icon: <ExitToAppIcon />},
+      {label: 'Settings', route: routes.dashboard, icon: <SettingsIcon />}
     ]
+
+    const navList = (
+      <div className="navList">
+        <div className="navList_icon fa-stack fa-2x">
+          <i className="navList_circle fas fa-circle fa-stack-2x" />
+          <i className="navList_icon fa-stack-1x fas fa-university " />
+        </div>
+        <List>
+          {links.slice(0, 4).map((link) => (
+            <ListItem
+              button={true}
+              key={link.label}
+              onClick={() => this.navigateTo(link.route)}
+              onKeyDown={(e) => this.handleKey(e, link.route)}
+            >
+              <ListItemIcon>{link.icon}</ListItemIcon>
+              <ListItemText primary={link.label} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List>
+          {links.slice(4).map((link) => (
+            <ListItem
+              button={true}
+              key={link.label}
+              onClick={() => this.navigateTo(link.route)}
+              onKeyDown={(e) => this.handleKey(e, link.route)}
+            >
+              <ListItemIcon>{link.icon}</ListItemIcon>
+              <ListItemText primary={link.label} />
+            </ListItem>
+          ))}
+          <ListItem button={true} onClick={this.logout} onKeyDown={this.handleKeyLogout}>
+            <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        </List>
+      </div>
+    )
 
     return (
       <div className="nav">
@@ -65,41 +108,21 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
             variant="permanent"
             className={classNames(classes.drawer,
               'show-medium', {
-              [classes.drawerOpen]: this.state.open,
-              [classes.drawerClose]: !this.state.open,
+              [classes.drawerOpen]: expanded,
+              [classes.drawerClose]: !expanded,
             })}
             classes={{
               paper: classNames('show-medium', {
-                [classes.drawerOpen]: this.state.open,
-                [classes.drawerClose]: !this.state.open,
+                [classes.drawerOpen]: expanded,
+                [classes.drawerClose]: !expanded,
               }),
             }}
-            open={this.state.open}
+            open={expanded}
           >
-            <List>
-              {links.slice(0, 4).map((link, index) => (
-                <ListItem button={true} key={link.label}>
-                  <Link className="navLink" to={link.route}>
-                    <ListItemIcon>{link.icon}</ListItemIcon>
-                    <ListItemText primary={link.label} />
-                  </Link>
-                </ListItem>
-              ))}
-            </List>
-            <Divider />
-            <List>
-              {links.slice(4).map((link, index) => (
-                <ListItem button={true} key={link.label}>
-                  <Link className="navLink" to={link.route}>
-                    <ListItemIcon>{link.icon}</ListItemIcon>
-                    <ListItemText primary={link.label} />
-                  </Link>
-                </ListItem>
-              ))}
-            </List>
+            {navList}
             <div className={classes.toolbar}>
-              <IconButton onClick={this.handleDrawer}>
-                {this.state.open ? 
+              <IconButton onClick={() => this.setState({ expanded: !expanded })}>
+                {expanded ? 
                 <svg style={{width:'24px', height:'24px'}} viewBox="0 0 24 24">
                 <path fill="#000000" d="M18.41,7.41L17,6L11,12L17,18L18.41,16.59L13.83,12L18.41,7.41M12.41,7.41L11,6L5,12L11,18L12.41,16.59L7.83,12L12.41,7.41Z" />
             </svg> :
@@ -111,30 +134,60 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
           </Drawer>
         <div className="header show-small">
           <AppBar position="fixed" >
-            <Toolbar disableGutters={!this.state.open}>
+            <Toolbar disableGutters={true}>
               <IconButton
                 color="inherit"
                 aria-label="Open drawer"
-                onClick={this.handleDrawer}
-                className={classNames(classes.menuButton, {
-                  [classes.hide]: this.state.open,
-                })}
+                onClick={() => this.setState({ open: !open })}
               >
-                <MenuIcon />
+                {!open && <MenuIcon />}
               </IconButton>
               <Typography variant="h6" color="inherit" noWrap={true}>
                 Mini variant drawer
               </Typography>
             </Toolbar>
+            <SwipeableDrawer
+              open={open}
+              onClose={() => this.setState({ open: false })}
+              onOpen={() => this.setState({ open: true })}
+            >
+              {navList}
+            </SwipeableDrawer>
           </AppBar>
         </div>
       </div>
     )
   }
 
-  private handleDrawer = () => {
-    this.setState({ open: !this.state.open });
-  };
+  private navigateTo = (link: string) => {
+    this.props.history.push(link);
+    this.setState({ open: false });
+  }
+
+  private handleKey = (e: React.KeyboardEvent<HTMLElement>, link: string) => {
+    if (e.keyCode === 13) {
+      this.navigateTo(link)
+      this.setState({ open: false });
+    }
+  }
+
+  private handleKeyLogout = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.keyCode === 13) {
+      this.logout()
+      this.setState({ open: false });
+    }
+  }
+
+  private logout = () => {
+    auth.doSignOut()
+    .then(() => {
+      console.log('Logged out')
+      this.props.history.push(routes.landing);
+    })
+    .catch((error: any) => {
+      console.error('Error logging out', error)
+    });
+  }
 }
 
 const drawerWidth = 200;

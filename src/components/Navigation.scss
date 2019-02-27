@@ -1,12 +1,18 @@
 @import '../appearance/styles/variables.scss';
 
-.navLink {
-  // color: $white;
-  display: flex;
-  // font-size: 16px;
-  // // padding: 1rem;
+.navList {
+  padding-top: 1rem;
+  text-align: center;
 
-  // &__label {
-  //   padding-left: 0.5rem;
-  // }
+  &_icon {
+    padding-bottom: 1rem;
+  }
+
+  &_circle {
+    color: $white;
+  }
+  
+  &_icon {
+    color: $primary;
+  }
 }
