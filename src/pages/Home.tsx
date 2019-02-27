@@ -5,7 +5,6 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Layout } from '../components/Layout';
-import { auth } from '../firebase';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
 
@@ -35,7 +34,6 @@ class DisconnectedHomePage extends React.Component<HomeMergedProps, HomePageStat
       <Layout>
         Home
         {this.props.currentUser ? this.props.currentUser.firstName : 'None'}
-        <span onClick={() => auth.doSignOut()}>Logout</span>
       </Layout>
     )
   }
