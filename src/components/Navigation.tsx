@@ -128,25 +128,6 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
             </Toolbar>
           </AppBar>
         </div>
-        {/* <div className="sidebar show-medium">
-          <span className="sidebar__icon fa-stack fa-2x">
-            <i className="sidebar__circle fas fa-circle fa-stack-2x" />
-            <i className="sidebar__symbol fas fa-university fa-stack-1x fa-inverse" />
-          </span>
-          <NavLink path={routes.dashboard} label="Dashboard" icon="fa-newspaper" />
-          <NavLink path={routes.dashboard} label="Transactions" icon="fa-credit-card" />
-          <NavLink path={routes.dashboard} label="Accounts" icon="fa-money-check" />
-          <NavLink path={routes.dashboard} label="Reports" icon="fa-chart-line" />
-          <NavLink path={routes.dashboard} label="Categories" icon="fa-list" />
-          <NavLink path={routes.dashboard} label="Settings" icon="fa-cog" />
-          <NavLink path={routes.dashboard} label="Logout" icon="fa-sign-out-alt" />
-        </div> */}
-
-        {/* Mobile Menu */}
-        {/* <div className="header show-small">
-          <i className="header__menu--open fas fa-bars" />
-          <i className="header__menu--close fas fa-times" />
-        </div> */}
       </div>
     )
   }
@@ -172,7 +153,7 @@ const styles = (theme: any) => ({
     }),
     width: theme.spacing.unit * 7 + 1,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9 + 1,
+      width: theme.spacing.unit * 7.5 + 1,
     },
   },
   drawerOpen: {
@@ -183,7 +164,7 @@ const styles = (theme: any) => ({
     width: drawerWidth,
   },
   toolbar: {
-    alignItems: 'center',
+    alignItems: 'flex-end',
     display: 'flex',
     justifyContent: 'flex-end',
     padding: '0 8px',
@@ -198,16 +179,3 @@ export const Navigation = compose(
   withStyles(styles as any, { withTheme: true }),
   connect(null, mapDispatchToProps)
 )(DisconnectedNavigation);
-
-// interface NavLinkProps {
-//   icon: string;
-//   label: string;
-//   path: string;
-// }
-
-// const NavLink: React.SFC<NavLinkProps> = ({icon, label, path}) => (
-//   <Link className="navLink" to={path}>
-//     <i className={`navLink__icon fas ${icon}`} />
-//     <span className="navLink__label">{label}</span>
-//   </Link>
-// )
