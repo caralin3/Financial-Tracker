@@ -1,12 +1,38 @@
+import AppBar from '@material-ui/core/AppBar';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import { withStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import BarChartIcon from '@material-ui/icons/BarChart';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HomeIcon from '@material-ui/icons/Home';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import MenuIcon from '@material-ui/icons/Menu';
+import SettingsIcon from '@material-ui/icons/Settings';
+import classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
-import { routes } from 'src/routes';
+import { theme } from '../appearance';
+import { auth } from '../firebase';
+import { routes } from '../routes';
+import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './';
 
-interface NavigationProps extends RouteComponentProps {}
+  interface NavigationProps extends RouteComponentProps {
+  classes: any;
+  theme: any;
+}
 
 interface DispatchMappedProps { }
 
@@ -14,55 +40,244 @@ interface SignUpMergedProps extends
   DispatchMappedProps,
   NavigationProps {}
 
-interface NavigationState { }
+interface NavigationState {
+  expanded: boolean;
+  open: boolean;
+  selected: string;
+}
 
 class DisconnectedNavigation extends React.Component<SignUpMergedProps, NavigationState> {
   public readonly state: NavigationState = {
+    expanded: true,
+    open: false,
+    selected: ''
+  }
+
+  public componentDidMount() {
+    const { pathname } = this.props.location;
+    this.setState({ selected: pathname })
   }
 
   public render() {
-    return (
-      <div className="nav">
-        <div className="sidebar show-medium">
-          <span className="sidebar__icon fa-stack fa-2x">
-            <i className="sidebar__circle fas fa-circle fa-stack-2x" />
-            <i className="sidebar__symbol fas fa-university fa-stack-1x fa-inverse" />
-          </span>
-          <NavLink path={routes.dashboard} label="Dashboard" icon="fa-newspaper" />
-          <NavLink path={routes.dashboard} label="Transactions" icon="fa-credit-card" />
-          <NavLink path={routes.dashboard} label="Accounts" icon="fa-money-check" />
-          <NavLink path={routes.dashboard} label="Reports" icon="fa-chart-line" />
-          <NavLink path={routes.dashboard} label="Categories" icon="fa-list" />
-          <NavLink path={routes.dashboard} label="Settings" icon="fa-cog" />
-          <NavLink path={routes.dashboard} label="Logout" icon="fa-sign-out-alt" />
-        </div>
+    const { classes } = this.props;
+    const { expanded, open, selected } = this.state;
 
-        {/* Mobile Menu */}
-        <div className="header show-small">
-          <i className="header__menu--open fas fa-bars" />
-          <i className="header__menu--close fas fa-times" />
+    const links = [
+      {label: 'Dashboard', route: routes.dashboard, icon: <HomeIcon />},
+      {label: 'Transactions', route: routes.transactions, icon: <CreditCardIcon />},
+      {label: 'Accounts', route: routes.accounts, icon: <AccountBoxIcon />},
+      {label: 'Reports', route: routes.reports, icon: <BarChartIcon />},
+      {label: 'Categories', route: routes.categories, icon: <ListAltIcon />},
+      {label: 'Settings', route: routes.settings, icon: <SettingsIcon />}
+    ]
+
+    const title: string = `${selected.slice(1, 2).toUpperCase()}${selected.slice(2)}`;
+
+    const navList = (
+      <div className={classNames('navList', classes.navBar)}>
+        <div className={classNames('navList_icon fa-stack fa-2x', {['navList_closed']: !expanded || (!expanded && !open)})}>
+          <i className="navList_circle fas fa-circle fa-stack-2x" />
+          <i className="navList_symbol fa-stack-1x fas fa-university " />
+        </div>
+        <List>
+          {links.slice(0, 4).map((link) => (
+            <li key={link.label}>
+            <ListItem
+              className={classNames(classes.activeItem, classes.text,
+                {[classes.selectedItem]: selected === link.route})
+              }
+              button={true}
+              
+              onClick={() => this.navigateTo(link.route)}
+              onKeyDown={(e) => this.handleKey(e, link.route)}
+              selected={selected === link.route}
+            >
+              <ListItemIcon>{link.icon}</ListItemIcon>
+              <ListItemText primary={link.label} />
+            </ListItem>
+            </li>
+          ))}   
+        </List>
+        <Divider variant='middle' />
+        <List>
+          {links.slice(4).map((link) => (
+            <li key={link.label}>
+            <ListItem
+              className={classNames(classes.activeItem, classes.text,
+                {[classes.selectedItem]: selected === link.route})
+              }
+              button={true}
+              key={link.label}
+              onClick={() => this.navigateTo(link.route)}
+              onKeyDown={(e) => this.handleKey(e, link.route)}
+            >
+              <ListItemIcon>{link.icon}</ListItemIcon>
+              <ListItemText primary={link.label} />
+            </ListItem>
+            </li>
+          ))}
+          <li>
+          <ListItem
+            className={classNames(classes.activeItem, classes.text)}
+            button={true}
+            onClick={this.logout}
+            onKeyDown={this.handleKeyLogout}
+          >
+            <ListItemIcon><ExitToAppIcon /></ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItem>
+          </li>
+        </List>
+      </div>
+    )
+
+    return (
+      <div>
+          <Drawer
+            variant="permanent"
+            className={classNames(classes.drawer,
+              'show-medium', {
+              [classes.drawerOpen]: expanded,
+              [classes.drawerClose]: !expanded,
+            })}
+            classes={{
+              paper: classNames(classes.navBar,
+                'show-medium', {
+                [classes.drawerOpen]: expanded,
+                [classes.drawerClose]: !expanded,
+              }),
+            }}
+            open={expanded}
+          >
+            {navList}
+            <div className={classes.toolbar}>
+              <IconButton aria-label="expander" onClick={() => this.setState({ expanded: !expanded })}>
+                {expanded ? <DoubleLeftChevronIcon /> : <DoubleRightChevronIcon />}
+              </IconButton>
+            </div>
+          </Drawer>
+        <div className="show-small">
+          <AppBar position="fixed" className={classes.navBar}>
+            <Toolbar disableGutters={true}>
+              <IconButton
+                color="inherit"
+                aria-label="Open drawer"
+                onClick={() => this.setState({ open: !open })}
+              >
+                {!open && <MenuIcon />}
+              </IconButton>
+              <Typography className="navList_heading" variant="h6" color="inherit" noWrap={true}>{title}</Typography>
+            </Toolbar>
+            <SwipeableDrawer
+              open={open}
+              onClose={() => this.setState({ open: false })}
+              onOpen={() => this.setState({ open: true })}
+            >
+              {navList}
+            </SwipeableDrawer>
+          </AppBar>
         </div>
       </div>
     )
   }
+
+  private navigateTo = (link: string) => {
+    this.props.history.push(link);
+    this.setState({
+      open: false,
+      selected: link
+    });
+  }
+
+  private handleKey = (e: React.KeyboardEvent<HTMLElement>, link: string) => {
+    if (e.keyCode === 13) {
+      this.navigateTo(link)
+      this.setState({ open: false });
+    }
+  }
+
+  private handleKeyLogout = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.keyCode === 13) {
+      this.logout()
+      this.setState({ open: false });
+    }
+  }
+
+  private logout = () => {
+    auth.doSignOut()
+    .then(() => {
+      console.log('Logged out')
+      this.props.history.push(routes.landing);
+    })
+    .catch((error: any) => {
+      console.error('Error logging out', error)
+    });
+  }
 }
+
+const drawerWidth = 200;
+
+const styles = ({
+  activeItem: {
+    '&:hover, &:active, &:focus': {
+      '& *': {
+        color: `${theme.palette.primary.dark} !important`
+      },
+      backgroundColor: `${theme.palette.primary.light} !important`
+    }
+  },
+  drawer: {
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
+  },
+  drawerClose: {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.sharp,
+    }),
+    width: theme.spacing.unit * 7 + 1,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing.unit * 7.5 + 1,
+    },
+  },
+  drawerOpen: {
+    transition: theme.transitions.create('width', {
+      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
+    }),
+    width: drawerWidth,
+  },
+  navBar: {
+    background: theme.palette.primary.main,
+  },
+  selectedItem: {
+    '& *': {
+      color: `${theme.palette.primary.dark} !important`
+    },
+    backgroundColor: `${theme.palette.primary.light} !important`
+  },
+  text: {
+    '& *': {
+      color: theme.palette.common.white,
+      fontFamily: 'FrancoisOne, sans-serif',
+      fontWeight: 'bold'
+    }
+  },
+  toolbar: {
+    alignItems: 'flex-end',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+  },
+});
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({ dispatch });
 
 export const Navigation = compose(
   withRouter,
+  withStyles(styles as any, { withTheme: true }),
   connect(null, mapDispatchToProps)
 )(DisconnectedNavigation);
-
-interface NavLinkProps {
-  icon: string;
-  label: string;
-  path: string;
-}
-
-const NavLink: React.SFC<NavLinkProps> = ({icon, label, path}) => (
-  <Link className="navLink" to={path}>
-    <i className={`navLink__icon fas ${icon}`} />
-    <span className="navLink__label">{label}</span>
-  </Link>
-)
