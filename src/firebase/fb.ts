@@ -1,8 +1,8 @@
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import config from '../config';
-import { FirebaseConfig } from './types';
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import config from "../config";
+import { FirebaseConfig } from "./types";
 
 if (!firebase.apps.length) {
   const firebaseConfig: FirebaseConfig = {
@@ -11,8 +11,8 @@ if (!firebase.apps.length) {
     databaseURL: config.firebaseDatabaseUrl,
     messagingSenderId: config.firebaseMsgSenderId,
     projectId: config.firebaseProjectId,
-    storageBucket: config.firebaseStorageBucket,
-  }
+    storageBucket: config.firebaseStorageBucket
+  };
   firebase.initializeApp(firebaseConfig);
 }
 

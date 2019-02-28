@@ -1,11 +1,11 @@
 export interface EnvironmentVariables {
-  NODE_ENV: 'development' | 'production';
+  NODE_ENV: "development" | "production";
   REACT_APP_FIREBASE_API_KEY: string;
   REACT_APP_FIREBASE_AUTH_DOMAIN: string;
   REACT_APP_FIREBASE_DATABASE_URL: string;
   REACT_APP_FIREBASE_MESSAGE_SENDER_ID: string;
   REACT_APP_FIREBASE_PROJECT_ID: string;
-  REACT_APP_FIREBASE_STORAGE_BUCKET: string;  
+  REACT_APP_FIREBASE_STORAGE_BUCKET: string;
 }
 
 declare global {
@@ -15,7 +15,7 @@ declare global {
 }
 
 export interface CommonConfiguration {
-  env: 'development' | 'production';
+  env: "development" | "production";
   firebaseApiKey: string | undefined;
   firebaseAuthDomain: string | undefined;
   firebaseDatabaseUrl: string | undefined;
@@ -27,4 +27,4 @@ export interface CommonConfiguration {
 export interface CompileTimeConfiguration extends CommonConfiguration {}
 
 export interface RuntimeConfiguration
-  extends Pick<CommonConfiguration, 'env'> {}
+  extends Pick<CommonConfiguration, "env"> {}

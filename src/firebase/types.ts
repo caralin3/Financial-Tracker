@@ -6,4 +6,3 @@ export interface FirebaseConfig {
   projectId: string | undefined;
   storageBucket: string | undefined;
 }
-

@@ -1,3 +1,3 @@
-export * from './configuration';
-export * from './routes';
-export * from './store';
+export * from "./configuration";
+export * from "./routes";
+export * from "./store";

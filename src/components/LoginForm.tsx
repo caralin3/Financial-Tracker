@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { auth } from '../firebase';
-import { routes } from '../routes';
-import { Form } from './';
+import * as React from "react";
+import { RouteComponentProps, withRouter } from "react-router";
+import { auth } from "../firebase";
+import { routes } from "../routes";
+import { Form } from "./";
 
 interface LoginFormProps extends RouteComponentProps {}
 
@@ -12,12 +12,15 @@ interface LoginFormState {
   password: string;
 }
 
-class DisconnectedLoginForm extends React.Component<LoginFormProps, LoginFormState> {
+class DisconnectedLoginForm extends React.Component<
+  LoginFormProps,
+  LoginFormState
+> {
   public readonly state: LoginFormState = {
-    email: '',
+    email: "",
     error: null,
-    password: '',
-  }
+    password: ""
+  };
 
   public render() {
     const { email, error, password } = this.state;
@@ -26,11 +29,15 @@ class DisconnectedLoginForm extends React.Component<LoginFormProps, LoginFormSta
 
     return (
       <div className="loginForm">
-        <Form buttonText="Log In" disabled={isInvalid} submit={this.handleSubmit}>
+        <Form
+          buttonText="Log In"
+          disabled={isInvalid}
+          submit={this.handleSubmit}
+        >
           {error && <p>{error.message}</p>}
           <input
             className="loginForm_input"
-            onChange={(e) => this.handleChange(e, 'email')}
+            onChange={e => this.handleChange(e, "email")}
             placeholder="Email Address"
             type="text"
             value={email}
@@ -38,39 +45,43 @@ class DisconnectedLoginForm extends React.Component<LoginFormProps, LoginFormSta
           <input
             className="loginForm_input"
             placeholder="Password"
-            onChange={(e) => this.handleChange(e, 'password')}
+            onChange={e => this.handleChange(e, "password")}
             type="password"
             value={password}
           />
         </Form>
       </div>
-    )
+    );
   }
 
-  private handleChange = (event: React.ChangeEvent<HTMLInputElement>, propertyName: string) => {
+  private handleChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    propertyName: string
+  ) => {
     this.setState({
-      [propertyName]: event.target.value,
+      [propertyName]: event.target.value
     } as Pick<LoginFormState, keyof LoginFormState>);
-  }
+  };
 
   private handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const { email, password } = this.state;
     const { history } = this.props;
 
     event.preventDefault();
-    auth.doSignInWithEmailAndPassword(email, password)
-    .then(() => {
-      this.setState({
-        email: '',
-        error: null,
-        password: '',
+    auth
+      .doSignInWithEmailAndPassword(email, password)
+      .then(() => {
+        this.setState({
+          email: "",
+          error: null,
+          password: ""
+        });
+        history.push(routes.dashboard);
+      })
+      .catch((error: any) => {
+        this.setState({ error });
       });
-      history.push(routes.dashboard);
-    })
-    .catch((error: any) => {
-      this.setState({ error });
-    });
-  }
+  };
 }
 
 export const LoginForm = withRouter(DisconnectedLoginForm);
