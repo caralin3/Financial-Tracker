@@ -6,6 +6,7 @@ const colors = {
   error: '#d0021b',
   highlight: '#efeeee',
   primary: '#0c98ac',
+  secondary: '#085B68',
   success: '#63c312',
   white: '#fff'
 }
