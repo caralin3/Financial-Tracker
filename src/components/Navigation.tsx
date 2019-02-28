@@ -24,6 +24,7 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
+import { theme } from '../appearance';
 import { auth } from '../firebase';
 import { routes } from '../routes';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './';
@@ -42,50 +43,69 @@ interface SignUpMergedProps extends
 interface NavigationState {
   expanded: boolean;
   open: boolean;
+  selected: string;
 }
 
 class DisconnectedNavigation extends React.Component<SignUpMergedProps, NavigationState> {
   public readonly state: NavigationState = {
     expanded: true,
-    open: false
+    open: false,
+    selected: ''
+  }
+
+  public componentDidMount() {
+    const { pathname } = this.props.location;
+    this.setState({ selected: pathname })
   }
 
   public render() {
     const { classes } = this.props;
-    const { expanded, open } = this.state;
+    const { expanded, open, selected } = this.state;
 
     const links = [
       {label: 'Dashboard', route: routes.dashboard, icon: <HomeIcon />},
-      {label: 'Transactions', route: routes.dashboard, icon: <CreditCardIcon />},
-      {label: 'Accounts', route: routes.dashboard, icon: <AccountBoxIcon />},
-      {label: 'Reports', route: routes.dashboard, icon: <BarChartIcon />},
-      {label: 'Categories', route: routes.dashboard, icon: <ListAltIcon />},
-      {label: 'Settings', route: routes.dashboard, icon: <SettingsIcon />}
+      {label: 'Transactions', route: routes.transactions, icon: <CreditCardIcon />},
+      {label: 'Accounts', route: routes.accounts, icon: <AccountBoxIcon />},
+      {label: 'Reports', route: routes.reports, icon: <BarChartIcon />},
+      {label: 'Categories', route: routes.categories, icon: <ListAltIcon />},
+      {label: 'Settings', route: routes.settings, icon: <SettingsIcon />}
     ]
 
+    const title: string = `${selected.slice(1, 2).toUpperCase()}${selected.slice(2)}`;
+
     const navList = (
-      <div className="navList">
-        <div className="navList_icon fa-stack fa-2x">
+      <div className={classNames('navList', classes.navBar)}>
+        <div className={classNames('navList_icon fa-stack fa-2x', {['navList_closed']: !expanded || (!expanded && !open)})}>
           <i className="navList_circle fas fa-circle fa-stack-2x" />
-          <i className="navList_icon fa-stack-1x fas fa-university " />
+          <i className="navList_symbol fa-stack-1x fas fa-university " />
         </div>
         <List>
           {links.slice(0, 4).map((link) => (
+            <li key={link.label}>
             <ListItem
+              className={classNames(classes.activeItem, classes.text,
+                {[classes.selectedItem]: selected === link.route})
+              }
               button={true}
-              key={link.label}
+              
               onClick={() => this.navigateTo(link.route)}
               onKeyDown={(e) => this.handleKey(e, link.route)}
+              selected={selected === link.route}
             >
               <ListItemIcon>{link.icon}</ListItemIcon>
               <ListItemText primary={link.label} />
             </ListItem>
-          ))}
+            </li>
+          ))}   
         </List>
-        <Divider />
+        <Divider variant='middle' />
         <List>
           {links.slice(4).map((link) => (
+            <li key={link.label}>
             <ListItem
+              className={classNames(classes.activeItem, classes.text,
+                {[classes.selectedItem]: selected === link.route})
+              }
               button={true}
               key={link.label}
               onClick={() => this.navigateTo(link.route)}
@@ -94,17 +114,25 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
               <ListItemIcon>{link.icon}</ListItemIcon>
               <ListItemText primary={link.label} />
             </ListItem>
+            </li>
           ))}
-          <ListItem button={true} onClick={this.logout} onKeyDown={this.handleKeyLogout}>
+          <li>
+          <ListItem
+            className={classNames(classes.activeItem, classes.text)}
+            button={true}
+            onClick={this.logout}
+            onKeyDown={this.handleKeyLogout}
+          >
             <ListItemIcon><ExitToAppIcon /></ListItemIcon>
             <ListItemText primary="Logout" />
           </ListItem>
+          </li>
         </List>
       </div>
     )
 
     return (
-      <div className="nav">
+      <div>
           <Drawer
             variant="permanent"
             className={classNames(classes.drawer,
@@ -113,7 +141,8 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
               [classes.drawerClose]: !expanded,
             })}
             classes={{
-              paper: classNames('show-medium', {
+              paper: classNames(classes.navBar,
+                'show-medium', {
                 [classes.drawerOpen]: expanded,
                 [classes.drawerClose]: !expanded,
               }),
@@ -122,13 +151,13 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
           >
             {navList}
             <div className={classes.toolbar}>
-              <IconButton onClick={() => this.setState({ expanded: !expanded })}>
+              <IconButton aria-label="expander" onClick={() => this.setState({ expanded: !expanded })}>
                 {expanded ? <DoubleLeftChevronIcon /> : <DoubleRightChevronIcon />}
               </IconButton>
             </div>
           </Drawer>
-        <div className="header show-small">
-          <AppBar position="fixed" >
+        <div className="show-small">
+          <AppBar position="fixed" className={classes.navBar}>
             <Toolbar disableGutters={true}>
               <IconButton
                 color="inherit"
@@ -137,9 +166,7 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
               >
                 {!open && <MenuIcon />}
               </IconButton>
-              <Typography variant="h6" color="inherit" noWrap={true}>
-                Mini variant drawer
-              </Typography>
+              <Typography className="navList_heading" variant="h6" color="inherit" noWrap={true}>{title}</Typography>
             </Toolbar>
             <SwipeableDrawer
               open={open}
@@ -156,7 +183,10 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
 
   private navigateTo = (link: string) => {
     this.props.history.push(link);
-    this.setState({ open: false });
+    this.setState({
+      open: false,
+      selected: link
+    });
   }
 
   private handleKey = (e: React.KeyboardEvent<HTMLElement>, link: string) => {
@@ -187,7 +217,15 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
 
 const drawerWidth = 200;
 
-const styles = (theme: any) => ({
+const styles = ({
+  activeItem: {
+    '&:hover, &:active, &:focus': {
+      '& *': {
+        color: `${theme.palette.primary.dark} !important`
+      },
+      backgroundColor: `${theme.palette.primary.light} !important`
+    }
+  },
   drawer: {
     flexShrink: 0,
     whiteSpace: 'nowrap',
@@ -210,6 +248,22 @@ const styles = (theme: any) => ({
       easing: theme.transitions.easing.sharp,
     }),
     width: drawerWidth,
+  },
+  navBar: {
+    background: theme.palette.primary.main,
+  },
+  selectedItem: {
+    '& *': {
+      color: `${theme.palette.primary.dark} !important`
+    },
+    backgroundColor: `${theme.palette.primary.light} !important`
+  },
+  text: {
+    '& *': {
+      color: theme.palette.common.white,
+      fontFamily: 'FrancoisOne, sans-serif',
+      fontWeight: 'bold'
+    }
   },
   toolbar: {
     alignItems: 'flex-end',

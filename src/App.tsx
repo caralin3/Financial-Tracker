@@ -1,6 +1,8 @@
+import { MuiThemeProvider } from '@material-ui/core';
 import * as History from 'history';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { theme } from './appearance';
 import { withAuthentication } from './auth/withAuthentication';
 import { createHistory, Router } from './routes';
 import { ApplicationState } from './store/createStore';
@@ -21,7 +23,9 @@ class DisconnectedApp extends React.Component<AppMergedProps> {
   
   public render() {
     return (
-      <Router history={this.history} />
+      <MuiThemeProvider theme={theme}>
+        <Router history={this.history} />
+      </MuiThemeProvider>
     );
   }
 }

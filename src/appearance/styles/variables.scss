@@ -1,13 +1,25 @@
 // colors
-$primary: #D0021B;
-// $background: #3F3F3F;
-// $hover: #9d0214;
-// $overlay: rgba(0,0,0,0.3);
+$primary: #0c98ac;
+$highlight: #efeeee;
+$overlay: #979797;
+$success: #63c312;
+$error: #d0021b;
 $black: #000;
 $white: #FFF;
 
 // fonts
-// $montserrat: 'Montserrat', sans-serif;
+@mixin heading {
+  font-family: 'FrancoisOne', sans-serif !important;
+  font-weight: bold !important;
+}
+
+@mixin number {
+  font-family: 'Oswald', sans-serif;
+}
+
+@mixin primary {
+  font-family: 'ArchivoNarrow', sans-serif;
+}
 
 // breakpoints
 $x-small: "screen and (min-width: 320px)";

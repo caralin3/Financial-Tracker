@@ -1,8 +1,13 @@
 @import '../appearance/styles/variables.scss';
 
 .navList {
+  height: 100%;
   padding-top: 1rem;
   text-align: center;
+
+  &_heading {
+    @include heading;
+  }
 
   &_icon {
     padding-bottom: 1rem;
@@ -12,7 +17,11 @@
     color: $white;
   }
   
-  &_icon {
+  &_symbol {
     color: $primary;
+  }
+
+  &_closed {
+    font-size: 20px;
   }
 }
