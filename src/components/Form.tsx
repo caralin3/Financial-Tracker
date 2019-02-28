@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 export interface FormProps {
   buttonText: string;
@@ -12,7 +12,7 @@ export const Form: React.SFC<FormProps> = props => (
     <form className="form_form" onSubmit={props.submit}>
       <div className={`form_fields ${props.className}`}>{props.children}</div>
       <button
-        className={props.disabled ? "form_button-disabled" : "form_button"}
+        className={props.disabled ? 'form_button-disabled' : 'form_button'}
         type="submit"
         disabled={props.disabled}
       >

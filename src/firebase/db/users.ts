@@ -1,7 +1,7 @@
-import { Dispatch } from "redux";
-import { sessionState } from "../../store";
-import { User } from "../../types";
-import { usersCollection } from "./";
+import { Dispatch } from 'redux';
+import { sessionState } from '../../store';
+import { User } from '../../types';
+import { usersCollection } from './';
 
 // CREATE USER
 // Set current user in store

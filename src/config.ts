@@ -1,4 +1,4 @@
-import { CompileTimeConfiguration } from "./types/configuration";
+import { CompileTimeConfiguration } from './types/configuration';
 
 const config: CompileTimeConfiguration = {
   env: process.env.NODE_ENV,

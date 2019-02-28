@@ -1,8 +1,8 @@
-import * as React from "react";
-import { RouteComponentProps, withRouter } from "react-router";
-import { auth } from "../firebase";
-import { routes } from "../routes";
-import { Form } from "./";
+import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { auth } from '../firebase';
+import { routes } from '../routes';
+import { Form } from './';
 
 interface LoginFormProps extends RouteComponentProps {}
 
@@ -17,9 +17,9 @@ class DisconnectedLoginForm extends React.Component<
   LoginFormState
 > {
   public readonly state: LoginFormState = {
-    email: "",
+    email: '',
     error: null,
-    password: ""
+    password: ''
   };
 
   public render() {
@@ -37,7 +37,7 @@ class DisconnectedLoginForm extends React.Component<
           {error && <p>{error.message}</p>}
           <input
             className="loginForm_input"
-            onChange={e => this.handleChange(e, "email")}
+            onChange={e => this.handleChange(e, 'email')}
             placeholder="Email Address"
             type="text"
             value={email}
@@ -45,7 +45,7 @@ class DisconnectedLoginForm extends React.Component<
           <input
             className="loginForm_input"
             placeholder="Password"
-            onChange={e => this.handleChange(e, "password")}
+            onChange={e => this.handleChange(e, 'password')}
             type="password"
             value={password}
           />
@@ -72,9 +72,9 @@ class DisconnectedLoginForm extends React.Component<
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({
-          email: "",
+          email: '',
           error: null,
-          password: ""
+          password: ''
         });
         history.push(routes.dashboard);
       })

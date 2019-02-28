@@ -1,33 +1,33 @@
-import AppBar from "@material-ui/core/AppBar";
-import Divider from "@material-ui/core/Divider";
-import Drawer from "@material-ui/core/Drawer";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { withStyles } from "@material-ui/core/styles";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import BarChartIcon from "@material-ui/icons/BarChart";
-import CreditCardIcon from "@material-ui/icons/CreditCard";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import HomeIcon from "@material-ui/icons/Home";
-import ListAltIcon from "@material-ui/icons/ListAlt";
-import MenuIcon from "@material-ui/icons/Menu";
-import SettingsIcon from "@material-ui/icons/Settings";
-import classNames from "classnames";
-import * as React from "react";
-import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router";
-import { compose } from "recompose";
-import { Dispatch } from "redux";
-import { theme } from "../appearance";
-import { auth } from "../firebase";
-import { routes } from "../routes";
-import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from "./";
+import AppBar from '@material-ui/core/AppBar';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import { withStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import BarChartIcon from '@material-ui/icons/BarChart';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import HomeIcon from '@material-ui/icons/Home';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import MenuIcon from '@material-ui/icons/Menu';
+import SettingsIcon from '@material-ui/icons/Settings';
+import classNames from 'classnames';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
+import { theme } from '../appearance';
+import { auth } from '../firebase';
+import { routes } from '../routes';
+import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './';
 
 interface NavigationProps extends RouteComponentProps {
   classes: any;
@@ -51,7 +51,7 @@ class DisconnectedNavigation extends React.Component<
   public readonly state: NavigationState = {
     expanded: true,
     open: false,
-    selected: ""
+    selected: ''
   };
 
   public componentDidMount() {
@@ -64,16 +64,16 @@ class DisconnectedNavigation extends React.Component<
     const { expanded, open, selected } = this.state;
 
     const links = [
-      { label: "Dashboard", route: routes.dashboard, icon: <HomeIcon /> },
+      { label: 'Dashboard', route: routes.dashboard, icon: <HomeIcon /> },
       {
         icon: <CreditCardIcon />,
-        label: "Transactions",
-        route: routes.transactions,
+        label: 'Transactions',
+        route: routes.transactions
       },
-      { label: "Accounts", route: routes.accounts, icon: <AccountBoxIcon /> },
-      { label: "Reports", route: routes.reports, icon: <BarChartIcon /> },
-      { label: "Categories", route: routes.categories, icon: <ListAltIcon /> },
-      { label: "Settings", route: routes.settings, icon: <SettingsIcon /> }
+      { label: 'Accounts', route: routes.accounts, icon: <AccountBoxIcon /> },
+      { label: 'Reports', route: routes.reports, icon: <BarChartIcon /> },
+      { label: 'Categories', route: routes.categories, icon: <ListAltIcon /> },
+      { label: 'Settings', route: routes.settings, icon: <SettingsIcon /> }
     ];
 
     const title: string = `${selected
@@ -81,10 +81,10 @@ class DisconnectedNavigation extends React.Component<
       .toUpperCase()}${selected.slice(2)}`;
 
     const navList = (
-      <div className={classNames("navList", classes.navBar)}>
+      <div className={classNames('navList', classes.navBar)}>
         <div
-          className={classNames("navList_icon fa-stack fa-2x", {
-            ["navList_closed"]: !expanded || (!expanded && !open)
+          className={classNames('navList_icon fa-stack fa-2x', {
+            ['navList_closed']: !expanded || (!expanded && !open)
           })}
         >
           <i className="navList_circle fas fa-circle fa-stack-2x" />
@@ -147,12 +147,12 @@ class DisconnectedNavigation extends React.Component<
       <div>
         <Drawer
           variant="permanent"
-          className={classNames(classes.drawer, "show-medium", {
+          className={classNames(classes.drawer, 'show-medium', {
             [classes.drawerOpen]: expanded,
             [classes.drawerClose]: !expanded
           })}
           classes={{
-            paper: classNames(classes.navBar, "show-medium", {
+            paper: classNames(classes.navBar, 'show-medium', {
               [classes.drawerOpen]: expanded,
               [classes.drawerClose]: !expanded
             })
@@ -231,11 +231,11 @@ class DisconnectedNavigation extends React.Component<
     auth
       .doSignOut()
       .then(() => {
-        console.log("Logged out");
+        console.log('Logged out');
         this.props.history.push(routes.landing);
       })
       .catch((error: any) => {
-        console.error("Error logging out", error);
+        console.error('Error logging out', error);
       });
   };
 }
@@ -244,8 +244,8 @@ const drawerWidth = 200;
 
 const styles = {
   activeItem: {
-    "&:hover, &:active, &:focus": {
-      "& *": {
+    '&:hover, &:active, &:focus': {
+      '& *': {
         color: `${theme.palette.primary.dark} !important`
       },
       backgroundColor: `${theme.palette.primary.light} !important`
@@ -253,22 +253,22 @@ const styles = {
   },
   drawer: {
     flexShrink: 0,
-    whiteSpace: "nowrap",
+    whiteSpace: 'nowrap',
     width: drawerWidth
   },
   drawerClose: {
-    overflowX: "hidden",
-    transition: theme.transitions.create("width", {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
       duration: theme.transitions.duration.leavingScreen,
       easing: theme.transitions.easing.sharp
     }),
     width: theme.spacing.unit * 7 + 1,
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up('sm')]: {
       width: theme.spacing.unit * 7.5 + 1
     }
   },
   drawerOpen: {
-    transition: theme.transitions.create("width", {
+    transition: theme.transitions.create('width', {
       duration: theme.transitions.duration.enteringScreen,
       easing: theme.transitions.easing.sharp
     }),
@@ -278,23 +278,23 @@ const styles = {
     background: theme.palette.primary.main
   },
   selectedItem: {
-    "& *": {
+    '& *': {
       color: `${theme.palette.primary.dark} !important`
     },
     backgroundColor: `${theme.palette.primary.light} !important`
   },
   text: {
-    "& *": {
+    '& *': {
       color: theme.palette.common.white,
-      fontFamily: "FrancoisOne, sans-serif",
-      fontWeight: "bold"
+      fontFamily: 'FrancoisOne, sans-serif',
+      fontWeight: 'bold'
     }
   },
   toolbar: {
-    alignItems: "flex-end",
-    display: "flex",
-    justifyContent: "flex-end",
-    padding: "0 8px",
+    alignItems: 'flex-end',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
     ...theme.mixins.toolbar
   }
 };

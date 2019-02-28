@@ -1,4 +1,4 @@
-import { auth } from "./fb";
+import { auth } from './fb';
 
 // Sign Up endpoint
 export const doCreateUserWithEmailAndPassword = (
@@ -21,8 +21,8 @@ export const doPasswordReset = (email: string) =>
 export const doPasswordUpdate = async (password: string) => {
   if (auth.currentUser) {
     await auth.currentUser.updatePassword(password);
-    console.log("Password changed successfully");
+    console.log('Password changed successfully');
   } else {
-    throw Error("No auth.currentUser!");
+    throw Error('No auth.currentUser!');
   }
 };

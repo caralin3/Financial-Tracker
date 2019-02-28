@@ -1,12 +1,12 @@
-import * as React from "react";
-import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router";
-import { compose } from "recompose";
-import { Dispatch } from "redux";
-import { withAuthorization } from "../auth/withAuthorization";
-import { Layout } from "../components/Layout";
-import { ApplicationState } from "../store/createStore";
-import { User } from "../types";
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
+import { withAuthorization } from '../auth/withAuthorization';
+import { Layout } from '../components/Layout';
+import { ApplicationState } from '../store/createStore';
+import { User } from '../types';
 
 export interface HomePageProps {}
 
@@ -36,7 +36,7 @@ class DisconnectedHomePage extends React.Component<
     return (
       <Layout>
         <h1>Home</h1>
-        {this.props.currentUser ? this.props.currentUser.firstName : "None"}
+        {this.props.currentUser ? this.props.currentUser.firstName : 'None'}
       </Layout>
     );
   }

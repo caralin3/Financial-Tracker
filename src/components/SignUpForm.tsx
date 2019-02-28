@@ -1,12 +1,12 @@
-import * as React from "react";
-import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router";
-import { compose } from "recompose";
-import { Dispatch } from "redux";
-import { auth, db } from "../firebase";
-import { routes } from "../routes";
-import { User } from "../types";
-import { Form } from "./";
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
+import { auth, db } from '../firebase';
+import { routes } from '../routes';
+import { User } from '../types';
+import { Form } from './';
 
 interface SignUpFormProps extends RouteComponentProps {}
 
@@ -30,12 +30,12 @@ class DisconnectedSignUpForm extends React.Component<
   SignUpFormState
 > {
   public readonly state: SignUpFormState = {
-    email: "",
+    email: '',
     error: null,
-    firstName: "",
-    lastName: "",
-    password: "",
-    passwordConfirm: ""
+    firstName: '',
+    lastName: '',
+    password: '',
+    passwordConfirm: ''
   };
 
   public render() {
@@ -65,35 +65,35 @@ class DisconnectedSignUpForm extends React.Component<
           {error && <p>{error.message}</p>}
           <input
             className="signupForm_input"
-            onChange={e => this.handleChange(e, "firstName")}
+            onChange={e => this.handleChange(e, 'firstName')}
             placeholder="First Name"
             type="text"
             value={firstName}
           />
           <input
             className="signupForm_input"
-            onChange={e => this.handleChange(e, "lastName")}
+            onChange={e => this.handleChange(e, 'lastName')}
             placeholder="Last Name"
             type="text"
             value={lastName}
           />
           <input
             className="signupForm_input"
-            onChange={e => this.handleChange(e, "email")}
+            onChange={e => this.handleChange(e, 'email')}
             placeholder="Email Address"
             type="text"
             value={email}
           />
           <input
             className="signupForm_input"
-            onChange={e => this.handleChange(e, "password")}
+            onChange={e => this.handleChange(e, 'password')}
             placeholder="Password"
             type="password"
             value={password}
           />
           <input
             className="signupForm_input"
-            onChange={e => this.handleChange(e, "passwordConfirm")}
+            onChange={e => this.handleChange(e, 'passwordConfirm')}
             placeholder="Confirm Password"
             type="password"
             value={passwordConfirm}
@@ -131,12 +131,12 @@ class DisconnectedSignUpForm extends React.Component<
       })
       .then(() => {
         this.setState({
-          email: "",
+          email: '',
           error: null,
-          firstName: "",
-          lastName: "",
-          password: "",
-          passwordConfirm: ""
+          firstName: '',
+          lastName: '',
+          password: '',
+          passwordConfirm: ''
         });
         history.push(routes.dashboard);
       })

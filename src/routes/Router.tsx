@@ -1,18 +1,18 @@
-import { ConnectedRouter } from "connected-react-router";
-import * as History from "history";
-import * as React from "react";
-import { Route, Switch } from "react-router";
-import { HomePage, LandingPage } from "../pages";
-import { RouteMap } from "../types";
+import { ConnectedRouter } from 'connected-react-router';
+import * as History from 'history';
+import * as React from 'react';
+import { Route, Switch } from 'react-router';
+import { HomePage, LandingPage } from '../pages';
+import { RouteMap } from '../types';
 
 export const routes = {
-  accounts: "/accounts",
-  categories: "/categories",
-  dashboard: "/dashboard",
-  landing: "/",
-  reports: "/reports",
-  settings: "/settings",
-  transactions: "/transactions"
+  accounts: '/accounts',
+  categories: '/categories',
+  dashboard: '/dashboard',
+  landing: '/',
+  reports: '/reports',
+  settings: '/settings',
+  transactions: '/transactions'
 };
 
 export const routeMap: RouteMap = {

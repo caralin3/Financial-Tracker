@@ -1,11 +1,11 @@
-import { User } from "../types";
+import { User } from '../types';
 
 export interface SetCurrentUserAction {
   currentUser: User | null;
-  type: "SET_CURRENT_USER";
+  type: 'SET_CURRENT_USER';
 }
 
-export const SET_CURRENT_USER = "SET_CURRENT_USER";
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
 export const setCurrentUser = (
   currentUser: User | null

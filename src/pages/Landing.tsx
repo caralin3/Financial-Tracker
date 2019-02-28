@@ -1,5 +1,5 @@
-import * as React from "react";
-import { LoginForm, SignUpForm } from "../components";
+import * as React from 'react';
+import { LoginForm, SignUpForm } from '../components';
 
 interface LandingPageProps {}
 
@@ -24,14 +24,14 @@ export class LandingPage extends React.Component<
         {login ? <LoginForm /> : <SignUpForm />}
         {login ? (
           <div className="login_link">
-            Don't have an account? |{" "}
+            Don't have an account? |{' '}
             <span role="button" onClick={() => this.setState({ login: false })}>
               Sign Up
             </span>
           </div>
         ) : (
           <div>
-            Already have an account? |{" "}
+            Already have an account? |{' '}
             <span role="button" onClick={() => this.setState({ login: true })}>
               Login
             </span>
