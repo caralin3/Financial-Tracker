@@ -19,7 +19,7 @@ interface StateMappedProps {
 }
 
 interface HomeMergedProps
-  extends RouteComponentProps,
+  extends RouteComponentProps<any>,
     StateMappedProps,
     DispatchMappedProps,
     HomePageProps {}
