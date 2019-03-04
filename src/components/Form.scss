@@ -1,0 +1,18 @@
+@import '../appearance/styles/variables.scss';
+
+.form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &_button {
+    padding: 1rem 0;
+
+    &-disabled {
+      &:hover {
+        cursor: not-allowed;
+      }
+    }
+  }
+}

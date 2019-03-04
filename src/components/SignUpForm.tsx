@@ -1,3 +1,4 @@
+import { TextField } from '@material-ui/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -39,64 +40,57 @@ class DisconnectedSignUpForm extends React.Component<
   };
 
   public render() {
-    const {
-      email,
-      error,
-      firstName,
-      lastName,
-      password,
-      passwordConfirm
-    } = this.state;
-
-    const isInvalid =
-      password !== passwordConfirm ||
-      !password ||
-      !email ||
-      !firstName ||
-      !lastName;
+    const { error } = this.state;
 
     return (
       <div className="signupForm">
         <Form
           buttonText="Sign Up"
-          disabled={isInvalid}
+          disabled={!this.isValid()}
           submit={this.handleSubmit}
         >
-          {error && <p>{error.message}</p>}
-          <input
-            className="signupForm_input"
+          {error && <p className="signupForm_error">{error.message}</p>}
+          <TextField
+            autoFocus={true}
+            id="signupForm_firstName"
+            label="First Name"
             onChange={e => this.handleChange(e, 'firstName')}
-            placeholder="First Name"
-            type="text"
-            value={firstName}
+            margin="normal"
+            error={!!error}
           />
-          <input
-            className="signupForm_input"
+          <TextField
+            id="signupForm_lastName"
+            label="Last Name"
             onChange={e => this.handleChange(e, 'lastName')}
-            placeholder="Last Name"
-            type="text"
-            value={lastName}
+            margin="normal"
+            error={!!error}
           />
-          <input
-            className="signupForm_input"
+          <TextField
+            id="signupForm_email"
+            label="Email"
             onChange={e => this.handleChange(e, 'email')}
-            placeholder="Email Address"
-            type="text"
-            value={email}
+            margin="normal"
+            error={!!error}
           />
-          <input
-            className="signupForm_input"
+          <TextField
+            id="signupForm_password"
+            label="Password"
+            type="password"
+            className="form_inputField"
             onChange={e => this.handleChange(e, 'password')}
-            placeholder="Password"
-            type="password"
-            value={password}
+            margin="normal"
+            error={!!error}
+            variant="standard"
           />
-          <input
-            className="signupForm_input"
-            onChange={e => this.handleChange(e, 'passwordConfirm')}
-            placeholder="Confirm Password"
+          <TextField
+            id="signupForm_confirmPassword"
+            label="Confirm Password"
             type="password"
-            value={passwordConfirm}
+            className="form_inputField"
+            onChange={e => this.handleChange(e, 'passwordConfirm')}
+            margin="normal"
+            error={!!error}
+            variant="standard"
           />
         </Form>
       </div>
@@ -104,13 +98,27 @@ class DisconnectedSignUpForm extends React.Component<
   }
 
   private handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
     propertyName: string
   ) => {
+    const value = e.target.value.trim();
     this.setState({
-      [propertyName]: event.target.value
+      [propertyName]: value
     } as Pick<SignUpFormState, keyof SignUpFormState>);
   };
+
+  private isValid = () => {
+    const {
+      email,
+      firstName,
+      lastName,
+      password,
+      passwordConfirm
+    } = this.state;
+    return !!firstName && !!lastName && !!email && !!password && !!passwordConfirm && password === passwordConfirm;
+  }
 
   private handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const { email, firstName, lastName, password } = this.state;

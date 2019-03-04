@@ -10,6 +10,12 @@ html, body {
 a {
   color: currentColor;
   text-decoration: none;
+
+  &:hover,
+  &:active,
+  &:focus {
+    cursor: pointer;
+  }
 }
 
 button {

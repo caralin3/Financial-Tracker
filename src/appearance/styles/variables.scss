@@ -10,15 +10,34 @@ $white: #FFF;
 // fonts
 @mixin heading {
   font-family: 'FrancoisOne', sans-serif !important;
+  font-size: 32px !important;
   font-weight: bold !important;
+
+  @media #{$medium} {
+    font-size: 50px !important;
+  }
 }
 
 @mixin number {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Oswald', sans-serif !important;
+}
+
+@mixin title {
+  font-family: 'ArchivoNarrow', sans-serif !important;
+  font-size: 28px !important;
+
+  @media #{$medium} {
+    font-size: 32px !important;
+  }
 }
 
 @mixin primary {
-  font-family: 'ArchivoNarrow', sans-serif;
+  font-family: 'ArchivoNarrow', sans-serif !important;
+  font-size: 16px !important;
+
+  @media #{$medium} {
+    font-size: 18px !important;
+  }
 }
 
 // breakpoints

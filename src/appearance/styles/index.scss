@@ -4,5 +4,10 @@
 @import './core.scss';
 @import './variables.scss';
 
+@import '../../components/Form.scss';
 @import '../../components/Layout.scss';
+@import '../../components/LoginForm.scss';
 @import '../../components/Navigation.scss';
+@import '../../components/SignUpForm.scss';
+
+@import '../../pages/Landing.scss';

@@ -29,11 +29,11 @@ class DisconnectedLoginForm extends React.Component<
     return (
       <div className="loginForm">
         <Form buttonText="Log In" submit={this.handleSubmit}>
-          {error && <p>{error.message}</p>}
+          {error && <p className="loginForm_error">{error.message}</p>}
           <TextField
+            autoFocus={true}
             id="login_email"
             label="Email"
-            // className={classes.textField}
             onChange={e => this.handleChange(e, 'email')}
             margin="normal"
             error={!!error}
@@ -42,10 +42,11 @@ class DisconnectedLoginForm extends React.Component<
             id="login_password"
             label="Password"
             type="password"
-            // className={classes.textField}
+            className="form_inputField"
             onChange={e => this.handleChange(e, 'password')}
             margin="normal"
             error={!!error}
+            variant="standard"
           />
         </Form>
       </div>

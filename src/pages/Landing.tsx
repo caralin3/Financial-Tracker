@@ -24,19 +24,19 @@ export class LandingPage extends React.Component<
         <Typography className="landing_title" variant="h1">
           Financial Tracker
         </Typography>
-        <Card style={{ width: 500, height: 300 }}>
+        <Card className="landing_form">
           {login ? (
-            <Typography className="landing_formTitle" variant="h4">
+            <Typography className="landing_label" variant="h2">
               Login
             </Typography>
           ) : (
-            <Typography className="landing_formTitle" variant="h4">
+            <Typography className="landing_label" variant="h2">
               Sign Up
             </Typography>
           )}
           {login ? <LoginForm /> : <SignUpForm />}
           {login ? (
-            <Typography variant="body1" className="login_link">
+            <Typography variant="body1" className="landing_text">
               Don't have an account? |{' '}
               <Link
                 role="button"
@@ -46,7 +46,7 @@ export class LandingPage extends React.Component<
               </Link>
             </Typography>
           ) : (
-            <Typography variant="body1" className="login_link">
+            <Typography variant="body1" className="landing_text">
               Already have an account? |{' '}
               <Link
                 role="button"
