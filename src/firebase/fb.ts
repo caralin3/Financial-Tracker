@@ -11,8 +11,8 @@ if (!firebase.apps.length) {
     databaseURL: config.firebaseDatabaseUrl,
     messagingSenderId: config.firebaseMsgSenderId,
     projectId: config.firebaseProjectId,
-    storageBucket: config.firebaseStorageBucket,
-  }
+    storageBucket: config.firebaseStorageBucket
+  };
   firebase.initializeApp(firebaseConfig);
 }
 

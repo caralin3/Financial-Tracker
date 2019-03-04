@@ -5,11 +5,11 @@
   "dependencies": {
     "connected-react-router": "^6.2.2",
     "firebase": "^5.8.2",
-    "node-sass": "^4.11.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
     "react-scripts-ts": "^4.0.8",
     "recompose": "^0.30.0",
     "redux": "^4.0.1",
@@ -20,6 +20,11 @@
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
+    "pretty": "prettier --write src/**/*.ts src/**/*.tsx",
+    "lint": "yarn run tslint --project ./",
+    "a11y:axe": "axe http://localhost:3000 --tags wcag2a,wcag2aa,best-practice --browser chrome",
+    "a11y:pa11y": "pa11y http://localhost:3000 --standard WCAG2AA",
+    "a11y": "concurrently --names \"a11y:axe,a11y:pa11y\" --prefix-colors \"blue,green\" \"yarn run a11y:axe\" \"yarn run a11y:pa11y\"",
     "test": "jest",
     "eject": "react-scripts-ts eject"
   },
@@ -38,9 +43,15 @@
     "@types/recompose": "^0.30.5",
     "@types/redux": "^3.6.0",
     "@types/redux-persist": "^4.3.1",
+    "axe-cli": "^3.0.0",
+    "concurrently": "^4.1.0",
     "dotenv": "^6.2.0",
     "jest": "^23.6.0",
-    "react-router-dom": "^4.3.1",
+    "node-sass": "^4.11.0",
+    "pa11y": "^5.1.0",
+    "prettier": "^1.16.4",
+    "tslint": "^5.13.0",
+    "tslint-react-a11y": "^1.0.0",
     "typescript": "^3.3.1"
   },
   "jest": {

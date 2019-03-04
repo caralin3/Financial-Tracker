@@ -14,13 +14,11 @@ interface StateMappedProps {
   currentUser: User | null;
 }
 
-interface AppMergedProps extends
-  StateMappedProps,
-  AppProps {}
+interface AppMergedProps extends StateMappedProps, AppProps {}
 
 class DisconnectedApp extends React.Component<AppMergedProps> {
   private history: History.History = createHistory();
-  
+
   public render() {
     return (
       <MuiThemeProvider theme={theme}>
@@ -31,10 +29,11 @@ class DisconnectedApp extends React.Component<AppMergedProps> {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-  currentUser: state.sessionState.currentUser,
+  currentUser: state.sessionState.currentUser
 });
 
-const ConnectedApp = connect<StateMappedProps, null, AppProps>
-(mapStateToProps)(DisconnectedApp);
+const ConnectedApp = connect<StateMappedProps, null, AppProps>(mapStateToProps)(
+  DisconnectedApp
+);
 
 export const App = withAuthentication(ConnectedApp) as any;

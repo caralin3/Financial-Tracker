@@ -1,15 +1,17 @@
-import AppBar from '@material-ui/core/AppBar';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import { withStyles } from '@material-ui/core/styles';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import {
+  AppBar,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  SwipeableDrawer,
+  Toolbar,
+  Typography,
+  withStyles,
+} from '@material-ui/core';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
@@ -29,16 +31,14 @@ import { auth } from '../firebase';
 import { routes } from '../routes';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './';
 
-  interface NavigationProps extends RouteComponentProps {
+interface NavigationProps extends RouteComponentProps {
   classes: any;
   theme: any;
 }
 
-interface DispatchMappedProps { }
+interface DispatchMappedProps {}
 
-interface SignUpMergedProps extends
-  DispatchMappedProps,
-  NavigationProps {}
+interface SignUpMergedProps extends DispatchMappedProps, NavigationProps {}
 
 interface NavigationState {
   expanded: boolean;
@@ -46,16 +46,19 @@ interface NavigationState {
   selected: string;
 }
 
-class DisconnectedNavigation extends React.Component<SignUpMergedProps, NavigationState> {
+class DisconnectedNavigation extends React.Component<
+  SignUpMergedProps,
+  NavigationState
+> {
   public readonly state: NavigationState = {
     expanded: true,
     open: false,
     selected: ''
-  }
+  };
 
   public componentDidMount() {
     const { pathname } = this.props.location;
-    this.setState({ selected: pathname })
+    this.setState({ selected: pathname });
   }
 
   public render() {
@@ -63,99 +66,115 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
     const { expanded, open, selected } = this.state;
 
     const links = [
-      {label: 'Dashboard', route: routes.dashboard, icon: <HomeIcon />},
-      {label: 'Transactions', route: routes.transactions, icon: <CreditCardIcon />},
-      {label: 'Accounts', route: routes.accounts, icon: <AccountBoxIcon />},
-      {label: 'Reports', route: routes.reports, icon: <BarChartIcon />},
-      {label: 'Categories', route: routes.categories, icon: <ListAltIcon />},
-      {label: 'Settings', route: routes.settings, icon: <SettingsIcon />}
-    ]
+      { label: 'Dashboard', route: routes.dashboard, icon: <HomeIcon /> },
+      {
+        icon: <CreditCardIcon />,
+        label: 'Transactions',
+        route: routes.transactions
+      },
+      { label: 'Accounts', route: routes.accounts, icon: <AccountBoxIcon /> },
+      { label: 'Reports', route: routes.reports, icon: <BarChartIcon /> },
+      { label: 'Categories', route: routes.categories, icon: <ListAltIcon /> },
+      { label: 'Settings', route: routes.settings, icon: <SettingsIcon /> }
+    ];
 
-    const title: string = `${selected.slice(1, 2).toUpperCase()}${selected.slice(2)}`;
+    const title: string = `${selected
+      .slice(1, 2)
+      .toUpperCase()}${selected.slice(2)}`;
 
     const navList = (
       <div className={classNames('navList', classes.navBar)}>
-        <div className={classNames('navList_icon fa-stack fa-2x', {['navList_closed']: !expanded || (!expanded && !open)})}>
+        <div
+          className={classNames('navList_icon fa-stack fa-2x', {
+            ['navList_closed']: !expanded || (!expanded && !open)
+          })}
+        >
           <i className="navList_circle fas fa-circle fa-stack-2x" />
           <i className="navList_symbol fa-stack-1x fas fa-university " />
         </div>
         <List>
-          {links.slice(0, 4).map((link) => (
+          {links.slice(0, 4).map(link => (
             <li key={link.label}>
-            <ListItem
-              className={classNames(classes.activeItem, classes.text,
-                {[classes.selectedItem]: selected === link.route})
-              }
-              button={true}
-              
-              onClick={() => this.navigateTo(link.route)}
-              onKeyDown={(e) => this.handleKey(e, link.route)}
-              selected={selected === link.route}
-            >
-              <ListItemIcon>{link.icon}</ListItemIcon>
-              <ListItemText primary={link.label} />
-            </ListItem>
+              <ListItem
+                className={classNames(classes.activeItem, classes.text, {
+                  [classes.selectedItem]: selected === link.route
+                })}
+                button={true}
+                onClick={() => this.navigateTo(link.route)}
+                onKeyDown={e => this.handleKey(e, link.route)}
+                selected={selected === link.route}
+              >
+                <ListItemIcon>{link.icon}</ListItemIcon>
+                <ListItemText primary={link.label} />
+              </ListItem>
             </li>
-          ))}   
+          ))}
         </List>
-        <Divider variant='middle' />
+        <Divider variant="middle" />
         <List>
-          {links.slice(4).map((link) => (
+          {links.slice(4).map(link => (
             <li key={link.label}>
-            <ListItem
-              className={classNames(classes.activeItem, classes.text,
-                {[classes.selectedItem]: selected === link.route})
-              }
-              button={true}
-              key={link.label}
-              onClick={() => this.navigateTo(link.route)}
-              onKeyDown={(e) => this.handleKey(e, link.route)}
-            >
-              <ListItemIcon>{link.icon}</ListItemIcon>
-              <ListItemText primary={link.label} />
-            </ListItem>
+              <ListItem
+                className={classNames(classes.activeItem, classes.text, {
+                  [classes.selectedItem]: selected === link.route
+                })}
+                button={true}
+                key={link.label}
+                onClick={() => this.navigateTo(link.route)}
+                onKeyDown={e => this.handleKey(e, link.route)}
+              >
+                <ListItemIcon>{link.icon}</ListItemIcon>
+                <ListItemText primary={link.label} />
+              </ListItem>
             </li>
           ))}
           <li>
-          <ListItem
-            className={classNames(classes.activeItem, classes.text)}
-            button={true}
-            onClick={this.logout}
-            onKeyDown={this.handleKeyLogout}
-          >
-            <ListItemIcon><ExitToAppIcon /></ListItemIcon>
-            <ListItemText primary="Logout" />
-          </ListItem>
+            <ListItem
+              className={classNames(classes.activeItem, classes.text)}
+              button={true}
+              onClick={this.logout}
+              onKeyDown={this.handleKeyLogout}
+            >
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+            </ListItem>
           </li>
         </List>
       </div>
-    )
+    );
 
     return (
       <div>
-          <Drawer
-            variant="permanent"
-            className={classNames(classes.drawer,
-              'show-medium', {
+        <Drawer
+          variant="permanent"
+          className={classNames(classes.drawer, 'show-medium', {
+            [classes.drawerOpen]: expanded,
+            [classes.drawerClose]: !expanded
+          })}
+          classes={{
+            paper: classNames(classes.navBar, 'show-medium', {
               [classes.drawerOpen]: expanded,
-              [classes.drawerClose]: !expanded,
-            })}
-            classes={{
-              paper: classNames(classes.navBar,
-                'show-medium', {
-                [classes.drawerOpen]: expanded,
-                [classes.drawerClose]: !expanded,
-              }),
-            }}
-            open={expanded}
-          >
-            {navList}
-            <div className={classes.toolbar}>
-              <IconButton aria-label="expander" onClick={() => this.setState({ expanded: !expanded })}>
-                {expanded ? <DoubleLeftChevronIcon /> : <DoubleRightChevronIcon />}
-              </IconButton>
-            </div>
-          </Drawer>
+              [classes.drawerClose]: !expanded
+            })
+          }}
+          open={expanded}
+        >
+          {navList}
+          <div className={classes.toolbar}>
+            <IconButton
+              aria-label="expander"
+              onClick={() => this.setState({ expanded: !expanded })}
+            >
+              {expanded ? (
+                <DoubleLeftChevronIcon />
+              ) : (
+                <DoubleRightChevronIcon />
+              )}
+            </IconButton>
+          </div>
+        </Drawer>
         <div className="show-small">
           <AppBar position="fixed" className={classes.navBar}>
             <Toolbar disableGutters={true}>
@@ -166,7 +185,14 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
               >
                 {!open && <MenuIcon />}
               </IconButton>
-              <Typography className="navList_heading" variant="h6" color="inherit" noWrap={true}>{title}</Typography>
+              <Typography
+                className="navList_heading"
+                variant="h6"
+                color="inherit"
+                noWrap={true}
+              >
+                {title}
+              </Typography>
             </Toolbar>
             <SwipeableDrawer
               open={open}
@@ -178,7 +204,7 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
           </AppBar>
         </div>
       </div>
-    )
+    );
   }
 
   private navigateTo = (link: string) => {
@@ -187,37 +213,38 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
       open: false,
       selected: link
     });
-  }
+  };
 
   private handleKey = (e: React.KeyboardEvent<HTMLElement>, link: string) => {
     if (e.keyCode === 13) {
-      this.navigateTo(link)
+      this.navigateTo(link);
       this.setState({ open: false });
     }
-  }
+  };
 
   private handleKeyLogout = (e: React.KeyboardEvent<HTMLElement>) => {
     if (e.keyCode === 13) {
-      this.logout()
+      this.logout();
       this.setState({ open: false });
     }
-  }
+  };
 
   private logout = () => {
-    auth.doSignOut()
-    .then(() => {
-      console.log('Logged out')
-      this.props.history.push(routes.landing);
-    })
-    .catch((error: any) => {
-      console.error('Error logging out', error)
-    });
-  }
+    auth
+      .doSignOut()
+      .then(() => {
+        console.log('Logged out');
+        this.props.history.push(routes.landing);
+      })
+      .catch((error: any) => {
+        console.error('Error logging out', error);
+      });
+  };
 }
 
 const drawerWidth = 200;
 
-const styles = ({
+const styles = {
   activeItem: {
     '&:hover, &:active, &:focus': {
       '& *': {
@@ -229,28 +256,28 @@ const styles = ({
   drawer: {
     flexShrink: 0,
     whiteSpace: 'nowrap',
-    width: drawerWidth,
+    width: drawerWidth
   },
   drawerClose: {
     overflowX: 'hidden',
     transition: theme.transitions.create('width', {
       duration: theme.transitions.duration.leavingScreen,
-      easing: theme.transitions.easing.sharp,
+      easing: theme.transitions.easing.sharp
     }),
     width: theme.spacing.unit * 7 + 1,
     [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 7.5 + 1,
-    },
+      width: theme.spacing.unit * 7.5 + 1
+    }
   },
   drawerOpen: {
     transition: theme.transitions.create('width', {
       duration: theme.transitions.duration.enteringScreen,
-      easing: theme.transitions.easing.sharp,
+      easing: theme.transitions.easing.sharp
     }),
-    width: drawerWidth,
+    width: drawerWidth
   },
   navBar: {
-    background: theme.palette.primary.main,
+    background: theme.palette.primary.main
   },
   selectedItem: {
     '& *': {
@@ -270,14 +297,19 @@ const styles = ({
     display: 'flex',
     justifyContent: 'flex-end',
     padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-});
+    ...theme.mixins.toolbar
+  }
+};
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  dispatch
+});
 
 export const Navigation = compose(
   withRouter,
   withStyles(styles as any, { withTheme: true }),
-  connect(null, mapDispatchToProps)
+  connect(
+    null,
+    mapDispatchToProps
+  )
 )(DisconnectedNavigation);

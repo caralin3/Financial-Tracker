@@ -7,7 +7,7 @@ const config: CompileTimeConfiguration = {
   firebaseDatabaseUrl: process.env.REACT_APP_FIREBASE_DATABASE_URL,
   firebaseMsgSenderId: process.env.REACT_APP_FIREBASE_MESSAGE_SENDER_ID,
   firebaseProjectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  firebaseStorageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  firebaseStorageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET
 };
 
 export default config;

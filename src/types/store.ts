@@ -3,7 +3,7 @@ import { sessionState } from 'src/store';
 
 export interface ApplicationState {
   router: RouterState;
-  sessionState: sessionState.SessionState,
+  sessionState: sessionState.SessionState;
 }
 
 export interface User {

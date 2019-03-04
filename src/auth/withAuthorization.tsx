@@ -7,7 +7,7 @@ import { User } from '../types';
 
 // tslint:disable:no-empty-interface
 interface WithAuthorProps {
-  history: any
+  history: any;
 }
 
 interface DispatchMappedProps {}
@@ -16,15 +16,18 @@ interface StateMappedProps {
   currentUser: User;
 }
 
-interface WithAuthorMergedProps extends
-  StateMappedProps,
-  DispatchMappedProps,
-  WithAuthorProps {}
+interface WithAuthorMergedProps
+  extends StateMappedProps,
+    DispatchMappedProps,
+    WithAuthorProps {}
 
 interface WithAuthState {}
 
 export const withAuthorization = (authCondition: any) => (Component: any) => {
-  class WithAuthorization extends React.Component<WithAuthorMergedProps, WithAuthState> {
+  class WithAuthorization extends React.Component<
+    WithAuthorMergedProps,
+    WithAuthState
+  > {
     public componentDidMount() {
       firebase.auth.onAuthStateChanged((currentUser: any) => {
         if (!authCondition(currentUser)) {
@@ -34,18 +37,16 @@ export const withAuthorization = (authCondition: any) => (Component: any) => {
     }
 
     public render() {
-      return (
-        this.props.currentUser ? <Component /> : null
-      );
+      return this.props.currentUser ? <Component /> : null;
     }
   }
 
   const mapStateToProps = (state: any) => ({
-    currentUser: state.sessionState.currentUser,
+    currentUser: state.sessionState.currentUser
   });
 
   return compose(
     withRouter,
-    connect(mapStateToProps),
+    connect(mapStateToProps)
   )(WithAuthorization);
-}
+};

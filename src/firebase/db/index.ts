@@ -20,5 +20,5 @@ export const requests = {
   // jobs,
   // subcategories,
   // transactions,
-  users,
-}
+  users
+};

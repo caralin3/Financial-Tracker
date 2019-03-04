@@ -8,5 +8,5 @@ export {
   DoubleRightChevronIcon,
   Form,
   LoginForm,
-  SignUpForm,
-}
+  SignUpForm
+};

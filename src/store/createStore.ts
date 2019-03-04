@@ -19,27 +19,29 @@ import { sessionState } from './index';
 
 export interface ApplicationState {
   router: RouterState;
-  sessionState: sessionState.SessionState,
+  sessionState: sessionState.SessionState;
 }
 
 export default (history: History.History): Store<ApplicationState> => {
-
-  const middleware = process.env.NODE_ENV === 'development' ? composeWithDevTools(
-    applyMiddleware(routerMiddleware(history)),
-    applyMiddleware(thunk)
-  ) : compose(
-    applyMiddleware(routerMiddleware(history)),
-    applyMiddleware(thunk)
-  );
+  const middleware =
+    process.env.NODE_ENV === 'development'
+      ? composeWithDevTools(
+          applyMiddleware(routerMiddleware(history)),
+          applyMiddleware(thunk)
+        )
+      : compose(
+          applyMiddleware(routerMiddleware(history)),
+          applyMiddleware(thunk)
+        );
 
   const rootReducer = combineReducers<ApplicationState>({
     router: connectRouter(history),
-    sessionState: sessionState.reducer,
+    sessionState: sessionState.reducer
   });
 
   const persistConfig = {
     key: 'root',
-    storage,
+    storage
   };
 
   const persistedReducer = persistReducer(persistConfig, rootReducer);

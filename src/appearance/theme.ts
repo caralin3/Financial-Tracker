@@ -9,10 +9,10 @@ const colors = {
   secondary: '#085B68',
   success: '#63c312',
   white: '#fff'
-}
+};
 
 export const theme: Theme = createMuiTheme({
-  overrides: { },
+  overrides: {},
   palette: {
     common: {
       black: colors.black,
@@ -22,10 +22,10 @@ export const theme: Theme = createMuiTheme({
     primary: {
       dark: colors.dark,
       light: colors.highlight,
-      main: colors.primary,
+      main: colors.primary
     }
   },
   typography: {
     useNextVariants: true
   }
-})
+});

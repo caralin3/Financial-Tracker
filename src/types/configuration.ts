@@ -5,7 +5,7 @@ export interface EnvironmentVariables {
   REACT_APP_FIREBASE_DATABASE_URL: string;
   REACT_APP_FIREBASE_MESSAGE_SENDER_ID: string;
   REACT_APP_FIREBASE_PROJECT_ID: string;
-  REACT_APP_FIREBASE_STORAGE_BUCKET: string;  
+  REACT_APP_FIREBASE_STORAGE_BUCKET: string;
 }
 
 declare global {
