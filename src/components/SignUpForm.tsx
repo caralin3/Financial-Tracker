@@ -1,4 +1,5 @@
 import { Grid, TextField } from '@material-ui/core';
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -17,129 +18,28 @@ interface DispatchMappedProps {
 
 interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps {}
 
-interface SignUpFormState {
-  email: string;
-  error: any;
-  firstName: string;
-  lastName: string;
-  password: string;
-  passwordConfirm: string;
-}
+const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
+  const [email, setEmail] = React.useState('');
+  const [error, setError] = React.useState(null);
+  const [firstName, setFirstname] = React.useState('');
+  const [lastName, setLastname] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [passwordConfirm, setPasswordConfirm] = React.useState('');
+  const md = useMediaQuery('(min-width:768px)');
 
-// TODO: Convert to function using hooks
-class DisconnectedSignUpForm extends React.Component<
-  SignUpMergedProps,
-  SignUpFormState
-> {
-  public readonly state: SignUpFormState = {
-    email: '',
-    error: null,
-    firstName: '',
-    lastName: '',
-    password: '',
-    passwordConfirm: ''
-  };
-
-  public render() {
-    const { error } = this.state;
-
+  const isValid = () => {
     return (
-      <div className="signupForm">
-        <Form
-          buttonText="Sign Up"
-          disabled={!this.isValid()}
-          submit={this.handleSubmit}
-        >
-          {error && <p className="signupForm_error">{error.message}</p>}
-          {/* TODO: Fix spacing on mobile */}
-          <Grid className="signupForm_gridContainer" container={true} spacing={24}>
-            <Grid item={true} md="auto">
-              <TextField
-                autoFocus={true}
-                id="signupForm_firstName"
-                label="First Name"
-                onChange={e => this.handleChange(e, 'firstName')}
-                margin="normal"
-                error={!!error}
-              />
-            </Grid>
-            <Grid item={true} md="auto">
-              <TextField
-                id="signupForm_lastName"
-                label="Last Name"
-                onChange={e => this.handleChange(e, 'lastName')}
-                margin="normal"
-                error={!!error}
-              />
-            </Grid>
-            <Grid item={true} md="auto">
-              <TextField
-                className="signupForm_email"
-                id="signupForm_email"
-                label="Email"
-                onChange={e => this.handleChange(e, 'email')}
-                margin="normal"
-                error={!!error}
-              />
-            </Grid>
-          </Grid>
-          <Grid className="signupForm_gridContainer" container={true} spacing={24}>
-            <Grid item={true} md="auto">
-              <TextField
-                id="signupForm_password"
-                label="Password"
-                type="password"
-                className="form_inputField"
-                onChange={e => this.handleChange(e, 'password')}
-                margin="normal"
-                error={!!error}
-                variant="standard"
-              />
-            </Grid>
-            <Grid item={true} md="auto">
-              <TextField
-                id="signupForm_confirmPassword"
-                label="Confirm Password"
-                type="password"
-                className="form_inputField"
-                onChange={e => this.handleChange(e, 'passwordConfirm')}
-                margin="normal"
-                error={!!error}
-                variant="standard"
-              />
-            </Grid>
-          </Grid>
-        </Form>
-      </div>
+      !!firstName &&
+      !!lastName &&
+      !!email &&
+      !!password &&
+      !!passwordConfirm &&
+      password === passwordConfirm
     );
-  }
-
-  private handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-    propertyName: string
-  ) => {
-    const value = e.target.value.trim();
-    this.setState({
-      [propertyName]: value
-    } as Pick<SignUpFormState, keyof SignUpFormState>);
   };
 
-  private isValid = () => {
-    const {
-      email,
-      firstName,
-      lastName,
-      password,
-      passwordConfirm
-    } = this.state;
-    return !!firstName && !!lastName && !!email && !!password && !!passwordConfirm && password === passwordConfirm;
-  }
-
-  private handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const { email, firstName, lastName, password } = this.state;
-    const { dispatch, history } = this.props;
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const { dispatch, history } = props;
 
     event.preventDefault();
     auth
@@ -155,21 +55,92 @@ class DisconnectedSignUpForm extends React.Component<
         await db.requests.users.createUser(currentUser, dispatch);
       })
       .then(() => {
-        this.setState({
-          email: '',
-          error: null,
-          firstName: '',
-          lastName: '',
-          password: '',
-          passwordConfirm: ''
-        });
+        setEmail('');
+        setFirstname('');
+        setLastname('');
+        setEmail('');
+        setPassword('');
+        setPasswordConfirm('');
         history.push(routes.dashboard);
       })
-      .catch((error: any) => {
-        this.setState({ error });
+      .catch((err: any) => {
+        setError(err.message);
       });
   };
-}
+
+  return (
+    <div className="signupForm">
+      <Form buttonText="Sign Up" disabled={!isValid()} submit={handleSubmit}>
+        {error && <p className="signupForm_error">{error}</p>}
+        <Grid
+          className="signupForm_gridContainer"
+          container={true}
+          spacing={md ? 24 : 0}
+        >
+          <Grid item={true} md="auto">
+            <TextField
+              autoFocus={true}
+              id="signupForm_firstName"
+              label="First Name"
+              onChange={e => setFirstname(e.target.value.trim())}
+              margin="normal"
+              error={!!error}
+            />
+          </Grid>
+          <Grid item={true} md="auto">
+            <TextField
+              id="signupForm_lastName"
+              label="Last Name"
+              onChange={e => setLastname(e.target.value.trim())}
+              margin="normal"
+              error={!!error}
+            />
+          </Grid>
+          <Grid item={true} md="auto">
+            <TextField
+              className="signupForm_email"
+              id="signupForm_email"
+              label="Email"
+              onChange={e => setEmail(e.target.value.trim())}
+              margin="normal"
+              error={!!error}
+            />
+          </Grid>
+        </Grid>
+        <Grid
+          className="signupForm_gridContainer"
+          container={true}
+          spacing={md ? 24 : 0}
+        >
+          <Grid item={true} md="auto">
+            <TextField
+              id="signupForm_password"
+              label="Password"
+              type="password"
+              className="form_inputField"
+              onChange={e => setPassword(e.target.value)}
+              margin="normal"
+              error={!!error}
+              variant="standard"
+            />
+          </Grid>
+          <Grid item={true} md="auto">
+            <TextField
+              id="signupForm_confirmPassword"
+              label="Confirm Password"
+              type="password"
+              className="form_inputField"
+              onChange={e => setPasswordConfirm(e.target.value)}
+              margin="normal"
+              error={!!error}
+              variant="standard"
+            />
+          </Grid>
+        </Grid>
+      </Form>
+    </div>
+  );
+};
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   dispatch
