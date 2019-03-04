@@ -12,4 +12,12 @@
     padding: 0 1rem;
     text-align: center;
   }
+
+  &_gridContainer {
+    justify-content: center;
+
+    @media #{$medium} {
+      justify-content: flex-start;
+    }
+  }
 }

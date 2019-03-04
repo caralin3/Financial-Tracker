@@ -1,4 +1,4 @@
-import { TextField } from '@material-ui/core';
+import { Grid, TextField } from '@material-ui/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -26,6 +26,7 @@ interface SignUpFormState {
   passwordConfirm: string;
 }
 
+// TODO: Convert to function using hooks
 class DisconnectedSignUpForm extends React.Component<
   SignUpMergedProps,
   SignUpFormState
@@ -50,48 +51,64 @@ class DisconnectedSignUpForm extends React.Component<
           submit={this.handleSubmit}
         >
           {error && <p className="signupForm_error">{error.message}</p>}
-          <TextField
-            autoFocus={true}
-            id="signupForm_firstName"
-            label="First Name"
-            onChange={e => this.handleChange(e, 'firstName')}
-            margin="normal"
-            error={!!error}
-          />
-          <TextField
-            id="signupForm_lastName"
-            label="Last Name"
-            onChange={e => this.handleChange(e, 'lastName')}
-            margin="normal"
-            error={!!error}
-          />
-          <TextField
-            id="signupForm_email"
-            label="Email"
-            onChange={e => this.handleChange(e, 'email')}
-            margin="normal"
-            error={!!error}
-          />
-          <TextField
-            id="signupForm_password"
-            label="Password"
-            type="password"
-            className="form_inputField"
-            onChange={e => this.handleChange(e, 'password')}
-            margin="normal"
-            error={!!error}
-            variant="standard"
-          />
-          <TextField
-            id="signupForm_confirmPassword"
-            label="Confirm Password"
-            type="password"
-            className="form_inputField"
-            onChange={e => this.handleChange(e, 'passwordConfirm')}
-            margin="normal"
-            error={!!error}
-            variant="standard"
-          />
+          {/* TODO: Fix spacing on mobile */}
+          <Grid className="signupForm_gridContainer" container={true} spacing={24}>
+            <Grid item={true} md="auto">
+              <TextField
+                autoFocus={true}
+                id="signupForm_firstName"
+                label="First Name"
+                onChange={e => this.handleChange(e, 'firstName')}
+                margin="normal"
+                error={!!error}
+              />
+            </Grid>
+            <Grid item={true} md="auto">
+              <TextField
+                id="signupForm_lastName"
+                label="Last Name"
+                onChange={e => this.handleChange(e, 'lastName')}
+                margin="normal"
+                error={!!error}
+              />
+            </Grid>
+            <Grid item={true} md="auto">
+              <TextField
+                className="signupForm_email"
+                id="signupForm_email"
+                label="Email"
+                onChange={e => this.handleChange(e, 'email')}
+                margin="normal"
+                error={!!error}
+              />
+            </Grid>
+          </Grid>
+          <Grid className="signupForm_gridContainer" container={true} spacing={24}>
+            <Grid item={true} md="auto">
+              <TextField
+                id="signupForm_password"
+                label="Password"
+                type="password"
+                className="form_inputField"
+                onChange={e => this.handleChange(e, 'password')}
+                margin="normal"
+                error={!!error}
+                variant="standard"
+              />
+            </Grid>
+            <Grid item={true} md="auto">
+              <TextField
+                id="signupForm_confirmPassword"
+                label="Confirm Password"
+                type="password"
+                className="form_inputField"
+                onChange={e => this.handleChange(e, 'passwordConfirm')}
+                margin="normal"
+                error={!!error}
+                variant="standard"
+              />
+            </Grid>
+          </Grid>
         </Form>
       </div>
     );
