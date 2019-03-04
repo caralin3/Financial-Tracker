@@ -10,9 +10,7 @@ export interface FormProps {
 
 export const Form: React.SFC<FormProps> = props => (
   <form className="form" onSubmit={props.submit}>
-    <div className="form_fields">
-      {props.children}
-    </div>
+    <div className="form_fields">{props.children}</div>
     <Button
       className={props.disabled ? 'form_button-disabled' : 'form_button'}
       type="submit"

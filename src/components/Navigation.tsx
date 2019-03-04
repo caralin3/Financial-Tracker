@@ -10,7 +10,7 @@ import {
   SwipeableDrawer,
   Toolbar,
   Typography,
-  withStyles,
+  withStyles
 } from '@material-ui/core';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import BarChartIcon from '@material-ui/icons/BarChart';

@@ -24,17 +24,11 @@ class DisconnectedLoginForm extends React.Component<
   };
 
   public render() {
-    const { email, error, password } = this.state;
-
-    const isInvalid = !password || !email;
+    const { error } = this.state;
 
     return (
       <div className="loginForm">
-        <Form
-          buttonText="Log In"
-          disabled={isInvalid}
-          submit={this.handleSubmit}
-        >
+        <Form buttonText="Log In" submit={this.handleSubmit}>
           {error && <p>{error.message}</p>}
           <TextField
             id="login_email"
@@ -59,13 +53,21 @@ class DisconnectedLoginForm extends React.Component<
   }
 
   private handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
     propertyName: string
   ) => {
+    const value = e.target.value.trim();
     this.setState({
-      [propertyName]: event.target.value
+      [propertyName]: value
     } as Pick<LoginFormState, keyof LoginFormState>);
   };
+
+  // private isValidEmail = (email: string = this.state.email): boolean => {
+  //   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  //   return re.test(email);
+  // };
 
   private handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const { email, password } = this.state;
