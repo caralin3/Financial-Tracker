@@ -6,7 +6,8 @@
   text-align: center;
 
   &_heading {
-    @include heading;
+    @include title;
+    font-weight: bold !important;
   }
 
   &_icon {
