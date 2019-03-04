@@ -1,3 +1,4 @@
+import { Card, Link, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { LoginForm, SignUpForm } from '../components';
 
@@ -19,24 +20,28 @@ export class LandingPage extends React.Component<
     const { login } = this.state;
 
     return (
-      <div>
-        <h1>Login</h1>
-        {login ? <LoginForm /> : <SignUpForm />}
-        {login ? (
-          <div className="login_link">
-            Don't have an account? |{' '}
-            <span role="button" onClick={() => this.setState({ login: false })}>
-              Sign Up
-            </span>
-          </div>
-        ) : (
-          <div>
-            Already have an account? |{' '}
-            <span role="button" onClick={() => this.setState({ login: true })}>
-              Login
-            </span>
-          </div>
-        )}
+      <div className="landing">
+        <Typography className="landing_title" variant="h1">Financial Tracker</Typography>
+        <Card style={{width: 500, height: 300}}>
+          {login ? <Typography className="landing_formTitle" variant="h4">Login</Typography> : 
+          <Typography className="landing_formTitle" variant="h4">Sign Up</Typography>}
+          {login ? <LoginForm /> : <SignUpForm />}
+          {login ? (
+            <Typography variant="body1" className="login_link">
+              Don't have an account? |{' '}
+              <Link role="button" onClick={() => this.setState({ login: false })}>
+                Sign Up
+              </Link>
+            </Typography>
+          ) : (
+            <Typography variant="body1" className="login_link">
+              Already have an account? |{' '}
+              <Link role="button" onClick={() => this.setState({ login: true })}>
+                Login
+              </Link>
+            </Typography>
+          )}
+        </Card>
       </div>
     );
   }

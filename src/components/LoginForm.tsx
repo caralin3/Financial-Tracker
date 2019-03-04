@@ -1,3 +1,4 @@
+import { TextField } from '@material-ui/core';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { auth } from '../firebase';
@@ -35,19 +36,22 @@ class DisconnectedLoginForm extends React.Component<
           submit={this.handleSubmit}
         >
           {error && <p>{error.message}</p>}
-          <input
-            className="loginForm_input"
+          <TextField
+            id="login_email"
+            label="Email"
+            // className={classes.textField}
             onChange={e => this.handleChange(e, 'email')}
-            placeholder="Email Address"
-            type="text"
-            value={email}
+            margin="normal"
+            error={!!error}
           />
-          <input
-            className="loginForm_input"
-            placeholder="Password"
-            onChange={e => this.handleChange(e, 'password')}
+          <TextField
+            id="login_password"
+            label="Password"
             type="password"
-            value={password}
+            // className={classes.textField}
+            onChange={e => this.handleChange(e, 'password')}
+            margin="normal"
+            error={!!error}
           />
         </Form>
       </div>
@@ -55,7 +59,7 @@ class DisconnectedLoginForm extends React.Component<
   }
 
   private handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
     propertyName: string
   ) => {
     this.setState({
