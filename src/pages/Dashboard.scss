@@ -52,3 +52,72 @@
     @include primary;
   }
 }
+
+.totals {
+  margin: 2rem 0;
+  padding: 1rem;
+
+  @media #{$medium} {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+    padding: 2rem;
+  }
+
+  &_title {
+    @include title;
+    color: $primary !important;
+    font-weight: bold !important;
+    padding-bottom: 1rem;
+
+    @media #{$medium} {
+      padding: 0;
+    }
+  }
+
+  &_amounts {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    @media #{$medium} {
+      flex: 1;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+    }
+
+    @media #{$large} {
+      flex: 1;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 0 3rem;
+    }
+  }
+
+  &_amount {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    @media #{$medium} {
+      flex-direction: column-reverse;
+      justify-content: center;
+      width: auto;
+    }
+
+    @media #{$large} {
+      flex-direction: row;
+    }
+  }
+
+  &_label {
+    @include primary;
+  }
+
+  &_number {
+    @include number;
+    padding-left: 1rem;
+  }
+}

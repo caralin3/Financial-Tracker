@@ -61,8 +61,22 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         />
       </div>
         {/* <Typography>{props.currentUser ? props.currentUser.firstName : 'None'}</Typography> */}
-      <Card>
-        <Typography variant="h5">Totals</Typography>
+      <Card className="totals" raised={true}>
+        <Typography className="totals_title" variant="h5">Totals</Typography>
+        <span className="totals_amounts">
+          <span className="totals_amount">
+            <Typography className="totals_label" variant="h6">Expenses</Typography>
+            <Typography className="totals_number" variant="h5">$20,450.98</Typography>
+          </span>
+          <span className="totals_amount">
+            <Typography className="totals_label" variant="h6">Income</Typography>
+            <Typography className="totals_number" variant="h5">$57,450.98</Typography>
+          </span>
+          <span className="totals_amount">
+            <Typography className="totals_label" variant="h6">Net</Typography>
+            <Typography className="totals_number" variant="h5">$34,450</Typography>
+          </span>
+        </span>
       </Card>
     </Layout>
   );
