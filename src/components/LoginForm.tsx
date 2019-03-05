@@ -7,88 +7,57 @@ import { Form } from './';
 
 interface LoginFormProps extends RouteComponentProps {}
 
-interface LoginFormState {
-  email: string;
-  error: any;
-  password: string;
-}
-
-class DisconnectedLoginForm extends React.Component<
-  LoginFormProps,
-  LoginFormState
-> {
-  public readonly state: LoginFormState = {
-    email: '',
-    error: null,
-    password: ''
-  };
-
-  public render() {
-    const { error } = this.state;
-
-    return (
-      <div className="loginForm">
-        <Form buttonText="Log In" submit={this.handleSubmit}>
-          {error && <p className="loginForm_error">{error.message}</p>}
-          <TextField
-            autoFocus={true}
-            id="login_email"
-            label="Email"
-            onChange={e => this.handleChange(e, 'email')}
-            margin="normal"
-            error={!!error}
-          />
-          <TextField
-            id="login_password"
-            label="Password"
-            type="password"
-            className="form_inputField"
-            onChange={e => this.handleChange(e, 'password')}
-            margin="normal"
-            error={!!error}
-            variant="standard"
-          />
-        </Form>
-      </div>
-    );
-  }
-
-  private handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-    propertyName: string
-  ) => {
-    const value = e.target.value.trim();
-    this.setState({
-      [propertyName]: value
-    } as Pick<LoginFormState, keyof LoginFormState>);
-  };
-
-  // private isValidEmail = (email: string = this.state.email): boolean => {
-  //   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  //   return re.test(email);
-  // };
-
-  private handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const { email, password } = this.state;
-    const { history } = this.props;
+const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
+  const [email, setEmail] = React.useState<string>('');
+  const [error, setError] = React.useState<string | null>(null);
+  const [password, setPassword] = React.useState<string>('');
+  
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const { history } = props;
 
     event.preventDefault();
     auth
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
-        this.setState({
-          email: '',
-          error: null,
-          password: ''
-        });
+        setEmail('');
+        setError(null);
+        setPassword('');
         history.push(routes.dashboard);
       })
-      .catch((error: any) => {
-        this.setState({ error });
+      .catch((err: any) => {
+        setError(err.message);
       });
   };
+
+  const isValidEmail = (value: string = email): boolean => {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(value);
+  };
+
+  return (
+    <div className="loginForm">
+      <Form buttonText="Log In" submit={handleSubmit}>
+        {error && <p className="loginForm_error">{error}</p>}
+        <TextField
+          autoFocus={true}
+          id="login_email"
+          label="Email"
+          onChange={e => setEmail(e.target.value.trim())}
+          margin="normal"
+          helperText={!isValidEmail() && !!email ? 'Invalid format' : 'Hint: jdoe@example.com'}
+          error={!!error || (!isValidEmail()  && !!email)}
+        />
+        <TextField
+          id="login_password"
+          label="Password"
+          type="password"
+          onChange={e => setPassword(e.target.value.trim())}
+          margin="normal"
+          error={!!error}
+        />
+      </Form>
+    </div>
+  );
 }
 
 export const LoginForm = withRouter(DisconnectedLoginForm);
