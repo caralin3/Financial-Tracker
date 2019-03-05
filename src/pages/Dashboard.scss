@@ -28,6 +28,16 @@
     width: 100%;
   }
 
+  &_mobileButton {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &_mobileMenuList {
+    width: 91%;
+  }
+
   &_title {
     @include heading;
     color: $primary !important;

@@ -1,8 +1,11 @@
-import { Button, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
+import { Button, Grow, MenuItem, MenuList, Paper, Popper, Typography } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import * as React from 'react';
 
 interface DropdownMenuProps {
+  className?: string;
+  menuListClass?: string;
   selected: string;
   menuItems: Array<{ label: string; value: string | number }>;
   onClose: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -10,6 +13,7 @@ interface DropdownMenuProps {
 
 export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
   const [open, setOpen] = React.useState<boolean>(false);
+  const mobile = useMediaQuery('(max-width:768px)');
   let anchorEl = null;
 
   const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -18,9 +22,9 @@ export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
   };
 
   return (
-    <div>
+    <div className={props.className}>
       <ClickAwayListener onClickAway={() => setOpen(false)}>
-        <div>
+        <div style={{ width: '100%' }}>
           <Button
             buttonRef={ref => (anchorEl = ref)}
             aria-owns={open ? 'menu-list-grow' : undefined}
@@ -28,10 +32,18 @@ export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
             color="primary"
             onClick={() => setOpen(!open)}
             variant="contained"
+            fullWidth={mobile ? true : false}
           >
             {props.selected}
           </Button>
-          <Popper open={open} anchorEl={anchorEl as any} transition={true} disablePortal={true}>
+          <Popper
+            className={props.menuListClass}
+            open={open}
+            anchorEl={anchorEl}
+            transition={true}
+            disablePortal={true}
+            placement="bottom-end"
+          >
             {({ TransitionProps, placement }) => (
               <Grow
                 {...TransitionProps}
@@ -43,7 +55,7 @@ export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
                   <MenuList>
                     {props.menuItems.map(item => (
                       <MenuItem key={item.value} data-value={item.value} onClick={handleClose}>
-                        {item.label}
+                        <Typography>{item.label}</Typography>
                       </MenuItem>
                     ))}
                   </MenuList>

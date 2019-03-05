@@ -52,7 +52,13 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         <hr className="dashboard_divider" />
       </div>
       <div className="show-small">
-        <DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />
+        <DropdownMenu
+          className="dashboard_mobileButton"
+          menuListClass="dashboard_mobileMenuList"
+          selected={menuItems[selected].label}
+          menuItems={menuItems}
+          onClose={handleMenu}
+        />
       </div>
       <Typography>{props.currentUser ? props.currentUser.firstName : 'None'}</Typography>
     </Layout>
