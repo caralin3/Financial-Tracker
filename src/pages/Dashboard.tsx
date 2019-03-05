@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
-import { Layout } from '../components/Layout';
+import { DropdownMenu, Layout } from '../components';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
 
@@ -26,10 +26,45 @@ interface DashboardMergedProps
     DashboardPageProps {}
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
+  const [selected, setSelected] = React.useState<number>(0);
+
+  const menuItems = [
+    { label: 'This Week', value: 0 },
+    { label: 'Last Week', value: 1 },
+    { label: 'This Month', value: 2 },
+    { label: 'Last Month', value: 3 },
+    { label: 'Custom Range', value: 4 }
+  ];
+
+  const handleMenu = (e: any) => {
+    setSelected(e.currentTarget.attributes.getNamedItem('data-value').value);
+  };
+
   return (
     <Layout>
-      <Typography variant="h3">Dashboard</Typography>
-      {props.currentUser ? props.currentUser.firstName : 'None'}
+      <div className="dashboard_header">
+        <div className="dashboard_headerContent">
+          <Typography className="dashboard_title" variant="h3">
+            Dashboard
+          </Typography>
+          <DropdownMenu
+            selected={menuItems[selected].label}
+            menuItems={menuItems}
+            onClose={handleMenu}
+          />
+        </div>
+        <hr className="dashboard_divider" />
+      </div>
+      <div className="show-small">
+        <DropdownMenu
+          selected={menuItems[selected].label}
+          menuItems={menuItems}
+          onClose={handleMenu}
+        />
+      </div>
+      <Typography>
+        {props.currentUser ? props.currentUser.firstName : 'None'}
+      </Typography>
     </Layout>
   );
 };

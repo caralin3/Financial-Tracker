@@ -1,0 +1,43 @@
+@import '../appearance/styles/variables.scss';
+
+.dashboard {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  &_header {
+    display: none;
+
+    @media #{$medium} {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+
+  &_headerContent {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &_divider {
+    width: 100%;
+  }
+
+  &_title {
+    @include heading;
+    color: $primary !important;
+  }
+
+  &_label {
+    @include title;
+  }
+
+  &_text {
+    @include primary;
+  }
+}

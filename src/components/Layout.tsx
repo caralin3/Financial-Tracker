@@ -6,6 +6,6 @@ export interface LayoutProps {}
 export const Layout: React.SFC<LayoutProps> = props => (
   <div className="layout">
     <Navigation />
-    {props.children}
+    <div className="layout_container">{props.children}</div>
   </div>
 );

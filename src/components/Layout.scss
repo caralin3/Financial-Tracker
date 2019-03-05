@@ -4,4 +4,13 @@
   align-items: flex-start;
   display: flex;
   justify-content: flex-start;
+
+  &_container {
+    padding: 5rem 1rem;
+    width: 100%;
+
+    @media #{$medium} {
+      padding: 2rem;
+    }
+  }
 }
