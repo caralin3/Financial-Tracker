@@ -86,35 +86,39 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           spacing={md ? 24 : 0}
         >
           <Grid item={true} md="auto"> */}
-            <TextField
-              autoFocus={true}
-              id="signupForm_firstName"
-              label="First Name"
-              onChange={e => setFirstname(e.target.value.trim())}
-              margin="normal"
-              error={!!error}
-            />
-          {/* </Grid>
+        <TextField
+          autoFocus={true}
+          id="signupForm_firstName"
+          label="First Name"
+          onChange={e => setFirstname(e.target.value.trim())}
+          margin="normal"
+          error={!!error}
+        />
+        {/* </Grid>
           <Grid item={true} md="auto"> */}
-            <TextField
-              id="signupForm_lastName"
-              label="Last Name"
-              onChange={e => setLastname(e.target.value.trim())}
-              margin="normal"
-              error={!!error}
-            />
-          {/* </Grid>
+        <TextField
+          id="signupForm_lastName"
+          label="Last Name"
+          onChange={e => setLastname(e.target.value.trim())}
+          margin="normal"
+          error={!!error}
+        />
+        {/* </Grid>
           <Grid item={true} md="auto"> */}
-            <TextField
-              className="signupForm_email"
-              id="signupForm_email"
-              label="Email"
-              helperText={!isValidEmail() && !!email ? 'Invalid format' : 'Hint: jdoe@example.com'}
-              error={!!error || (!isValidEmail()  && !!email)}
-              margin="normal"
-              onChange={e => setEmail(e.target.value.trim())}
-            />
-          {/* </Grid>
+        <TextField
+          className="signupForm_email"
+          id="signupForm_email"
+          label="Email"
+          helperText={
+            !isValidEmail() && !!email
+              ? 'Invalid format'
+              : 'Hint: jdoe@example.com'
+          }
+          error={!!error || (!isValidEmail() && !!email)}
+          margin="normal"
+          onChange={e => setEmail(e.target.value.trim())}
+        />
+        {/* </Grid>
         </Grid>
         <Grid
           className="signupForm_gridContainer"
@@ -122,29 +126,29 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           spacing={md ? 24 : 0}
         >
           <Grid item={true} md="auto"> */}
-            <TextField
-              id="signupForm_password"
-              label="Password"
-              type="password"
-              className="form_inputField"
-              onChange={e => setPassword(e.target.value.trim())}
-              margin="normal"
-              error={!!error}
-              variant="standard"
-            />
-          {/* </Grid>
+        <TextField
+          id="signupForm_password"
+          label="Password"
+          type="password"
+          className="form_inputField"
+          onChange={e => setPassword(e.target.value.trim())}
+          margin="normal"
+          error={!!error}
+          variant="standard"
+        />
+        {/* </Grid>
           <Grid item={true} md="auto"> */}
-            <TextField
-              id="signupForm_confirmPassword"
-              label="Confirm Password"
-              type="password"
-              className="form_inputField"
-              onChange={e => setPasswordConfirm(e.target.value.trim())}
-              margin="normal"
-              error={!!error}
-              variant="standard"
-            />
-          {/* </Grid>
+        <TextField
+          id="signupForm_confirmPassword"
+          label="Confirm Password"
+          type="password"
+          className="form_inputField"
+          onChange={e => setPasswordConfirm(e.target.value.trim())}
+          margin="normal"
+          error={!!error}
+          variant="standard"
+        />
+        {/* </Grid>
         </Grid> */}
       </Form>
     </div>

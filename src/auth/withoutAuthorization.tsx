@@ -7,7 +7,7 @@ import { firebase } from '../firebase';
 import { routes } from '../routes';
 import { ApplicationState, User } from '../types';
 
-interface WithAuthorProps {
+interface WithoutAuthorProps {
   history: History.History;
 }
 
@@ -17,28 +17,30 @@ interface StateMappedProps {
   currentUser: User;
 }
 
-interface WithAuthorMergedProps
+interface WithoutAuthorMergedProps
   extends StateMappedProps,
     DispatchMappedProps,
-    WithAuthorProps {}
+    WithoutAuthorProps {}
 
-interface WithAuthState {}
+interface WithoutAuthState {}
 
-export const withAuthorization = (authCondition: any) => (Component: any) => {
-  class WithAuthorization extends React.Component<
-    WithAuthorMergedProps,
-    WithAuthState
+export const withoutAuthorization = (authCondition: any) => (
+  Component: any
+) => {
+  class WithoutAuthorization extends React.Component<
+    WithoutAuthorMergedProps,
+    WithoutAuthState
   > {
     public componentDidMount() {
       firebase.auth.onAuthStateChanged((currentUser: any) => {
-        if (!authCondition(currentUser)) {
-          this.props.history.push(routes.landing);
+        if (authCondition(currentUser)) {
+          this.props.history.push(routes.dashboard);
         }
       });
     }
 
     public render() {
-      return this.props.currentUser ? <Component /> : null;
+      return !this.props.currentUser ? <Component /> : null;
     }
   }
 
@@ -49,5 +51,5 @@ export const withAuthorization = (authCondition: any) => (Component: any) => {
   return compose(
     withRouter,
     connect(mapStateToProps)
-  )(WithAuthorization);
+  )(WithoutAuthorization);
 };

@@ -2,7 +2,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import * as History from 'history';
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import { HomePage, LandingPage } from '../pages';
+import { DashboardPage, LandingPage } from '../pages';
 import { RouteMap } from '../types';
 
 export const routes = {
@@ -16,16 +16,15 @@ export const routes = {
 };
 
 export const routeMap: RouteMap = {
-  [routes.accounts]: HomePage,
-  [routes.categories]: HomePage,
-  [routes.dashboard]: HomePage,
+  [routes.accounts]: DashboardPage,
+  [routes.categories]: DashboardPage,
+  [routes.dashboard]: DashboardPage,
   [routes.landing]: LandingPage,
-  [routes.reports]: HomePage,
-  [routes.settings]: HomePage,
-  [routes.transactions]: HomePage
+  [routes.reports]: DashboardPage,
+  [routes.settings]: DashboardPage,
+  [routes.transactions]: DashboardPage
 };
 
-/** TODO: Handle protected routes */
 export const Router = ({ history }: { history: History.History }) => (
   <ConnectedRouter history={history}>
     <Switch>

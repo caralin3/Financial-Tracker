@@ -1,3 +1,4 @@
+import { Typography } from '@material-ui/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -8,7 +9,7 @@ import { Layout } from '../components/Layout';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
 
-export interface HomePageProps {}
+export interface DashboardPageProps {}
 
 interface DispatchMappedProps {
   dispatch: Dispatch<any>;
@@ -18,29 +19,20 @@ interface StateMappedProps {
   currentUser: User | null;
 }
 
-interface HomeMergedProps
+interface DashboardMergedProps
   extends RouteComponentProps<any>,
     StateMappedProps,
     DispatchMappedProps,
-    HomePageProps {}
+    DashboardPageProps {}
 
-export interface HomePageState {}
-
-class DisconnectedHomePage extends React.Component<
-  HomeMergedProps,
-  HomePageState
-> {
-  public readonly state: HomePageState = {};
-
-  public render() {
-    return (
-      <Layout>
-        <h1>Home</h1>
-        {this.props.currentUser ? this.props.currentUser.firstName : 'None'}
-      </Layout>
-    );
-  }
-}
+const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
+  return (
+    <Layout>
+      <Typography variant="h3">Dashboard</Typography>
+      {props.currentUser ? props.currentUser.firstName : 'None'}
+    </Layout>
+  );
+};
 
 const authCondition = (authUser: any) => !!authUser;
 
@@ -50,11 +42,11 @@ const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser
 });
 
-export const HomePage = compose(
+export const DashboardPage = compose(
   withRouter,
   withAuthorization(authCondition),
   connect(
     mapStateToProps,
     mapDispatchToProps
   )
-)(DisconnectedHomePage);
+)(DisconnectedDashboardPage);

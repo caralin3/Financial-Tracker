@@ -1,4 +1,4 @@
-import { HomePage } from './Home';
+import { DashboardPage } from './Dashboard';
 import { LandingPage } from './Landing';
 
-export { HomePage, LandingPage };
+export { DashboardPage, LandingPage };

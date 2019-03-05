@@ -11,7 +11,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
   const [email, setEmail] = React.useState<string>('');
   const [error, setError] = React.useState<string | null>(null);
   const [password, setPassword] = React.useState<string>('');
-  
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const { history } = props;
 
@@ -44,8 +44,12 @@ const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
           label="Email"
           onChange={e => setEmail(e.target.value.trim())}
           margin="normal"
-          helperText={!isValidEmail() && !!email ? 'Invalid format' : 'Hint: jdoe@example.com'}
-          error={!!error || (!isValidEmail()  && !!email)}
+          helperText={
+            !isValidEmail() && !!email
+              ? 'Invalid format'
+              : 'Hint: jdoe@example.com'
+          }
+          error={!!error || (!isValidEmail() && !!email)}
         />
         <TextField
           id="login_password"
@@ -58,6 +62,6 @@ const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
       </Form>
     </div>
   );
-}
+};
 
 export const LoginForm = withRouter(DisconnectedLoginForm);
