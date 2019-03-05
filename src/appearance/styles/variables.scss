@@ -18,8 +18,13 @@ $white: #FFF;
   }
 }
 
-@mixin number {
-  font-family: 'Oswald', sans-serif !important;
+@mixin heading2 {
+  font-family: 'FrancoisOne', sans-serif !important;
+  font-size: 28px !important;
+
+  @media #{$medium} {
+    font-size: 42px !important;
+  }
 }
 
 @mixin title {
@@ -38,6 +43,10 @@ $white: #FFF;
   @media #{$medium} {
     font-size: 18px !important;
   }
+}
+
+@mixin number {
+  font-family: 'Oswald', sans-serif !important;
 }
 
 // breakpoints

@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Card, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -60,7 +60,10 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
           onClose={handleMenu}
         />
       </div>
-      <Typography>{props.currentUser ? props.currentUser.firstName : 'None'}</Typography>
+        {/* <Typography>{props.currentUser ? props.currentUser.firstName : 'None'}</Typography> */}
+      <Card>
+        <Typography variant="h5">Totals</Typography>
+      </Card>
     </Layout>
   );
 };
