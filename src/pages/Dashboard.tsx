@@ -1,4 +1,5 @@
-import { Card, Typography } from '@material-ui/core';
+import { Card, CardHeader, Grid, IconButton, Theme, Typography, withStyles } from '@material-ui/core';
+import Add from '@material-ui/icons/Add';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -9,7 +10,9 @@ import { DropdownMenu, Layout } from '../components';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
 
-export interface DashboardPageProps {}
+export interface DashboardPageProps {
+  classes: any;
+}
 
 interface DispatchMappedProps {
   dispatch: Dispatch<any>;
@@ -27,6 +30,7 @@ interface DashboardMergedProps
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const [selected, setSelected] = React.useState<number>(0);
+  const { classes } = props;
 
   const menuItems = [
     { label: 'This Week', value: 0 },
@@ -60,27 +64,111 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
           onClose={handleMenu}
         />
       </div>
-        {/* <Typography>{props.currentUser ? props.currentUser.firstName : 'None'}</Typography> */}
-      <Card className="totals" raised={true}>
-        <Typography className="totals_title" variant="h5">Totals</Typography>
-        <span className="totals_amounts">
-          <span className="totals_amount">
-            <Typography className="totals_label" variant="h6">Expenses</Typography>
-            <Typography className="totals_number" variant="h5">$20,450.98</Typography>
-          </span>
-          <span className="totals_amount">
-            <Typography className="totals_label" variant="h6">Income</Typography>
-            <Typography className="totals_number" variant="h5">$57,450.98</Typography>
-          </span>
-          <span className="totals_amount">
-            <Typography className="totals_label" variant="h6">Net</Typography>
-            <Typography className="totals_number" variant="h5">$34,450</Typography>
-          </span>
-        </span>
-      </Card>
+      <Grid container={true} spacing={24}>
+        <Grid item={true} xs={12}>
+          <Card className="totals" raised={true}>
+            <Typography className="totals_title" variant="h5">
+              Totals
+            </Typography>
+            <span className="totals_amounts">
+              <span className="totals_amount">
+                <Typography className="totals_label" variant="h6">
+                  Expenses
+                </Typography>
+                <Typography className="totals_number" variant="h5">
+                  $20,450.98
+                </Typography>
+              </span>
+              <span className="totals_amount">
+                <Typography className="totals_label" variant="h6">
+                  Income
+                </Typography>
+                <Typography className="totals_number" variant="h5">
+                  $57,450.98
+                </Typography>
+              </span>
+              <span className="totals_amount">
+                <Typography className="totals_label" variant="h6">
+                  Net
+                </Typography>
+                <Typography className="totals_number" variant="h5">
+                  $34,450
+                </Typography>
+              </span>
+            </span>
+          </Card>
+        </Grid>
+        <Grid item={true} md={6} sm={12} xs={12}>
+          <Card className="gridItem" raised={true}>
+            <CardHeader
+              classes={{
+                title: classes.title
+              }}
+              action={
+                <IconButton>
+                  <Add color="primary" />
+                </IconButton>
+              }
+              title="Recent Transactions"
+            />
+          </Card>
+        </Grid>
+        <Grid item={true} md={6} sm={12} xs={12}>
+          <Card className="gridItem" raised={true}>
+            <CardHeader
+              classes={{
+                title: classes.title
+              }}
+              action={
+                <IconButton>
+                  <Add color="primary" />
+                </IconButton>
+              }
+              title="Budget"
+            />
+          </Card>
+        </Grid>
+        <Grid item={true} md={6} sm={12} xs={12}>
+          <Card className="gridItem" raised={true}>
+            <CardHeader
+              classes={{
+                title: classes.title
+              }}
+              action={
+                <IconButton>
+                  <Add color="primary" />
+                </IconButton>
+              }
+              title="Accounts"
+            />
+          </Card>
+        </Grid>
+        <Grid item={true} md={6} sm={12} xs={12}>
+          <Card className="gridItem" raised={true}>
+            <CardHeader
+              classes={{
+                title: classes.title
+              }}
+              action={
+                <IconButton>
+                  <Add color="primary" />
+                </IconButton>
+              }
+              title="Goals"
+            />
+          </Card>
+        </Grid>
+      </Grid>
     </Layout>
   );
 };
+
+const styles = (theme: Theme) => ({
+  title: {
+    color: theme.palette.primary.main,
+    fontWeight: 'bold'
+  }
+});
 
 const authCondition = (authUser: any) => !!authUser;
 
@@ -93,6 +181,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 export const DashboardPage = compose(
   withRouter,
   withAuthorization(authCondition),
+  withStyles(styles as any, { withTheme: true }),
   connect(
     mapStateToProps,
     mapDispatchToProps

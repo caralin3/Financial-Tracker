@@ -121,3 +121,10 @@
     padding-left: 1rem;
   }
 }
+
+.gridItem {
+  &_title {
+    @include title;
+    color: $primary !important;
+  }
+}
