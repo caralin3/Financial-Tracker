@@ -1,16 +1,6 @@
-import {
-  connectRouter,
-  routerMiddleware,
-  RouterState
-} from 'connected-react-router';
+import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router';
 import * as History from 'history';
-import {
-  applyMiddleware,
-  combineReducers,
-  compose,
-  createStore,
-  Store
-} from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore, Store } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -25,10 +15,7 @@ export interface ApplicationState {
 export default (history: History.History): Store<ApplicationState> => {
   const middleware =
     process.env.NODE_ENV === 'development'
-      ? composeWithDevTools(
-          applyMiddleware(routerMiddleware(history)),
-          applyMiddleware(thunk)
-        )
+      ? composeWithDevTools(applyMiddleware(routerMiddleware(history)), applyMiddleware(thunk))
       : compose(
           applyMiddleware(routerMiddleware(history)),
           applyMiddleware(thunk)

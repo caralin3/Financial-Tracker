@@ -1,11 +1,4 @@
-import {
-  Button,
-  Grow,
-  MenuItem,
-  MenuList,
-  Paper,
-  Popper
-} from '@material-ui/core';
+import { Button, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import * as React from 'react';
 
@@ -38,28 +31,18 @@ export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
           >
             {props.selected}
           </Button>
-          <Popper
-            open={open}
-            anchorEl={anchorEl as any}
-            transition={true}
-            disablePortal={true}
-          >
+          <Popper open={open} anchorEl={anchorEl as any} transition={true} disablePortal={true}>
             {({ TransitionProps, placement }) => (
               <Grow
                 {...TransitionProps}
                 style={{
-                  transformOrigin:
-                    placement === 'bottom' ? 'center top' : 'center bottom'
+                  transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'
                 }}
               >
                 <Paper>
                   <MenuList>
                     {props.menuItems.map(item => (
-                      <MenuItem
-                        key={item.value}
-                        data-value={item.value}
-                        onClick={handleClose}
-                      >
+                      <MenuItem key={item.value} data-value={item.value} onClick={handleClose}>
                         {item.label}
                       </MenuItem>
                     ))}

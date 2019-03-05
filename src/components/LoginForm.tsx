@@ -44,11 +44,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
           label="Email"
           onChange={e => setEmail(e.target.value.trim())}
           margin="normal"
-          helperText={
-            !isValidEmail() && !!email
-              ? 'Invalid format'
-              : 'Hint: jdoe@example.com'
-          }
+          helperText={!isValidEmail() && !!email ? 'Invalid format' : 'Hint: jdoe@example.com'}
           error={!!error || (!isValidEmail() && !!email)}
         />
         <TextField

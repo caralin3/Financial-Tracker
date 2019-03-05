@@ -32,8 +32,6 @@ const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser
 });
 
-const ConnectedApp = connect<StateMappedProps, null, AppProps>(mapStateToProps)(
-  DisconnectedApp
-);
+const ConnectedApp = connect<StateMappedProps, null, AppProps>(mapStateToProps)(DisconnectedApp);
 
 export const App = withAuthentication(ConnectedApp) as any;

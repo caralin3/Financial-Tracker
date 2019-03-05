@@ -109,11 +109,7 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           className="signupForm_email"
           id="signupForm_email"
           label="Email"
-          helperText={
-            !isValidEmail() && !!email
-              ? 'Invalid format'
-              : 'Hint: jdoe@example.com'
-          }
+          helperText={!isValidEmail() && !!email ? 'Invalid format' : 'Hint: jdoe@example.com'}
           error={!!error || (!isValidEmail() && !!email)}
           margin="normal"
           onChange={e => setEmail(e.target.value.trim())}

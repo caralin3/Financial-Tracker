@@ -46,10 +46,7 @@ interface NavigationState {
   selected: string;
 }
 
-class DisconnectedNavigation extends React.Component<
-  SignUpMergedProps,
-  NavigationState
-> {
+class DisconnectedNavigation extends React.Component<SignUpMergedProps, NavigationState> {
   public readonly state: NavigationState = {
     expanded: true,
     open: false,
@@ -78,9 +75,7 @@ class DisconnectedNavigation extends React.Component<
       { label: 'Settings', route: routes.settings, icon: <SettingsIcon /> }
     ];
 
-    const title: string = `${selected
-      .slice(1, 2)
-      .toUpperCase()}${selected.slice(2)}`;
+    const title: string = `${selected.slice(1, 2).toUpperCase()}${selected.slice(2)}`;
 
     const navList = (
       <div className={classNames('navList', classes.navBar)}>
@@ -163,34 +158,18 @@ class DisconnectedNavigation extends React.Component<
         >
           {navList}
           <div className={classes.toolbar}>
-            <IconButton
-              aria-label="expander"
-              onClick={() => this.setState({ expanded: !expanded })}
-            >
-              {expanded ? (
-                <DoubleLeftChevronIcon />
-              ) : (
-                <DoubleRightChevronIcon />
-              )}
+            <IconButton aria-label="expander" onClick={() => this.setState({ expanded: !expanded })}>
+              {expanded ? <DoubleLeftChevronIcon /> : <DoubleRightChevronIcon />}
             </IconButton>
           </div>
         </Drawer>
         <div className="show-small">
           <AppBar position="fixed" className={classes.navBar}>
             <Toolbar disableGutters={true}>
-              <IconButton
-                color="inherit"
-                aria-label="Open drawer"
-                onClick={() => this.setState({ open: !open })}
-              >
+              <IconButton color="inherit" aria-label="Open drawer" onClick={() => this.setState({ open: !open })}>
                 {!open && <MenuIcon />}
               </IconButton>
-              <Typography
-                className="navList_heading"
-                variant="h6"
-                color="inherit"
-                noWrap={true}
-              >
+              <Typography className="navList_heading" variant="h6" color="inherit" noWrap={true}>
                 {title}
               </Typography>
             </Toolbar>

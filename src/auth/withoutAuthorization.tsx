@@ -17,20 +17,12 @@ interface StateMappedProps {
   currentUser: User;
 }
 
-interface WithoutAuthorMergedProps
-  extends StateMappedProps,
-    DispatchMappedProps,
-    WithoutAuthorProps {}
+interface WithoutAuthorMergedProps extends StateMappedProps, DispatchMappedProps, WithoutAuthorProps {}
 
 interface WithoutAuthState {}
 
-export const withoutAuthorization = (authCondition: any) => (
-  Component: any
-) => {
-  class WithoutAuthorization extends React.Component<
-    WithoutAuthorMergedProps,
-    WithoutAuthState
-  > {
+export const withoutAuthorization = (authCondition: any) => (Component: any) => {
+  class WithoutAuthorization extends React.Component<WithoutAuthorMergedProps, WithoutAuthState> {
     public componentDidMount() {
       firebase.auth.onAuthStateChanged((currentUser: any) => {
         if (authCondition(currentUser)) {

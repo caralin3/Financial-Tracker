@@ -12,18 +12,12 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {}
 
-interface WithAuthMergedProps
-  extends StateMappedProps,
-    DispatchMappedProps,
-    WithAuthProps {}
+interface WithAuthMergedProps extends StateMappedProps, DispatchMappedProps, WithAuthProps {}
 
 interface WithAuthState {}
 
 export const withAuthentication = (Component: any) => {
-  class WithAuthentication extends React.Component<
-    WithAuthMergedProps,
-    WithAuthState
-  > {
+  class WithAuthentication extends React.Component<WithAuthMergedProps, WithAuthState> {
     public readonly state: WithAuthState = {};
 
     public componentDidMount() {
@@ -42,9 +36,7 @@ export const withAuthentication = (Component: any) => {
     }
   }
 
-  const mapDispatchToProps = (
-    dispatch: Dispatch<any>
-  ): DispatchMappedProps => ({ dispatch });
+  const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({ dispatch });
 
   return connect(
     null,

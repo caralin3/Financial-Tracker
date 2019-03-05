@@ -5,12 +5,4 @@ import { Layout } from './Layout';
 import { LoginForm } from './LoginForm';
 import { SignUpForm } from './SignUpForm';
 
-export {
-  DoubleLeftChevronIcon,
-  DoubleRightChevronIcon,
-  DropdownMenu,
-  Form,
-  Layout,
-  LoginForm,
-  SignUpForm
-};
+export { DoubleLeftChevronIcon, DoubleRightChevronIcon, DropdownMenu, Form, Layout, LoginForm, SignUpForm };

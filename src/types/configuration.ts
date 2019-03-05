@@ -26,5 +26,4 @@ export interface CommonConfiguration {
 
 export interface CompileTimeConfiguration extends CommonConfiguration {}
 
-export interface RuntimeConfiguration
-  extends Pick<CommonConfiguration, 'env'> {}
+export interface RuntimeConfiguration extends Pick<CommonConfiguration, 'env'> {}

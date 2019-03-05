@@ -19,12 +19,7 @@ export const Form: React.SFC<FormProps> = props => (
         ['form_button-disabled']: props.disabled
       })}
     >
-      <Button
-        color="primary"
-        type="submit"
-        disabled={props.disabled}
-        variant="contained"
-      >
+      <Button color="primary" type="submit" disabled={props.disabled} variant="contained">
         {props.buttonText}
       </Button>
     </div>

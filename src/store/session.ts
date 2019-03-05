@@ -7,9 +7,7 @@ export interface SetCurrentUserAction {
 
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
-export const setCurrentUser = (
-  currentUser: User | null
-): SetCurrentUserAction => ({
+export const setCurrentUser = (currentUser: User | null): SetCurrentUserAction => ({
   currentUser,
   type: SET_CURRENT_USER
 });
@@ -26,10 +24,7 @@ const initialState: SessionState = {
 
 // Session reducer manages the authUser object
 // Authenticated user represents the session
-export const reducer = (
-  state: SessionState = initialState,
-  action: SessionActions
-) => {
+export const reducer = (state: SessionState = initialState, action: SessionActions) => {
   switch (action.type) {
     case SET_CURRENT_USER: {
       return {
