@@ -6,7 +6,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
-import { DropdownMenu, Layout } from '../components';
+import { AccountModal, BudgetModal, DropdownMenu, GoalModal, Layout, TransactionModal } from '../components';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
 
@@ -29,6 +29,10 @@ interface DashboardMergedProps
     DashboardPageProps {}
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
+  const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
+  const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
+  const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
+  const [addingTrans, setAddingTrans] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<number>(0);
   const { classes } = props;
 
@@ -46,6 +50,10 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
 
   return (
     <Layout>
+      <AccountModal open={addingAccount} handleClose={() => setAddingAccount(false)} />
+      <BudgetModal open={addingBudget} handleClose={() => setAddingBudget(false)} />
+      <GoalModal open={addingGoal} handleClose={() => setAddingGoal(false)} />
+      <TransactionModal open={addingTrans} handleClose={() => setAddingTrans(false)} />
       <div className="dashboard_header">
         <div className="dashboard_headerContent">
           <Typography className="dashboard_title" variant="h3">
@@ -105,7 +113,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
                 title: classes.title
               }}
               action={
-                <IconButton>
+                <IconButton onClick={() => setAddingTrans(true)}>
                   <Add color="primary" />
                 </IconButton>
               }
@@ -120,7 +128,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
                 title: classes.title
               }}
               action={
-                <IconButton>
+                <IconButton onClick={() => setAddingBudget(true)}>
                   <Add color="primary" />
                 </IconButton>
               }
@@ -135,7 +143,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
                 title: classes.title
               }}
               action={
-                <IconButton>
+                <IconButton onClick={() => setAddingAccount(true)}>
                   <Add color="primary" />
                 </IconButton>
               }
@@ -150,7 +158,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
                 title: classes.title
               }}
               action={
-                <IconButton>
+                <IconButton onClick={() => setAddingGoal(true)}>
                   <Add color="primary" />
                 </IconButton>
               }
@@ -166,7 +174,10 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
 const styles = (theme: Theme) => ({
   title: {
     color: theme.palette.primary.main,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 22
+    }
   }
 });
 

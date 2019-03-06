@@ -15,7 +15,7 @@ const DisconnectedLandingPage: React.SFC<LandingPageProps> = props => {
       <Typography className="landing_title" variant="h1">
         Financial Tracker
       </Typography>
-      <Card className="landing_form">
+      <Card className="landing_form" raised={true}>
         {login ? (
           <Typography className="landing_label" variant="h2">
             Login

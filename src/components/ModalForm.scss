@@ -1,0 +1,13 @@
+@import '../appearance/styles/variables.scss';
+
+.modalForm {
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate(-50%, -50%);
+  width: 92%;
+
+  @media #{$medium} {
+    width: 85%;
+  }
+}
