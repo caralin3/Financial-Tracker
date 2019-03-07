@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader, IconButton, Modal, Theme, withStyles } from '@material-ui/core';
+import { CardHeader, Dialog, DialogContent, IconButton, Theme, withStyles } from '@material-ui/core';
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import { Form } from './';
@@ -14,14 +15,22 @@ interface ModalFormProps {
 
 export const UnwrappedModalForm: React.SFC<ModalFormProps> = props => {
   const { classes } = props;
+  const xs = useMediaQuery('(max-width:680px)');
+  const sm = useMediaQuery('(max-width:1070px)');
+
   return (
-    <Modal
-      aria-labelledby="simple-modal-title"
-      aria-describedby="simple-modal-description"
+    <Dialog
+      aria-labelledby={`form-modal-${props.formTitle}`}
+      aria-describedby="form-modal-description"
       open={props.open}
+      className="modalForm"
       onClose={props.handleClose}
+      scroll="body"
+      fullWidth={true}
+      fullScreen={xs}
+      maxWidth={sm ? 'sm' : 'md'}
     >
-      <Card className="modalForm">
+      <DialogContent>
         <CardHeader
           classes={{
             title: classes.title
@@ -33,13 +42,11 @@ export const UnwrappedModalForm: React.SFC<ModalFormProps> = props => {
           }
           title={props.formTitle}
         />
-        <CardContent>
-          <Form buttonText={props.formButton} submit={props.formSubmit}>
-            {props.children}
-          </Form>
-        </CardContent>
-      </Card>
-    </Modal>
+        <Form buttonText={props.formButton} submit={props.formSubmit}>
+          {props.children}
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

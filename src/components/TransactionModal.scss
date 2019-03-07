@@ -9,6 +9,13 @@
   //   width: 100%;
   // }
 
+  &_fields {
+    align-items: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+
   &_error {
     color: $error;
     font-size: 16px;

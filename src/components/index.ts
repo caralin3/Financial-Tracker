@@ -2,7 +2,7 @@ import { AccountModal } from './AccountModal';
 import { BudgetModal } from './BudgetModal';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
 import { DropdownMenu } from './DropdownMenu';
-import { Form } from './Form';
+import { Form, SelectInput } from './Form';
 import { GoalModal } from './GoalModal';
 import { Layout } from './Layout';
 import { LoginForm } from './LoginForm';
@@ -21,6 +21,7 @@ export {
   Layout,
   LoginForm,
   ModalForm,
+  SelectInput,
   SignUpForm,
   TransactionModal
 };

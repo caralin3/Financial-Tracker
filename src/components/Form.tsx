@@ -1,6 +1,7 @@
-import { Button } from '@material-ui/core';
+import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@material-ui/core';
 import classNames from 'classnames';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 export interface FormProps {
   buttonText: string;
@@ -25,3 +26,41 @@ export const Form: React.SFC<FormProps> = props => (
     </div>
   </form>
 );
+
+interface SelectInputProps {
+  handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  label: string;
+  selected: string;
+  options: Array<{ label: string; value: string }>;
+}
+
+export const SelectInput: React.SFC<SelectInputProps> = props => {
+  let inputLabelRef: any = null;
+  const [labelWidth, setLabelWidth] = React.useState(0);
+
+  React.useEffect(() => {
+    const elem: any = ReactDOM.findDOMNode(inputLabelRef);
+    if (!!elem) {
+      setLabelWidth(elem.offsetWidth);
+    }
+  });
+
+  return (
+    <FormControl variant="outlined">
+      <InputLabel ref={ref => (inputLabelRef = ref)} htmlFor={`outlined-${props.label}-select`}>
+        {props.label}
+      </InputLabel>
+      <Select
+        value={props.selected}
+        onChange={props.handleChange}
+        input={<OutlinedInput labelWidth={labelWidth} name={props.label} id={`outlined-${props.label}-select`} />}
+      >
+        {props.options.map(op => (
+          <MenuItem key={op.value} value={op.value}>
+            {op.label}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
