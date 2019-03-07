@@ -1,4 +1,5 @@
 import { Tab, Tabs, TextField, Typography } from '@material-ui/core';
+import classnames from 'classnames';
 import * as React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { theme } from '../appearance';
@@ -24,64 +25,77 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     const options = [{ label: 'Select', value: '' }, { label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];
     return (
       <Typography className="transModal_fields transModal_fields--expense" component="div" dir={theme.direction}>
-        <SelectInput label="From" selected={from} handleChange={e => setFrom(e.target.value)} options={options} />
-        <TextField
-          id="outlined-name"
-          label="Name"
-          // className={classes.textField}
-          // value={this.state.name}
-          // onChange={this.handleChange('name')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-name"
-          label="Date"
-          // className={classes.textField}
-          // value={this.state.name}
-          // onChange={this.handleChange('name')}
-          InputLabelProps={{
-            shrink: true
-          }}
-          margin="normal"
-          type="date"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-name"
-          label="Name"
-          // className={classes.textField}
-          // value={this.state.name}
-          // onChange={this.handleChange('name')}
-          type="number"
-          margin="normal"
-          variant="outlined"
-        />
-        <SelectInput label="Categories" selected={from} handleChange={e => setFrom(e.target.value)} options={options} />
-        <SelectInput
-          label="Subcategories"
-          selected={from}
-          handleChange={e => setFrom(e.target.value)}
-          options={options}
-        />
-        <TextField
-          id="outlined-name"
-          label="Name"
-          // className={classes.textField}
-          // value={this.state.name}
-          // onChange={this.handleChange('name')}
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="outlined-name"
-          label="Name"
-          // className={classes.textField}
-          // value={this.state.name}
-          // onChange={this.handleChange('name')}
-          margin="normal"
-          variant="outlined"
-        />
+        <div className="transModal_section">
+          <SelectInput label="From" selected={from} handleChange={e => setFrom(e.target.value)} options={options} />
+          <TextField
+            id="outlined-name"
+            label="Name"
+            // className={classes.textField}
+            // value={this.state.name}
+            // onChange={this.handleChange('name')}
+            margin="normal"
+            variant="outlined"
+          />
+        </div>
+        <div className="transModal_section">
+          <TextField
+            id="outlined-name"
+            label="Date"
+            // className={classes.textField}
+            // value={this.state.name}
+            // onChange={this.handleChange('name')}
+            InputLabelProps={{
+              shrink: true
+            }}
+            margin="normal"
+            type="date"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-name"
+            label="Name"
+            // className={classes.textField}
+            // value={this.state.name}
+            // onChange={this.handleChange('name')}
+            type="number"
+            margin="normal"
+            variant="outlined"
+          />
+        </div>
+        <div className="transModal_section">
+          <SelectInput
+            label="Categories"
+            selected={from}
+            handleChange={e => setFrom(e.target.value)}
+            options={options}
+          />
+          <SelectInput
+            label="Subcategories"
+            selected={from}
+            handleChange={e => setFrom(e.target.value)}
+            options={options}
+          />
+        </div>
+        <div className="transModal_section">
+          <TextField
+            id="outlined-name"
+            label="Name"
+            // className={classes.textField}
+            // value={this.state.name}
+            // onChange={this.handleChange('name')}
+            margin="normal"
+            variant="outlined"
+          />
+          <TextField
+            id="outlined-name"
+            label="Name"
+            // className={classes.textField}
+            // value={this.state.name}
+            // onChange={this.handleChange('name')}
+            margin="normal"
+            variant="outlined"
+          />
+        </div>
       </Typography>
     );
   };
@@ -111,12 +125,11 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         value={tab}
         variant="fullWidth"
         indicatorColor="primary"
-        textColor="primary"
         onChange={(e, val) => setTab(val)}
       >
-        <Tab className="transModal_tab" label="Expense" />
-        <Tab className="transModal_tab" label="Income" />
-        <Tab className="transModal_tab" label="Transfer" />
+        <Tab className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 0 })} label="Expense" />
+        <Tab className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 1 })} label="Income" />
+        <Tab className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 2 })} label="Transfer" />
       </Tabs>
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
