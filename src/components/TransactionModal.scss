@@ -14,20 +14,23 @@
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
+    overflow: hidden;
     padding: 1rem 0 !important;
-    width: 100% !important;
+
+    &--loading {
+      padding: 5rem 0 !important;
+    }
   }
 
-  &_section {
+  &_grid {
     align-items: center;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
-    width: 100% !important;
+    padding: 1rem;
+    overflow: hidden;
+    width: 50% !important;
 
-    @media #{$medium} {
-      flex-direction: row;
-      justify-content: space-between;
+    @media screen and (min-width: 600px) {
+      width: 85% !important;      
     }
   }
 
@@ -36,13 +39,5 @@
     font-size: 16px;
     padding: 0 1rem;
     text-align: center;
-  }
-
-  &_gridContainer {
-    justify-content: center;
-
-    @media #{$medium} {
-      justify-content: flex-start;
-    }
   }
 }

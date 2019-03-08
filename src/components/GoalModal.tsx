@@ -15,6 +15,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
 
   return (
     <ModalForm
+      disabled={true}
       formTitle="Add Goal"
       formButton="Add"
       formSubmit={handleSubmit}

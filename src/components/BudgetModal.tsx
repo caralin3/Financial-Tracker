@@ -15,6 +15,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
 
   return (
     <ModalForm
+      disabled={true}
       formTitle="Add Budget"
       formButton="Add"
       formSubmit={handleSubmit}

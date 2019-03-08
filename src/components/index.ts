@@ -5,6 +5,7 @@ import { DropdownMenu } from './DropdownMenu';
 import { Form, SelectInput } from './Form';
 import { GoalModal } from './GoalModal';
 import { Layout } from './Layout';
+import { Loading } from './Loading';
 import { LoginForm } from './LoginForm';
 import { ModalForm } from './ModalForm';
 import { SignUpForm } from './SignUpForm';
@@ -19,6 +20,7 @@ export {
   Form,
   GoalModal,
   Layout,
+  Loading,
   LoginForm,
   ModalForm,
   SelectInput,

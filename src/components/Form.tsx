@@ -46,7 +46,7 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
   });
 
   return (
-    <FormControl variant="outlined">
+    <FormControl fullWidth={true} variant="outlined">
       <InputLabel ref={ref => (inputLabelRef = ref)} htmlFor={`outlined-${props.label}-select`}>
         {props.label}
       </InputLabel>

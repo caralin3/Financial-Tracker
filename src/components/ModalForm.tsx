@@ -6,6 +6,7 @@ import { Form } from './';
 
 interface ModalFormProps {
   classes: any;
+  disabled: boolean;
   formButton: string;
   formTitle: string;
   formSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -42,7 +43,7 @@ export const UnwrappedModalForm: React.SFC<ModalFormProps> = props => {
           }
           title={props.formTitle}
         />
-        <Form buttonText={props.formButton} submit={props.formSubmit}>
+        <Form buttonText={props.formButton} disabled={props.disabled} submit={props.formSubmit}>
           {props.children}
         </Form>
       </DialogContent>

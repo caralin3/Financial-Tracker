@@ -15,6 +15,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
 
   return (
     <ModalForm
+      disabled={true}
       formTitle="Add Account"
       formButton="Add"
       formSubmit={handleSubmit}
