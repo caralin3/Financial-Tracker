@@ -24,15 +24,15 @@ interface StateMappedProps {
 
 interface DashboardMergedProps
   extends RouteComponentProps<any>,
-    StateMappedProps,
-    DispatchMappedProps,
-    DashboardPageProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  DashboardPageProps { }
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
-  const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
+  const [addingBudget, setAddingBudget] = React.useState<boolean>(true);
   const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
-  const [addingTrans, setAddingTrans] = React.useState<boolean>(true);
+  const [addingTrans, setAddingTrans] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<number>(0);
   const { classes } = props;
 

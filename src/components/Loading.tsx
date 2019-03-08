@@ -1,7 +1,7 @@
 import { CircularProgress, Typography } from '@material-ui/core';
 import * as React from 'react';
 
-export interface LoadingProps { }
+export interface LoadingProps {}
 
 export const Loading: React.SFC<LoadingProps> = props => (
   <div className="loading">

@@ -37,7 +37,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   );
 
   const expenseFields = (
-    <Typography className="transModal_fields transModal_fields--expense" component="div" dir={theme.direction}>
+    <Typography className="transModal_fields" component="div" dir={theme.direction}>
       <Grid className="transModal_grid" container={true} spacing={24}>
         <Grid item={true} xs={12} sm={6}>
           <SelectInput label="From" selected={from} handleChange={e => setFrom(e.target.value)} options={options} />
@@ -129,7 +129,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   );
 
   const incomeFields = (
-    <Typography className="transModal_fields transModal_fields--income" component="div" dir={theme.direction}>
+    <Typography className="transModal_fields" component="div" dir={theme.direction}>
       <Grid className="transModal_grid" container={true} spacing={24}>
         <Grid item={true} xs={12} sm={6}>
           <TextField
@@ -201,7 +201,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   );
 
   const transferFields = (
-    <Typography className="transModal_fields transModal_fields--transfer" component="div" dir={theme.direction}>
+    <Typography className="transModal_fields" component="div" dir={theme.direction}>
       <Grid className="transModal_grid" container={true} spacing={24}>
         <Grid item={true} xs={12} sm={6}>
           <SelectInput label="From" selected={from} handleChange={e => setFrom(e.target.value)} options={options} />
