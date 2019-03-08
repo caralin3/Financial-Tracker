@@ -31,7 +31,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
       {loading ? (
         <Loading />
       ) : (
-          <Grid className="transModal_grid" container={true} spacing={24}>
+          <Grid container={true} alignItems="center" justify="center" spacing={24}>
             <Grid item={true} xs={12} sm={6}>
               <SelectInput
                 label="Category"
@@ -52,11 +52,28 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
                 variant="outlined"
               />
             </Grid>
-            <Grid item={true} xs={12} sm={6}>
+            <Grid item={true} xs={12} sm={3}>
               <Typography className="modal-title" color="primary" variant="body1">
                 Frequency
               </Typography>
             </Grid>
+            <Grid item={true} xs={12} sm={9}>
+              <Grid container={true} spacing={24}>
+                <Grid item={true} xs={6} sm={3}>
+                  Monthly
+                </Grid>
+                <Grid item={true} xs={6} sm={3}>
+                  Monthly
+                </Grid>
+                <Grid item={true} xs={6} sm={3}>
+                  Monthly
+                </Grid>
+                <Grid item={true} xs={6} sm={3}>
+                  Monthly
+                </Grid>
+              </Grid>
+            </Grid>
+            {/* </Grid> */}
           </Grid>
         )}
     </ModalForm>
