@@ -11,6 +11,10 @@
     padding: 1rem;
     overflow: hidden;
     width: 95% !important;
+
+    @media #{$medium} {
+      width: 75% !important;  
+    }
   }
 
   &_error {
