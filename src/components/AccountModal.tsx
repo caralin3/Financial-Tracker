@@ -17,9 +17,9 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // props.handleClose();
     // setError(true);
     setSuccess(true);
+    // setTimeout(() => props.handleClose(), 3000);
   };
 
   const options = [{ label: 'Select', value: '' }, { label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];

@@ -29,7 +29,7 @@ interface DashboardMergedProps
   DashboardPageProps { }
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
-  const [addingAccount, setAddingAccount] = React.useState<boolean>(true);
+  const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
   const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
   const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
   const [addingTrans, setAddingTrans] = React.useState<boolean>(false);
