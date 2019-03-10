@@ -1,6 +1,6 @@
 import { FormControlLabel, Grid, Radio, TextField, Typography } from '@material-ui/core';
 import * as React from 'react';
-import { Loading, ModalForm, SelectInput } from './';
+import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface BudgetModalProps {
   handleClose: () => void;
@@ -9,22 +9,24 @@ interface BudgetModalProps {
 
 const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
   const [loading] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<boolean>(false);
   const [category, setCategory] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number | undefined>(undefined);
   const [frequency, setFrequency] = React.useState<string>('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    props.handleClose();
+    // props.handleClose();
+    // setError(true);
+    setSuccess(true);
   };
 
   const options = [{ label: 'Select', value: '' }, { label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];
 
-  console.log(frequency);
-
   return (
     <ModalForm
-      disabled={true}
+      disabled={false}
       formTitle="Add Budget"
       formButton="Add"
       formSubmit={handleSubmit}
@@ -32,9 +34,18 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
       handleClose={props.handleClose}
     >
       {loading ? (
-        <Loading />
+        <div className="budgetModal_loading">
+          <Loading />
+        </div>
       ) : (
-        <Grid container={true} alignItems="center" justify="center" spacing={24}>
+        <Grid className="budgetModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+          <Alert
+            onClose={() => setSuccess(false)}
+            open={success}
+            variant="success"
+            message="This is a success message!"
+          />
+          <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
           <Grid item={true} xs={12} sm={6}>
             <SelectInput
               label="Category"

@@ -4,7 +4,10 @@
 @import './core.scss';
 @import './variables.scss';
 
+@import '../../components/AccountModal.scss';
+@import '../../components/BudgetModal.scss';
 @import '../../components/Form.scss';
+@import '../../components/GoalModal.scss';
 @import '../../components/Layout.scss';
 @import '../../components/Loading.scss';
 @import '../../components/LoginForm.scss';

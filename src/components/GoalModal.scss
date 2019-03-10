@@ -1,0 +1,42 @@
+@import '../appearance/styles/variables.scss';
+
+.goalModal {
+  &_loading {
+    padding: 5rem 0 !important;
+  }
+
+  &_row {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  &_fieldText {
+    padding: 0 1rem;
+
+    &--spend {
+      padding-right: 0.5rem;
+      width: 100%;
+
+      @media #{$medium} {
+        padding-right: 0.3rem;
+        width: 12rem;
+      }
+    }
+  }
+
+  &_grid {
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden;
+    width: 95% !important;
+  }
+
+  &_error {
+    color: $error;
+    font-size: 16px;
+    padding: 0 1rem;
+    text-align: center;
+  }
+}

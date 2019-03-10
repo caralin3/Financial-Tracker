@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import * as React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { theme } from '../appearance';
-import { Loading, ModalForm, SelectInput } from './';
+import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface TransactionModalProps {
   handleClose: () => void;
@@ -12,6 +12,8 @@ interface TransactionModalProps {
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => {
   const [loading] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<boolean>(false);
   const [tab, setTab] = React.useState<number>(0);
   const [from, setFrom] = React.useState<string>('');
   const [to, setTo] = React.useState<string>('');
@@ -26,6 +28,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // props.handleClose();
+    setError(true);
+    // setSuccess(true);
   };
 
   const options = [{ label: 'Select', value: '' }, { label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];
@@ -264,13 +268,15 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
 
   return (
     <ModalForm
-      disabled={true}
+      disabled={false}
       formTitle="Add Transaction"
       formButton="Add"
       formSubmit={handleSubmit}
       open={props.open}
       handleClose={props.handleClose}
     >
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="This is a success message!" />
+      <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
       <Tabs
         className="transModal_tabs"
         value={tab}
