@@ -1,4 +1,5 @@
 import { AccountModal } from './AccountModal';
+import { Alert } from './Alert';
 import { BudgetModal } from './BudgetModal';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
 import { DropdownMenu } from './DropdownMenu';
@@ -12,6 +13,7 @@ import { SignUpForm } from './SignUpForm';
 import { TransactionModal } from './TransactionModal';
 
 export {
+  Alert,
   AccountModal,
   BudgetModal,
   DoubleLeftChevronIcon,
