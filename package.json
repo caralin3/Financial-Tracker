@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "connected-react-router": "^6.2.2",
+    "downshift": "^3.2.7",
     "firebase": "^5.8.2",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",

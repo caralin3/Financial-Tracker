@@ -51,7 +51,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
             id="expense-item"
             label="Item"
             fullWidth={true}
-            autoComplete="item"
             className="transModal_field--item"
             value={item}
             onChange={e => setItem(e.target.value.trim())}
