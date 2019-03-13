@@ -1,19 +1,21 @@
 import Checkbox from '@material-ui/core/Checkbox';
+import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { Theme, withStyles } from '@material-ui/core/styles';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
-import Table from '@material-ui/core/Table';
+import MuiTable from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
+import MuiTableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
+import MuiToolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -25,25 +27,18 @@ interface TableHeadProps {
   order: 'desc' | 'asc' | undefined;
   orderBy: string;
   rowCount: number;
+  rows: any[];
 }
 
-export const EnhancedTableHead: React.SFC<TableHeadProps> = props => {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount } = props;
+export const TableHead: React.SFC<TableHeadProps> = props => {
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, rows } = props;
 
   const createSortHandler = (property: string) => (event: any) => {
     props.onRequestSort(event, property);
   };
 
-  const rows = [
-    { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-    { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-    { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-    { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-    { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' }
-  ];
-
   return (
-    <TableHead>
+    <MuiTableHead>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
@@ -67,20 +62,21 @@ export const EnhancedTableHead: React.SFC<TableHeadProps> = props => {
           </TableCell>
         ))}
       </TableRow>
-    </TableHead>
+    </MuiTableHead>
   );
 };
 
 interface TableToolbarProps {
   classes: any;
   numSelected: number;
+  tableTitle: string;
 }
 
-export const EnhancedTableToolbar: React.SFC<TableToolbarProps> = props => {
-  const { numSelected, classes } = props;
+export const Toolbar: React.SFC<TableToolbarProps> = props => {
+  const { classes, numSelected, tableTitle } = props;
 
   return (
-    <Toolbar
+    <MuiToolbar
       className={classNames(classes.root, {
         [classes.highlight]: numSelected > 0
       })}
@@ -92,18 +88,27 @@ export const EnhancedTableToolbar: React.SFC<TableToolbarProps> = props => {
           </Typography>
         ) : (
           <Typography variant="h6" id="tableTitle">
-            Nutrition
+            {tableTitle}
           </Typography>
         )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
         {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton aria-label="Delete">
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+          <div className={classes.actionButtons}>
+            {numSelected === 1 && (
+              <Tooltip title="Edit">
+                <IconButton aria-label="Edit">
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title="Delete">
+              <IconButton aria-label="Delete">
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
         ) : (
           <Tooltip title="Filter list">
             <IconButton aria-label="Filter list">
@@ -112,11 +117,14 @@ export const EnhancedTableToolbar: React.SFC<TableToolbarProps> = props => {
           </Tooltip>
         )}
       </div>
-    </Toolbar>
+    </MuiToolbar>
   );
 };
 
 const toolbarStyles = (theme: Theme) => ({
+  actionButtons: {
+    display: 'flex'
+  },
   actions: {
     color: theme.palette.text.secondary
   },
@@ -141,41 +149,63 @@ const toolbarStyles = (theme: Theme) => ({
   }
 });
 
-const TableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
+const TableToolbar = withStyles(toolbarStyles)(Toolbar);
+
+interface TableFilterListProps {
+  classes: any;
+  filters: Array<{ [key: string]: string | number }>;
+  onChangeFilter: () => void;
+}
+
+const FilterList: React.SFC<TableFilterListProps> = props => {
+  const { classes, filters, onChangeFilter } = props;
+
+  return (
+    <div className={classes.root}>
+      {filters.map((item: { [key: string]: string }) =>
+        Object.keys(item).map((key: string) => (
+          <Chip
+            className={classes.chip}
+            label={item[key]}
+            key={key}
+            onDelete={onChangeFilter.bind(null, key, item.value, 'checkbox')}
+          />
+        ))
+      )}
+    </div>
+  );
+};
+
+const filterListStyles = (theme: Theme) => ({
+  chip: {
+    margin: '8px 8px 0px 0px'
+  },
+  root: {
+    display: 'flex',
+    justifyContent: 'left',
+    // flexWrap: 'wrap',
+    margin: '5px 16px 20px 20px'
+  }
+});
+
+export const TableFilterList = withStyles(filterListStyles)(FilterList);
 
 interface TableProps {
   classes: any;
+  data: any;
+  rows: any[];
+  title: string;
 }
 
-const EnhancedTable: React.SFC<TableProps> = props => {
-  let counter = 0;
-  const createData = (name: string, calories: number, fat: number, carbs: number, protein: number) => {
-    counter += 1;
-    return { id: counter, name, calories, fat, carbs, protein };
-  };
-
-  const data: any[] = [
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Donut', 452, 25.0, 51, 4.9),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-    createData('Honeycomb', 408, 3.2, 87, 6.5),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Jelly Bean', 375, 0.0, 94, 0.0),
-    createData('KitKat', 518, 26.0, 65, 7.0),
-    createData('Lollipop', 392, 0.2, 98, 0.0),
-    createData('Marshmallow', 318, 0, 81, 2.0),
-    createData('Nougat', 360, 19.0, 9, 37.0),
-    createData('Oreo', 437, 18.0, 63, 4.0)
-  ];
-
-  const { classes } = props;
+const Table: React.SFC<TableProps> = props => {
+  const { classes, data, rows, title } = props;
   const [order, setOrder] = React.useState<'desc' | 'asc' | undefined>(undefined);
   const [orderBy, setOrderBy] = React.useState<string>('');
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
   const [page, setPage] = React.useState<number>(0);
-  let selected: any[] = [];
+  const [selected, setSelected] = React.useState<number[]>([]);
+
+  const filters = [{ ['name']: 'John', ['age']: 50 }];
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
@@ -205,7 +235,7 @@ const EnhancedTable: React.SFC<TableProps> = props => {
     return ordered === 'desc' ? (a: any, b: any) => desc(a, b, orderedBy) : (a: any, b: any) => -desc(a, b, orderedBy);
   };
 
-  const handleRequestSort = (event: any, property: any) => {
+  const handleRequestSort = (e: React.MouseEvent<HTMLButtonElement>, property: any) => {
     const orderedBy = property;
     let ordered: 'desc' | 'asc' | undefined = 'desc';
 
@@ -217,15 +247,15 @@ const EnhancedTable: React.SFC<TableProps> = props => {
     setOrderBy(orderedBy);
   };
 
-  const handleSelectAllClick = (event: any) => {
-    if (event.target.checked) {
-      selected = data.map(n => n.id);
+  const handleSelectAllClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelected(data.map((n: any) => n.id));
       return;
     }
-    selected = [];
+    setSelected([]);
   };
 
-  const handleClick = (event: any, id: number) => {
+  const handleClick = (e: React.MouseEvent<HTMLTableRowElement>, id: number) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: any[] = [];
 
@@ -238,70 +268,71 @@ const EnhancedTable: React.SFC<TableProps> = props => {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
-    selected = newSelected;
-  };
-
-  const handleChangePage = (event: any, pg: number) => {
-    setPage(pg);
-  };
-
-  const handleChangeRowsPerPage = (event: any) => {
-    setRowsPerPage(event.target.value);
+    setSelected(newSelected);
   };
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   return (
     <Paper className={classNames([classes.root, 'table_container'])}>
-      <TableToolbar numSelected={selected.length} />
+      <TableToolbar numSelected={selected.length} tableTitle={title} />
+      <TableFilterList filters={filters} onChangeFilter={() => null} />
       <div className={classNames([classes.tableWrapper, 'table_wrapper'])}>
-        <Table className={classes.table} aria-labelledby="tableTitle">
-          <EnhancedTableHead
-            numSelected={selected.length}
+        <MuiTable className={classes.table} aria-labelledby="tableTitle">
+          <TableHead
+            numSelected={data.length > 0 ? selected.length : -1}
             order={order}
             orderBy={orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
             rowCount={data.length}
+            rows={rows}
           />
           <TableBody>
-            {stableSort(data, getSorting(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map(n => {
-                const sel: boolean = isSelected(n.id);
-                return (
-                  <TableRow
-                    hover={true}
-                    onClick={event => handleClick(event, n.id)}
-                    role="checkbox"
-                    aria-checked={sel}
-                    tabIndex={-1}
-                    key={n.id}
-                    selected={sel}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox checked={sel} />
-                    </TableCell>
-                    <TableCell component="th" scope="row" padding="none">
-                      {n.name}
-                    </TableCell>
-                    <TableCell align="right">{n.calories}</TableCell>
-                    <TableCell align="right">{n.fat}</TableCell>
-                    <TableCell align="right">{n.carbs}</TableCell>
-                    <TableCell align="right">{n.protein}</TableCell>
-                  </TableRow>
-                );
-              })}
-            {emptyRows > 0 && (
+            {data.length > 0 ? (
+              stableSort(data, getSorting(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map(n => {
+                  const sel: boolean = isSelected(n.id);
+                  return (
+                    <TableRow
+                      className="table_row"
+                      hover={true}
+                      onClick={event => handleClick(event, n.id)}
+                      role="checkbox"
+                      aria-checked={sel}
+                      tabIndex={-1}
+                      key={n.id}
+                      selected={sel}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox checked={sel} />
+                      </TableCell>
+                      <TableCell component="th" scope="row" padding="none">
+                        {n.name}
+                      </TableCell>
+                      <TableCell align="right">{n.calories}</TableCell>
+                      <TableCell align="right">{n.fat}</TableCell>
+                      <TableCell align="right">{n.carbs}</TableCell>
+                      <TableCell align="right">{n.protein}</TableCell>
+                    </TableRow>
+                  );
+                })
+            ) : (
+              <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
+                <TableCell colSpan={3} />
+                <TableCell>No records</TableCell>
+              </TableRow>
+            )}
+            {data.length > 0 && emptyRows > 0 && (
               <TableRow style={{ height: 49 * emptyRows }}>
                 <TableCell colSpan={6} />
               </TableRow>
             )}
           </TableBody>
-        </Table>
+        </MuiTable>
       </div>
       <TablePagination
-        // classes={classes.pagRoot}
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={data.length}
@@ -313,8 +344,10 @@ const EnhancedTable: React.SFC<TableProps> = props => {
         nextIconButtonProps={{
           'aria-label': 'Next Page'
         }}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={handleChangeRowsPerPage}
+        onChangePage={(e: React.MouseEvent<HTMLButtonElement>, num: number) => setPage(num)}
+        onChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+          setRowsPerPage(parseInt(e.target.value, 10))
+        }
       />
     </Paper>
   );
@@ -336,4 +369,4 @@ const styles = (theme: Theme) => ({
   }
 });
 
-export const DataTable = withStyles(styles)(EnhancedTable);
+export const DataTable = withStyles(styles)(Table);

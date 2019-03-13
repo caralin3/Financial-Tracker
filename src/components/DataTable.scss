@@ -34,4 +34,15 @@
   &_wrapper {
     overflow-x: auto;
   }
+
+  &_toolbar {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  &_row {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
