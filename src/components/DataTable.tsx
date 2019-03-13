@@ -39,47 +39,37 @@ export const EnhancedTableHead: React.SFC<TableHeadProps> = props => {
     { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
     { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
     { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-    { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+    { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' }
   ];
 
   return (
     <TableHead>
-        <TableRow>
-          <TableCell padding="checkbox">
-            <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={numSelected === rowCount}
-              onChange={onSelectAllClick}
-            />
+      <TableRow>
+        <TableCell padding="checkbox">
+          <Checkbox
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={numSelected === rowCount}
+            onChange={onSelectAllClick}
+          />
+        </TableCell>
+        {rows.map((row: any) => (
+          <TableCell
+            key={row.id}
+            align={row.numeric ? 'right' : 'left'}
+            padding={row.disablePadding ? 'none' : 'default'}
+            sortDirection={orderBy === row.id ? order : false}
+          >
+            <Tooltip title="Sort" placement={row.numeric ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
+              <TableSortLabel active={orderBy === row.id} direction={order} onClick={createSortHandler(row.id)}>
+                {row.label}
+              </TableSortLabel>
+            </Tooltip>
           </TableCell>
-          {rows.map(
-            (row: any) => (
-              <TableCell
-                key={row.id}
-                align={row.numeric ? 'right' : 'left'}
-                padding={row.disablePadding ? 'none' : 'default'}
-                sortDirection={orderBy === row.id ? order : false}
-              >
-                <Tooltip
-                  title="Sort"
-                  placement={row.numeric ? 'bottom-end' : 'bottom-start'}
-                  enterDelay={300}
-                >
-                  <TableSortLabel
-                    active={orderBy === row.id}
-                    direction={order}
-                    onClick={createSortHandler(row.id)}
-                  >
-                    {row.label}
-                  </TableSortLabel>
-                </Tooltip>
-              </TableCell>
-            ),
-          )}
-        </TableRow>
-      </TableHead>
-  )
-}
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+};
 
 interface TableToolbarProps {
   classes: any;
@@ -92,7 +82,7 @@ export const EnhancedTableToolbar: React.SFC<TableToolbarProps> = props => {
   return (
     <Toolbar
       className={classNames(classes.root, {
-        [classes.highlight]: numSelected > 0,
+        [classes.highlight]: numSelected > 0
       })}
     >
       <div className={classes.title}>
@@ -124,35 +114,34 @@ export const EnhancedTableToolbar: React.SFC<TableToolbarProps> = props => {
       </div>
     </Toolbar>
   );
-}
+};
 
 const toolbarStyles = (theme: Theme) => ({
   actions: {
-    color: theme.palette.text.secondary,
+    color: theme.palette.text.secondary
   },
   highlight:
-  theme.palette.type === 'light'
-  ? {
-    backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-    color: theme.palette.secondary.main,
-  }
-  : {
-    backgroundColor: theme.palette.secondary.dark,
-    color: theme.palette.text.primary,
-  },
+    theme.palette.type === 'light'
+      ? {
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+          color: theme.palette.secondary.main
+        }
+      : {
+          backgroundColor: theme.palette.secondary.dark,
+          color: theme.palette.text.primary
+        },
   root: {
-    paddingRight: theme.spacing.unit,
+    paddingRight: theme.spacing.unit
   },
   spacer: {
-    flex: '1 1 100%',
+    flex: '1 1 100%'
   },
   title: {
-    flex: '0 0 auto',
-  },
+    flex: '0 0 auto'
+  }
 });
 
 const TableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
-
 
 interface TableProps {
   classes: any;
@@ -163,7 +152,7 @@ const EnhancedTable: React.SFC<TableProps> = props => {
   const createData = (name: string, calories: number, fat: number, carbs: number, protein: number) => {
     counter += 1;
     return { id: counter, name, calories, fat, carbs, protein };
-  }
+  };
 
   const data: any[] = [
     createData('Cupcake', 305, 3.7, 67, 4.3),
@@ -178,7 +167,7 @@ const EnhancedTable: React.SFC<TableProps> = props => {
     createData('Lollipop', 392, 0.2, 98, 0.0),
     createData('Marshmallow', 318, 0, 81, 2.0),
     createData('Nougat', 360, 19.0, 9, 37.0),
-    createData('Oreo', 437, 18.0, 63, 4.0),
+    createData('Oreo', 437, 18.0, 63, 4.0)
   ];
 
   const { classes } = props;
@@ -198,23 +187,23 @@ const EnhancedTable: React.SFC<TableProps> = props => {
       return 1;
     }
     return 0;
-  }
+  };
 
   const stableSort = (array: any[], cmp: (v1: any, v2: any) => number) => {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
       const ordered = cmp(a[0], b[0]);
       if (ordered !== 0) {
-        return ordered
-      };
+        return ordered;
+      }
       return a[1] - b[1];
     });
     return stabilizedThis.map(el => el[0]);
-  }
-  
+  };
+
   const getSorting = (ordered: 'desc' | 'asc' | undefined, orderedBy: string) => {
-    return ordered === 'desc' ? (a: any, b: any) => desc(a, b, orderedBy) : (a: any, b: any) => - desc(a, b, orderedBy);
-  }
+    return ordered === 'desc' ? (a: any, b: any) => desc(a, b, orderedBy) : (a: any, b: any) => -desc(a, b, orderedBy);
+  };
 
   const handleRequestSort = (event: any, property: any) => {
     const orderedBy = property;
@@ -247,10 +236,7 @@ const EnhancedTable: React.SFC<TableProps> = props => {
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
+      newSelected = newSelected.concat(selected.slice(0, selectedIndex), selected.slice(selectedIndex + 1));
     }
     selected = newSelected;
   };
@@ -315,31 +301,39 @@ const EnhancedTable: React.SFC<TableProps> = props => {
         </Table>
       </div>
       <TablePagination
+        // classes={classes.pagRoot}
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={data.length}
         rowsPerPage={rowsPerPage}
         page={page}
         backIconButtonProps={{
-          'aria-label': 'Previous Page',
+          'aria-label': 'Previous Page'
         }}
         nextIconButtonProps={{
-          'aria-label': 'Next Page',
+          'aria-label': 'Next Page'
         }}
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
     </Paper>
   );
-}
+};
 
 const styles = (theme: Theme) => ({
+  pagRoot: {
+    actions: {
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: 15
+      }
+    }
+  },
   root: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3
   },
   table: {
-    minWidth: 1020,
-  },
+    minWidth: 1020
+  }
 });
 
-export const DataTable = withStyles(styles)(EnhancedTable)
+export const DataTable = withStyles(styles)(EnhancedTable);

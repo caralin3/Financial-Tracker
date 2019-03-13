@@ -24,12 +24,11 @@ interface StateMappedProps {
 
 interface TransactionsMergedProps
   extends RouteComponentProps<any>,
-  StateMappedProps,
-  DispatchMappedProps,
-  TransactionsPageProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
-
   return (
     <Layout>
       <DataTable />
