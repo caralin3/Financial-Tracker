@@ -266,9 +266,9 @@ const EnhancedTable: React.SFC<TableProps> = props => {
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={classNames([classes.root, 'table_container'])}>
       <TableToolbar numSelected={selected.length} />
-      <div className={classes.tableWrapper} style={{overflowX: 'auto'}}>
+      <div className={classNames([classes.tableWrapper, 'table_wrapper'])}>
         <Table className={classes.table} aria-labelledby="tableTitle">
           <EnhancedTableHead
             numSelected={selected.length}
@@ -336,14 +336,10 @@ const EnhancedTable: React.SFC<TableProps> = props => {
 const styles = (theme: Theme) => ({
   root: {
     marginTop: theme.spacing.unit * 3,
-    width: '100%',
   },
   table: {
-    minWidth: 800,
+    minWidth: 1020,
   },
-  // tableWrapper: {
-  //   overflowX: 'auto',
-  // },
 });
 
 export const DataTable = withStyles(styles)(EnhancedTable)
