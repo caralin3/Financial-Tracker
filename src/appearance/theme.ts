@@ -13,7 +13,13 @@ const colors = {
 };
 
 export const theme: Theme = createMuiTheme({
-  overrides: {},
+  overrides: {
+    MuiTablePagination: {
+      actions: {
+        marginLeft: 0
+      }
+    }
+  },
   palette: {
     action: {
       disabled: colors.white,

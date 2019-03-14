@@ -1,0 +1,48 @@
+@import '../appearance/styles/variables.scss';
+
+.table {
+  &_container {
+    @media #{$x-small} {
+      width: 91% !important;
+    }
+    @media #{$small} {
+      width: 92% !important;
+    }
+    @media #{$medium} {
+      width: 68% !important;
+    }
+    @media #{$large} {
+      width: 75% !important;
+    }
+    @media #{$x-large} {
+      width: 100% !important;
+    }
+    @media only screen and (max-width: 1066px) and (min-width: 1038px) {
+      width: 85% !important;
+    }
+    @media only screen and (max-width: 1206px) and (min-width: 1066px) {
+      width: 85% !important;
+    }
+    @media only screen and (max-width: 1228px) and (min-width: 1206px) {
+      width: 95% !important;
+    }
+    @media only screen and (max-width: 1256px) and (min-width: 1228px) {
+      width: 97% !important;
+    }
+  }
+
+  &_wrapper {
+    overflow-x: auto;
+  }
+
+  &_toolbar {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  &_row {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
