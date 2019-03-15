@@ -1,6 +1,5 @@
-import { Button, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Paper, Select, TextField } from '@material-ui/core';
+import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField } from '@material-ui/core';
 import classNames from 'classnames';
-import Downshift from 'downshift';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
@@ -66,137 +65,56 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
 
 interface AutoTextFieldProps {
   className?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  item: string;
-  label: string;
-  selected: string;
   dataList: string[];
+  id: string;
+  label: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value: string;
 }
 
 export const AutoTextField: React.SFC<AutoTextFieldProps> = props => {
-  const [inputValue, setInputValue] = React.useState<string>('');
-  // const [selectedItem, setSelectedItem] = React.useState<string[]>([]);
-  const selectedItem: string[] = [];
+  const { className, dataList, id, label, onChange, value } = props;
 
-  const renderSuggestion = (suggestion: string, index: number, itemProps: object, highlightedIndex: number, selectedItem: string ) => {
-    const isHighlighted = highlightedIndex === index;
-    const isSelected = (selectedItem || '').indexOf(suggestion) > -1;
-  }
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
-      selectedItem = selectedItem.slice(0, selectedItem.length - 1);
-    }
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => setInputValue(event.target.value.trim());
-
-  const handleChange = (item: string) => {
-    if (selectedItem.indexOf(item) === -1) {
-      selectedItem = [...selectedItem, item];
-    }
-    setInputValue('');
-  };
-
-  const handleDelete = (item: string) => () => {
-    const selectedItem = [...selectedItem];
-    selectedItem.splice(selectedItem.indexOf(item), 1);
-    return { selectedItem };
-  };
-
-  const getSuggestions = (value: string) => {
-    const inputValue = value.trim().toLowerCase();
+  const getSuggestions = (val: string) => {
+    const inputValue = val.trim().toLowerCase();
     const inputLength = inputValue.length;
     let count = 0;
-  
+
     return inputLength === 0
       ? []
-      : props.dataList.filter(suggestion => {
-          const keep =
-            count < 5 && suggestion.slice(0, inputLength).toLowerCase() === inputValue;
-  
-          if (keep) {
-            count += 1;
-          }
-  
-          return keep;
-        });
-  }
+      : dataList.filter(suggestion => {
+        const keep =
+          count < 5 && suggestion.slice(0, inputLength).toLowerCase() === inputValue;
 
-  const renderInput = (
-    <TextField
-      id="expense-item"
-      label={props.label}
-      fullWidth={true}
-      className={props.className}
-      value={props.item}
-      onChange={props.onChange}
-      margin="normal"
-      variant="outlined"
-      InputProps={{
-        startAdornment: selectedItem.map((item: string) => (
-          <Chip
-            key={item}
-            tabIndex={-1}
-            label={item}
-            // className={classes.chip}
-            onDelete={() => handleDelete(item)}
-          />
-        )),
-        onChange: handleInputChange,
-        onKeyDown: handleKeyDown,
-        placeholder: props.label,
-      }}
-    />
-  );
-  
-    return (
-      <MenuItem
-        {...itemProps}
-        key={suggestion}
-        selected={isHighlighted}
-        component="div"
-        style={{
-          fontWeight: isSelected ? 500 : 400,
-        }}
-      >
-        {suggestion}
-      </MenuItem>
-    );
+        if (keep) {
+          count += 1;
+        }
+
+        return keep;
+      });
   }
 
   return (
-    <Downshift
-        id="downshift-multiple"
-        inputValue={inputValue}
-        onChange={handleChange}
-        selectedItem={selectedItem}
-      >
-        {({
-          getInputProps,
-          getItemProps,
-          isOpen,
-          inputValue: inputValue2,
-          selectedItem: selectedItem2,
-          highlightedIndex,
-        }) => (
-          <div>
-            
-            {isOpen ? (
-              <Paper square={true}>
-                {getSuggestions(inputValue2).map((suggestion: string, index: number) =>
-                  renderSuggestion({
-                    suggestion,
-                    index,
-                    itemProps: getItemProps({ item: suggestion.label }),
-                    highlightedIndex,
-                    selectedItem: selectedItem2,
-                  }),
-                )}
-              </Paper>
-            ) : null}
-          </div>
-          )}
-    </Downshift>
-  );
-};
+    <div>
+      <TextField
+        id={id}
+        label={label}
+        fullWidth={true}
+        className={className}
+        value={value}
+        onChange={onChange}
+        margin="normal"
+        variant="outlined"
+        inputProps={{
+          list: 'items',
+        }}
+      />
+      <datalist id="items">
+        {getSuggestions(value).map((item: string) => (
+          <option aria-selected={false} key={item} value={item}>{item}</option>
+        ))}
+      </datalist>
+    </div>
+  )
+
+}

@@ -4,6 +4,7 @@ import * as React from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { theme } from '../appearance';
 import { Alert, Loading, ModalForm, SelectInput } from './';
+import { AutoTextField } from './Form';
 
 interface TransactionModalProps {
   handleClose: () => void;
@@ -24,6 +25,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   const [subcategory, setSubcategory] = React.useState<string>('');
   const [note, setNote] = React.useState<string>('');
   const [tag, setTag] = React.useState<string>('');
+
+  const items = ['One', 'Two', 'Three'];
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,15 +50,13 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
           <SelectInput label="From" selected={from} handleChange={e => setFrom(e.target.value)} options={options} />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
-          <TextField
+          <AutoTextField
+            className="transModal_field--item"
             id="expense-item"
             label="Item"
-            fullWidth={true}
-            className="transModal_field--item"
-            value={item}
             onChange={e => setItem(e.target.value.trim())}
-            margin="normal"
-            variant="outlined"
+            dataList={items}
+            value={item}
           />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
@@ -103,27 +104,25 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         </Grid>
         {tab === 0 && (
           <Grid item={true} xs={12} sm={6}>
-            <TextField
+            <AutoTextField
+              className="transModal_field--item"
               id="expense-note"
               label="Note"
-              fullWidth={true}
-              value={note}
               onChange={e => setNote(e.target.value.trim())}
-              margin="normal"
-              variant="outlined"
+              dataList={items}
+              value={note}
             />
           </Grid>
         )}
         {tab === 0 && (
           <Grid item={true} xs={12} sm={6}>
-            <TextField
+            <AutoTextField
+              className="transModal_field--item"
               id="expense-tag"
               label="Tag"
-              fullWidth={true}
-              value={tag}
               onChange={e => setTag(e.target.value.trim())}
-              margin="normal"
-              variant="outlined"
+              dataList={items}
+              value={tag}
             />
           </Grid>
         )}
@@ -135,16 +134,13 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     <Typography className="transModal_fields" component="div" dir={theme.direction}>
       <Grid className="transModal_grid" container={true} spacing={24}>
         <Grid item={true} xs={12} sm={6}>
-          <TextField
-            id="expense-item"
-            label="From"
-            fullWidth={true}
-            autoComplete="item"
+          <AutoTextField
             className="transModal_field--item"
-            value={item}
+            id="income-item"
+            label="Item"
             onChange={e => setItem(e.target.value.trim())}
-            margin="normal"
-            variant="outlined"
+            dataList={items}
+            value={item}
           />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
@@ -152,7 +148,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <TextField
-            id="expense-date"
+            id="income-date"
             label="Date"
             fullWidth={true}
             value={date}
@@ -167,7 +163,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <TextField
-            id="expense-amount"
+            id="income-amount"
             label="Amount"
             fullWidth={true}
             value={amount}
@@ -178,25 +174,23 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
           />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
-          <TextField
-            id="expense-note"
+          <AutoTextField
+            className="transModal_field--item"
+            id="income-note"
             label="Note"
-            fullWidth={true}
-            value={note}
             onChange={e => setNote(e.target.value.trim())}
-            margin="normal"
-            variant="outlined"
+            dataList={items}
+            value={note}
           />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
-          <TextField
-            id="expense-tag"
+          <AutoTextField
+            className="transModal_field--item"
+            id="income-tag"
             label="Tag"
-            fullWidth={true}
-            value={tag}
             onChange={e => setTag(e.target.value.trim())}
-            margin="normal"
-            variant="outlined"
+            dataList={items}
+            value={tag}
           />
         </Grid>
       </Grid>
@@ -214,7 +208,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <TextField
-            id="expense-date"
+            id="transfer-date"
             label="Date"
             fullWidth={true}
             value={date}
@@ -229,7 +223,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <TextField
-            id="expense-amount"
+            id="transfer-amount"
             label="Amount"
             fullWidth={true}
             value={amount}
@@ -240,25 +234,23 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
           />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
-          <TextField
-            id="expense-note"
+          <AutoTextField
+            className="transModal_field--item"
+            id="transfer-note"
             label="Note"
-            fullWidth={true}
-            value={note}
             onChange={e => setNote(e.target.value.trim())}
-            margin="normal"
-            variant="outlined"
+            dataList={items}
+            value={note}
           />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
-          <TextField
-            id="expense-tag"
+          <AutoTextField
+            className="transModal_field--item"
+            id="transfer-tag"
             label="Tag"
-            fullWidth={true}
-            value={tag}
             onChange={e => setTag(e.target.value.trim())}
-            margin="normal"
-            variant="outlined"
+            dataList={items}
+            value={tag}
           />
         </Grid>
       </Grid>
