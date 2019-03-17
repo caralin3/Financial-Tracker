@@ -1,5 +1,6 @@
 import { AccountModal } from './AccountModal';
 import { Alert } from './Alert';
+import { AlertDialog } from './AlertDialog';
 import { BudgetModal } from './BudgetModal';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
 import { DataTable } from './DataTable';
@@ -15,6 +16,7 @@ import { TransactionModal } from './TransactionModal';
 
 export {
   Alert,
+  AlertDialog,
   AccountModal,
   BudgetModal,
   DataTable,

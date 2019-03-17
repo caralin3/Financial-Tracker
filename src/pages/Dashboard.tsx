@@ -50,10 +50,20 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
 
   return (
     <Layout>
-      <AccountModal open={addingAccount} handleClose={() => setAddingAccount(false)} />
-      <BudgetModal open={addingBudget} handleClose={() => setAddingBudget(false)} />
-      <GoalModal open={addingGoal} handleClose={() => setAddingGoal(false)} />
-      <TransactionModal open={addingTrans} handleClose={() => setAddingTrans(false)} />
+      <AccountModal
+        title="Add Account"
+        buttonText="Add"
+        open={addingAccount}
+        handleClose={() => setAddingAccount(false)}
+      />
+      <BudgetModal title="Add Budget" buttonText="Add" open={addingBudget} handleClose={() => setAddingBudget(false)} />
+      <GoalModal title="Add Goal" buttonText="Add" open={addingGoal} handleClose={() => setAddingGoal(false)} />
+      <TransactionModal
+        title="Add Transaction"
+        buttonText="Add"
+        open={addingTrans}
+        handleClose={() => setAddingTrans(false)}
+      />
       <div className="dashboard_header">
         <div className="dashboard_headerContent">
           <Typography className="dashboard_title" variant="h3">
@@ -190,9 +200,9 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 export const DashboardPage = compose(
-  withRouter,
   withAuthorization(authCondition),
   withStyles(styles as any, { withTheme: true }),
+  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps

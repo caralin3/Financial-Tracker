@@ -1,12 +1,12 @@
 import { Theme, withStyles } from '@material-ui/core';
-// import Add from '@material-ui/icons/Add';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
-import { DataTable, Layout } from '../components';
+import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from '../components';
+import { routes } from '../routes';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
 
@@ -23,12 +23,19 @@ interface StateMappedProps {
 }
 
 interface TransactionsMergedProps
-  extends RouteComponentProps<any>,
+  extends RouteComponentProps,
     StateMappedProps,
     DispatchMappedProps,
     TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
+  const [loading] = React.useState<boolean>(false);
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<boolean>(false);
+  const [items, setItems] = React.useState<string[]>([]);
+  const [editingTrans, setEditingTrans] = React.useState<boolean>(false);
+
   let counter = 0;
   const createData = (name: string, calories: number, fat: number, carbs: number, protein: number) => {
     counter += 1;
@@ -59,9 +66,52 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
     createData('Oreo', 437, 18.0, 63, 4.0)
   ];
 
+  const handleDelete = (selected: string[]) => {
+    setOpenDialog(true);
+    setItems(selected);
+  };
+
+  const deleteTransaction = () => {
+    console.log(items);
+  };
+
+  const handleEdit = (id: string) => {
+    const { history } = props;
+    console.log(id);
+    history.push(`${routes.transactions}/${id}`);
+    setEditingTrans(true);
+  };
+
+  const handleConfirm = () => {
+    deleteTransaction();
+    setOpenDialog(false);
+    setSuccess(true);
+  };
+
   return (
     <Layout>
-      <DataTable data={data} rows={rows} title="Expenses" />
+      <AlertDialog
+        cancelText="Cancel"
+        confirmText="Confirm"
+        description={`Deleting ${items}`}
+        onClose={() => setOpenDialog(false)}
+        onConfirm={handleConfirm}
+        open={openDialog}
+        title="Are you sure you want to delete these transactions?"
+      />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="This is a success message!" />
+      <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+      <TransactionModal
+        title="Edit Transaction"
+        buttonText="Edit"
+        open={editingTrans}
+        handleClose={() => setEditingTrans(false)}
+      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} rows={rows} title="Expenses" />
+      )}
     </Layout>
   );
 };
@@ -85,9 +135,9 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 export const TransactionsPage = compose(
-  withRouter,
   withAuthorization(authCondition),
   withStyles(styles as any, { withTheme: true }),
+  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps

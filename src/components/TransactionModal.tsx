@@ -1,20 +1,28 @@
 import { Grid, Tab, Tabs, TextField, Typography } from '@material-ui/core';
 import classnames from 'classnames';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 import SwipeableViews from 'react-swipeable-views';
 import { theme } from '../appearance';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 import { AutoTextField } from './Form';
 
-interface TransactionModalProps {
+interface RouteParams {
+  id: string;
+}
+
+interface TransactionModalProps extends RouteComponentProps<RouteParams> {
+  buttonText: string;
   handleClose: () => void;
   open: boolean;
+  title: string;
 }
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => {
   const [loading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+  const [editing, setEditing] = React.useState<string>('');
   const [tab, setTab] = React.useState<number>(0);
   const [from, setFrom] = React.useState<string>('');
   const [to, setTo] = React.useState<string>('');
@@ -25,6 +33,12 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   const [subcategory, setSubcategory] = React.useState<string>('');
   const [note, setNote] = React.useState<string>('');
   const [tag, setTag] = React.useState<string>('');
+
+  React.useEffect(() => {
+    console.log(props.match.params.id);
+    // Load transaction from id
+    setEditing('expense');
+  });
 
   const items = ['One', 'Two', 'Three'];
 
@@ -260,8 +274,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   return (
     <ModalForm
       disabled={false}
-      formTitle="Add Transaction"
-      formButton="Add"
+      formTitle={props.title}
+      formButton={props.buttonText}
       formSubmit={handleSubmit}
       open={props.open}
       handleClose={props.handleClose}
@@ -275,12 +289,25 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         indicatorColor="primary"
         onChange={(e, val) => setTab(val)}
       >
-        <Tab className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 0 })} label="Expense" />
-        <Tab className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 1 })} label="Income" />
-        <Tab className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 2 })} label="Transfer" />
+        <Tab
+          className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 0 })}
+          disabled={editing !== 'expense'}
+          label="Expense"
+        />
+        <Tab
+          className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 1 })}
+          disabled={editing !== 'income'}
+          label="Income"
+        />
+        <Tab
+          className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 2 })}
+          disabled={editing !== 'transfer'}
+          label="Transfer"
+        />
       </Tabs>
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        disabled={editing !== ''}
         index={tab}
         onChangeIndex={index => setTab(index)}
       >
@@ -292,4 +319,4 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   );
 };
 
-export const TransactionModal = DisconnectedTransactionModal;
+export const TransactionModal = withRouter(DisconnectedTransactionModal);

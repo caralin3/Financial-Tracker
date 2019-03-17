@@ -3,8 +3,10 @@ import * as React from 'react';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface AccountModalProps {
+  buttonText: string;
   handleClose: () => void;
   open: boolean;
+  title: string;
 }
 
 const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
@@ -27,8 +29,8 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
   return (
     <ModalForm
       disabled={false}
-      formTitle="Add Account"
-      formButton="Add"
+      formTitle={props.title}
+      formButton={props.buttonText}
       formSubmit={handleSubmit}
       open={props.open}
       handleClose={props.handleClose}

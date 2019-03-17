@@ -68,12 +68,14 @@ export const TableHead: React.SFC<TableHeadProps> = props => {
 
 interface TableToolbarProps {
   classes: any;
+  onDelete: () => void;
+  onEdit: () => void;
   numSelected: number;
   tableTitle: string;
 }
 
 export const Toolbar: React.SFC<TableToolbarProps> = props => {
-  const { classes, numSelected, tableTitle } = props;
+  const { classes, onDelete, onEdit, numSelected, tableTitle } = props;
 
   return (
     <MuiToolbar
@@ -98,13 +100,13 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
           <div className={classes.actionButtons}>
             {numSelected === 1 && (
               <Tooltip title="Edit">
-                <IconButton aria-label="Edit">
+                <IconButton aria-label="Edit" onClick={onEdit}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>
             )}
             <Tooltip title="Delete">
-              <IconButton aria-label="Delete">
+              <IconButton aria-label="Delete" onClick={onDelete}>
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
@@ -193,17 +195,19 @@ export const TableFilterList = withStyles(filterListStyles)(FilterList);
 interface TableProps {
   classes: any;
   data: any;
+  onDelete: (selected: string[]) => void;
+  onEdit: (id: string) => void;
   rows: any[];
   title: string;
 }
 
 const Table: React.SFC<TableProps> = props => {
-  const { classes, data, rows, title } = props;
+  const { classes, data, onDelete, onEdit, rows, title } = props;
   const [order, setOrder] = React.useState<'desc' | 'asc' | undefined>(undefined);
   const [orderBy, setOrderBy] = React.useState<string>('');
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
   const [page, setPage] = React.useState<number>(0);
-  const [selected, setSelected] = React.useState<number[]>([]);
+  const [selected, setSelected] = React.useState<string[]>([]);
 
   const filters = [{ ['name']: 'John', ['age']: 50 }];
 
@@ -255,7 +259,7 @@ const Table: React.SFC<TableProps> = props => {
     setSelected([]);
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLTableRowElement>, id: number) => {
+  const handleClick = (e: React.MouseEvent<HTMLTableRowElement>, id: string) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: any[] = [];
 
@@ -271,11 +275,16 @@ const Table: React.SFC<TableProps> = props => {
     setSelected(newSelected);
   };
 
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   return (
     <Paper className={classNames([classes.root, 'table_container'])}>
-      <TableToolbar numSelected={selected.length} tableTitle={title} />
+      <TableToolbar
+        onDelete={() => onDelete(selected)}
+        onEdit={() => onEdit(selected[0])}
+        numSelected={selected.length}
+        tableTitle={title}
+      />
       <TableFilterList filters={filters} onChangeFilter={() => null} />
       <div className={classNames([classes.tableWrapper, 'table_wrapper'])}>
         <MuiTable className={classes.table} aria-labelledby="tableTitle">

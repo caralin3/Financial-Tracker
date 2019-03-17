@@ -83,16 +83,15 @@ export const AutoTextField: React.SFC<AutoTextFieldProps> = props => {
     return inputLength === 0
       ? []
       : dataList.filter(suggestion => {
-        const keep =
-          count < 5 && suggestion.slice(0, inputLength).toLowerCase() === inputValue;
+          const keep = count < 5 && suggestion.slice(0, inputLength).toLowerCase() === inputValue;
 
-        if (keep) {
-          count += 1;
-        }
+          if (keep) {
+            count += 1;
+          }
 
-        return keep;
-      });
-  }
+          return keep;
+        });
+  };
 
   return (
     <div>
@@ -106,15 +105,16 @@ export const AutoTextField: React.SFC<AutoTextFieldProps> = props => {
         margin="normal"
         variant="outlined"
         inputProps={{
-          list: 'items',
+          list: 'items'
         }}
       />
       <datalist id="items">
         {getSuggestions(value).map((item: string) => (
-          <option aria-selected={false} key={item} value={item}>{item}</option>
+          <option aria-selected={false} key={item} value={item}>
+            {item}
+          </option>
         ))}
       </datalist>
     </div>
-  )
-
-}
+  );
+};

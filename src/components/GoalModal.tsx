@@ -3,8 +3,10 @@ import * as React from 'react';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface GoalModalProps {
+  buttonText: string;
   handleClose: () => void;
   open: boolean;
+  title: string;
 }
 
 const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
@@ -31,8 +33,8 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
   return (
     <ModalForm
       disabled={false}
-      formTitle="Add Goal"
-      formButton="Add"
+      formTitle={props.title}
+      formButton={props.buttonText}
       formSubmit={handleSubmit}
       open={props.open}
       handleClose={props.handleClose}

@@ -75,7 +75,10 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
       { label: 'Settings', route: routes.settings, icon: <SettingsIcon /> }
     ];
 
-    const title: string = `${selected.slice(1, 2).toUpperCase()}${selected.slice(2)}`;
+    let title: string = selected.split('/')[1];
+    if (title) {
+      title = `${title.slice(0, 1).toUpperCase()}${title.slice(1)}`;
+    }
 
     const navList = (
       <div className={classNames('navList', classes.navBar)}>
@@ -92,7 +95,7 @@ class DisconnectedNavigation extends React.Component<SignUpMergedProps, Navigati
             <li key={link.label}>
               <ListItem
                 className={classNames(classes.activeItem, classes.text, {
-                  [classes.selectedItem]: selected === link.route
+                  [classes.selectedItem]: selected.startsWith(link.route)
                 })}
                 button={true}
                 onClick={() => this.navigateTo(link.route)}

@@ -3,8 +3,10 @@ import * as React from 'react';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface BudgetModalProps {
+  buttonText: string;
   handleClose: () => void;
   open: boolean;
+  title: string;
 }
 
 const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
@@ -27,8 +29,8 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
   return (
     <ModalForm
       disabled={false}
-      formTitle="Add Budget"
-      formButton="Add"
+      formTitle={props.title}
+      formButton={props.buttonText}
       formSubmit={handleSubmit}
       open={props.open}
       handleClose={props.handleClose}
