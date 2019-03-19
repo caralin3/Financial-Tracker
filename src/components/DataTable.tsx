@@ -14,9 +14,11 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Filters, Popup } from './';
@@ -90,10 +92,10 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography variant="h6" id="tableTitle">
-            {tableTitle}
-          </Typography>
-        )}
+            <Typography variant="h6" id="tableTitle">
+              {tableTitle}
+            </Typography>
+          )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
@@ -113,12 +115,17 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             </Tooltip>
           </div>
         ) : (
-          <div className={classes.actionButtons}>
-            <Tooltip title="Filter list">
-              <Popup content={<Filters />} trigger={<FilterListIcon />} />
-            </Tooltip>
-          </div>
-        )}
+            <div className={classes.actionButtons}>
+              <Tooltip title="Export">
+                <IconButton aria-label="Export" onClick={() => null}>
+                  <CloudDownloadIcon />
+                  {/* <Popup content={<Filters />} trigger={<CloudDownloadIcon />} /> */}
+                </IconButton>
+              </Tooltip>
+              <Popup content={<Filters />} tooltip="View Colmns" trigger={<ViewColumnIcon />} />
+              <Popup content={<Filters />} tooltip="Filters" trigger={<FilterListIcon />} />
+            </div>
+          )}
       </div>
     </MuiToolbar>
   );
@@ -135,13 +142,13 @@ const toolbarStyles = (theme: Theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          color: theme.palette.secondary.main
-        }
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        color: theme.palette.secondary.main
+      }
       : {
-          backgroundColor: theme.palette.secondary.dark,
-          color: theme.palette.text.primary
-        },
+        backgroundColor: theme.palette.secondary.dark,
+        color: theme.palette.text.primary
+      },
   root: {
     paddingRight: theme.spacing.unit
   },
@@ -330,11 +337,11 @@ const Table: React.SFC<TableProps> = props => {
                   );
                 })
             ) : (
-              <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
-                <TableCell colSpan={3} />
-                <TableCell>No records</TableCell>
-              </TableRow>
-            )}
+                <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
+                  <TableCell colSpan={3} />
+                  <TableCell>No records</TableCell>
+                </TableRow>
+              )}
             {data.length > 0 && emptyRows > 0 && (
               <TableRow style={{ height: 49 * emptyRows }}>
                 <TableCell colSpan={6} />
