@@ -19,6 +19,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import classNames from 'classnames';
 import * as React from 'react';
+import { Filters, Popup } from './';
 
 interface TableHeadProps {
   numSelected: number;
@@ -112,11 +113,11 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             </Tooltip>
           </div>
         ) : (
-          <Tooltip title="Filter list">
-            <IconButton aria-label="Filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
+          <div className={classes.actionButtons}>
+            <Tooltip title="Filter list">
+              <Popup content={<Filters />} trigger={<FilterListIcon />} />
+            </Tooltip>
+          </div>
         )}
       </div>
     </MuiToolbar>
@@ -125,6 +126,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
 
 const toolbarStyles = (theme: Theme) => ({
   actionButtons: {
+    alignItems: 'center',
     display: 'flex'
   },
   actions: {

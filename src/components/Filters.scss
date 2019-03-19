@@ -1,0 +1,20 @@
+@import '../appearance/styles/variables.scss';
+
+.filters {
+  &_header {
+    align-items: center;
+    display: flex;
+  }
+
+  &_title {
+    padding-right: 1rem;
+  }
+
+  &_button {
+    &-disabled {
+      &:hover {
+        cursor: not-allowed;
+      }
+    }
+  }
+}
