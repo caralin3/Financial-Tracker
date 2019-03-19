@@ -13,8 +13,8 @@ interface DropdownMenuProps {
 
 export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
   const [open, setOpen] = React.useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = React.useState<any>(null);
   const mobile = useMediaQuery('(max-width:768px)');
-  let anchorEl = null;
 
   const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
     props.onClose(e);
@@ -26,7 +26,7 @@ export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
       <ClickAwayListener onClickAway={() => setOpen(false)}>
         <div style={{ width: '100%' }}>
           <Button
-            buttonRef={ref => (anchorEl = ref)}
+            buttonRef={ref => setAnchorEl(ref)}
             aria-owns={open ? 'menu-list-grow' : undefined}
             aria-haspopup="true"
             color="primary"
@@ -43,6 +43,7 @@ export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
             transition={true}
             disablePortal={true}
             placement="bottom-end"
+            style={{ zIndex: 1 }}
           >
             {({ TransitionProps, placement }) => (
               <Grow
