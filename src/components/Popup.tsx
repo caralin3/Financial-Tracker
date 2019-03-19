@@ -1,4 +1,3 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Fade from '@material-ui/core/Fade';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
@@ -21,19 +20,17 @@ export const Popup: React.SFC<PopupProps> = props => {
   };
 
   return (
-    <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div>
-        <IconButton aria-owns={open ? 'menu-list-grow' : undefined} aria-haspopup="true" onClick={handleClick}>
-          {props.trigger}
-        </IconButton>
-        <Popper open={open} anchorEl={anchorEl} transition={true} placement="bottom-end" style={{ zIndex: 1 }}>
-          {({ TransitionProps }) => (
-            <Fade {...TransitionProps} timeout={350}>
-              <Paper>{props.content}</Paper>
-            </Fade>
-          )}
-        </Popper>
-      </div>
-    </ClickAwayListener>
+    <div>
+      <IconButton aria-owns={open ? 'popup' : undefined} aria-haspopup="true" onClick={handleClick}>
+        {props.trigger}
+      </IconButton>
+      <Popper id="popup" open={open} anchorEl={anchorEl} transition={true} placement="bottom-end" style={{ zIndex: 1 }}>
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={350}>
+            <Paper>{props.content}</Paper>
+          </Fade>
+        )}
+      </Popper>
+    </div>
   );
-}
+};

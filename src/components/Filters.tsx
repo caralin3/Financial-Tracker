@@ -1,5 +1,6 @@
-import { Button, Typography } from '@material-ui/core';
+import { Button, Grid, Typography } from '@material-ui/core';
 import * as React from 'react';
+import { SelectInput } from './Form';
 
 export interface FiltersProps {}
 
@@ -11,5 +12,59 @@ export const Filters: React.SFC<FiltersProps> = props => (
         Reset
       </Button>
     </div>
+    <Grid className="filters_grid" container={true} spacing={24}>
+      <Grid item={true} md={6}>
+        <SelectInput
+          label="Item"
+          selected="All"
+          handleChange={() => null}
+          options={[
+            { label: 'One', value: 'one' },
+            { label: 'Two', value: 'two' },
+            { label: 'Three', value: 'three' },
+            { label: 'Four', value: 'four' }
+          ]}
+        />
+      </Grid>
+      <Grid item={true} md={6}>
+        <SelectInput
+          label="Item"
+          selected="All"
+          handleChange={() => null}
+          options={[
+            { label: 'One', value: 'one' },
+            { label: 'Two', value: 'two' },
+            { label: 'Three', value: 'three' },
+            { label: 'Four', value: 'four' }
+          ]}
+        />
+      </Grid>
+      <Grid item={true} md={6}>
+        <SelectInput
+          label="Item"
+          selected="All"
+          handleChange={() => null}
+          options={[
+            { label: 'One', value: 'one' },
+            { label: 'Two', value: 'two' },
+            { label: 'Three', value: 'three' },
+            { label: 'Four', value: 'four' }
+          ]}
+        />
+      </Grid>
+      <Grid item={true} md={6}>
+        <SelectInput
+          label="Item"
+          selected="All"
+          handleChange={() => null}
+          options={[
+            { label: 'One', value: 'one' },
+            { label: 'Two', value: 'two' },
+            { label: 'Three', value: 'three' },
+            { label: 'Four', value: 'four' }
+          ]}
+        />
+      </Grid>
+    </Grid>
   </div>
 );

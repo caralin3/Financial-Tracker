@@ -1,13 +1,15 @@
 @import '../appearance/styles/variables.scss';
 
 .filters {
+  padding: 1rem;
+
   &_header {
     align-items: center;
     display: flex;
   }
 
-  &_title {
-    padding-right: 1rem;
+  &_grid {
+    width: 100%;
   }
 
   &_button {

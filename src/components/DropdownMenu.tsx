@@ -37,6 +37,7 @@ export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
             {props.selected}
           </Button>
           <Popper
+            id="menu-list-grow"
             className={props.menuListClass}
             open={open}
             anchorEl={anchorEl}
