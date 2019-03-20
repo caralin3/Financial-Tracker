@@ -31,7 +31,7 @@ export const Popup: React.SFC<PopupProps> = props => {
       <Popper id="popup" open={open} anchorEl={anchorEl} transition={true} placement="bottom-end" style={{ zIndex: 1 }}>
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            <Paper>{props.content}</Paper>
+            <Paper className="popup_content">{props.content}</Paper>
           </Fade>
         )}
       </Popper>

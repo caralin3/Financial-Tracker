@@ -13,7 +13,7 @@ export const Filters: React.SFC<FiltersProps> = props => (
       </Button>
     </div>
     <Grid className="filters_grid" container={true} spacing={24}>
-      <Grid item={true} md={6}>
+      <Grid item={true} xs={12} md={6}>
         <SelectInput
           label="Item"
           selected="All"
@@ -26,7 +26,7 @@ export const Filters: React.SFC<FiltersProps> = props => (
           ]}
         />
       </Grid>
-      <Grid item={true} md={6}>
+      <Grid item={true} xs={12} md={6}>
         <SelectInput
           label="Item"
           selected="All"
@@ -39,7 +39,7 @@ export const Filters: React.SFC<FiltersProps> = props => (
           ]}
         />
       </Grid>
-      <Grid item={true} md={6}>
+      <Grid item={true} xs={12} md={6}>
         <SelectInput
           label="Item"
           selected="All"
@@ -52,7 +52,7 @@ export const Filters: React.SFC<FiltersProps> = props => (
           ]}
         />
       </Grid>
-      <Grid item={true} md={6}>
+      <Grid item={true} xs={12} md={6}>
         <SelectInput
           label="Item"
           selected="All"
