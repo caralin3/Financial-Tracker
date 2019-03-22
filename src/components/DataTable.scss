@@ -31,6 +31,12 @@
     }
   }
 
+  &_filters {
+    @media #{$small} {
+      margin-right: 1.5rem;
+    }
+  }
+
   &_wrapper {
     overflow-x: auto;
   }

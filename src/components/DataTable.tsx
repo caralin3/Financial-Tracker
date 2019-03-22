@@ -79,6 +79,13 @@ interface TableToolbarProps {
 
 export const Toolbar: React.SFC<TableToolbarProps> = props => {
   const { classes, onDelete, onEdit, numSelected, tableTitle } = props;
+  const [openColumns, setOpenColumns] = React.useState<boolean>(false);
+  const [openFilters, setOpenFilters] = React.useState<boolean>(false);
+
+  const handleClick = (cols: boolean, filters: boolean) => {
+    setOpenColumns(cols);
+    setOpenFilters(filters);
+  };
 
   return (
     <MuiToolbar
@@ -92,10 +99,10 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             {numSelected} selected
           </Typography>
         ) : (
-            <Typography variant="h6" id="tableTitle">
-              {tableTitle}
-            </Typography>
-          )}
+          <Typography variant="h6" id="tableTitle">
+            {tableTitle}
+          </Typography>
+        )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
@@ -115,17 +122,29 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             </Tooltip>
           </div>
         ) : (
-            <div className={classes.actionButtons}>
-              <Tooltip title="Export">
-                <IconButton aria-label="Export" onClick={() => null}>
-                  <CloudDownloadIcon />
-                  {/* <Popup content={<Filters />} trigger={<CloudDownloadIcon />} /> */}
-                </IconButton>
-              </Tooltip>
-              <Popup content={<Filters />} tooltip="View Colmns" trigger={<ViewColumnIcon />} />
-              <Popup content={<Filters />} tooltip="Filters" trigger={<FilterListIcon />} />
-            </div>
-          )}
+          <div className={classes.actionButtons}>
+            <Tooltip title="Export">
+              <IconButton aria-label="Export" onClick={() => null}>
+                <CloudDownloadIcon />
+              </IconButton>
+            </Tooltip>
+            <Popup
+              open={openColumns}
+              onClick={() => handleClick(!openColumns, false)}
+              content={<Filters />}
+              tooltip="View Colmns"
+              trigger={<ViewColumnIcon />}
+            />
+            <Popup
+              class="table_filters"
+              open={openFilters}
+              onClick={() => handleClick(false, !openFilters)}
+              content={<Filters />}
+              tooltip="Filters"
+              trigger={<FilterListIcon />}
+            />
+          </div>
+        )}
       </div>
     </MuiToolbar>
   );
@@ -142,13 +161,13 @@ const toolbarStyles = (theme: Theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        color: theme.palette.secondary.main
-      }
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+          color: theme.palette.secondary.main
+        }
       : {
-        backgroundColor: theme.palette.secondary.dark,
-        color: theme.palette.text.primary
-      },
+          backgroundColor: theme.palette.secondary.dark,
+          color: theme.palette.text.primary
+        },
   root: {
     paddingRight: theme.spacing.unit
   },
@@ -337,11 +356,11 @@ const Table: React.SFC<TableProps> = props => {
                   );
                 })
             ) : (
-                <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
-                  <TableCell colSpan={3} />
-                  <TableCell>No records</TableCell>
-                </TableRow>
-              )}
+              <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
+                <TableCell colSpan={3} />
+                <TableCell>No records</TableCell>
+              </TableRow>
+            )}
             {data.length > 0 && emptyRows > 0 && (
               <TableRow style={{ height: 49 * emptyRows }}>
                 <TableCell colSpan={6} />
