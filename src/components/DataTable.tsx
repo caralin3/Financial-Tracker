@@ -231,9 +231,10 @@ const Table: React.SFC<TableProps> = props => {
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
   const [page, setPage] = React.useState<number>(0);
   const [selected, setSelected] = React.useState<string[]>([]);
-  const [filters, setFilters] = React.useState<{ [key: string]: string | number }>({ ['name']: 'John', ['age']: 50 });
+  const [displayData, setDisplayData] = React.useState<object[]>(data);
+  const [filters, setFilters] = React.useState<{ [key: string]: string | number }>({});
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, displayData.length - page * rowsPerPage);
 
   const desc = (a: any, b: any, orderedBy: string) => {
     if (b[orderedBy] < a[orderedBy]) {
@@ -275,7 +276,7 @@ const Table: React.SFC<TableProps> = props => {
 
   const handleSelectAllClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelected(data.map((n: any) => n.id));
+      setSelected(displayData.map((n: any) => n.id));
       return;
     }
     setSelected([]);
@@ -309,10 +310,26 @@ const Table: React.SFC<TableProps> = props => {
       }
     });
     setFilters(updatedFilters);
+    filter(updatedFilters);
   };
 
   const handleSelectFilter = (value: string | number, col: string) => {
-    setFilters({ ...filters, [col]: value });
+    const updatedFilters: { [key: string]: string | number } = { ...filters, [col]: value };
+    setFilters(updatedFilters);
+    filter(updatedFilters);
+  };
+  
+  const filter = (dataFilters: { [key: string]: string | number }) => {
+    const conditions: Array<(d: any) => boolean> = [];
+    Object.keys(dataFilters).forEach(col => {
+      conditions.push((d: any) => d[col] === dataFilters[col]);
+    });
+    if (conditions.length === 0) {
+      setDisplayData(data);
+    } else {
+      const filteredData = displayData.filter((d: any) => conditions.every(cond => cond(d)));
+      setDisplayData(filteredData);
+    }
   };
 
   return (
@@ -329,17 +346,17 @@ const Table: React.SFC<TableProps> = props => {
       <div className={classNames([classes.tableWrapper, 'table_wrapper'])}>
         <MuiTable className={classes.table} aria-labelledby="tableTitle">
           <TableHead
-            numSelected={data.length > 0 ? selected.length : -1}
+            numSelected={displayData.length > 0 ? selected.length : -1}
             order={order}
             orderBy={orderBy}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
-            rowCount={data.length}
+            rowCount={displayData.length}
             rows={rows}
           />
           <TableBody>
-            {data.length > 0 ? (
-              stableSort(data, getSorting(order, orderBy))
+            {displayData.length > 0 ? (
+              stableSort(displayData, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(n => {
                   const sel: boolean = isSelected(n.id);
@@ -373,7 +390,7 @@ const Table: React.SFC<TableProps> = props => {
                 <TableCell>No records</TableCell>
               </TableRow>
             )}
-            {data.length > 0 && emptyRows > 0 && (
+            {displayData.length > 0 && emptyRows > 0 && (
               <TableRow style={{ height: 49 * emptyRows }}>
                 <TableCell colSpan={6} />
               </TableRow>
@@ -384,7 +401,7 @@ const Table: React.SFC<TableProps> = props => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={data.length}
+        count={displayData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         backIconButtonProps={{

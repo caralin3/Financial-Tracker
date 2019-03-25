@@ -52,10 +52,10 @@ export const Filters: React.SFC<FiltersProps> = props => {
           <SelectInput
             label="Item"
             selected={item}
-            handleChange={e => handleChange(e, 'item')}
+            handleChange={e => handleChange(e, 'name')}
             options={[
               { label: 'All', value: 'all' },
-              { label: 'One', value: 'one' },
+              { label: 'Eclair', value: 'Eclair' },
               { label: 'Two', value: 'two' },
               { label: 'Three', value: 'three' },
               { label: 'Four', value: 'four' }
@@ -66,10 +66,10 @@ export const Filters: React.SFC<FiltersProps> = props => {
           <SelectInput
             label="Item"
             selected={item2}
-            handleChange={e => handleChange(e, 'item2')}
+            handleChange={e => handleChange(e, 'fat')}
             options={[
               { label: 'All', value: 'all' },
-              { label: 'One', value: 'one' },
+              { label: 16, value: 16 },
               { label: 'Two', value: 'two' },
               { label: 'Three', value: 'three' },
               { label: 'Four', value: 'four' }

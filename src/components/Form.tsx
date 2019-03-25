@@ -29,7 +29,7 @@ interface SelectInputProps {
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   label: string;
   selected: string;
-  options: Array<{ label: string; value: string }>;
+  options: Array<{ label: string | number; value: string | number }>;
 }
 
 export const SelectInput: React.SFC<SelectInputProps> = props => {
