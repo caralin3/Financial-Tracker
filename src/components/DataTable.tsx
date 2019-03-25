@@ -73,12 +73,14 @@ interface TableToolbarProps {
   classes: any;
   onDelete: () => void;
   onEdit: () => void;
+  onResetFilters: () => void;
+  onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
   numSelected: number;
   tableTitle: string;
 }
 
 export const Toolbar: React.SFC<TableToolbarProps> = props => {
-  const { classes, onDelete, onEdit, numSelected, tableTitle } = props;
+  const { classes, onDelete, onEdit, numSelected, onResetFilters, onSelectFilter, tableTitle } = props;
   const [openColumns, setOpenColumns] = React.useState<boolean>(false);
   const [openFilters, setOpenFilters] = React.useState<boolean>(false);
 
@@ -131,7 +133,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             <Popup
               open={openColumns}
               onClick={() => handleClick(!openColumns, false)}
-              content={<Filters />}
+              content={<Filters onResetFilters={onResetFilters} onSelectFilter={onSelectFilter} />}
               tooltip="View Colmns"
               trigger={<ViewColumnIcon />}
             />
@@ -139,7 +141,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
               class="table_filters"
               open={openFilters}
               onClick={() => handleClick(false, !openFilters)}
-              content={<Filters />}
+              content={<Filters onResetFilters={onResetFilters} onSelectFilter={onSelectFilter} />}
               tooltip="Filters"
               trigger={<FilterListIcon />}
             />
@@ -183,25 +185,18 @@ const TableToolbar = withStyles(toolbarStyles)(Toolbar);
 
 interface TableFilterListProps {
   classes: any;
-  filters: Array<{ [key: string]: string | number }>;
-  onChangeFilter: () => void;
+  filters: { [key: string]: string | number };
+  onDeleteFilter: (key: string) => void;
 }
 
 const FilterList: React.SFC<TableFilterListProps> = props => {
-  const { classes, filters, onChangeFilter } = props;
+  const { classes, filters, onDeleteFilter } = props;
 
   return (
     <div className={classes.root}>
-      {filters.map((item: { [key: string]: string }) =>
-        Object.keys(item).map((key: string) => (
-          <Chip
-            className={classes.chip}
-            label={item[key]}
-            key={key}
-            onDelete={onChangeFilter.bind(null, key, item.value, 'checkbox')}
-          />
-        ))
-      )}
+      {Object.keys(filters).map((key: string) => (
+        <Chip className={classes.chip} label={filters[key]} key={key} onDelete={() => onDeleteFilter(key)} />
+      ))}
     </div>
   );
 };
@@ -236,8 +231,7 @@ const Table: React.SFC<TableProps> = props => {
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
   const [page, setPage] = React.useState<number>(0);
   const [selected, setSelected] = React.useState<string[]>([]);
-
-  const filters = [{ ['name']: 'John', ['age']: 50 }];
+  const [filters, setFilters] = React.useState<{ [key: string]: string | number }>({ ['name']: 'John', ['age']: 50 });
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
@@ -305,15 +299,33 @@ const Table: React.SFC<TableProps> = props => {
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
+  const handleResetFilters = () => setFilters({});
+
+  const handleDeleteFilter = (key: string) => {
+    const updatedFilters: { [key: string]: string | number } = {};
+    Object.keys(filters).forEach(id => {
+      if (id !== key) {
+        updatedFilters[id] = filters[id];
+      }
+    });
+    setFilters(updatedFilters);
+  };
+
+  const handleSelectFilter = (value: string | number, col: string) => {
+    setFilters({ ...filters, [col]: value });
+  };
+
   return (
     <Paper className={classNames([classes.root, 'table_container'])}>
       <TableToolbar
         onDelete={() => onDelete(selected)}
         onEdit={() => onEdit(selected[0])}
+        onResetFilters={handleResetFilters}
+        onSelectFilter={(e, col) => handleSelectFilter(e.target.value, col)}
         numSelected={selected.length}
         tableTitle={title}
       />
-      <TableFilterList filters={filters} onChangeFilter={() => null} />
+      <TableFilterList filters={filters} onDeleteFilter={handleDeleteFilter} />
       <div className={classNames([classes.tableWrapper, 'table_wrapper'])}>
         <MuiTable className={classes.table} aria-labelledby="tableTitle">
           <TableHead

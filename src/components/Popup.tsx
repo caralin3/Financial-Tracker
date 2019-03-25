@@ -16,7 +16,6 @@ interface PopupProps {
 }
 
 export const Popup: React.SFC<PopupProps> = props => {
-  // const [open, setOpen] = React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<any>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

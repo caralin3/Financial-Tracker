@@ -35,7 +35,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   const [tag, setTag] = React.useState<string>('');
 
   React.useEffect(() => {
-    console.log(props.match.params.id);
+    // console.log(props.match.params.id);
     // Load transaction from id
     setEditing('expense');
   });
