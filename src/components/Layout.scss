@@ -5,6 +5,34 @@
   display: flex;
   justify-content: flex-start;
 
+  &_header {
+    display: none;
+
+    @media #{$medium} {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+
+  &_title {
+    @include heading2;
+    color: $primary !important;
+    font-weight: bold !important;
+  }
+
+  &_headerContent {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &_divider {
+    width: 100%;
+  }
+
   &_container {
     padding: 5rem 1rem;
     width: 100%;

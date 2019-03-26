@@ -90,7 +90,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
   };
 
   return (
-    <Layout>
+    <Layout title="Transactions">
       <AlertDialog
         cancelText="Cancel"
         confirmText="Confirm"

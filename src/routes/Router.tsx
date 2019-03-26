@@ -2,7 +2,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import * as History from 'history';
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import { DashboardPage, LandingPage, TransactionsPage } from '../pages';
+import { AccountsPage, CategoriesPage, DashboardPage, LandingPage, ReportsPage, SettingsPage, TransactionsPage } from '../pages';
 import { RouteMap } from '../types';
 
 export const routes = {
@@ -16,12 +16,12 @@ export const routes = {
 };
 
 export const routeMap: RouteMap = {
-  [routes.accounts]: DashboardPage,
-  [routes.categories]: DashboardPage,
+  [routes.accounts]: AccountsPage,
+  [routes.categories]: CategoriesPage,
   [routes.dashboard]: DashboardPage,
   [routes.landing]: LandingPage,
-  [routes.reports]: DashboardPage,
-  [routes.settings]: DashboardPage,
+  [routes.reports]: ReportsPage,
+  [routes.settings]: SettingsPage,
   [routes.transactions]: TransactionsPage
 };
 

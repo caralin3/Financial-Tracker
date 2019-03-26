@@ -49,7 +49,10 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   };
 
   return (
-    <Layout>
+    <Layout
+      title="Dashboard"
+      buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
+    >
       <AccountModal
         title="Add Account"
         buttonText="Add"
@@ -64,15 +67,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         open={addingTrans}
         onClose={() => setAddingTrans(false)}
       />
-      <div className="dashboard_header">
-        <div className="dashboard_headerContent">
-          <Typography className="dashboard_title" variant="h3">
-            Dashboard
-          </Typography>
-          <DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />
-        </div>
-        <hr className="dashboard_divider" />
-      </div>
       <div className="show-small">
         <DropdownMenu
           className="dashboard_mobileButton"

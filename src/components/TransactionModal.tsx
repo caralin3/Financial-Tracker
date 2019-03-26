@@ -54,7 +54,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     if (onSuccess) {
       onSuccess();
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

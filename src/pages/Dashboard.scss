@@ -6,28 +6,6 @@
   flex-direction: column;
   justify-content: flex-start;
 
-  &_header {
-    display: none;
-
-    @media #{$medium} {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-  }
-
-  &_headerContent {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  &_divider {
-    width: 100%;
-  }
-
   &_mobileButton {
     align-items: center;
     display: flex;
@@ -36,12 +14,6 @@
 
   &_mobileMenuList {
     width: 91%;
-  }
-
-  &_title {
-    @include heading2;
-    color: $primary !important;
-    font-weight: bold !important;
   }
 
   &_label {
