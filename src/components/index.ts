@@ -6,6 +6,7 @@ import { Columns } from './Columns';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
 import { DataTable } from './DataTable';
 import { DropdownMenu } from './DropdownMenu';
+import { ExpandableCard } from './ExpandableCard';
 import { Filters } from './Filters';
 import { Form, SelectInput } from './Form';
 import { GoalModal } from './GoalModal';
@@ -27,6 +28,7 @@ export {
   DoubleLeftChevronIcon,
   DoubleRightChevronIcon,
   DropdownMenu,
+  ExpandableCard,
   Filters,
   Form,
   GoalModal,

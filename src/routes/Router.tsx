@@ -2,7 +2,15 @@ import { ConnectedRouter } from 'connected-react-router';
 import * as History from 'history';
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import { AccountsPage, CategoriesPage, DashboardPage, LandingPage, ReportsPage, SettingsPage, TransactionsPage } from '../pages';
+import {
+  AccountsPage,
+  CategoriesPage,
+  DashboardPage,
+  LandingPage,
+  ReportsPage,
+  SettingsPage,
+  TransactionsPage
+} from '../pages';
 import { RouteMap } from '../types';
 
 export const routes = {

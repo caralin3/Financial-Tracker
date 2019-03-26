@@ -1,11 +1,22 @@
-import { Theme, withStyles } from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import Typography from '@material-ui/core/Typography';
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
+import PanoramaFishEyeIcon from '@material-ui/icons/PanoramaFishEye';
+// import LensIcon from '@material-ui/icons/Lens';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
+import SwipeableViews from 'react-swipeable-views';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
-import { Alert, AlertDialog, Layout, Loading } from '../components';
+import { Alert, AlertDialog, ExpandableCard, Layout, Loading } from '../components';
 // import { routes } from '../routes';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
@@ -25,33 +36,28 @@ interface StateMappedProps {
 interface AccountsMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, AccountsPageProps {}
 
 const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
+  const matchMd = useMediaQuery('(min-width:960px)');
   const [loading] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [items, setItems] = React.useState<string[]>([]);
+  const [cashExpanded, setCashExpanded] = React.useState<boolean>(false);
+  const [bankExpanded, setBankExpanded] = React.useState<boolean>(true);
+  const [creditExpanded, setCreditExpanded] = React.useState<boolean>(false);
 
-  // let counter = 0;
-  // const createData = (name: string, calories: number, fat: string, carbs: number, protein: number) => {
-  //   counter += 1;
-  //   return { id: counter, name, calories, fat, carbs, protein };
-  // };
+  let counter = 0;
+  const createData = (label: string, balance: number, link: string) => {
+    counter += 1;
+    return { id: counter, label, balance, link };
+  };
 
-  // const data: any[] = [
-  //   createData('Cupcake', 305, 'asdlksad', 67, 4.3),
-  //   createData('Donut', 452, 'as dlksad', 51, 4.9),
-  //   createData('Eclair', 262, 'asdlk sad', 24, 6.0),
-  //   createData('Frozen yogurt', 159, 'asdlksa asdd', 24, 4.0),
-  //   createData('Gingerbread', 356, 'asdlks asjk ad', 49, 3.9),
-  //   createData('Honeycomb', 408, 'asdlk sad', 87, 6.5),
-  //   createData('Ice cream sandwich', 350, 'asd lksad', 37, 4.3),
-  //   createData('Jelly Bean', 375, 'asd asd lksad', 94, 0.0),
-  //   createData('KitKat', 518, 'asdlk sad', 65, 7.0),
-  //   createData('Lollipop', 392, 'asdl ksad', 98, 0.0),
-  //   createData('Marshmallow', 318, 'asasd dlksad', 81, 2.0),
-  //   createData('Nougat', 360, 'as dlksad', 9, 37.0),
-  //   createData('Oreo', 437, 'asdlk sad', 63, 4.0)
-  // ];
+  const data: any[] = [
+    createData('Account 1', 15905.54, 'asdlksaasdd'),
+    createData('Account 2', 3050.54, 'asdlksad'),
+    createData('Account 3', 452.56, 'asdlksad'),
+    createData('Account 4', 262.0, 'asdlksad')
+  ];
 
   const handleDelete = (selected: string[]) => {
     setOpenDialog(true);
@@ -71,6 +77,12 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
     setSuccess(true);
   };
 
+  const accountTotals = [
+    { id: 0, type: 'Cash', balance: 50.98 },
+    { id: 1, type: 'Bank Account', balance: 20450.98 },
+    { id: 2, type: 'Credit', balance: 2050.08 }
+  ];
+
   return (
     <Layout title="Accounts">
       <AlertDialog
@@ -84,12 +96,119 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
       />
       <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="This is a success message!" />
       <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
-      {loading ? <Loading /> : <div>Accounts</div>}
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className="accounts">
+          <Grid container={true} spacing={24}>
+            {matchMd ? (
+              accountTotals.map(acc => (
+                <Grid key={acc.id} item={true} xs={12} md={4}>
+                  <Card className="accounts_card" raised={true}>
+                    <Typography className="accounts_label" color="primary">
+                      {acc.type}
+                    </Typography>
+                    <Typography className="accounts_balance" variant="h5">
+                      {acc.balance}
+                    </Typography>
+                  </Card>
+                </Grid>
+              ))
+            ) : (
+              <Grid item={true} xs={12} md={4}>
+              <SwipeableViews enableMouseEvents={true}>
+                {accountTotals.map(acc => (
+                  <Typography className="accounts_container">
+                    <Card key={acc.id} className="accounts_card" raised={true}>
+                      <Typography className="accounts_label" color="primary">
+                        {acc.type}
+                      </Typography>
+                      <Typography className="accounts_balance" variant="h5">
+                        {acc.balance}
+                      </Typography>
+                    </Card>
+                  <div className="accounts_dots">
+                  {accountTotals.map((a, index) => <PanoramaFishEyeIcon key={index} className="accounts_dot" />)}
+                  </div>
+                  </Typography>
+                ))}
+              </SwipeableViews>
+              </Grid>
+            )}
+            <Grid item={true} xs={12}>
+              <ExpandableCard
+                title="Bank Accounts"
+                expanded={bankExpanded}
+                onToggle={() => setBankExpanded(!bankExpanded)}
+              >
+                <List>
+                  {data.map(acc => (
+                    <ListItem key={acc.id} className="account_item">
+                      <AccountItem
+                        label={acc.label}
+                        balance={acc.balance}
+                        link={acc.link}
+                        onDelete={() => console.log(acc.id)}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </ExpandableCard>
+            </Grid>
+            <Grid item={true} xs={12}>
+              <ExpandableCard title="Cash" expanded={cashExpanded} onToggle={() => setCashExpanded(!cashExpanded)}>
+                <AccountItem label="Wallet 1" balance={15.98} link="" onDelete={() => console.log()} />
+              </ExpandableCard>
+            </Grid>
+            <Grid item={true} xs={12}>
+              <ExpandableCard
+                title="Credit Cards"
+                expanded={creditExpanded}
+                onToggle={() => setCreditExpanded(!creditExpanded)}
+              >
+                <AccountItem label="Credit 1" balance={50.98} link="" onDelete={() => console.log()} />
+                <AccountItem label="Credit 2" balance={250.0} link="" onDelete={() => console.log()} />
+                <AccountItem label="Credit 3" balance={450} link="" onDelete={() => console.log()} />
+              </ExpandableCard>
+            </Grid>
+          </Grid>
+        </div>
+      )}
     </Layout>
   );
 };
 
-const styles = (theme: Theme) => ({});
+interface AccountItemProps {
+  balance: number;
+  label: string;
+  link: string;
+  onDelete: () => void;
+}
+
+const AccountItem: React.SFC<AccountItemProps> = props => (
+  <div className="account">
+    <div className="account_text">
+      <Typography className="account_label" variant="h6">
+        {props.label}
+      </Typography>
+      <Typography className="account_balance" variant="h6">
+        {props.balance}
+      </Typography>
+    </div>
+    <div className="account_text">
+      <Button onClick={props.onDelete}>
+        <Typography className="account_delete" color="error">
+          Delete
+        </Typography>
+      </Button>
+      <Link className="account_view" href={props.link} variant="h6">
+        View Activity
+      </Link>
+    </div>
+  </div>
+);
+
+const styles = () => ({});
 
 const authCondition = (authUser: any) => !!authUser;
 

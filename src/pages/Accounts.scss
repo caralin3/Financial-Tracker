@@ -1,0 +1,90 @@
+@import '../appearance/styles/variables.scss';
+
+.accounts {
+  margin-top: 0;
+  
+  @media #{$medium} {
+    margin-top: 2rem;
+  }
+
+  &_container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem 0.2rem;
+  }
+
+  &_dots {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5rem;
+    text-align: center;
+  }
+
+  &_dot {
+    font-size: 12px !important;
+    margin: 0 0.5rem;
+  }
+
+  &_card {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 0;
+    padding: 1rem 0;
+
+    @media #{$medium} {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &_label {
+    @include title2;
+    font-weight: bold !important;
+  }
+
+  &_balance {
+    @include number;
+    padding: 0 0.5rem;
+  }
+}
+
+.account {
+  width: 100%;
+
+  &_item {
+    border-bottom: 1px solid $highlight;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &_text {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &_label {
+    @include primary;
+    padding: 0 0.5rem;
+  }
+
+  &_delete {
+    @include secondary;
+    text-transform: none;
+  }
+
+  &_view {
+    @include secondary;
+    padding: 0 0.5rem;
+  }
+
+  &_balance {
+    @include number;
+    padding: 0 0.5rem;
+  }
+}
