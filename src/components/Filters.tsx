@@ -5,6 +5,7 @@ import { SelectInput } from './Form';
 export interface FiltersProps {
   onResetFilters: () => void;
   onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
+  count: number;
 }
 
 export const Filters: React.SFC<FiltersProps> = props => {
@@ -13,12 +14,18 @@ export const Filters: React.SFC<FiltersProps> = props => {
   const [item3, setItem3] = React.useState<string>('all');
   const [item4, setItem4] = React.useState<string>('all');
 
+  React.useEffect(() => {
+    if (props.count === 0) {
+      handleReset();
+    }
+  });
+
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>, col: string) => {
     switch (col) {
-      case 'item':
+      case 'name':
         setItem(e.target.value);
         break;
-      case 'item2':
+      case 'fat':
         setItem2(e.target.value);
         break;
       case 'item3':

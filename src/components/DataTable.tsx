@@ -71,16 +71,17 @@ export const TableHead: React.SFC<TableHeadProps> = props => {
 
 interface TableToolbarProps {
   classes: any;
+  filterCount: number;
+  numSelected: number;
   onDelete: () => void;
   onEdit: () => void;
   onResetFilters: () => void;
   onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
-  numSelected: number;
   tableTitle: string;
 }
 
 export const Toolbar: React.SFC<TableToolbarProps> = props => {
-  const { classes, onDelete, onEdit, numSelected, onResetFilters, onSelectFilter, tableTitle } = props;
+  const { classes, filterCount, onDelete, onEdit, numSelected, onResetFilters, onSelectFilter, tableTitle } = props;
   const [openColumns, setOpenColumns] = React.useState<boolean>(false);
   const [openFilters, setOpenFilters] = React.useState<boolean>(false);
 
@@ -133,7 +134,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             <Popup
               open={openColumns}
               onClick={() => handleClick(!openColumns, false)}
-              content={<Filters onResetFilters={onResetFilters} onSelectFilter={onSelectFilter} />}
+              content={<Filters count={filterCount} onResetFilters={onResetFilters} onSelectFilter={onSelectFilter} />}
               tooltip="View Colmns"
               trigger={<ViewColumnIcon />}
             />
@@ -141,7 +142,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
               class="table_filters"
               open={openFilters}
               onClick={() => handleClick(false, !openFilters)}
-              content={<Filters onResetFilters={onResetFilters} onSelectFilter={onSelectFilter} />}
+              content={<Filters count={filterCount} onResetFilters={onResetFilters} onSelectFilter={onSelectFilter} />}
               tooltip="Filters"
               trigger={<FilterListIcon />}
             />
@@ -300,7 +301,10 @@ const Table: React.SFC<TableProps> = props => {
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
-  const handleResetFilters = () => setFilters({});
+  const handleResetFilters = () => {
+    setFilters({});
+    setDisplayData(data);
+  };
 
   const handleDeleteFilter = (key: string) => {
     const updatedFilters: { [key: string]: string | number } = {};
@@ -314,32 +318,34 @@ const Table: React.SFC<TableProps> = props => {
   };
 
   const handleSelectFilter = (value: string | number, col: string) => {
-    const updatedFilters: { [key: string]: string | number } = { ...filters, [col]: value };
-    setFilters(updatedFilters);
-    filter(updatedFilters);
+    if (value === 'all') {
+      handleDeleteFilter(col);
+    } else {
+      const updatedFilters: { [key: string]: string | number } = { ...filters, [col]: value };
+      setFilters(updatedFilters);
+      filter(updatedFilters);
+    }
   };
-  
+
   const filter = (dataFilters: { [key: string]: string | number }) => {
     const conditions: Array<(d: any) => boolean> = [];
     Object.keys(dataFilters).forEach(col => {
       conditions.push((d: any) => d[col] === dataFilters[col]);
     });
-    if (conditions.length === 0) {
-      setDisplayData(data);
-    } else {
-      const filteredData = displayData.filter((d: any) => conditions.every(cond => cond(d)));
-      setDisplayData(filteredData);
-    }
+
+    const filteredData = data.filter((d: any) => conditions.every(cond => cond(d)));
+    setDisplayData(filteredData);
   };
 
   return (
     <Paper className={classNames([classes.root, 'table_container'])}>
       <TableToolbar
+        filterCount={Object.keys(filters).length}
+        numSelected={selected.length}
         onDelete={() => onDelete(selected)}
         onEdit={() => onEdit(selected[0])}
         onResetFilters={handleResetFilters}
         onSelectFilter={(e, col) => handleSelectFilter(e.target.value, col)}
-        numSelected={selected.length}
         tableTitle={title}
       />
       <TableFilterList filters={filters} onDeleteFilter={handleDeleteFilter} />
