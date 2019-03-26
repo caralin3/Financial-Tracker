@@ -62,7 +62,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         title="Add Transaction"
         buttonText="Add"
         open={addingTrans}
-        handleClose={() => setAddingTrans(false)}
+        onClose={() => setAddingTrans(false)}
       />
       <div className="dashboard_header">
         <div className="dashboard_headerContent">

@@ -234,7 +234,7 @@ interface TableProps {
   classes: any;
   data: any;
   onDelete: (selected: string[]) => void;
-  onEdit: (id: string) => void;
+  onEdit: (id: string, type: string) => void;
   columns: any[];
   title: string;
 }
@@ -365,7 +365,7 @@ const Table: React.SFC<TableProps> = props => {
         filterCount={Object.keys(filters).length}
         numSelected={selected.length}
         onDelete={() => onDelete(selected)}
-        onEdit={() => onEdit(selected[0])}
+        onEdit={() => onEdit(selected[0], title.toLowerCase())}
         onResetFilters={handleResetFilters}
         onSelectColumns={handleSelectColumns}
         onSelectFilter={(e, col) => handleSelectFilter(e.target.value, col)}

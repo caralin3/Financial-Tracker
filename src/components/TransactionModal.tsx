@@ -1,5 +1,6 @@
 import { Grid, Tab, Tabs, TextField, Typography } from '@material-ui/core';
 import classnames from 'classnames';
+import * as querystring from 'querystring';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import SwipeableViews from 'react-swipeable-views';
@@ -13,14 +14,14 @@ interface RouteParams {
 
 interface TransactionModalProps extends RouteComponentProps<RouteParams> {
   buttonText: string;
-  handleClose: () => void;
+  onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
   title: string;
 }
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => {
   const [loading] = React.useState<boolean>(false);
-  const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<string>('');
   const [tab, setTab] = React.useState<number>(0);
@@ -35,18 +36,33 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   const [tag, setTag] = React.useState<string>('');
 
   React.useEffect(() => {
-    // console.log(props.match.params.id);
-    // Load transaction from id
-    setEditing('expense');
+    const query: any = querystring.parse(props.location.search.slice(1));
+    // TODO: Load transaction from id
+    if (query.edit) {
+      setEditing(query.edit);
+    }
   });
 
   const items = ['One', 'Two', 'Three'];
 
+  const handleClose = () => {
+    const { history, match, onClose, onSuccess } = props;
+    if (match.params.id) {
+      history.goBack();
+    }
+    onClose();
+    if (onSuccess) {
+      onSuccess();
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // props.handleClose();
     setError(true);
     // setSuccess(true);
+    if (props.match.params.id) {
+      handleClose();
+    }
   };
 
   const options = [{ label: 'Select', value: '' }, { label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];
@@ -278,9 +294,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
       formButton={props.buttonText}
       formSubmit={handleSubmit}
       open={props.open}
-      handleClose={props.handleClose}
+      handleClose={handleClose}
     >
-      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="This is a success message!" />
       <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
       <Tabs
         className="transModal_tabs"
@@ -291,17 +306,17 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
       >
         <Tab
           className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 0 })}
-          disabled={editing !== 'expense'}
+          disabled={!!editing && editing !== 'expenses'}
           label="Expense"
         />
         <Tab
           className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 1 })}
-          disabled={editing !== 'income'}
+          disabled={!!editing && editing !== 'income'}
           label="Income"
         />
         <Tab
           className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 2 })}
-          disabled={editing !== 'transfer'}
+          disabled={!!editing && editing !== 'transfers'}
           label="Transfer"
         />
       </Tabs>

@@ -71,14 +71,15 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
     setItems(selected);
   };
 
+  // TODO: Handle delete
   const deleteTransaction = () => {
     console.log(items);
   };
 
-  const handleEdit = (id: string) => {
+  const handleEdit = (id: string, type: string) => {
     const { history } = props;
-    console.log(id);
-    history.push(`${routes.transactions}/${id}`);
+    console.log(id, type);
+    history.push(`${routes.transactions}/${id}?edit=${type}`);
     setEditingTrans(true);
   };
 
@@ -105,7 +106,8 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
         title="Edit Transaction"
         buttonText="Edit"
         open={editingTrans}
-        handleClose={() => setEditingTrans(false)}
+        onClose={() => setEditingTrans(false)}
+        onSuccess={() => setSuccess(true)}
       />
       {loading ? (
         <Loading />
