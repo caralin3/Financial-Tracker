@@ -2,6 +2,7 @@ import { AccountModal } from './AccountModal';
 import { Alert } from './Alert';
 import { AlertDialog } from './AlertDialog';
 import { BudgetModal } from './BudgetModal';
+import { Columns } from './Columns';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
 import { DataTable } from './DataTable';
 import { DropdownMenu } from './DropdownMenu';
@@ -21,6 +22,7 @@ export {
   AlertDialog,
   AccountModal,
   BudgetModal,
+  Columns,
   DataTable,
   DoubleLeftChevronIcon,
   DoubleRightChevronIcon,

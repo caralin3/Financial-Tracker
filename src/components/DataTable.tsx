@@ -21,7 +21,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import classNames from 'classnames';
 import * as React from 'react';
-import { Filters, Popup } from './';
+import { Columns, Filters, Popup } from './';
 
 interface TableHeadProps {
   numSelected: number;
@@ -30,11 +30,11 @@ interface TableHeadProps {
   order: 'desc' | 'asc' | undefined;
   orderBy: string;
   rowCount: number;
-  rows: any[];
+  columns: any[];
 }
 
 export const TableHead: React.SFC<TableHeadProps> = props => {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, rows } = props;
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, columns } = props;
 
   const createSortHandler = (property: string) => (event: any) => {
     props.onRequestSort(event, property);
@@ -50,16 +50,16 @@ export const TableHead: React.SFC<TableHeadProps> = props => {
             onChange={onSelectAllClick}
           />
         </TableCell>
-        {rows.map((row: any) => (
+        {columns.map((col, index) => (
           <TableCell
-            key={row.id}
-            align={row.numeric ? 'right' : 'left'}
-            padding={row.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === row.id ? order : false}
+            key={col.id}
+            align={index !== 0 && col.numeric ? 'right' : 'left'}
+            padding={index === 0 ? 'none' : 'default'}
+            sortDirection={orderBy === col.id ? order : false}
           >
-            <Tooltip title="Sort" placement={row.numeric ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
-              <TableSortLabel active={orderBy === row.id} direction={order} onClick={createSortHandler(row.id)}>
-                {row.label}
+            <Tooltip title="Sort" placement={col.numeric ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
+              <TableSortLabel active={orderBy === col.id} direction={order} onClick={createSortHandler(col.id)}>
+                {col.label}
               </TableSortLabel>
             </Tooltip>
           </TableCell>
@@ -71,17 +71,32 @@ export const TableHead: React.SFC<TableHeadProps> = props => {
 
 interface TableToolbarProps {
   classes: any;
+  columns: any[];
+  displayColumns: any[];
   filterCount: number;
   numSelected: number;
   onDelete: () => void;
   onEdit: () => void;
   onResetFilters: () => void;
+  onSelectColumns: (columns: any[]) => void;
   onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
   tableTitle: string;
 }
 
 export const Toolbar: React.SFC<TableToolbarProps> = props => {
-  const { classes, filterCount, onDelete, onEdit, numSelected, onResetFilters, onSelectFilter, tableTitle } = props;
+  const {
+    classes,
+    columns,
+    displayColumns,
+    filterCount,
+    onDelete,
+    onEdit,
+    numSelected,
+    onResetFilters,
+    onSelectColumns,
+    onSelectFilter,
+    tableTitle
+  } = props;
   const [openColumns, setOpenColumns] = React.useState<boolean>(false);
   const [openFilters, setOpenFilters] = React.useState<boolean>(false);
 
@@ -134,7 +149,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             <Popup
               open={openColumns}
               onClick={() => handleClick(!openColumns, false)}
-              content={<Filters count={filterCount} onResetFilters={onResetFilters} onSelectFilter={onSelectFilter} />}
+              content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
               tooltip="View Colmns"
               trigger={<ViewColumnIcon />}
             />
@@ -209,7 +224,6 @@ const filterListStyles = (theme: Theme) => ({
   root: {
     display: 'flex',
     justifyContent: 'left',
-    // flexWrap: 'wrap',
     margin: '5px 16px 20px 20px'
   }
 });
@@ -221,18 +235,19 @@ interface TableProps {
   data: any;
   onDelete: (selected: string[]) => void;
   onEdit: (id: string) => void;
-  rows: any[];
+  columns: any[];
   title: string;
 }
 
 const Table: React.SFC<TableProps> = props => {
-  const { classes, data, onDelete, onEdit, rows, title } = props;
+  const { classes, data, onDelete, onEdit, columns, title } = props;
+  const [displayData, setDisplayData] = React.useState<object[]>(data);
+  const [displayColumns, setDisplayColumns] = React.useState<any[]>(columns);
   const [order, setOrder] = React.useState<'desc' | 'asc' | undefined>(undefined);
   const [orderBy, setOrderBy] = React.useState<string>('');
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
   const [page, setPage] = React.useState<number>(0);
   const [selected, setSelected] = React.useState<string[]>([]);
-  const [displayData, setDisplayData] = React.useState<object[]>(data);
   const [filters, setFilters] = React.useState<{ [key: string]: string | number }>({});
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, displayData.length - page * rowsPerPage);
@@ -337,14 +352,22 @@ const Table: React.SFC<TableProps> = props => {
     setDisplayData(filteredData);
   };
 
+  const handleSelectColumns = (cols: any[]) => {
+    const displayCols = columns.filter(c => cols.indexOf(c.id) !== -1);
+    setDisplayColumns(displayCols);
+  };
+
   return (
     <Paper className={classNames([classes.root, 'table_container'])}>
       <TableToolbar
+        columns={columns}
+        displayColumns={displayColumns}
         filterCount={Object.keys(filters).length}
         numSelected={selected.length}
         onDelete={() => onDelete(selected)}
         onEdit={() => onEdit(selected[0])}
         onResetFilters={handleResetFilters}
+        onSelectColumns={handleSelectColumns}
         onSelectFilter={(e, col) => handleSelectFilter(e.target.value, col)}
         tableTitle={title}
       />
@@ -358,7 +381,7 @@ const Table: React.SFC<TableProps> = props => {
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
             rowCount={displayData.length}
-            rows={rows}
+            columns={displayColumns}
           />
           <TableBody>
             {displayData.length > 0 ? (
@@ -380,13 +403,20 @@ const Table: React.SFC<TableProps> = props => {
                       <TableCell padding="checkbox">
                         <Checkbox checked={sel} />
                       </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
-                        {n.name}
-                      </TableCell>
-                      <TableCell align="right">{n.calories}</TableCell>
-                      <TableCell align="right">{n.fat}</TableCell>
-                      <TableCell align="right">{n.carbs}</TableCell>
-                      <TableCell align="right">{n.protein}</TableCell>
+                      {displayColumns.map((col, index) => {
+                        if (index === 0) {
+                          return (
+                            <TableCell key={col.id} component="th" scope="row" padding="none">
+                              {n[col.id]}
+                            </TableCell>
+                          );
+                        }
+                        return (
+                          <TableCell key={col.id} align={col.numeric ? 'right' : 'left'}>
+                            {n[col.id]}
+                          </TableCell>
+                        );
+                      })}
                     </TableRow>
                   );
                 })
