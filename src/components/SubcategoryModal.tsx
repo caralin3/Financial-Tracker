@@ -2,6 +2,7 @@ import { Grid, TextField } from '@material-ui/core';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { categories, categoryOptions, subcategories } from '../mock';
+// import { Subcategory } from '../types';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
@@ -30,8 +31,12 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => 
     if (params.id) {
       const [subcategory] = subcategories.filter(sub => sub.id === params.id);
       console.log(params.id, subcategory);
+      if (subcategory) {
+        setName(subcategory.name);
+        setCategoryId(subcategory.category.id);
+      }
     }
-  });
+  }, [props.match.params.id]);
 
   const handleClose = () => {
     const {
@@ -79,30 +84,30 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => 
           <Loading />
         </div>
       ) : (
-        <Grid className="subcategoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-          <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
-          <Grid item={true} xs={12}>
-            <SelectInput
-              label="Category"
-              selected={categoryId}
-              handleChange={e => setCategoryId(e.target.value)}
-              options={categoryOptions()}
-            />
+          <Grid className="subcategoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+            <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+            <Grid item={true} xs={12}>
+              <SelectInput
+                label="Category"
+                selected={categoryId}
+                handleChange={e => setCategoryId(e.target.value)}
+                options={categoryOptions()}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                id="subcategory-name"
+                label="Subcategory Name"
+                fullWidth={true}
+                value={name}
+                onChange={e => setName(e.target.value.trim())}
+                type="text"
+                margin="normal"
+                variant="outlined"
+              />
+            </Grid>
           </Grid>
-          <Grid item={true} xs={12}>
-            <TextField
-              id="subcategory-name"
-              label="Subcategory Name"
-              fullWidth={true}
-              value={name}
-              onChange={e => setName(e.target.value.trim())}
-              type="text"
-              margin="normal"
-              variant="outlined"
-            />
-          </Grid>
-        </Grid>
-      )}
+        )}
     </ModalForm>
   );
 };
