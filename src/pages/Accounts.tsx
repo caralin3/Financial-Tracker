@@ -21,7 +21,15 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { AccountModal, Alert, AlertDialog, ExpandableCard, Layout, Loading } from '../components';
 import { routes } from '../routes';
 import { ApplicationState } from '../store/createStore';
-import { User } from '../types';
+import { accountTypeId, User } from '../types';
+
+interface AccountType {
+  balance: number;
+  id: accountTypeId;
+  label: string;
+  expanded: boolean;
+  toggle: () => void;
+}
 
 export interface AccountsPageProps {
   classes: any;
@@ -85,7 +93,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
     setSuccess(true);
   };
 
-  const accountTypes = [
+  const accountTypes: AccountType[] = [
     { id: 'cash', label: 'Cash', balance: 50.98, expanded: cashExpanded, toggle: () => setCashExpanded(!cashExpanded) },
     {
       balance: 20450.98,

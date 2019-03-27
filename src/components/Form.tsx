@@ -2,6 +2,7 @@ import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextF
 import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { Option } from '../types';
 
 export interface FormProps {
   buttonText: string;
@@ -28,8 +29,8 @@ export const Form: React.SFC<FormProps> = props => (
 interface SelectInputProps {
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   label: string;
-  selected: string;
-  options: Array<{ label: string | number; value: string | number }>;
+  selected: any;
+  options: Option[];
 }
 
 export const SelectInput: React.SFC<SelectInputProps> = props => {

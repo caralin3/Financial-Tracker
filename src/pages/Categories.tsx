@@ -20,6 +20,7 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, CategoryModal, Layout, Loading, SubcategoryModal } from '../components';
+import { categories, subcategories } from '../mock';
 import { routes } from '../routes';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
@@ -54,43 +55,6 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   const [error, setError] = React.useState<boolean>(false);
   const [deleteId, setDeleteId] = React.useState<string>('');
 
-  let counter = 0;
-  const createCategory = (name: string) => {
-    counter += 1;
-    return { id: `${counter}`, name };
-  };
-
-  const createSubcategory = (name: string, categoryId: string) => {
-    counter += 1;
-    return { id: counter, name, categoryId };
-  };
-
-  const categories: any[] = [
-    createCategory('Household'),
-    createCategory('Food'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household')
-  ];
-
-  const subcategories: any[] = [
-    createSubcategory('Mortgage', '1'),
-    createSubcategory('Mortgage', '1'),
-    createSubcategory('Groceries', '2'),
-    ,
-    createSubcategory('Groceries', '2'),
-    ,
-    createSubcategory('Groceries', '2'),
-    ,
-  ];
-
   const handleDelete = (id: string, type: string) => {
     if (type === 'category') {
       setOpenDialog(true);
@@ -106,7 +70,6 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
 
   const deleteSubcategory = () => null;
 
-  // TODO: Handle edit
   const handleEdit = (id: string, type: string) => {
     const { history } = props;
     console.log(id, type);
@@ -209,14 +172,14 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
                         </IconButton>
                       </div>
                     </ListItem>
-                    {subcategories.filter(sub => sub.categoryId === cat.id).length > 0 && (
+                    {subcategories.filter(sub => sub.category.id === cat.id).length > 0 && (
                       <ListItem className="subcategory">
                         <ListItemText primary="Subcategories" primaryTypographyProps={{ color: 'primary' }} />
                       </ListItem>
                     )}
                     <List className="category_subs">
                       {subcategories
-                        .filter(sub => sub.categoryId === cat.id)
+                        .filter(sub => sub.category.id === cat.id)
                         .map(sub => (
                           <ListItem className="subcategory" key={sub.id}>
                             <ListItemText primary={sub.name} />

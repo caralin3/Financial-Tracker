@@ -1,7 +1,8 @@
 import { Grid, TextField } from '@material-ui/core';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Alert, Loading, ModalForm, SelectInput } from '.';
+import { categories, categoryOptions, subcategories } from '../mock';
+import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
   id: string;
@@ -25,8 +26,11 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => 
     const {
       match: { params }
     } = props;
-    console.log(params.id);
     // TODO: Load subcategory from id
+    if (params.id) {
+      const [subcategory] = subcategories.filter(sub => sub.id === params.id);
+      console.log(params.id, subcategory);
+    }
   });
 
   const handleClose = () => {
@@ -48,6 +52,8 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => 
       onSuccess
     } = props;
     e.preventDefault();
+    const [category] = categories.filter(cat => cat.id === categoryId);
+    console.log(category, name);
     // setError(true);
 
     // TODO: Handle edit
@@ -58,27 +64,6 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => 
       onSuccess();
     }
   };
-
-  let counter = 0;
-  const createCategory = (label: string) => {
-    counter += 1;
-    return { value: `${counter}`, label };
-  };
-
-  const options: any[] = [
-    createCategory('Household'),
-    createCategory('Food'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household'),
-    createCategory('Household')
-  ];
 
   return (
     <ModalForm
@@ -101,7 +86,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => 
               label="Category"
               selected={categoryId}
               handleChange={e => setCategoryId(e.target.value)}
-              options={options}
+              options={categoryOptions()}
             />
           </Grid>
           <Grid item={true} xs={12}>
