@@ -358,7 +358,7 @@ const Table: React.SFC<TableProps> = props => {
   };
 
   return (
-    <Paper className={classNames([classes.root, 'table_container'])}>
+    <Paper className={classes.root} elevation={8}>
       <TableToolbar
         columns={columns}
         displayColumns={displayColumns}
@@ -464,7 +464,7 @@ const styles = (theme: Theme) => ({
     }
   },
   root: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing.unit * 5
   },
   table: {
     minWidth: 1020

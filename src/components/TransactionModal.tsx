@@ -36,18 +36,24 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   const [tag, setTag] = React.useState<string>('');
 
   React.useEffect(() => {
-    const query: any = querystring.parse(props.location.search.slice(1));
+    const { location } = props;
+    const query: any = querystring.parse(location.search.slice(1));
     // TODO: Load transaction from id
-    if (query.edit) {
-      setEditing(query.edit);
+    if (query.type) {
+      setEditing(query.type);
     }
   });
 
   const items = ['One', 'Two', 'Three'];
 
   const handleClose = () => {
-    const { history, match, onClose, onSuccess } = props;
-    if (match.params.id) {
+    const {
+      history,
+      match: { params },
+      onClose,
+      onSuccess
+    } = props;
+    if (params.id) {
       history.goBack();
     }
     onClose();
@@ -56,11 +62,16 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     }
   };
 
+  // TODO: Handle add
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const {
+      match: { params }
+    } = props;
     e.preventDefault();
     setError(true);
-    // setSuccess(true);
-    if (props.match.params.id) {
+
+    // TODO: Handle edit
+    if (params.id) {
       handleClose();
     }
   };

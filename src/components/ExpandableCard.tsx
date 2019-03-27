@@ -1,4 +1,3 @@
-// import { Theme, withStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -8,7 +7,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import * as React from 'react';
 
 export interface ExpandableCardProps {
-  // classes: any;
   className?: string;
   expanded: boolean;
   onToggle: () => void;
@@ -30,11 +28,3 @@ export const ExpandableCard: React.SFC<ExpandableCardProps> = props => (
     </Collapse>
   </Card>
 );
-
-// const styles = (theme: Theme) => ({
-//   container: {
-//     padding: '1rem'
-//   }
-// });
-
-// export const ExpandableCard = withStyles(styles)(DisconnectedExpandableCard);

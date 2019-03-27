@@ -53,12 +53,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       title="Dashboard"
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
-      <AccountModal
-        title="Add Account"
-        buttonText="Add"
-        open={addingAccount}
-        handleClose={() => setAddingAccount(false)}
-      />
+      <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)} />
       <BudgetModal title="Add Budget" buttonText="Add" open={addingBudget} handleClose={() => setAddingBudget(false)} />
       <GoalModal title="Add Goal" buttonText="Add" open={addingGoal} handleClose={() => setAddingGoal(false)} />
       <TransactionModal

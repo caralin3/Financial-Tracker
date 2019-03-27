@@ -1,27 +1,63 @@
 import { Grid, TextField } from '@material-ui/core';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
-interface AccountModalProps {
+interface RouteParams {
+  id: string;
+}
+
+interface AccountModalProps extends RouteComponentProps<RouteParams> {
   buttonText: string;
-  handleClose: () => void;
+  onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
   title: string;
 }
 
 const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
   const [loading] = React.useState<boolean>(false);
-  const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
   const [balance, setBalance] = React.useState<number | undefined>(undefined);
   const [type, setType] = React.useState<string>('');
 
+  React.useEffect(() => {
+    const {
+      match: { params }
+    } = props;
+    console.log(params.id);
+    // TODO: Load account from id
+  });
+
+  const handleClose = () => {
+    const {
+      history,
+      match: { params },
+      onClose
+    } = props;
+    if (params.id) {
+      history.goBack();
+    }
+    onClose();
+  };
+
+  // TODO: Handle add
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const {
+      match: { params },
+      onSuccess
+    } = props;
     e.preventDefault();
     // setError(true);
-    setSuccess(true);
-    // setTimeout(() => props.handleClose(), 3000);
+
+    // TODO: Handle edit
+    if (params.id) {
+      handleClose();
+      if (onSuccess) {
+        onSuccess();
+      }
+    }
   };
 
   const options = [{ label: 'Select', value: '' }, { label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];
@@ -33,7 +69,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
       formButton={props.buttonText}
       formSubmit={handleSubmit}
       open={props.open}
-      handleClose={props.handleClose}
+      handleClose={handleClose}
     >
       {loading ? (
         <div className="accountModal_loading">
@@ -41,12 +77,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
         </div>
       ) : (
         <Grid className="accountModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-          <Alert
-            onClose={() => setSuccess(false)}
-            open={success}
-            variant="success"
-            message="This is a success message!"
-          />
           <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
           <Grid item={true} xs={12}>
             <TextField
@@ -86,4 +116,4 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
   );
 };
 
-export const AccountModal = DisconnectedAccountModal;
+export const AccountModal = withRouter(DisconnectedAccountModal);
