@@ -51,6 +51,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
           <Grid item={true} xs={12} sm={6}>
             <SelectInput
               label="Category"
+              autoFocus={true}
               selected={category}
               handleChange={e => setCategory(e.target.value)}
               options={options}

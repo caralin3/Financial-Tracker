@@ -13,15 +13,15 @@ import { categories, subcategories } from './';
 export const categoryOptions = () => {
   const options: Option[] = [];
   categories.forEach(cat => {
-    options.push(createOption(cat.name, cat.id))
-  })
+    options.push(createOption(cat.name, cat.id));
+  });
   return options;
-}
+};
 
 export const subcategoryOptions = () => {
   const options: Option[] = [];
   subcategories.forEach(sub => {
-    options.push(createOption(sub.name, sub.id))
-  })
+    options.push(createOption(sub.name, sub.id));
+  });
   return options;
-}
+};

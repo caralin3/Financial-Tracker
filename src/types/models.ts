@@ -1,4 +1,3 @@
-
 export type accountTypeId = 'cash' | 'bank' | 'credit';
 
 export interface Account {

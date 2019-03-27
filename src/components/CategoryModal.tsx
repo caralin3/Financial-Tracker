@@ -1,7 +1,8 @@
 import { Grid, TextField } from '@material-ui/core';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Alert, Loading, ModalForm } from '.';
+import { categories } from '../mock';
+import { Alert, Loading, ModalForm } from './';
 
 interface RouteParams {
   id: string;
@@ -24,9 +25,15 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalProps> = props => {
     const {
       match: { params }
     } = props;
-    console.log(params.id);
     // TODO: Load category from id
-  });
+    if (params.id) {
+      const [subcategory] = categories.filter(cat => cat.id === params.id);
+      console.log(params.id, subcategory);
+      if (subcategory) {
+        setName(subcategory.name);
+      }
+    }
+  }, [props.match.params.id]);
 
   const handleClose = () => {
     const {
@@ -43,14 +50,18 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalProps> = props => {
   // TODO: Handle add
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const {
-      // match: { params },
+      match: { params },
       onSuccess
     } = props;
     e.preventDefault();
     // setError(true);
+    console.log(name);
 
     // TODO: Handle edit
-    // if (params.id) {}
+    if (params.id) {
+      const [category] = categories.filter(cat => cat.id === params.id);
+      console.log(category);
+    }
 
     handleClose();
     if (onSuccess) {
@@ -78,6 +89,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalProps> = props => {
             <TextField
               id="category-name"
               label="Category Name"
+              autoFocus={true}
               fullWidth={true}
               value={name}
               onChange={e => setName(e.target.value.trim())}

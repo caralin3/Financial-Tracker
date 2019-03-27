@@ -93,6 +93,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         <Grid item={true} xs={12} sm={6}>
           <AutoTextField
             className="transModal_field--item"
+            autoFocus={true}
             id="expense-item"
             label="Item"
             onChange={e => setItem(e.target.value.trim())}
@@ -177,6 +178,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         <Grid item={true} xs={12} sm={6}>
           <AutoTextField
             className="transModal_field--item"
+            autoFocus={true}
             id="income-item"
             label="Item"
             onChange={e => setItem(e.target.value.trim())}
@@ -242,7 +244,13 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     <Typography className="transModal_fields" component="div" dir={theme.direction}>
       <Grid className="transModal_grid" container={true} spacing={24}>
         <Grid item={true} xs={12} sm={6}>
-          <SelectInput label="From" selected={from} handleChange={e => setFrom(e.target.value)} options={options} />
+          <SelectInput
+            label="From"
+            autoFocus={true}
+            selected={from}
+            handleChange={e => setFrom(e.target.value)}
+            options={options}
+          />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <SelectInput label="To" selected={to} handleChange={e => setTo(e.target.value)} options={options} />

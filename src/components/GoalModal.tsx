@@ -55,6 +55,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
           <Grid item={true} xs={12}>
             <SelectInput
               label="Goal Based On"
+              autoFocus={true}
               selected={criteria}
               handleChange={e => setCriteria(e.target.value)}
               options={options}

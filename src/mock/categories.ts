@@ -29,7 +29,7 @@ export const categories: Category[] = [
   createCategory('Savings'),
   createCategory('Shopping'),
   createCategory('Travel'),
-  createCategory('Utilities'),
+  createCategory('Utilities')
 ];
 
 export const subcategories: Subcategory[] = [
@@ -48,5 +48,5 @@ export const subcategories: Subcategory[] = [
   createSubcategory('Medications', categories[9]),
   createSubcategory('Dental', categories[9]),
   createSubcategory('Specialty', categories[9]),
-  createSubcategory('Merchandise', categories[13]),
-]
+  createSubcategory('Merchandise', categories[13])
+];

@@ -27,6 +27,7 @@ export const Form: React.SFC<FormProps> = props => (
 );
 
 interface SelectInputProps {
+  autoFocus?: boolean;
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   label: string;
   selected: any;
@@ -50,6 +51,7 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
         {props.label}
       </InputLabel>
       <Select
+        autoFocus={props.autoFocus}
         value={props.selected}
         onChange={props.handleChange}
         input={<OutlinedInput labelWidth={labelWidth} name={props.label} id={`outlined-${props.label}-select`} />}
@@ -65,6 +67,7 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
 };
 
 interface AutoTextFieldProps {
+  autoFocus?: boolean;
   className?: string;
   dataList: string[];
   id: string;
@@ -98,6 +101,7 @@ export const AutoTextField: React.SFC<AutoTextFieldProps> = props => {
     <div>
       <TextField
         id={id}
+        autoFocus={props.autoFocus}
         label={label}
         fullWidth={true}
         className={className}

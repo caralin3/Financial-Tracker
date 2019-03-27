@@ -190,7 +190,10 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
                               >
                                 <EditIcon color="primary" />
                               </IconButton>
-                              <IconButton className="subcategory_button" onClick={() => handleDelete(sub.id, 'subcategory')}>
+                              <IconButton
+                                className="subcategory_button"
+                                onClick={() => handleDelete(sub.id, 'subcategory')}
+                              >
                                 <DeleteIcon color="error" />
                               </IconButton>
                             </div>
@@ -198,7 +201,12 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
                         ))}
                     </List>
                     <ListItem className="subcategory">
-                      <Button color="primary" onClick={() => setOpenSubAdd(!openSubAdd)} variant="contained" fullWidth={true}>
+                      <Button
+                        color="primary"
+                        onClick={() => setOpenSubAdd(!openSubAdd)}
+                        variant="contained"
+                        fullWidth={true}
+                      >
                         Add Subcategory
                       </Button>
                     </ListItem>
