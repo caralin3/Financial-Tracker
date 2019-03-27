@@ -464,7 +464,7 @@ const styles = (theme: Theme) => ({
     }
   },
   root: {
-    marginTop: theme.spacing.unit * 5
+    marginBottom: theme.spacing.unit * 5
   },
   table: {
     minWidth: 1020

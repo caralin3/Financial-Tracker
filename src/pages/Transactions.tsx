@@ -99,56 +99,46 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
 
   return (
     <Layout className="transactions" title="Transactions" buttons={addButton(false)}>
-      <div className="transactions_container">
-        <div className="show-small">{addButton(true)}</div>
-        <AlertDialog
-          cancelText="Cancel"
-          confirmText="Confirm"
-          description={`Deleting ${items}`}
-          onClose={() => setOpenDialog(false)}
-          onConfirm={handleConfirm}
-          open={openDialog}
-          title="Are you sure you want to delete these transactions?"
-        />
-        <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="This is a success message!" />
-        <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
-        <TransactionModal
-          title="Add Transaction"
-          buttonText="Add"
-          open={openAdd}
-          onClose={() => setOpenAdd(false)}
-          onSuccess={() => setSuccess(true)}
-        />
-        <TransactionModal
-          title="Edit Transaction"
-          buttonText="Edit"
-          open={openEdit}
-          onClose={() => setOpenEdit(false)}
-          onSuccess={() => setSuccess(true)}
-        />
-        {loading ? (
-          <Loading />
-        ) : (
-          <div>
-            <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} columns={columns} title="Expenses" />
-            <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} columns={columns} title="Income" />
-            <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} columns={columns} title="Transfers" />
-          </div>
-        )}
-      </div>
+      <div className="show-small">{addButton(true)}</div>
+      <AlertDialog
+        cancelText="Cancel"
+        confirmText="Confirm"
+        description={`Deleting ${items}`}
+        onClose={() => setOpenDialog(false)}
+        onConfirm={handleConfirm}
+        open={openDialog}
+        title="Are you sure you want to delete these transactions?"
+      />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="This is a success message!" />
+      <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+      <TransactionModal
+        title="Add Transaction"
+        buttonText="Add"
+        open={openAdd}
+        onClose={() => setOpenAdd(false)}
+        onSuccess={() => setSuccess(true)}
+      />
+      <TransactionModal
+        title="Edit Transaction"
+        buttonText="Edit"
+        open={openEdit}
+        onClose={() => setOpenEdit(false)}
+        onSuccess={() => setSuccess(true)}
+      />
+      {loading ? (
+        <Loading />
+      ) : (
+        <div>
+          <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} columns={columns} title="Expenses" />
+          <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} columns={columns} title="Income" />
+          <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} columns={columns} title="Transfers" />
+        </div>
+      )}
     </Layout>
   );
 };
 
-const styles = (theme: Theme) => ({
-  title: {
-    color: theme.palette.primary.main,
-    fontWeight: 'bold',
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 22
-    }
-  }
-});
+const styles = (theme: Theme) => ({});
 
 const authCondition = (authUser: any) => !!authUser;
 

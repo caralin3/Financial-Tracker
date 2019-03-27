@@ -3,6 +3,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import * as React from 'react';
 
@@ -18,7 +19,7 @@ export const ExpandableCard: React.SFC<ExpandableCardProps> = props => (
     <CardHeader
       action={
         <IconButton onClick={props.onToggle}>
-          <ExpandMoreIcon />
+          {props.expanded ? <ExpandMoreIcon /> : <ExpandLessIcon />}
         </IconButton>
       }
       title={props.title}

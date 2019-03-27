@@ -12,6 +12,7 @@ import {
   Typography,
   withStyles
 } from '@material-ui/core';
+// import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import CreditCardIcon from '@material-ui/icons/CreditCard';

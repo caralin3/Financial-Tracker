@@ -6,6 +6,7 @@
 
 @import '../../components/AccountModal.scss';
 @import '../../components/BudgetModal.scss';
+@import '../../components/CategoryModal.scss';
 @import '../../components/DataTable.scss';
 @import '../../components/Filters.scss';
 @import '../../components/Form.scss';
@@ -16,8 +17,10 @@
 @import '../../components/Popup.scss';
 @import '../../components/Navigation.scss';
 @import '../../components/SignUpForm.scss';
+@import '../../components/SubcategoryModal.scss';
 @import '../../components/TransactionModal.scss';
 
 @import '../../pages/Accounts.scss';
+@import '../../pages/Categories.scss';
 @import '../../pages/Dashboard.scss';
 @import '../../pages/Landing.scss';

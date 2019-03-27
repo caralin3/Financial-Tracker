@@ -31,6 +31,10 @@
 
   &_divider {
     width: 100%;
+
+    @media #{$medium} {
+      margin-bottom: 2rem;
+    }
   }
 
   &_container {
@@ -44,7 +48,8 @@
 }
 
 .transactions {
-  padding: 5rem 1rem;
+  // padding: 5rem 1rem;
+
   @media #{$x-small} {
     width: 91% !important;
   }

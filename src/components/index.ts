@@ -2,6 +2,7 @@ import { AccountModal } from './AccountModal';
 import { Alert } from './Alert';
 import { AlertDialog } from './AlertDialog';
 import { BudgetModal } from './BudgetModal';
+import { CategoryModal } from './CategoryModal';
 import { Columns } from './Columns';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
 import { DataTable } from './DataTable';
@@ -16,6 +17,7 @@ import { LoginForm } from './LoginForm';
 import { ModalForm } from './ModalForm';
 import { Popup } from './Popup';
 import { SignUpForm } from './SignUpForm';
+import { SubcategoryModal } from './SubcategoryModal';
 import { TransactionModal } from './TransactionModal';
 
 export {
@@ -23,6 +25,7 @@ export {
   AlertDialog,
   AccountModal,
   BudgetModal,
+  CategoryModal,
   Columns,
   DataTable,
   DoubleLeftChevronIcon,
@@ -39,5 +42,6 @@ export {
   Popup,
   SelectInput,
   SignUpForm,
+  SubcategoryModal,
   TransactionModal
 };
