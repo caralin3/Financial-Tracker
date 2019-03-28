@@ -23,6 +23,7 @@ import { accounts } from '../mock';
 import { routes } from '../routes';
 import { ApplicationState } from '../store/createStore';
 import { accountType, User } from '../types';
+import { formatMoney } from '../util';
 
 interface AccountType {
   balance: number;
@@ -140,7 +141,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
                       {type.label}
                     </Typography>
                     <Typography className="accounts_balance" variant="h5">
-                      {type.balance}
+                      {formatMoney(type.balance)}
                     </Typography>
                   </Card>
                 </Grid>
@@ -155,7 +156,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
                           {type.label}
                         </Typography>
                         <Typography className="accounts_balance" variant="h5">
-                          {type.balance}
+                          {formatMoney(type.balance)}
                         </Typography>
                       </Card>
                     </Grid>
@@ -218,7 +219,7 @@ const AccountItem: React.SFC<AccountItemProps> = props => (
         {props.label}
       </Typography>
       <Typography className="account_balance" variant="h6">
-        {props.balance}
+        {formatMoney(props.balance)}
       </Typography>
     </div>
     <div className="account_text">

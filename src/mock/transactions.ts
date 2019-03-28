@@ -24,13 +24,13 @@ const index = (max: number) => Math.floor(Math.random() * max);
 
 export const transactions: Transaction[] = [
   createTransaction(
-    20.54,
-    categories[index(categories.length)],
+    280.54,
+    categories[1],
     new Date().toISOString(),
     accounts[index(accounts.length)],
     'Netflix',
     '',
-    subcategories[index(subcategories.length)],
+    subcategories[10],
     '',
     undefined,
     'expense'
@@ -60,9 +60,9 @@ export const transactions: Transaction[] = [
     'transfer'
   ),
   createTransaction(
-    20.54,
+    120.54,
     categories[index(categories.length)],
-    new Date().toISOString(),
+    new Date('03/03/2019').toISOString(),
     accounts[index(accounts.length)],
     'Netflix',
     '',

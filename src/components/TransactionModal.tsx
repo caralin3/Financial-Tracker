@@ -1,11 +1,13 @@
 import { Grid, Tab, Tabs, TextField, Typography } from '@material-ui/core';
 import classnames from 'classnames';
+import * as moment from 'moment';
 import * as querystring from 'querystring';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import SwipeableViews from 'react-swipeable-views';
 import { theme } from '../appearance';
-import { accounts, categories, subcategories } from '../mock';
+import { accounts, categories, subcategories, transactions } from '../mock';
+import { transactionType } from '../types';
 import { getOptions } from '../util';
 import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
 
@@ -38,21 +40,58 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
 
   React.useEffect(() => {
     const {
-      // match: { params },
+      match: { params },
       location
     } = props;
     const query: any = querystring.parse(location.search.slice(1));
     // TODO: Load transaction from id
     if (query.type) {
       setEditing(query.type);
+      switch (query.type as transactionType) {
+        case 'income':
+          setTab(1);
+          break;
+        case 'transfer':
+          setTab(2);
+          break;
+        default:
+          setTab(0);
+          break;
+      }
     }
-    // if (params.id) {
-    //   const [transaction] = transactions.filter(trans => trans.id === params.id);
-    //   console.log(params.id, transaction);
-    //   if (transaction) {
-    //     // setName(transaction.name);
-    //   }
-    // }
+    if (params.id) {
+      const [transaction] = transactions.filter(trans => trans.id === params.id);
+      console.log(params.id, transaction);
+      if (transaction) {
+        if (transaction.category) {
+          setCategoryId(transaction.category.id);
+        }
+        if (transaction.from) {
+          setFrom(transaction.from.id);
+        }
+        if (transaction.item) {
+          setItem(transaction.item);
+        }
+        if (transaction.note) {
+          setNote(transaction.note);
+        }
+        if (transaction.subcategory) {
+          setSubcategoryId(transaction.subcategory.id);
+        }
+        if (transaction.tags) {
+          setTags(transaction.tags);
+        }
+        if (transaction.to) {
+          setTo(transaction.to.id);
+        }
+        setDate(moment(transaction.date).format('YYYY-MM-DD'));
+        setAmount(transaction.amount);
+      }
+    } else {
+      if ((amount && date) || from || item || note || to || categoryId || subcategoryId) {
+        resetFields();
+      }
+    }
   }, [props.match.params.id]);
 
   const items = ['One', 'Two', 'Three'];
@@ -362,7 +401,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
       >
         <Tab
           className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 0 })}
-          disabled={!!editing && editing !== 'expenses'}
+          disabled={!!editing && editing !== 'expense'}
           label="Expense"
         />
         <Tab
@@ -372,7 +411,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         />
         <Tab
           className={classnames('transModal_tab', { ['transModal_activeTab']: tab === 2 })}
-          disabled={!!editing && editing !== 'transfers'}
+          disabled={!!editing && editing !== 'transfer'}
           label="Transfer"
         />
       </Tabs>

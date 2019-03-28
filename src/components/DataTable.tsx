@@ -230,9 +230,12 @@ const filterListStyles = (theme: Theme) => ({
 
 export const TableFilterList = withStyles(filterListStyles)(FilterList);
 
+export type sortDir = 'desc' | 'asc';
+
 interface TableProps {
   classes: any;
   data: any;
+  defaultSort?: { dir: sortDir; orderBy: string };
   onDelete: (selected: string[]) => void;
   onEdit: (id: string, type: string) => void;
   columns: any[];
@@ -240,11 +243,11 @@ interface TableProps {
 }
 
 const Table: React.SFC<TableProps> = props => {
-  const { classes, data, onDelete, onEdit, columns, title } = props;
+  const { classes, data, defaultSort, onDelete, onEdit, columns, title } = props;
   const [displayData, setDisplayData] = React.useState<object[]>(data);
   const [displayColumns, setDisplayColumns] = React.useState<any[]>(columns);
-  const [order, setOrder] = React.useState<'desc' | 'asc' | undefined>(undefined);
-  const [orderBy, setOrderBy] = React.useState<string>('');
+  const [order, setOrder] = React.useState<sortDir | undefined>(defaultSort ? defaultSort.dir : undefined);
+  const [orderBy, setOrderBy] = React.useState<string>(defaultSort ? defaultSort.orderBy : '');
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
   const [page, setPage] = React.useState<number>(0);
   const [selected, setSelected] = React.useState<string[]>([]);
@@ -357,6 +360,8 @@ const Table: React.SFC<TableProps> = props => {
     setDisplayColumns(displayCols);
   };
 
+  const editType = title.endsWith('s') ? title.toLowerCase().slice(0, title.length - 1) : title.toLowerCase();
+
   return (
     <Paper className={classes.root} elevation={8}>
       <TableToolbar
@@ -365,7 +370,7 @@ const Table: React.SFC<TableProps> = props => {
         filterCount={Object.keys(filters).length}
         numSelected={selected.length}
         onDelete={() => onDelete(selected)}
-        onEdit={() => onEdit(selected[0], title.toLowerCase())}
+        onEdit={() => onEdit(selected[0], editType)}
         onResetFilters={handleResetFilters}
         onSelectColumns={handleSelectColumns}
         onSelectFilter={(e, col) => handleSelectFilter(e.target.value, col)}

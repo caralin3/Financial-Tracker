@@ -9,6 +9,7 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { AccountModal, BudgetModal, DropdownMenu, GoalModal, Layout, TransactionModal } from '../components';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
+import { formatMoney } from '../util';
 
 export interface DashboardPageProps {
   classes: any;
@@ -83,7 +84,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
                   Expenses
                 </Typography>
                 <Typography className="totals_number" variant="h5">
-                  $20,450.98
+                  {formatMoney(20450.98)}
                 </Typography>
               </span>
               <span className="totals_amount">
@@ -99,7 +100,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
                   Net
                 </Typography>
                 <Typography className="totals_number" variant="h5">
-                  $34,450
+                  {formatMoney(34450)}
                 </Typography>
               </span>
             </span>

@@ -1,0 +1,36 @@
+import * as moment from 'moment';
+import { Account, Category, Subcategory, Transaction } from '../types';
+
+export const formatMoney = (val: number) => `$${val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+
+export const formatEmptyString = (val: string | undefined) => {
+  if (!val) {
+    return 'N/A';
+  }
+  return val;
+};
+
+export const formatTableData = (val: Account | Category | Subcategory | undefined) => {
+  if (val) {
+    return val.name;
+  }
+  return 'N/A';
+};
+
+export const formatTableTransaction = (transactions: Transaction[]) => {
+  if (transactions.length === 0) {
+    return [];
+  }
+  return transactions.map(trans => ({
+    ...trans,
+    amount: formatMoney(trans.amount),
+    category: formatTableData(trans.category),
+    date: moment(trans.date).format('MM/DD/YYYY'),
+    from: formatTableData(trans.from),
+    item: formatEmptyString(trans.item),
+    note: formatEmptyString(trans.note),
+    subcategory: formatTableData(trans.subcategory),
+    tags: formatEmptyString(trans.tags),
+    to: formatTableData(trans.to)
+  }));
+};

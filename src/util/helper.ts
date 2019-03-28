@@ -31,7 +31,7 @@ export const expenseColumns = [
   createColumns('subcategory', 'Subcategory', false),
   createColumns('date', 'Date', false),
   createColumns('amount', 'Amount', false),
-  createColumns('note', 'note', false),
+  createColumns('note', 'Note', false),
   createColumns('tags', 'Tags', false)
 ];
 
@@ -52,7 +52,3 @@ export const transferColumns = [
   createColumns('note', 'note', false),
   createColumns('tags', 'Tags', false)
 ];
-
-export const createTableData = () => {
-  return;
-}

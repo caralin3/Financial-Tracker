@@ -11,7 +11,7 @@ import { transactions } from '../mock';
 import { routes } from '../routes';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
-import { expenseColumns, incomeColumns, transferColumns } from '../util';
+import { expenseColumns, formatTableTransaction, incomeColumns, transferColumns } from '../util';
 
 export interface TransactionsPageProps {
   classes: any;
@@ -27,9 +27,9 @@ interface StateMappedProps {
 
 interface TransactionsMergedProps
   extends RouteComponentProps,
-  StateMappedProps,
-  DispatchMappedProps,
-  TransactionsPageProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
   const [loading] = React.useState<boolean>(false);
@@ -69,9 +69,9 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
     </Button>
   );
 
-  const expenses = transactions.filter(trans => trans.type === 'expense');
-  const income = transactions.filter(trans => trans.type === 'income');
-  const transfers = transactions.filter(trans => trans.type === 'transfer');
+  const expenses = formatTableTransaction(transactions.filter(trans => trans.type === 'expense'));
+  const income = formatTableTransaction(transactions.filter(trans => trans.type === 'income'));
+  const transfers = formatTableTransaction(transactions.filter(trans => trans.type === 'transfer'));
 
   return (
     <Layout className="transactions" title="Transactions" buttons={addButton(false)}>
@@ -104,24 +104,33 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
       {loading ? (
         <Loading />
       ) : (
-          <div>
-            <DataTable
-              data={expenses}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              columns={expenseColumns}
-              title="Expenses"
-            />
-            <DataTable data={income} onDelete={handleDelete} onEdit={handleEdit} columns={incomeColumns} title="Income" />
-            <DataTable
-              data={transfers}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              columns={transferColumns}
-              title="Transfers"
-            />
-          </div>
-        )}
+        <div>
+          <DataTable
+            data={expenses}
+            defaultSort={{ dir: 'desc', orderBy: 'date' }}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            columns={expenseColumns}
+            title="Expenses"
+          />
+          <DataTable
+            data={income}
+            defaultSort={{ dir: 'desc', orderBy: 'date' }}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            columns={incomeColumns}
+            title="Income"
+          />
+          <DataTable
+            data={transfers}
+            defaultSort={{ dir: 'desc', orderBy: 'date' }}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            columns={transferColumns}
+            title="Transfers"
+          />
+        </div>
+      )}
     </Layout>
   );
 };
