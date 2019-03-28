@@ -5,8 +5,9 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import SwipeableViews from 'react-swipeable-views';
 import { theme } from '../appearance';
-import { Alert, Loading, ModalForm, SelectInput } from './';
-import { AutoTextField } from './Form';
+import { accounts, categories, subcategories } from '../mock';
+import { getOptions } from '../util';
+import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
   id: string;
@@ -29,22 +30,46 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   const [to, setTo] = React.useState<string>('');
   const [item, setItem] = React.useState<string>('');
   const [date, setDate] = React.useState<string>('');
-  const [amount, setAmount] = React.useState<number | undefined>(undefined);
-  const [category, setCategory] = React.useState<string>('');
-  const [subcategory, setSubcategory] = React.useState<string>('');
+  const [amount, setAmount] = React.useState<number | undefined | ''>(undefined);
+  const [categoryId, setCategoryId] = React.useState<string>('');
+  const [subcategoryId, setSubcategoryId] = React.useState<string>('');
   const [note, setNote] = React.useState<string>('');
   const [tag, setTag] = React.useState<string>('');
 
   React.useEffect(() => {
-    const { location } = props;
+    const {
+      // match: { params },
+      location
+    } = props;
     const query: any = querystring.parse(location.search.slice(1));
     // TODO: Load transaction from id
     if (query.type) {
       setEditing(query.type);
     }
-  });
+    // if (params.id) {
+    //   const [transaction] = transactions.filter(trans => trans.id === params.id);
+    //   console.log(params.id, transaction);
+    //   if (transaction) {
+    //     // setName(transaction.name);
+    //   }
+    // }
+  }, [props.match.params.id]);
 
   const items = ['One', 'Two', 'Three'];
+
+  const resetFields = () => {
+    setCategoryId('');
+    setDate('');
+    setFrom('');
+    setItem('');
+    setNote('');
+    setSubcategoryId('');
+    setTag('');
+    setTo('');
+    if (amount) {
+      setAmount('');
+    }
+  }
 
   const handleClose = () => {
     const {
@@ -60,6 +85,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     if (onSuccess) {
       onSuccess();
     }
+    resetFields();
   };
 
   // TODO: Handle add
@@ -76,8 +102,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     }
   };
 
-  const options = [{ label: 'Select', value: '' }, { label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];
-
   const loadingProgress = (
     <Typography className="transModal_fields transModal_fields--loading" component="div" dir={theme.direction}>
       <Loading />
@@ -88,12 +112,17 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     <Typography className="transModal_fields" component="div" dir={theme.direction}>
       <Grid className="transModal_grid" container={true} spacing={24}>
         <Grid item={true} xs={12} sm={6}>
-          <SelectInput label="From" selected={from} handleChange={e => setFrom(e.target.value)} options={options} />
+          <SelectInput
+            label="From"
+            autoFocus={true}
+            selected={from}
+            handleChange={e => setFrom(e.target.value)}
+            options={getOptions(accounts)}
+          />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <AutoTextField
             className="transModal_field--item"
-            autoFocus={true}
             id="expense-item"
             label="Item"
             onChange={e => setItem(e.target.value.trim())}
@@ -131,17 +160,17 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         <Grid item={true} xs={12} sm={6}>
           <SelectInput
             label="Category"
-            selected={category}
-            handleChange={e => setCategory(e.target.value)}
-            options={options}
+            selected={categoryId}
+            handleChange={e => setCategoryId(e.target.value)}
+            options={getOptions(categories)}
           />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <SelectInput
             label="Subcategory"
-            selected={subcategory}
-            handleChange={e => setSubcategory(e.target.value)}
-            options={options}
+            selected={subcategoryId}
+            handleChange={e => setSubcategoryId(e.target.value)}
+            options={getOptions(subcategories.filter(sub => sub.category.id === categoryId))}
           />
         </Grid>
         {tab === 0 && (
@@ -178,7 +207,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         <Grid item={true} xs={12} sm={6}>
           <AutoTextField
             className="transModal_field--item"
-            autoFocus={true}
             id="income-item"
             label="Item"
             onChange={e => setItem(e.target.value.trim())}
@@ -187,7 +215,12 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
           />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
-          <SelectInput label="To" selected={to} handleChange={e => setTo(e.target.value)} options={options} />
+          <SelectInput
+            label="To"
+            selected={to}
+            handleChange={e => setTo(e.target.value)}
+            options={getOptions(accounts)}
+          />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <TextField
@@ -246,14 +279,18 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         <Grid item={true} xs={12} sm={6}>
           <SelectInput
             label="From"
-            autoFocus={true}
             selected={from}
             handleChange={e => setFrom(e.target.value)}
-            options={options}
+            options={getOptions(accounts)}
           />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
-          <SelectInput label="To" selected={to} handleChange={e => setTo(e.target.value)} options={options} />
+          <SelectInput
+            label="To"
+            selected={to}
+            handleChange={e => setTo(e.target.value)}
+            options={getOptions(accounts)}
+          />
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <TextField

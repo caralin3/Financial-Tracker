@@ -1,10 +1,10 @@
-export type accountTypeId = 'cash' | 'bank' | 'credit';
+export type accountType = 'cash' | 'bank' | 'credit';
 
 export interface Account {
-  balance: string;
+  balance: number;
   id: string;
   name: string;
-  type: accountTypeId;
+  type: accountType;
   userId: string;
 }
 

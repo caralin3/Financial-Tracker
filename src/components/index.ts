@@ -9,7 +9,7 @@ import { DataTable } from './DataTable';
 import { DropdownMenu } from './DropdownMenu';
 import { ExpandableCard } from './ExpandableCard';
 import { Filters } from './Filters';
-import { Form, SelectInput } from './Form';
+import { AutoTextField, Form, SelectInput } from './Form';
 import { GoalModal } from './GoalModal';
 import { Layout } from './Layout';
 import { Loading } from './Loading';
@@ -24,6 +24,7 @@ export {
   Alert,
   AlertDialog,
   AccountModal,
+  AutoTextField,
   BudgetModal,
   CategoryModal,
   Columns,

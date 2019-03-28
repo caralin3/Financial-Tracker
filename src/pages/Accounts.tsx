@@ -19,13 +19,14 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { AccountModal, Alert, AlertDialog, ExpandableCard, Layout, Loading } from '../components';
+import { accounts } from '../mock';
 import { routes } from '../routes';
 import { ApplicationState } from '../store/createStore';
-import { accountTypeId, User } from '../types';
+import { accountType, User } from '../types';
 
 interface AccountType {
   balance: number;
-  id: accountTypeId;
+  id: accountType;
   label: string;
   expanded: boolean;
   toggle: () => void;
@@ -58,19 +59,6 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   const [cashExpanded, setCashExpanded] = React.useState<boolean>(false);
   const [bankExpanded, setBankExpanded] = React.useState<boolean>(true);
   const [creditExpanded, setCreditExpanded] = React.useState<boolean>(false);
-
-  let counter = 0;
-  const createData = (label: string, balance: number, link: string) => {
-    counter += 1;
-    return { id: counter, label, balance, link };
-  };
-
-  const data: any[] = [
-    createData('Account 1', 15905.54, 'asdlksaasdd'),
-    createData('Account 2', 3050.54, 'asdlksad'),
-    createData('Account 3', 452.56, 'asdlksad'),
-    createData('Account 4', 262.0, 'asdlksad')
-  ];
 
   const handleDelete = (id: string) => {
     setOpenDialog(true);
@@ -189,17 +177,20 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
                 <Grid item={true} xs={12} key={type.id}>
                   <ExpandableCard title={type.label} expanded={type.expanded} onToggle={type.toggle}>
                     <List>
-                      {data.map(acc => (
-                        <ListItem key={acc.id} className="account_item">
-                          <AccountItem
-                            label={acc.label}
-                            balance={acc.balance}
-                            link={acc.link}
-                            onEdit={() => handleEdit(acc.id, type.id)}
-                            onDelete={() => handleDelete(acc.id)}
-                          />
-                        </ListItem>
-                      ))}
+                      {/* TODO: Handle empty list */}
+                      {accounts
+                        .filter(acc => acc.type === type.id)
+                        .map(acc => (
+                          <ListItem key={acc.id} className="account_item">
+                            <AccountItem
+                              label={acc.name}
+                              balance={acc.balance}
+                              link={''}
+                              onEdit={() => handleEdit(acc.id, type.id)}
+                              onDelete={() => handleDelete(acc.id)}
+                            />
+                          </ListItem>
+                        ))}
                     </List>
                   </ExpandableCard>
                 </Grid>
