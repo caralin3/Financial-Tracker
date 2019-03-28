@@ -34,7 +34,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   const [categoryId, setCategoryId] = React.useState<string>('');
   const [subcategoryId, setSubcategoryId] = React.useState<string>('');
   const [note, setNote] = React.useState<string>('');
-  const [tag, setTag] = React.useState<string>('');
+  const [tags, setTags] = React.useState<string>('');
 
   React.useEffect(() => {
     const {
@@ -64,7 +64,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     setItem('');
     setNote('');
     setSubcategoryId('');
-    setTag('');
+    setTags('');
     setTo('');
     if (amount) {
       setAmount('');
@@ -189,11 +189,11 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
           <Grid item={true} xs={12} sm={6}>
             <AutoTextField
               className="transModal_field--item"
-              id="expense-tag"
-              label="Tag"
-              onChange={e => setTag(e.target.value.trim())}
+              id="expense-tags"
+              label="Tags"
+              onChange={e => setTags(e.target.value.trim())}
               dataList={items}
-              value={tag}
+              value={tags}
             />
           </Grid>
         )}
@@ -262,11 +262,11 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         <Grid item={true} xs={12} sm={6}>
           <AutoTextField
             className="transModal_field--item"
-            id="income-tag"
-            label="Tag"
-            onChange={e => setTag(e.target.value.trim())}
+            id="income-tags"
+            label="Tags"
+            onChange={e => setTags(e.target.value.trim())}
             dataList={items}
-            value={tag}
+            value={tags}
           />
         </Grid>
       </Grid>
@@ -332,11 +332,11 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
         <Grid item={true} xs={12} sm={6}>
           <AutoTextField
             className="transModal_field--item"
-            id="transfer-tag"
-            label="Tag"
-            onChange={e => setTag(e.target.value.trim())}
+            id="transfer-tags"
+            label="Tags"
+            onChange={e => setTags(e.target.value.trim())}
             dataList={items}
-            value={tag}
+            value={tags}
           />
         </Grid>
       </Grid>

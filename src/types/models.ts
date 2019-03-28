@@ -33,7 +33,7 @@ export interface Transaction {
   item?: string;
   note?: string;
   subcategory?: Subcategory;
-  tag?: string;
+  tags?: string;
   to?: Account;
   type: transactionType;
   userId: string;

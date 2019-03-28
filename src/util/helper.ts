@@ -17,3 +17,42 @@ export const getOptions = (data: Account[] | Category[] | Subcategory[]) => {
   });
   return options;
 };
+
+export const createColumns = (id: string, label: string, numeric: boolean) => ({
+  id,
+  label,
+  numeric
+});
+
+export const expenseColumns = [
+  createColumns('item', 'Item', false),
+  createColumns('from', 'From', false),
+  createColumns('category', 'Category', false),
+  createColumns('subcategory', 'Subcategory', false),
+  createColumns('date', 'Date', false),
+  createColumns('amount', 'Amount', false),
+  createColumns('note', 'note', false),
+  createColumns('tags', 'Tags', false)
+];
+
+export const incomeColumns = [
+  createColumns('item', 'From', false),
+  createColumns('to', 'To', false),
+  createColumns('date', 'Date', false),
+  createColumns('amount', 'Amount', false),
+  createColumns('note', 'note', false),
+  createColumns('tags', 'Tags', false)
+];
+
+export const transferColumns = [
+  createColumns('from', 'From', false),
+  createColumns('to', 'To', false),
+  createColumns('date', 'Date', false),
+  createColumns('amount', 'Amount', false),
+  createColumns('note', 'note', false),
+  createColumns('tags', 'Tags', false)
+];
+
+export const createTableData = () => {
+  return;
+}

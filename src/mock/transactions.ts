@@ -12,12 +12,12 @@ const createTransaction = (
   item: string | undefined,
   note: string | undefined,
   subcategory: Subcategory | undefined,
-  tag: string | undefined,
+  tags: string | undefined,
   to: Account | undefined,
   type: transactionType
 ): Transaction => {
   counter += 1;
-  return { id: `${counter}`, amount, category, date, from, item, note, subcategory, tag, to, type, userId };
+  return { id: `${counter}`, amount, category, date, from, item, note, subcategory, tags, to, type, userId };
 };
 
 const index = (max: number) => Math.floor(Math.random() * max);
@@ -238,5 +238,5 @@ export const transactions: Transaction[] = [
     '',
     accounts[index(accounts.length)],
     'transfer'
-  ),
+  )
 ];

@@ -7,9 +7,11 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from '../components';
+import { transactions } from '../mock';
 import { routes } from '../routes';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
+import { expenseColumns, incomeColumns, transferColumns } from '../util';
 
 export interface TransactionsPageProps {
   classes: any;
@@ -25,9 +27,9 @@ interface StateMappedProps {
 
 interface TransactionsMergedProps
   extends RouteComponentProps,
-    StateMappedProps,
-    DispatchMappedProps,
-    TransactionsPageProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  TransactionsPageProps { }
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
   const [loading] = React.useState<boolean>(false);
@@ -37,36 +39,6 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [openEdit, setOpenEdit] = React.useState<boolean>(false);
-
-  let counter = 0;
-  const createData = (name: string, calories: number, fat: string, carbs: number, protein: number) => {
-    counter += 1;
-    return { id: counter, name, calories, fat, carbs, protein };
-  };
-
-  const columns = [
-    { id: 'name', numeric: false, label: 'Dessert (100g serving)' },
-    { id: 'calories', numeric: true, label: 'Calories' },
-    { id: 'fat', numeric: false, label: 'Fat (g)' },
-    { id: 'carbs', numeric: true, label: 'Carbs (g)' },
-    { id: 'protein', numeric: true, label: 'Protein (g)' }
-  ];
-
-  const data: any[] = [
-    createData('Cupcake', 305, 'asdlksad', 67, 4.3),
-    createData('Donut', 452, 'as dlksad', 51, 4.9),
-    createData('Eclair', 262, 'asdlk sad', 24, 6.0),
-    createData('Frozen yogurt', 159, 'asdlksa asdd', 24, 4.0),
-    createData('Gingerbread', 356, 'asdlks asjk ad', 49, 3.9),
-    createData('Honeycomb', 408, 'asdlk sad', 87, 6.5),
-    createData('Ice cream sandwich', 350, 'asd lksad', 37, 4.3),
-    createData('Jelly Bean', 375, 'asd asd lksad', 94, 0.0),
-    createData('KitKat', 518, 'asdlk sad', 65, 7.0),
-    createData('Lollipop', 392, 'asdl ksad', 98, 0.0),
-    createData('Marshmallow', 318, 'asasd dlksad', 81, 2.0),
-    createData('Nougat', 360, 'as dlksad', 9, 37.0),
-    createData('Oreo', 437, 'asdlk sad', 63, 4.0)
-  ];
 
   const handleDelete = (selected: string[]) => {
     setOpenDialog(true);
@@ -96,6 +68,10 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
       Add Transaction
     </Button>
   );
+
+  const expenses = transactions.filter(trans => trans.type === 'expense');
+  const income = transactions.filter(trans => trans.type === 'income');
+  const transfers = transactions.filter(trans => trans.type === 'transfer');
 
   return (
     <Layout className="transactions" title="Transactions" buttons={addButton(false)}>
@@ -128,12 +104,24 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
       {loading ? (
         <Loading />
       ) : (
-        <div>
-          <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} columns={columns} title="Expenses" />
-          <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} columns={columns} title="Income" />
-          <DataTable data={data} onDelete={handleDelete} onEdit={handleEdit} columns={columns} title="Transfers" />
-        </div>
-      )}
+          <div>
+            <DataTable
+              data={expenses}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              columns={expenseColumns}
+              title="Expenses"
+            />
+            <DataTable data={income} onDelete={handleDelete} onEdit={handleEdit} columns={incomeColumns} title="Income" />
+            <DataTable
+              data={transfers}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              columns={transferColumns}
+              title="Transfers"
+            />
+          </div>
+        )}
     </Layout>
   );
 };
