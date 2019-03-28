@@ -5,6 +5,7 @@ import { BudgetModal } from './BudgetModal';
 import { CategoryModal } from './CategoryModal';
 import { Columns } from './Columns';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
+import { DashboardCard } from './DashboardCard';
 import { DataTable } from './DataTable';
 import { DropdownMenu } from './DropdownMenu';
 import { ExpandableCard } from './ExpandableCard';
@@ -28,6 +29,7 @@ export {
   BudgetModal,
   CategoryModal,
   Columns,
+  DashboardCard,
   DataTable,
   DoubleLeftChevronIcon,
   DoubleRightChevronIcon,

@@ -1,15 +1,29 @@
-import { Card, CardHeader, Grid, IconButton, Theme, Typography, withStyles } from '@material-ui/core';
-import Add from '@material-ui/icons/Add';
+import { Theme, withStyles } from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
-import { AccountModal, BudgetModal, DropdownMenu, GoalModal, Layout, TransactionModal } from '../components';
+import {
+  AccountModal,
+  BudgetModal,
+  DashboardCard,
+  DropdownMenu,
+  GoalModal,
+  Layout,
+  TransactionModal
+} from '../components';
+import { transactions } from '../mock';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
-import { formatMoney } from '../util';
+import { formatMoney, getTransByType } from '../util';
 
 export interface DashboardPageProps {
   classes: any;
@@ -35,7 +49,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
   const [addingTrans, setAddingTrans] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<number>(0);
-  const { classes } = props;
 
   const menuItems = [
     { label: 'This Week', value: 0 },
@@ -48,6 +61,46 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const handleMenu = (e: any) => {
     setSelected(e.currentTarget.attributes.getNamedItem('data-value').value);
   };
+
+  const recentTransactions = (
+    <List className="dashboard_card">
+      {getTransByType(transactions, 'expense').slice(0, 10).map(trans => (
+      <ListItem key={trans.id}>
+        <ListItemText primary={trans.item} />
+      </ListItem>))}
+    </List>
+  );
+
+  const budgets = (
+    <List className="dashboard_card">
+      <ListItem>
+        <ListItemText primary="Item" />
+      </ListItem>
+    </List>
+  );
+
+  const accounts = (
+    <List className="dashboard_card">
+      <ListItem>
+        <ListItemText primary="Item" />
+      </ListItem>
+    </List>
+  );
+
+  const goals = (
+    <List className="dashboard_card">
+      <ListItem>
+        <ListItemText primary="Item" />
+      </ListItem>
+    </List>
+  );
+
+  const dashboardSections = [
+    { title: 'Recent Transaction', action: () => setAddingTrans(true), content: recentTransactions },
+    { title: 'Budget', action: () => setAddingBudget(true), content: budgets },
+    { title: 'Accounts', action: () => setAddingAccount(true), content: accounts },
+    { title: 'Goals', action: () => setAddingGoal(true), content: goals }
+  ];
 
   return (
     <Layout
@@ -72,7 +125,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
           onClose={handleMenu}
         />
       </div>
-      <Grid container={true} spacing={24}>
+      <Grid container={true} spacing={32}>
         <Grid item={true} xs={12}>
           <Card className="totals" raised={true}>
             <Typography className="totals_title" variant="h5">
@@ -106,80 +159,19 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
             </span>
           </Card>
         </Grid>
-        <Grid item={true} md={6} sm={12} xs={12}>
-          <Card className="gridItem" raised={true}>
-            <CardHeader
-              classes={{
-                title: classes.title
-              }}
-              action={
-                <IconButton onClick={() => setAddingTrans(true)}>
-                  <Add color="primary" />
-                </IconButton>
-              }
-              title="Recent Transactions"
-            />
-          </Card>
-        </Grid>
-        <Grid item={true} md={6} sm={12} xs={12}>
-          <Card className="gridItem" raised={true}>
-            <CardHeader
-              classes={{
-                title: classes.title
-              }}
-              action={
-                <IconButton onClick={() => setAddingBudget(true)}>
-                  <Add color="primary" />
-                </IconButton>
-              }
-              title="Budget"
-            />
-          </Card>
-        </Grid>
-        <Grid item={true} md={6} sm={12} xs={12}>
-          <Card className="gridItem" raised={true}>
-            <CardHeader
-              classes={{
-                title: classes.title
-              }}
-              action={
-                <IconButton onClick={() => setAddingAccount(true)}>
-                  <Add color="primary" />
-                </IconButton>
-              }
-              title="Accounts"
-            />
-          </Card>
-        </Grid>
-        <Grid item={true} md={6} sm={12} xs={12}>
-          <Card className="gridItem" raised={true}>
-            <CardHeader
-              classes={{
-                title: classes.title
-              }}
-              action={
-                <IconButton onClick={() => setAddingGoal(true)}>
-                  <Add color="primary" />
-                </IconButton>
-              }
-              title="Goals"
-            />
-          </Card>
-        </Grid>
+        {dashboardSections.map(section => (
+          <Grid item={true} md={6} sm={12} xs={12} key={section.title}>
+            <DashboardCard className="gridItem" title={section.title} onClick={section.action}>
+              {section.content}
+            </DashboardCard>
+          </Grid>
+        ))}
       </Grid>
     </Layout>
   );
 };
 
-const styles = (theme: Theme) => ({
-  title: {
-    color: theme.palette.primary.main,
-    fontWeight: 'bold',
-    [theme.breakpoints.down('sm')]: {
-      fontSize: 22
-    }
-  }
-});
+const styles = (theme: Theme) => ({});
 
 const authCondition = (authUser: any) => !!authUser;
 

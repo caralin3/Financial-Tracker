@@ -1,4 +1,4 @@
-import { Account, Category, Option, Subcategory } from '../types';
+import { Account, Category, Option, Subcategory, Transaction, transactionType } from '../types';
 
 export const createOption = (label: string, value: string | number): Option => {
   return { label, value };
@@ -52,3 +52,5 @@ export const transferColumns = [
   createColumns('note', 'note', false),
   createColumns('tags', 'Tags', false)
 ];
+
+export const getTransByType = (transactions: Transaction[], type: transactionType) => transactions.filter(trans => trans.type === type);

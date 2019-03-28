@@ -11,7 +11,7 @@ import { transactions } from '../mock';
 import { routes } from '../routes';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
-import { expenseColumns, formatTableTransaction, incomeColumns, transferColumns } from '../util';
+import { expenseColumns, formatTableTransaction, getTransByType, incomeColumns, transferColumns } from '../util';
 
 export interface TransactionsPageProps {
   classes: any;
@@ -69,9 +69,9 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
     </Button>
   );
 
-  const expenses = formatTableTransaction(transactions.filter(trans => trans.type === 'expense'));
-  const income = formatTableTransaction(transactions.filter(trans => trans.type === 'income'));
-  const transfers = formatTableTransaction(transactions.filter(trans => trans.type === 'transfer'));
+  const expenses = formatTableTransaction(getTransByType(transactions, 'expense'));
+  const income = formatTableTransaction(getTransByType(transactions, 'income'));
+  const transfers = formatTableTransaction(getTransByType(transactions, 'transfer'));
 
   return (
     <Layout className="transactions" title="Transactions" buttons={addButton(false)}>
