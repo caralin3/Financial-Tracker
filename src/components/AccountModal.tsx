@@ -51,7 +51,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
     if (balance) {
       setBalance('');
     }
-  }
+  };
 
   const handleClose = () => {
     const {
@@ -98,42 +98,42 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
           <Loading />
         </div>
       ) : (
-          <Grid className="accountModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-            <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
-            <Grid item={true} xs={12}>
-              <TextField
-                id="account-name"
-                label="Name"
-                fullWidth={true}
-                value={name}
-                onChange={e => setName(e.target.value.trim())}
-                type="text"
-                margin="normal"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                id="account-balance"
-                label="Balance"
-                fullWidth={true}
-                value={balance}
-                onChange={e => setBalance(parseFloat(e.target.value))}
-                type="number"
-                margin="normal"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <SelectInput
-                label="Account Type"
-                selected={type}
-                handleChange={e => setType(e.target.value as accountType)}
-                options={accountTypeOptions}
-              />
-            </Grid>
+        <Grid className="accountModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+          <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+          <Grid item={true} xs={12}>
+            <TextField
+              id="account-name"
+              label="Name"
+              fullWidth={true}
+              value={name}
+              onChange={e => setName(e.target.value.trim())}
+              type="text"
+              margin="normal"
+              variant="outlined"
+            />
           </Grid>
-        )}
+          <Grid item={true} xs={12}>
+            <TextField
+              id="account-balance"
+              label="Balance"
+              fullWidth={true}
+              value={balance}
+              onChange={e => setBalance(parseFloat(e.target.value))}
+              type="number"
+              margin="normal"
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item={true} xs={12}>
+            <SelectInput
+              label="Account Type"
+              selected={type}
+              handleChange={e => setType(e.target.value as accountType)}
+              options={accountTypeOptions}
+            />
+          </Grid>
+        </Grid>
+      )}
     </ModalForm>
   );
 };

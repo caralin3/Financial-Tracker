@@ -25,16 +25,16 @@ export type transactionType = 'expense' | 'income' | 'transfer';
 
 export interface Transaction {
   amount: number;
-  category: Category;
+  category?: Category;
   // createdAt: string;
   date: string;
-  from: Account;
+  from?: Account;
   id: string;
-  item: string;
-  note: string;
-  subcategory: Subcategory;
-  tag: string;
-  to: Account;
+  item?: string;
+  note?: string;
+  subcategory?: Subcategory;
+  tag?: string;
+  to?: Account;
   type: transactionType;
   userId: string;
 }

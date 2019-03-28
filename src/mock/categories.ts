@@ -3,12 +3,12 @@ import { Category, Subcategory } from '../types';
 const userId = 'BapP607iB5VFAsYSJv37dWQhTH12';
 
 let counter = 0;
-const createCategory = (name: string) => {
+const createCategory = (name: string): Category => {
   counter += 1;
   return { id: `${counter}`, name, userId };
 };
 
-const createSubcategory = (name: string, category: Category) => {
+const createSubcategory = (name: string, category: Category): Subcategory => {
   counter += 1;
   return { id: `${counter}`, name, category, userId };
 };

@@ -41,7 +41,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalProps> = props => {
 
   const resetFields = () => {
     setName('');
-  }
+  };
 
   const handleClose = () => {
     const {
@@ -92,23 +92,23 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalProps> = props => {
           <Loading />
         </div>
       ) : (
-          <Grid className="categoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-            <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
-            <Grid item={true} xs={12}>
-              <TextField
-                id="category-name"
-                label="Category Name"
-                autoFocus={true}
-                fullWidth={true}
-                value={name}
-                onChange={e => setName(e.target.value.trim())}
-                type="text"
-                margin="normal"
-                variant="outlined"
-              />
-            </Grid>
+        <Grid className="categoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+          <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+          <Grid item={true} xs={12}>
+            <TextField
+              id="category-name"
+              label="Category Name"
+              autoFocus={true}
+              fullWidth={true}
+              value={name}
+              onChange={e => setName(e.target.value.trim())}
+              type="text"
+              margin="normal"
+              variant="outlined"
+            />
           </Grid>
-        )}
+        </Grid>
+      )}
     </ModalForm>
   );
 };

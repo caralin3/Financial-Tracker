@@ -3,7 +3,7 @@ import { Account, accountType } from '../types';
 const userId = 'BapP607iB5VFAsYSJv37dWQhTH12';
 
 let counter = 0;
-const createAccount = (name: string, balance: number, type: accountType) => {
+const createAccount = (name: string, balance: number, type: accountType): Account => {
   counter += 1;
   return { id: `${counter}`, name, balance, type, userId };
 };

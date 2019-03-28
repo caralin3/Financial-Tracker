@@ -69,7 +69,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
     if (amount) {
       setAmount('');
     }
-  }
+  };
 
   const handleClose = () => {
     const {
