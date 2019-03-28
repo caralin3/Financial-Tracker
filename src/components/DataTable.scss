@@ -1,6 +1,12 @@
 @import '../appearance/styles/variables.scss';
 
 .table {
+  // margin: 1rem;
+
+  @media #{$medium} {
+    margin: 0 2rem;
+  }
+
   &_filters {
     @media #{$small} {
       margin-right: 1.5rem;

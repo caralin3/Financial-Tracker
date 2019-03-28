@@ -75,7 +75,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
 
   return (
     <Layout className="transactions" title="Transactions" buttons={addButton(false)}>
-      <div className="show-small">{addButton(true)}</div>
+      <div className="show-small transactions_mobileButton">{addButton(true)}</div>
       <AlertDialog
         cancelText="Cancel"
         confirmText="Confirm"

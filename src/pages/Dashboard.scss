@@ -29,6 +29,62 @@
     max-height: 300px;
     overflow-y: auto;
   }
+
+  &_bold {
+    font-weight: bold !important;
+  }
+
+  &_green {
+    color: $success !important;
+  }
+
+  &_recent {
+    border-bottom: 1px solid $highlight;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &-text {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+  
+    &-label {
+      @include primary;
+    }
+
+    &-date {
+      @include primary;
+      text-align: right;
+    }
+  
+    &-amount {
+      @include number;
+      font-size: 18px !important;
+      text-align: right;
+
+      @media #{$medium} {
+        font-size: 20px !important;
+      }
+    }
+  }
+}
+
+.gridItem {
+  @media #{$medium} {
+    margin-bottom: 1rem;
+  }
+
+  &_title {
+    @include title;
+    color: $primary !important;
+  }
 }
 
 .totals {
@@ -97,16 +153,5 @@
   &_number {
     @include number;
     padding-left: 1rem;
-  }
-}
-
-.gridItem {
-  @media #{$medium} {
-    margin-bottom: 1rem;
-  }
-
-  &_title {
-    @include title;
-    color: $primary !important;
   }
 }

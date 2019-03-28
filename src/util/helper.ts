@@ -53,4 +53,5 @@ export const transferColumns = [
   createColumns('tags', 'Tags', false)
 ];
 
-export const getTransByType = (transactions: Transaction[], type: transactionType) => transactions.filter(trans => trans.type === type);
+export const getTransByType = (transactions: Transaction[], type: transactionType) =>
+  transactions.filter(trans => trans.type === type);

@@ -363,7 +363,8 @@ const Table: React.SFC<TableProps> = props => {
   const editType = title.endsWith('s') ? title.toLowerCase().slice(0, title.length - 1) : title.toLowerCase();
 
   return (
-    <Paper className={classes.root} elevation={8}>
+    // <Paper className={classes.root} elevation={8}>
+    <Paper className={classNames([classes.root, 'table'])} elevation={8}>
       <TableToolbar
         columns={columns}
         displayColumns={displayColumns}
@@ -377,7 +378,7 @@ const Table: React.SFC<TableProps> = props => {
         tableTitle={title}
       />
       <TableFilterList filters={filters} onDeleteFilter={handleDeleteFilter} />
-      <div className={classNames([classes.tableWrapper, 'table_wrapper'])}>
+      <div className="table_wrapper">
         <MuiTable className={classes.table} aria-labelledby="tableTitle">
           <TableHead
             numSelected={displayData.length > 0 ? selected.length : -1}

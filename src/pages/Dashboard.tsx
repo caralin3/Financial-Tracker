@@ -5,6 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
+import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -23,7 +24,7 @@ import {
 import { transactions } from '../mock';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
-import { formatMoney, getTransByType } from '../util';
+import { formatMoney } from '../util';
 
 export interface DashboardPageProps {
   classes: any;
@@ -64,10 +65,31 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
 
   const recentTransactions = (
     <List className="dashboard_card">
-      {getTransByType(transactions, 'expense').slice(0, 10).map(trans => (
-      <ListItem key={trans.id}>
-        <ListItemText primary={trans.item} />
-      </ListItem>))}
+      {transactions.slice(0, 10)
+        .map(trans => (
+          <ListItem key={trans.id} className="dashboard_recent">
+            <div className="dashboard_recent-text">
+              <ListItemText
+                primaryTypographyProps={{ className: 'dashboard_recent-label dashboard_bold'}}
+                primary={trans.type === 'expense' ? trans.item : trans.to && trans.to.name}
+              />
+              <ListItemText
+                primary={formatMoney(trans.amount)}
+                primaryTypographyProps={{ className: `dashboard_recent-amount dashboard_bold ${trans.type === 'income' && 'dashboard_green'}`, color: trans.type === 'expense' ? 'error' : 'default' }}
+              />
+            </div>
+            <div className="dashboard_recent-text">
+              <ListItemText
+                primaryTypographyProps={{ className: 'dashboard_recent-label' }}
+                primary={trans.type !== 'income' ? trans.from && trans.from.name : trans.item}
+              />
+              <ListItemText
+                primaryTypographyProps={{ className: 'dashboard_recent-date' }}
+                primary={moment(trans.date).format('MMM DD')}
+              />
+            </div>
+          </ListItem>
+        ))}
     </List>
   );
 
