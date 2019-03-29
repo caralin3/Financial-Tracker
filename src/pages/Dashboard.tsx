@@ -40,11 +40,12 @@ interface StateMappedProps {
 
 interface DashboardMergedProps
   extends RouteComponentProps<any>,
-    StateMappedProps,
-    DispatchMappedProps,
-    DashboardPageProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  DashboardPageProps { }
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
+  const { currentUser } = props;
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
   const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
   const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
@@ -70,7 +71,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
           <ListItem key={trans.id} className="dashboard_recent">
             <div className="dashboard_recent-text">
               <ListItemText
-                primaryTypographyProps={{ className: 'dashboard_recent-label dashboard_bold'}}
+                primaryTypographyProps={{ className: 'dashboard_recent-label dashboard_bold' }}
                 primary={trans.type === 'expense' ? trans.item : trans.to && trans.to.name}
               />
               <ListItemText
@@ -124,9 +125,11 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     { title: 'Goals', action: () => setAddingGoal(true), content: goals }
   ];
 
+  const username = currentUser ? `${currentUser.firstName}'s` : '';
+
   return (
     <Layout
-      title="Dashboard"
+      title={`${username} Dashboard`}
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
       <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)} />
