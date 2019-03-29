@@ -8,6 +8,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import * as moment from 'moment';
 import * as React from 'react';
@@ -28,7 +29,7 @@ import {
 import { accounts, transactions } from '../mock';
 import { ApplicationState } from '../store/createStore';
 import { User } from '../types';
-import { formatMoney } from '../util';
+import { accountTypeOptions, formatMoney } from '../util';
 
 export interface DashboardPageProps {
   classes: any;
@@ -54,6 +55,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
   const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
   const [addingTrans, setAddingTrans] = React.useState<boolean>(false);
+  const [expanded, setExpanded] = React.useState<number>(1);
   const [selected, setSelected] = React.useState<number>(0);
 
   const menuItems = [
@@ -73,7 +75,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       {transactions.slice(0, 10)
         .map(trans => (
           <ListItem key={trans.id} className="dashboard_item">
-            <div className="dashboard_item-text">
+            <div className="dashboard_fullRow">
               <ListItemText
                 primaryTypographyProps={{ className: 'dashboard_item-label dashboard_bold' }}
                 primary={trans.type === 'expense' ? trans.item : trans.to && trans.to.name}
@@ -83,7 +85,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
                 primaryTypographyProps={{ className: `dashboard_item-amount dashboard_bold ${trans.type === 'income' && 'dashboard_green'}`, color: trans.type === 'expense' ? 'error' : 'default' }}
               />
             </div>
-            <div className="dashboard_item-text">
+            <div className="dashboard_fullRow">
               <ListItemText
                 primaryTypographyProps={{ className: 'dashboard_item-label' }}
                 primary={trans.type !== 'income' ? trans.from && trans.from.name : trans.item}
@@ -106,23 +108,49 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     </List>
   );
 
+  const handleExpansion = (index: number) => () => {
+    if (expanded === index + 1) {
+      setExpanded(0);
+    } else {
+      setExpanded(index + 1);
+    }
+  }
+
   const accountItems = (
     <List className="dashboard_card">
-      {accounts.slice(0, 10)
-        .map(acc => (
-          <ListItem key={acc.id} className="dashboard_listItem">
-            <ExpansionPanel className="dashboard_item-panel">
-              <ExpansionPanelSummary expandIcon={<ExpandMoreIcon color="primary" />}>
+      {accountTypeOptions
+        .map((accType, index) => (
+          <ListItem key={accType.value} className="dashboard_listItem">
+            <ExpansionPanel className="dashboard_item-panel" expanded={expanded === (index + 1)} onChange={handleExpansion(index)}>
+              <ExpansionPanelSummary className="dashboard_fullRow">
+                <div className="dashboard_row">
+                  <ListItemText
+                    primaryTypographyProps={{ className: 'dashboard_item-label dashboard_bold' }}
+                    primary={accType.label}
+                  />
+                  {expanded === (index + 1) ? <ExpandLessIcon color="primary" /> : <ExpandMoreIcon color="primary" />}
+                </div>
                 <ListItemText
-                  // primaryTypographyProps={{ className: 'dashboard_item-label dashboard_bold' }}
-                  primary="Cash"
+                  primaryTypographyProps={{ className: 'dashboard_item-amount dashboard_bold' }}
+                  primary={formatMoney(54200)}
                 />
               </ExpansionPanelSummary>
-              <ExpansionPanelDetails>
-                <ListItemText
-                  // primaryTypographyProps={{ className: 'dashboard_item-label dashboard_bold' }}
-                  primary={acc.name}
-                />
+              <ExpansionPanelDetails className="dashboard_fullRow">
+                <List className="dashboard_list">
+                {accounts.slice(0, 10).map(acc => 
+                  <ListItem key={acc.id} button={true}>
+                    <ListItemText
+                      primaryTypographyProps={{ className: 'dashboard_item-label' }}
+                      primary={acc.name}
+                    />
+                    <ListItemText
+                      className="dashboard_item-amount"
+                      primaryTypographyProps={{ className: 'dashboard_item-amount dashboard_bold' }}
+                      primary={formatMoney(240.54)}
+                    />
+                  </ListItem>
+                )}
+                </List>
               </ExpansionPanelDetails>
             </ExpansionPanel>
           </ListItem>

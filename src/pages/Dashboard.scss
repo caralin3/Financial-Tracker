@@ -26,7 +26,7 @@
   }
 
   &_card {
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
   }
 
@@ -36,6 +36,28 @@
 
   &_green {
     color: $success !important;
+  }
+
+  &_row {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &_fullRow {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &_list {
+    width: 100%;
+  }
+
+  &_listItem {
+    margin: 1rem 0 !important;
+    padding: 0 !important;
   }
 
   &_item {
@@ -48,13 +70,6 @@
       border-bottom: none;
     }
 
-    &-text {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-    }
-
     &-panel {
       align-items: flex-start;
       border: none !important;
@@ -63,7 +78,8 @@
       display: flex;
       justify-content: space-between;
       flex-direction: column;
-      width: 100%;
+      overflow-x: hidden;
+      width: inherit;
     }
   
     &-label {
