@@ -135,13 +135,17 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
                   primary={formatMoney(54200)}
                 />
               </ExpansionPanelSummary>
-              <ExpansionPanelDetails className="dashboard_fullRow">
+              <ExpansionPanelDetails className="dashboard_row">
                 <List className="dashboard_list">
                 {accounts.slice(0, 10).map(acc => 
                   <ListItem key={acc.id} button={true}>
                     <ListItemText
                       primaryTypographyProps={{ className: 'dashboard_item-label' }}
                       primary={acc.name}
+                    />
+                    <ListItemText
+                      primaryTypographyProps={{ style: { visibility: 'hidden' } }}
+                      primary="super_duper_very_extra_space"
                     />
                     <ListItemText
                       className="dashboard_item-amount"
@@ -168,8 +172,8 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
 
   const dashboardSections = [
     { title: 'Recent Transaction', action: () => setAddingTrans(true), content: recentTransactions },
-    { title: 'Budget', action: () => setAddingBudget(true), content: budgetItems },
     { title: 'Accounts', action: () => setAddingAccount(true), content: accountItems },
+    { title: 'Budget', action: () => setAddingBudget(true), content: budgetItems },
     { title: 'Goals', action: () => setAddingGoal(true), content: goalItems }
   ];
 
