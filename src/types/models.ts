@@ -1,7 +1,7 @@
 export type accountType = 'cash' | 'bank' | 'credit';
 
 export interface Account {
-  balance: number;
+  amount: number;
   id: string;
   name: string;
   type: accountType;

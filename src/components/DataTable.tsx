@@ -363,7 +363,6 @@ const Table: React.SFC<TableProps> = props => {
   const editType = title.endsWith('s') ? title.toLowerCase().slice(0, title.length - 1) : title.toLowerCase();
 
   return (
-    // <Paper className={classes.root} elevation={8}>
     <Paper className={classNames([classes.root, 'table'])} elevation={8}>
       <TableToolbar
         columns={columns}
@@ -418,7 +417,7 @@ const Table: React.SFC<TableProps> = props => {
                           );
                         }
                         return (
-                          <TableCell key={col.id} align={col.numeric ? 'right' : 'left'}>
+                          <TableCell key={col.id} className="table_cell" align={col.numeric ? 'right' : 'left'} padding="none">
                             {n[col.id]}
                           </TableCell>
                         );

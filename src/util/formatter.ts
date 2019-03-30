@@ -1,7 +1,13 @@
 import * as moment from 'moment';
 import { Account, Category, Subcategory, Transaction } from '../types';
 
-export const formatMoney = (val: number) => `$${val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+export const formatMoney = (val: number) => {
+  const num = val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+  if (num.indexOf('-', 0) !== -1) {
+    return `${num.slice(0, 1)}$${num.slice(1)}`
+  }
+  return `$${num}`;
+};
 
 export const formatEmptyString = (val: string | undefined) => {
   if (!val) {
@@ -34,3 +40,5 @@ export const formatTableTransaction = (transactions: Transaction[]) => {
     to: formatTableData(trans.to)
   }));
 };
+
+export const formatNumberArray = (arr: any[]) => arr.map(val => val.amount);

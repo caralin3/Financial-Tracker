@@ -185,7 +185,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
                             <ListItem key={acc.id} className="account_item">
                               <AccountItem
                                 label={acc.name}
-                                balance={acc.balance}
+                                balance={acc.amount}
                                 link={''}
                                 onEdit={() => handleEdit(acc.id, type.id)}
                                 onDelete={() => handleDelete(acc.id)}
