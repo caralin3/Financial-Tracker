@@ -1,5 +1,7 @@
 import { FormControlLabel, Grid, Radio, TextField, Typography } from '@material-ui/core';
 import * as React from 'react';
+import { categories } from '../mock';
+import { getOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface BudgetModalProps {
@@ -23,8 +25,6 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
     // setError(true);
     setSuccess(true);
   };
-
-  const options = [{ label: 'Select', value: '' }, { label: 'One', value: 'one' }, { label: 'Two', value: 'two' }];
 
   return (
     <ModalForm
@@ -54,7 +54,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
               autoFocus={true}
               selected={category}
               handleChange={e => setCategory(e.target.value)}
-              options={options}
+              options={getOptions(categories)}
             />
           </Grid>
           <Grid item={true} xs={12} sm={6}>

@@ -42,7 +42,7 @@ export interface Transaction {
 export interface Budget {
   amount: number;
   category: Category;
-  frequency: string;
+  frequency: 'monthly' | 'quarterly' | 'sem-annually' | 'yearly';
   id: string;
   userId: string;
 }
@@ -51,7 +51,7 @@ export interface Goal {
   amount: number;
   criteria: string;
   endDate?: string;
-  frequency: string;
+  frequency: 'monthly' | 'quarterly' | 'custom';
   id: string;
   item: string;
   startDate?: string;
