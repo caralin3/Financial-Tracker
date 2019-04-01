@@ -106,8 +106,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const budgetItems = (
     <List className="dashboard_card">
       <ListItem>
-        <ProgressBar percent={25} />
-        <ListItemText primary="Item" />
+        <ProgressBar percent={75} leftLabel="Groceries" rightLabel="$75 of $100" textColor="primary" />
       </ListItem>
     </List>
   );
@@ -167,7 +166,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const goalItems = (
     <List className="dashboard_card">
       <ListItem>
-        <ListItemText primary="Item" />
+        <ProgressBar endLabel="75%" percent={75} leftLabel="Groceries" rightLabel="$75 of $100" textColor="primary" />
       </ListItem>
     </List>
   );
