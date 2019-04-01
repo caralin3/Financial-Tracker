@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { theme } from 'src/appearance';
+import { theme } from '../appearance';
 
 export const DoubleLeftChevronIcon: React.SFC = () => (
   <svg style={{ width: '24px', height: '24px' }} viewBox="0 0 24 24">

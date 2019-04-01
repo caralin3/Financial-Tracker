@@ -24,6 +24,7 @@ import {
   DropdownMenu,
   GoalModal,
   Layout,
+  ProgressBar,
   TransactionModal
 } from '../components';
 import { accounts, transactions } from '../mock';
@@ -105,6 +106,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const budgetItems = (
     <List className="dashboard_card">
       <ListItem>
+        <ProgressBar percent={25} />
         <ListItemText primary="Item" />
       </ListItem>
     </List>

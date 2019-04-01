@@ -17,6 +17,7 @@ import { Loading } from './Loading';
 import { LoginForm } from './LoginForm';
 import { ModalForm } from './ModalForm';
 import { Popup } from './Popup';
+import { ProgressBar } from './ProgressBar';
 import { SignUpForm } from './SignUpForm';
 import { SubcategoryModal } from './SubcategoryModal';
 import { TransactionModal } from './TransactionModal';
@@ -43,6 +44,7 @@ export {
   LoginForm,
   ModalForm,
   Popup,
+  ProgressBar,
   SelectInput,
   SignUpForm,
   SubcategoryModal,

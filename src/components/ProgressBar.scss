@@ -1,0 +1,25 @@
+@import '../appearance/styles/variables.scss';
+
+.progressBar {
+  border-radius: 6rem;
+	overflow: hidden;
+  width: 100%;
+
+	span {
+		display: block;
+	}
+
+  &_bar {
+    background: $highlight;
+  }
+
+  &_progress {
+    background: $success;
+    padding: 0.5rem;
+  }
+
+  &_over {
+    background: $error;
+    padding: 0.5rem;
+  }
+}
