@@ -1,38 +1,90 @@
 import { Button, Grid, Typography } from '@material-ui/core';
 import * as React from 'react';
+import { Column, Option, Transaction } from '../types';
+import { removeDupObjs } from '../util';
 import { SelectInput } from './Form';
 
 export interface FiltersProps {
+  count: number;
+  data: Transaction[];
+  filters: Column[];
   onResetFilters: () => void;
   onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
-  count: number;
 }
 
 export const Filters: React.SFC<FiltersProps> = props => {
+  const { count, data, filters } = props;
   const [item, setItem] = React.useState<string>('all');
   const [item2, setItem2] = React.useState<string>('all');
   const [item3, setItem3] = React.useState<string>('all');
   const [item4, setItem4] = React.useState<string>('all');
+  const [item5, setItem5] = React.useState<string>('all');
+  const [item6, setItem6] = React.useState<string>('all');
+  const [item7, setItem7] = React.useState<string>('all');
+  const [item8, setItem8] = React.useState<string>('all');
 
   React.useEffect(() => {
-    if (props.count === 0) {
+    if (count === 0) {
       handleReset();
     }
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>, col: string) => {
-    switch (col) {
-      case 'name':
+  const createOps = (col: Column) => {
+    const options: Option[] = [{ label: 'All', value: 'all' }];
+    data.forEach(d => {
+      options.push({ label: d[col.id], value: d[col.id] });
+    });
+    return removeDupObjs(options);
+  };
+
+  const getSelected = (index: number) => {
+    switch (index) {
+      case 0:
+        return item;
+      case 1:
+        return item2;
+      case 2:
+        return item3;
+      case 3:
+        return item4;
+      case 4:
+        return item5;
+      case 5:
+        return item6;
+      case 6:
+        return item7;
+      case 7:
+        return item8;
+      default:
+        return item;
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>, col: string, index: number) => {
+    switch (index) {
+      case 0:
         setItem(e.target.value);
         break;
-      case 'fat':
+      case 1:
         setItem2(e.target.value);
         break;
-      case 'item3':
+      case 2:
         setItem3(e.target.value);
         break;
-      case 'item4':
+      case 3:
         setItem4(e.target.value);
+        break;
+      case 4:
+        setItem5(e.target.value);
+        break;
+      case 5:
+        setItem6(e.target.value);
+        break;
+      case 6:
+        setItem7(e.target.value);
+        break;
+      case 7:
+        setItem8(e.target.value);
         break;
     }
     props.onSelectFilter(e, col);
@@ -43,6 +95,10 @@ export const Filters: React.SFC<FiltersProps> = props => {
     setItem2('all');
     setItem3('all');
     setItem4('all');
+    setItem5('all');
+    setItem6('all');
+    setItem7('all');
+    setItem8('all');
     props.onResetFilters();
   };
 
@@ -55,62 +111,16 @@ export const Filters: React.SFC<FiltersProps> = props => {
         </Button>
       </div>
       <Grid className="filters_grid" container={true} spacing={24}>
-        <Grid item={true} xs={12} md={6}>
-          <SelectInput
-            label="Item"
-            selected={item}
-            handleChange={e => handleChange(e, 'name')}
-            options={[
-              { label: 'All', value: 'all' },
-              { label: 'Eclair', value: 'Eclair' },
-              { label: 'Two', value: 'two' },
-              { label: 'Three', value: 'three' },
-              { label: 'Four', value: 'four' }
-            ]}
-          />
-        </Grid>
-        <Grid item={true} xs={12} md={6}>
-          <SelectInput
-            label="Item"
-            selected={item2}
-            handleChange={e => handleChange(e, 'fat')}
-            options={[
-              { label: 'All', value: 'all' },
-              { label: 16, value: 16 },
-              { label: 'Two', value: 'two' },
-              { label: 'Three', value: 'three' },
-              { label: 'Four', value: 'four' }
-            ]}
-          />
-        </Grid>
-        <Grid item={true} xs={12} md={6}>
-          <SelectInput
-            label="Item"
-            selected={item3}
-            handleChange={e => handleChange(e, 'item3')}
-            options={[
-              { label: 'All', value: 'all' },
-              { label: 'One', value: 'one' },
-              { label: 'Two', value: 'two' },
-              { label: 'Three', value: 'three' },
-              { label: 'Four', value: 'four' }
-            ]}
-          />
-        </Grid>
-        <Grid item={true} xs={12} md={6}>
-          <SelectInput
-            label="Item"
-            selected={item4}
-            handleChange={e => handleChange(e, 'item4')}
-            options={[
-              { label: 'All', value: 'all' },
-              { label: 'One', value: 'one' },
-              { label: 'Two', value: 'two' },
-              { label: 'Three', value: 'three' },
-              { label: 'Four', value: 'four' }
-            ]}
-          />
-        </Grid>
+        {filters.map((col, index) => (
+          <Grid item={true} xs={12} md={6} key={col.id}>
+            <SelectInput
+              label={col.label}
+              selected={getSelected(index)}
+              handleChange={e => handleChange(e, col.id, index)}
+              options={createOps(col)}
+            />
+          </Grid>
+        ))}
       </Grid>
     </div>
   );

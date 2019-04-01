@@ -15,4 +15,10 @@
       }
     }
   }
+
+  &_grid {
+    @media #{$medium} {
+      max-width: 30rem;
+    }
+  }
 }

@@ -45,9 +45,9 @@ interface StateMappedProps {
 
 interface DashboardMergedProps
   extends RouteComponentProps<any>,
-  StateMappedProps,
-  DispatchMappedProps,
-  DashboardPageProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    DashboardPageProps {}
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const { currentUser } = props;
@@ -116,7 +116,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     } else {
       setExpanded(index + 1);
     }
-  }
+  };
 
   const accountItems = (
     <List className="dashboard_card">
@@ -233,7 +233,11 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
                 <Typography className="totals_label" variant="h6">
                   Net
                 </Typography>
-                <Typography className={`totals_number ${net > 0 && 'dashboard_green'}`} variant="h5" color={net < 0 ? 'error' : 'default'}>
+                <Typography
+                  className={`totals_number ${net > 0 && 'dashboard_green'}`}
+                  variant="h5"
+                  color={net < 0 ? 'error' : 'default'}
+                >
                   {formatMoney(net)}
                 </Typography>
               </span>

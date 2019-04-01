@@ -28,6 +28,7 @@ export const Form: React.SFC<FormProps> = props => (
 
 interface SelectInputProps {
   autoFocus?: boolean;
+  className?: string;
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   label: string;
   selected: any;
@@ -46,7 +47,7 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
   });
 
   return (
-    <FormControl fullWidth={true} variant="outlined">
+    <FormControl className={props.className} fullWidth={true} variant="outlined">
       <InputLabel ref={ref => (inputLabelRef = ref)} htmlFor={`outlined-${props.label}-select`}>
         {props.label}
       </InputLabel>

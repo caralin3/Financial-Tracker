@@ -4,7 +4,7 @@ import { Account, Category, Subcategory, Transaction } from '../types';
 export const formatMoney = (val: number) => {
   const num = val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   if (num.indexOf('-', 0) !== -1) {
-    return `${num.slice(0, 1)}$${num.slice(1)}`
+    return `${num.slice(0, 1)}$${num.slice(1)}`;
   }
   return `$${num}`;
 };

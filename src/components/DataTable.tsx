@@ -21,6 +21,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import classNames from 'classnames';
 import * as React from 'react';
+import { Column } from '../types';
 import { Columns, Filters, Popup } from './';
 
 interface TableHeadProps {
@@ -30,7 +31,7 @@ interface TableHeadProps {
   order: 'desc' | 'asc' | undefined;
   orderBy: string;
   rowCount: number;
-  columns: any[];
+  columns: Column[];
 }
 
 export const TableHead: React.SFC<TableHeadProps> = props => {
@@ -71,14 +72,15 @@ export const TableHead: React.SFC<TableHeadProps> = props => {
 
 interface TableToolbarProps {
   classes: any;
-  columns: any[];
+  columns: Column[];
+  data: any[];
   displayColumns: any[];
   filterCount: number;
   numSelected: number;
   onDelete: () => void;
   onEdit: () => void;
   onResetFilters: () => void;
-  onSelectColumns: (columns: any[]) => void;
+  onSelectColumns: (columns: Column[]) => void;
   onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
   tableTitle: string;
 }
@@ -87,6 +89,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
   const {
     classes,
     columns,
+    data,
     displayColumns,
     filterCount,
     onDelete,
@@ -157,7 +160,15 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
               class="table_filters"
               open={openFilters}
               onClick={() => handleClick(false, !openFilters)}
-              content={<Filters count={filterCount} onResetFilters={onResetFilters} onSelectFilter={onSelectFilter} />}
+              content={
+                <Filters
+                  data={data}
+                  filters={columns}
+                  count={filterCount}
+                  onResetFilters={onResetFilters}
+                  onSelectFilter={onSelectFilter}
+                />
+              }
               tooltip="Filters"
               trigger={<FilterListIcon />}
             />
@@ -234,18 +245,18 @@ export type sortDir = 'desc' | 'asc';
 
 interface TableProps {
   classes: any;
-  data: any;
+  data: any[];
   defaultSort?: { dir: sortDir; orderBy: string };
   onDelete: (selected: string[]) => void;
   onEdit: (id: string, type: string) => void;
-  columns: any[];
+  columns: Column[];
   title: string;
 }
 
 const Table: React.SFC<TableProps> = props => {
   const { classes, data, defaultSort, onDelete, onEdit, columns, title } = props;
-  const [displayData, setDisplayData] = React.useState<object[]>(data);
-  const [displayColumns, setDisplayColumns] = React.useState<any[]>(columns);
+  const [displayData, setDisplayData] = React.useState<any[]>(data);
+  const [displayColumns, setDisplayColumns] = React.useState<Column[]>(columns);
   const [order, setOrder] = React.useState<sortDir | undefined>(defaultSort ? defaultSort.dir : undefined);
   const [orderBy, setOrderBy] = React.useState<string>(defaultSort ? defaultSort.orderBy : '');
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(5);
@@ -366,6 +377,7 @@ const Table: React.SFC<TableProps> = props => {
     <Paper className={classNames([classes.root, 'table'])} elevation={8}>
       <TableToolbar
         columns={columns}
+        data={data}
         displayColumns={displayColumns}
         filterCount={Object.keys(filters).length}
         numSelected={selected.length}
@@ -417,7 +429,12 @@ const Table: React.SFC<TableProps> = props => {
                           );
                         }
                         return (
-                          <TableCell key={col.id} className="table_cell" align={col.numeric ? 'right' : 'left'} padding="none">
+                          <TableCell
+                            key={col.id}
+                            className="table_cell"
+                            align={col.numeric ? 'right' : 'left'}
+                            padding="none"
+                          >
                             {n[col.id]}
                           </TableCell>
                         );

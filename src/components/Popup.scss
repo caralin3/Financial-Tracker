@@ -1,11 +1,16 @@
 @import '../appearance/styles/variables.scss';
 
 .popup {
+  margin-top: 14rem;
   padding-left: 0.5rem;
   width: 90%;
 
   @media #{$small} {
     padding-left: 0;
     width: auto;
+  }
+  
+  @media #{$medium} {
+    margin-top: 0;
   }
 }
