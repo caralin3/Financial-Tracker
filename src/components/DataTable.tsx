@@ -108,6 +108,11 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
     setOpenFilters(filters);
   };
 
+  const handleReset = () => {
+    setOpenFilters(false);
+    onResetFilters();
+  };
+
   return (
     <MuiToolbar
       className={classNames(classes.root, {
@@ -165,7 +170,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
                   data={data}
                   filters={columns}
                   count={filterCount}
-                  onResetFilters={onResetFilters}
+                  onResetFilters={handleReset}
                   onSelectFilter={onSelectFilter}
                 />
               }

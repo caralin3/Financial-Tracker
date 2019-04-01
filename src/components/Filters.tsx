@@ -25,9 +25,16 @@ export const Filters: React.SFC<FiltersProps> = props => {
 
   React.useEffect(() => {
     if (count === 0) {
-      handleReset();
+      setItem('all');
+      setItem2('all');
+      setItem3('all');
+      setItem4('all');
+      setItem5('all');
+      setItem6('all');
+      setItem7('all');
+      setItem8('all');
     }
-  });
+  }, [count]);
 
   const createOps = (col: Column) => {
     const options: Option[] = [{ label: 'All', value: 'all' }];
