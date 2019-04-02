@@ -1,6 +1,7 @@
 import { FormControlLabel, Grid, Radio, TextField, Typography } from '@material-ui/core';
 import * as React from 'react';
 import { categories } from '../mock';
+import { budgetFreq } from '../types';
 import { getOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
@@ -17,7 +18,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
   const [error, setError] = React.useState<boolean>(false);
   const [category, setCategory] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number | undefined>(undefined);
-  const [frequency, setFrequency] = React.useState<string>('');
+  const [frequency, setFrequency] = React.useState<budgetFreq>(undefined);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

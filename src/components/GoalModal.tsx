@@ -1,5 +1,6 @@
 import { FormControlLabel, Grid, Radio, TextField, Typography } from '@material-ui/core';
 import * as React from 'react';
+import { goalCriteria, goalFreq } from '../types';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface GoalModalProps {
@@ -13,13 +14,13 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
   const [loading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
-  const [criteria, setCriteria] = React.useState<string>('');
+  const [criteria, setCriteria] = React.useState<goalCriteria>(undefined);
   const [comparison, setComparison] = React.useState<string>('');
   const [item, setItem] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number | undefined>(undefined);
   const [startDate, setStartDate] = React.useState<string>('');
   const [endDate, setEndDate] = React.useState<string>('');
-  const [frequency, setFrequency] = React.useState<string>('');
+  const [frequency, setFrequency] = React.useState<goalFreq>(undefined);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,7 +58,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
               label="Goal Based On"
               autoFocus={true}
               selected={criteria}
-              handleChange={e => setCriteria(e.target.value)}
+              handleChange={e => setCriteria(e.target.value as goalCriteria)}
               options={options}
             />
           </Grid>
@@ -115,7 +116,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
               <Grid item={true} xs={4}>
                 <FormControlLabel
                   value="custom-range"
-                  control={<Radio color="primary" checked={frequency === 'custom-range'} />}
+                  control={<Radio color="primary" checked={frequency === 'custom'} />}
                   label="Custom range"
                   labelPlacement="end"
                   onChange={(e: any) => setFrequency(e.target.value)}
@@ -123,7 +124,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
               </Grid>
             </Grid>
           </Grid>
-          {frequency === 'custom-range' && (
+          {frequency === 'custom' && (
             <Grid item={true} xs={12} sm={6}>
               <TextField
                 id="start-date"
@@ -140,7 +141,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
               />
             </Grid>
           )}
-          {frequency === 'custom-range' && (
+          {frequency === 'custom' && (
             <Grid item={true} xs={12} sm={6}>
               <TextField
                 id="end-date"

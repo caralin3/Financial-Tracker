@@ -61,8 +61,8 @@ export const transactions: Transaction[] = [
   ),
   createTransaction(
     120.54,
-    categories[index(categories.length)],
-    new Date('03/03/2019').toISOString(),
+    categories[3],
+    new Date().toISOString(),
     accounts[index(accounts.length)],
     'Netflix',
     '',

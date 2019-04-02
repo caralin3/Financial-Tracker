@@ -39,21 +39,27 @@ export interface Transaction {
   userId: string;
 }
 
+export type budgetFreq = 'monthly' | 'quarterly' | 'semi-annually' | 'yearly' | undefined;
+
 export interface Budget {
   amount: number;
   category: Category;
-  frequency: 'monthly' | 'quarterly' | 'sem-annually' | 'yearly';
+  frequency: budgetFreq;
   id: string;
   userId: string;
 }
 
+export type goalCriteria = 'account' | 'category' | 'item' | 'subcategory' | undefined;
+
+export type goalFreq = 'monthly' | 'quarterly' | 'yearly' | 'custom' | undefined;
+
 export interface Goal {
   amount: number;
-  criteria: string;
+  criteria: goalCriteria;
   endDate?: string;
-  frequency: 'monthly' | 'quarterly' | 'custom';
+  frequency: goalFreq;
   id: string;
-  item: string;
+  item: Account | Category | Subcategory | Transaction;
   startDate?: string;
   userId: string;
 }

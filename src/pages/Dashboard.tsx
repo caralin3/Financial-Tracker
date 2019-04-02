@@ -27,10 +27,10 @@ import {
   ProgressBar,
   TransactionModal
 } from '../components';
-import { accounts, transactions } from '../mock';
+import { accounts, budgets, transactions } from '../mock';
 import { ApplicationState } from '../store/createStore';
-import { User } from '../types';
-import { accountTypeOptions, formatMoney, getArrayTotal, getObjectByType } from '../util';
+import { budgetFreq, User } from '../types';
+import { accountTypeOptions, calcPercent, formatMoney, getArrayTotal, getObjectByType } from '../util';
 
 export interface DashboardPageProps {
   classes: any;
@@ -103,13 +103,47 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     </List>
   );
 
-  const budgetItems = (
-    <List className="dashboard_card">
-      <ListItem>
-        <ProgressBar percent={75} leftLabel="Groceries" rightLabel="$75 of $100" textColor="primary" />
-      </ListItem>
-    </List>
-  );
+  const budgetItems = () => {
+    const calcSpent = (freq: budgetFreq, categoryId: string) => {
+      const expenses = getObjectByType(transactions, 'expense').filter(trans => trans.category.id === categoryId);
+      switch(freq) {
+        case 'monthly':
+          const monthly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'month'));
+          return getArrayTotal(monthly);
+        case 'quarterly':
+          const quarterly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'quarter'));
+          return getArrayTotal(quarterly);
+        case 'semi-annually':
+          const semi = expenses.filter(trans => Math.abs(moment(new Date(trans.date)).diff(new Date(), 'months', true)) <= 6);
+          return getArrayTotal(semi);
+        case 'yearly':
+          const yearly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'year'));
+          return getArrayTotal(yearly);
+        default:
+          return 0;
+      }
+    };
+
+    return (
+      <List className="dashboard_card">
+        {budgets.map(budget => {
+          const spent = calcSpent(budget.frequency, budget.category.id);
+          const total = budget.amount;
+          const percent = calcPercent(spent, total);
+          return (
+            <ListItem key={budget.id}>
+              <ProgressBar
+                percent={percent}
+                leftLabel={budget.category.name}
+                rightLabel={`${formatMoney(spent)} of ${formatMoney(total)}`}
+                textColor="primary"
+              />
+            </ListItem>
+          );
+        })}
+      </List>
+    );
+  };
 
   const handleExpansion = (index: number) => () => {
     if (expanded === index + 1) {
@@ -174,7 +208,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const dashboardSections = [
     { title: 'Recent Transactions', action: () => setAddingTrans(true), content: recentTransactions },
     { title: 'Accounts', action: () => setAddingAccount(true), content: accountItems },
-    { title: 'Budgets', action: () => setAddingBudget(true), content: budgetItems },
+    { title: 'Budgets', action: () => setAddingBudget(true), content: budgetItems() },
     { title: 'Goals', action: () => setAddingGoal(true), content: goalItems }
   ];
 

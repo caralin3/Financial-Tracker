@@ -6,14 +6,22 @@ interface ProgressBarProps {
   leftLabel?: string;
   percent: number;
   rightLabel?: string;
-  textColor?: TypographyProps["color"];
+  textColor?: TypographyProps['color'];
 }
 
 export const ProgressBar: React.SFC<ProgressBarProps> = ({ endLabel, leftLabel, percent, rightLabel, textColor }) => (
   <div className="progressBar">
     <div className={endLabel ? 'progressBar_paddedRow' : 'progressBar_row'}>
-      {leftLabel && <Typography className="progressBar_label" color={textColor}>{leftLabel}</Typography>}
-      {rightLabel && <Typography className="progressBar_label" color={textColor}>{rightLabel}</Typography>}
+      {leftLabel && (
+        <Typography className="progressBar_label" color={textColor}>
+          {leftLabel}
+        </Typography>
+      )}
+      {rightLabel && (
+        <Typography className="progressBar_label" color={textColor}>
+          {rightLabel}
+        </Typography>
+      )}
     </div>
     <div className="progressBar_row">
       <div className="progressBar_container">
