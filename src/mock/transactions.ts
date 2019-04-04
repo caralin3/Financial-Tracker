@@ -96,8 +96,32 @@ export const transactions: Transaction[] = [
     'transfer'
   ),
   createTransaction(
-    20.54,
-    categories[index(categories.length)],
+    50,
+    categories[0],
+    new Date().toISOString(),
+    accounts[index(accounts.length)],
+    'Netflix',
+    '',
+    subcategories[index(subcategories.length)],
+    '',
+    undefined,
+    'expense'
+  ),
+  createTransaction(
+    20,
+    categories[4],
+    new Date().toISOString(),
+    accounts[index(accounts.length)],
+    'Netflix',
+    '',
+    subcategories[index(subcategories.length)],
+    '',
+    undefined,
+    'expense'
+  ),
+  createTransaction(
+    20,
+    categories[6],
     new Date().toISOString(),
     accounts[index(accounts.length)],
     'Netflix',
@@ -132,8 +156,8 @@ export const transactions: Transaction[] = [
     'transfer'
   ),
   createTransaction(
-    20.54,
-    categories[index(categories.length)],
+    200,
+    categories[5],
     new Date().toISOString(),
     accounts[index(accounts.length)],
     'Netflix',
@@ -168,8 +192,8 @@ export const transactions: Transaction[] = [
     'transfer'
   ),
   createTransaction(
-    20.54,
-    categories[index(categories.length)],
+    150,
+    categories[2],
     new Date().toISOString(),
     accounts[index(accounts.length)],
     'Netflix',
@@ -204,8 +228,8 @@ export const transactions: Transaction[] = [
     'transfer'
   ),
   createTransaction(
-    20.54,
-    categories[index(categories.length)],
+    2000,
+    categories[7],
     new Date().toISOString(),
     accounts[index(accounts.length)],
     'Netflix',

@@ -2,6 +2,12 @@
 
 .progressBar {
   width: 100%;
+  &:hover,
+  &:focus {
+    .progressBar_sublabel {
+      display: block !important;
+    }
+  }
 
   span {
 		display: block;
@@ -28,6 +34,15 @@
 
   &_label {
     @include primary;
+    align-items: center !important;
+    display: flex !important;
+  }
+
+  &_sublabel {
+    @include copy;
+    display: none !important;
+    color: $black;
+    padding-left: 0.5rem;
   }
 
   &_end {

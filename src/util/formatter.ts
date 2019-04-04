@@ -1,10 +1,13 @@
 import * as moment from 'moment';
 import { Account, Category, Subcategory, Transaction } from '../types';
 
-export const formatMoney = (val: number) => {
+export const formatMoney = (val: number, noZeros?: boolean) => {
   const num = val.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   if (num.indexOf('-', 0) !== -1) {
     return `${num.slice(0, 1)}$${num.slice(1)}`;
+  }
+  if (noZeros && num.slice(-2) === '00') {
+    return `$${num.slice(0, -3)}`
   }
   return `$${num}`;
 };

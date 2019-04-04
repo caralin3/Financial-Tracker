@@ -63,6 +63,15 @@ $white: #FFF;
   }
 }
 
+@mixin copy {
+  font-family: 'ArchivoNarrow', sans-serif !important;
+  font-size: 14px !important;
+
+  @media #{$medium} {
+    font-size: 14px !important;
+  }
+}
+
 @mixin number {
   font-family: 'Oswald', sans-serif !important;
 }

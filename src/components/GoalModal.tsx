@@ -1,6 +1,6 @@
 import { FormControlLabel, Grid, Radio, TextField, Typography } from '@material-ui/core';
 import * as React from 'react';
-import { goalCriteria, goalFreq } from '../types';
+import { goalCriteria, goalFreq, goalOperation } from '../types';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface GoalModalProps {
@@ -15,7 +15,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [criteria, setCriteria] = React.useState<goalCriteria>(undefined);
-  const [comparison, setComparison] = React.useState<string>('');
+  const [operation, setOperation] = React.useState<goalOperation>(undefined);
   const [item, setItem] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number | undefined>(undefined);
   const [startDate, setStartDate] = React.useState<string>('');
@@ -66,8 +66,8 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
             <Typography className="goalModal_fieldText--spend">I want to spend</Typography>
             <SelectInput
               label="Comparator"
-              selected={comparison}
-              handleChange={e => setComparison(e.target.value)}
+              selected={operation}
+              handleChange={e => setOperation(e.target.value as goalOperation)}
               options={options}
             />
           </Grid>

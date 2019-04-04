@@ -135,7 +135,8 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
               <ProgressBar
                 percent={percent}
                 leftLabel={budget.category.name}
-                rightLabel={`${formatMoney(spent)} of ${formatMoney(total)}`}
+                rightLabel={`${formatMoney(spent, true)} of ${formatMoney(total, true)}`}
+                subLabel={budget.frequency}
                 textColor="primary"
               />
             </ListItem>

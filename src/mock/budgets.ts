@@ -9,15 +9,14 @@ const createBudget = (category: Category, amount: number, frequency: budgetFreq)
   return { id: `${counter}`, category, amount, frequency, userId };
 };
 
-const total = () => Math.random() * 1000;
 
 export const budgets: Budget[] = [
-  createBudget(categories[0], total(), 'quarterly'),
+  createBudget(categories[0], 100, 'quarterly'),
   createBudget(categories[1], 500, 'monthly'),
-  createBudget(categories[2], total(), 'monthly'),
-  createBudget(categories[3], total(), 'yearly'),
-  createBudget(categories[4], total(), 'semi-annually'),
-  createBudget(categories[5], total(), 'quarterly'),
-  createBudget(categories[6], total(), 'semi-annually'),
-  createBudget(categories[7], total(), 'yearly')
+  createBudget(categories[2], 400, 'monthly'),
+  createBudget(categories[3], 1000, 'yearly'),
+  createBudget(categories[4], 80, 'semi-annually'),
+  createBudget(categories[5], 200, 'quarterly'),
+  createBudget(categories[6], 50, 'semi-annually'),
+  createBudget(categories[7], 10000, 'yearly')
 ];
