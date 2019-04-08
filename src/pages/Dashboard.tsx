@@ -27,10 +27,10 @@ import {
   ProgressBar,
   TransactionModal
 } from '../components';
-import { accounts, budgets, transactions } from '../mock';
+import { accounts, budgets, goals, transactions } from '../mock';
 import { ApplicationState } from '../store/createStore';
-import { budgetFreq, User } from '../types';
-import { accountTypeOptions, calcPercent, formatMoney, getArrayTotal, getObjectByType } from '../util';
+import { budgetFreq, Goal, Transaction, User } from '../types';
+import { accountTypeOptions, calcPercent, formatMoney, getArrayTotal, getExpensesByAmount, getExpensesByCriteria, getExpensesByDates, getObjectByType } from '../util';
 
 export interface DashboardPageProps {
   classes: any;
@@ -106,22 +106,8 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const budgetItems = () => {
     const calcSpent = (freq: budgetFreq, categoryId: string) => {
       const expenses = getObjectByType(transactions, 'expense').filter(trans => trans.category.id === categoryId);
-      switch(freq) {
-        case 'monthly':
-          const monthly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'month'));
-          return getArrayTotal(monthly);
-        case 'quarterly':
-          const quarterly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'quarter'));
-          return getArrayTotal(quarterly);
-        case 'semi-annually':
-          const semi = expenses.filter(trans => Math.abs(moment(new Date(trans.date)).diff(new Date(), 'months', true)) <= 6);
-          return getArrayTotal(semi);
-        case 'yearly':
-          const yearly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'year'));
-          return getArrayTotal(yearly);
-        default:
-          return 0;
-      }
+      const filteredExpenses = getExpensesByDates(freq, expenses);
+      return getArrayTotal(filteredExpenses);
     };
 
     return (
@@ -134,6 +120,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
             <ListItem key={budget.id}>
               <ProgressBar
                 percent={percent}
+                endLabel={`${percent.toFixed(0)}%`}
                 leftLabel={budget.category.name}
                 rightLabel={`${formatMoney(spent, true)} of ${formatMoney(total, true)}`}
                 subLabel={budget.frequency}
@@ -198,19 +185,45 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     </List>
   );
 
-  const goalItems = (
-    <List className="dashboard_card">
-      <ListItem>
-        <ProgressBar endLabel="75%" percent={75} leftLabel="Groceries" rightLabel="$75 of $100" textColor="primary" />
-      </ListItem>
-    </List>
-  );
+  const goalItems = () => {
+    const calcSpent = (goal: Goal) => {
+      const item = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
+      const expenses = getObjectByType(transactions, 'expense');
+      const dateFilteredExps = getExpensesByDates(goal.frequency, expenses, goal.startDate, goal.endDate);
+      const criteriaFilteredExps = getExpensesByCriteria(goal.criteria, item, dateFilteredExps);
+      const amountFilteredExps = getExpensesByAmount(goal.amount, goal.comparator, criteriaFilteredExps);
+      console.log(dateFilteredExps, criteriaFilteredExps, amountFilteredExps);
+      return getArrayTotal(amountFilteredExps);
+    };
+
+    return (
+      <List className="dashboard_card">
+        {goals.map(goal => {
+          const label = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
+          const spent = calcSpent(goal);
+          const total = goal.amount;
+          const percent = calcPercent(spent, total);
+          return (
+            <ListItem key={goal.id}>
+              <ProgressBar
+                percent={percent}
+                leftLabel={label}
+                rightLabel={`${formatMoney(spent, true)} ${goal.comparator} ${formatMoney(total, true)}`}
+                subLabel={goal.frequency}
+                textColor="primary"
+              />
+            </ListItem>
+          );
+        })}
+      </List>
+    );
+  }
 
   const dashboardSections = [
     { title: 'Recent Transactions', action: () => setAddingTrans(true), content: recentTransactions },
     { title: 'Accounts', action: () => setAddingAccount(true), content: accountItems },
     { title: 'Budgets', action: () => setAddingBudget(true), content: budgetItems() },
-    { title: 'Goals', action: () => setAddingGoal(true), content: goalItems }
+    { title: 'Goals', action: () => setAddingGoal(true), content: goalItems() }
   ];
 
   const username = currentUser ? `${currentUser.firstName}'s` : '';

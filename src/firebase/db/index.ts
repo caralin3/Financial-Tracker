@@ -1,8 +1,8 @@
 import { db } from '../fb';
 // import * as accounts from './accounts';
-// import * as categories from './categories';
+import * as categories from './categories';
 // import * as jobs from './jobs';
-// import * as subcategories from './subcategories';
+import * as subcategories from './subcategories';
 // import * as transactions from './transactions';
 import * as users from './users';
 
@@ -16,9 +16,9 @@ export const transactionsCollection = db.collection('transactions');
 
 export const requests = {
   // accounts,
-  // categories,
+  categories,
   // jobs,
-  // subcategories,
+  subcategories,
   // transactions,
   users
 };

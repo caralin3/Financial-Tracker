@@ -53,7 +53,7 @@ export type goalCriteria = 'account' | 'category' | 'item' | 'subcategory' | und
 
 export type goalFreq = 'monthly' | 'quarterly' | 'yearly' | 'custom' | undefined;
 
-export type goalOperation = '<' | '>' | '===' | '<==' | '>==' | undefined;
+export type goalComparator = '<' | '>' | '===' | '<=' | '>=' | undefined;
 
 export interface Goal {
   amount: number;
@@ -62,7 +62,7 @@ export interface Goal {
   frequency: goalFreq;
   id: string;
   item: Account | Category | Subcategory | Transaction;
-  operation: goalOperation;
+  comparator: goalComparator;
   startDate?: string;
   userId: string;
 }

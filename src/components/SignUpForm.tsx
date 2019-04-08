@@ -60,6 +60,8 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
         };
         // Create a user in database
         await db.requests.users.createUser(currentUser, dispatch);
+        await db.requests.categories.createInitialCategories(currentUser.id, dispatch);
+        await db.requests.subcategories.createInitialSubcategories(currentUser.id, dispatch);
       })
       .then(() => {
         setEmail('');

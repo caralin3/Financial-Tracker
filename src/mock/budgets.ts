@@ -9,7 +9,6 @@ const createBudget = (category: Category, amount: number, frequency: budgetFreq)
   return { id: `${counter}`, category, amount, frequency, userId };
 };
 
-
 export const budgets: Budget[] = [
   createBudget(categories[0], 100, 'quarterly'),
   createBudget(categories[1], 500, 'monthly'),

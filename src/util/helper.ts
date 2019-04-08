@@ -1,4 +1,5 @@
-import { Account, accountType, Category, Option, Subcategory, transactionType } from '../types';
+import * as moment from 'moment';
+import { Account, accountType, budgetFreq, Category, goalComparator, goalCriteria, goalFreq, Option, Subcategory, Transaction, transactionType } from '../types';
 
 export const removeDups = (arr: any[]) => arr.filter((item, index, self) => self.indexOf(item) === index);
 
@@ -60,3 +61,54 @@ export const transferColumns = [
 
 export const getObjectByType = (arr: any[], type: accountType | transactionType) =>
   arr.filter(obj => obj.type === type);
+
+export const getExpensesByDates = (frequency: budgetFreq | goalFreq, expenses: Transaction[], startDate?: string, endDate?: string) => {
+  switch(frequency) {
+    case 'custom':
+      if (startDate && endDate) {
+        return expenses.filter(trans => moment(new Date(trans.date)).isBetween(new Date(startDate), new Date(endDate), 'day'))
+      }
+      return [];
+    case 'monthly':
+      const monthly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'month'));
+      return monthly;
+    case 'quarterly':
+      return expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'quarter'));
+    case 'semi-annually':
+      return expenses.filter(trans => Math.abs(moment(new Date(trans.date)).diff(new Date(), 'months', true)) <= 6);
+    case 'yearly':
+      return expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'year'));
+    default:
+      return [];
+  }
+}
+
+export const getExpensesByCriteria = (criteria: goalCriteria, item: string, expenses: Transaction[]) => {
+  switch(criteria) {
+    case 'account':
+      return expenses.filter(trans => trans.from && trans.from.name === item);
+    case 'category':
+      return expenses.filter(trans => trans.category && trans.category.name === item);
+    case 'item':
+      return expenses.filter(trans => trans.item === item);
+    case 'subcategory':
+      return expenses.filter(trans => trans.subcategory && trans.subcategory.name === item);
+    default:
+      return [];
+  }
+}
+
+export const comparators = {
+  '<': (a: any, b: any) => a < b,
+  '<=': (a: any, b: any) => a <= b,
+  '===': (a: any, b: any) => a === b,
+  '>': (a: any, b: any) => a > b,
+  '>=': (a: any, b: any) => a >= b,
+}
+
+export const getExpensesByAmount = (amount: number, comp: goalComparator, expenses: Transaction[]) => {
+  if (comp) {
+    return expenses.filter(trans => comparators[comp](trans.amount, amount));
+  }
+  return [];
+}
