@@ -66,6 +66,8 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   React.useEffect(() => {
     if (accounts.length === 0) {
       loadData();
+    } else {
+      setLoading(false);
     }
   }, [currentUser]);
 
@@ -81,7 +83,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   };
 
   // TODO: Handle delete
-  const deleteAccount = () => console.log(deleteId);
+  const deleteAccount = async () => await requests.accounts.deleteAccount(deleteId, dispatch);
 
   const handleEdit = (id: string, type: string) => {
     const { history } = props;

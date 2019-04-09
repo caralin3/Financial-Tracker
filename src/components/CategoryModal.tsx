@@ -7,7 +7,6 @@ import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { categoriesState } from '../store';
 import { ApplicationState, Category, User } from '../types';
-import { sort } from '../util';
 import { Alert, Loading, ModalForm } from './';
 
 interface RouteParams {
@@ -71,7 +70,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
   const loadCategories = async () => {
     if (currentUser) {
       const cats = await requests.categories.getAllCategories(currentUser.id);
-      dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
+      dispatch(categoriesState.setCategories(cats));
       setLoading(false);
     }
   };

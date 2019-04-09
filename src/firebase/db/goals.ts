@@ -30,7 +30,7 @@ export const getAllGoals = (userId: string) =>
         } as Goal);
       }
     });
-    return sort(goals, 'desc', 'name');
+    return sort(goals, 'desc', 'item.name');
   });
 
 // TODO: UPDATE GOAL

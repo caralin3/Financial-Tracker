@@ -9,7 +9,7 @@ import { budgets } from '../mock';
 import { categoriesState } from '../store';
 // import { budgetsState, categoriesState } from '../store';
 import { ApplicationState, Budget, budgetFreq, Category, User } from '../types';
-import { getOptions, sort } from '../util';
+import { getOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
@@ -85,7 +85,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   const loadBudgets = async () => {
     if (currentUser) {
       // const buds = await requests.budgets.getAllBudgets(currentUser.id);
-      // dispatch(budgetsState.setBudgets(sort(buds, 'desc', 'name')));
+      // dispatch(budgetsState.setBudgets(buds));
       setLoading(false);
     }
   };
@@ -93,7 +93,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   const loadCategories = async () => {
     if (currentUser) {
       const cats = await requests.categories.getAllCategories(currentUser.id);
-      dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
+      dispatch(categoriesState.setCategories(cats));
       setLoading(false);
     }
   };

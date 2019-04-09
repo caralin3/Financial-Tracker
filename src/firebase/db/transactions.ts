@@ -30,7 +30,7 @@ export const getAllTransactions = (userId: string) =>
         } as Transaction);
       }
     });
-    return sort(transactions, 'desc', 'name');
+    return sort(transactions, 'desc', 'date');
   });
 
 // TODO: UPDATE TRANSACTION

@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { categoriesState } from '../../store';
 import { Category } from '../../types';
+import { sort } from '../../util';
 import { FBCategory } from '../types';
 import { categoriesCollection } from './';
 
@@ -56,7 +57,7 @@ export const getAllCategories = (userId: string) =>
         } as Category);
       }
     });
-    return categories;
+    return sort(categories, 'desc', 'name');
   });
 
 // TODO: UPDATE CATEGORY

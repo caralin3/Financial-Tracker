@@ -23,7 +23,6 @@ import { requests } from '../firebase/db';
 import { routes } from '../routes';
 import { categoriesState, subcategoriesState } from '../store';
 import { ApplicationState, Category, Subcategory, User } from '../types';
-import { sort } from '../util';
 
 export interface CategoriesPageProps {
   classes: any;
@@ -69,8 +68,8 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   const loadData = async () => {
     const cats = await requests.categories.getAllCategories(currentUser ? currentUser.id : '');
     const subs = await requests.subcategories.getAllSubcategories(currentUser ? currentUser.id : '');
-    dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
-    dispatch(subcategoriesState.setSubcategories(sort(subs, 'desc', 'name')));
+    dispatch(categoriesState.setCategories(cats));
+    dispatch(subcategoriesState.setSubcategories(subs));
     setLoading(false);
   };
 

@@ -7,7 +7,7 @@ import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { accountsState } from '../store';
 import { Account, accountType, ApplicationState, User } from '../types';
-import { accountTypeOptions, sort } from '../util';
+import { accountTypeOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
@@ -40,9 +40,10 @@ interface AccountModalMergedProps
 const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   const { accounts, currentUser, dispatch } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
-  const [balance, setBalance] = React.useState<number | undefined | ''>(undefined);
+  const [amount, setAmount] = React.useState<number>(0);
   const [type, setType] = React.useState<accountType | ''>('');
 
   React.useEffect(() => {
@@ -59,12 +60,12 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
       console.log(params.id, account);
       if (account) {
         setName(account.name);
-        setBalance(account.amount);
+        setAmount(account.amount);
         setType(account.type);
         setLoading(false);
       }
     } else {
-      if (name && balance && type) {
+      if (name && amount && type) {
         resetFields();
       }
     }
@@ -73,7 +74,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   const loadAccounts = async () => {
     if (currentUser) {
       const accs = await requests.accounts.getAllAccounts(currentUser.id);
-      dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+      dispatch(accountsState.setAccounts(accs));
       setLoading(false);
     }
   };
@@ -81,8 +82,8 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   const resetFields = () => {
     setName('');
     setType('');
-    if (balance) {
-      setBalance('');
+    if (amount) {
+      setAmount(0);
     }
   };
 
@@ -100,19 +101,38 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   };
 
   // TODO: Handle add
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
       match: { params },
       onSuccess
     } = props;
     e.preventDefault();
-    // setError(true);
+    if (currentUser) {
+      const newAccount = {
+        amount,
+        name,
+        type: type as accountType,
+        userId: currentUser.id
+      };
 
-    // TODO: Handle edit
-    if (params.id) {
-      handleClose();
-      if (onSuccess) {
-        onSuccess();
+      // TODO: Handle edit
+      if (params.id) {
+        const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, dispatch);
+        if (edited) {
+          handleClose();
+          if (onSuccess) {
+            onSuccess();
+          }
+        } else {
+          setError(true);
+        }
+      } else {
+        const added = await requests.accounts.createAccount(newAccount, dispatch);
+        if (added) {
+          setSuccess(true);
+        } else {
+          setError(true);
+        }
       }
     }
   };
@@ -132,6 +152,12 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
         </div>
       ) : (
         <Grid className="accountModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+          <Alert
+            onClose={() => setSuccess(false)}
+            open={success}
+            variant="success"
+            message={`${name} has been added`}
+          />
           <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
           <Grid item={true} xs={12}>
             <TextField
@@ -148,11 +174,11 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
           </Grid>
           <Grid item={true} xs={12}>
             <TextField
-              id="account-balance"
+              id="account-amount"
               label="Balance"
               fullWidth={true}
-              value={balance}
-              onChange={e => setBalance(parseFloat(e.target.value))}
+              value={amount}
+              onChange={e => setAmount(parseFloat(e.target.value))}
               type="number"
               margin="normal"
               variant="outlined"

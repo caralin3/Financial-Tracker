@@ -30,7 +30,7 @@ export const getAllBudgets = (userId: string) =>
         } as Budget);
       }
     });
-    return sort(budgets, 'desc', 'name');
+    return sort(budgets, 'desc', 'category.name');
   });
 
 // TODO: UPDATE BUDGET

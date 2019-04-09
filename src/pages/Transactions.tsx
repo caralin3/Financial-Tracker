@@ -49,7 +49,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
   const loadData = async () => {
     if (currentUser) {
       // const trans = await requests.transactions.getAllTransactions(currentUser.id);
-      // dispatch(transactionsState.setTransactions(sort(trans, 'desc', 'name')));;
+      // dispatch(transactionsState.setTransactions(trans));;
       setLoading(false);
     }
   };

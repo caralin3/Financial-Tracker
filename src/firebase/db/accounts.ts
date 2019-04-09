@@ -13,9 +13,11 @@ export const createAccount = (account: FBAccount, dispatch: Dispatch<any>) =>
       // Set account in store
       dispatch(accountsState.addAccount({ id: doc.id, ...account }));
       console.log('Account written with ID: ', doc.id);
+      return true;
     })
     .catch(error => {
       console.error('Error adding account: ', error);
+      return false;
     });
 
 // READ ACCOUNTS
@@ -42,9 +44,11 @@ export const updateAccount = (account: Account, dispatch: Dispatch<any>) =>
       // Set account in store
       dispatch(accountsState.editAccount(account));
       console.log('Account updated with ID: ', account.id);
+      return true;
     })
     .catch(error => {
       console.error('Error updating account: ', error);
+      return false;
     });
 
 // TODO: DELETE ACCOUNT
@@ -56,7 +60,9 @@ export const deleteAccount = (id: string, dispatch: Dispatch<any>) =>
       // Set account in store
       dispatch(accountsState.deleteAccount(id));
       console.log('Account deleted with ID: ', id);
+      return true;
     })
     .catch(error => {
       console.error('Error deleting account: ', id, error);
+      return false;
     });

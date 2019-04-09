@@ -12,7 +12,7 @@ import { theme } from '../appearance';
 import { requests } from '../firebase/db';
 import { accountsState, categoriesState, subcategoriesState } from '../store';
 import { Account, ApplicationState, Category, Subcategory, Transaction, transactionType, User } from '../types';
-import { getOptions, sort } from '../util';
+import { getOptions } from '../util';
 import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
@@ -135,9 +135,9 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       const accs = await requests.accounts.getAllAccounts(currentUser.id);
       const cats = await requests.categories.getAllCategories(currentUser.id);
       const subs = await requests.subcategories.getAllSubcategories(currentUser.id);
-      dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
-      dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
-      dispatch(subcategoriesState.setSubcategories(sort(subs, 'desc', 'name')));
+      dispatch(accountsState.setAccounts(accs));
+      dispatch(categoriesState.setCategories(cats));
+      dispatch(subcategoriesState.setSubcategories(subs));
       setLoading(false);
     }
   };
@@ -145,7 +145,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   const loadTransactions = async () => {
     if (currentUser) {
       // const trans = await requests.transactions.getAllTransactions(currentUser.id);
-      // dispatch(transactionsState.setTransactions(sort(trans, 'desc', 'name')));;
+      // dispatch(transactionsState.setTransactions(trans));;
       setLoading(false);
     }
   };

@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { subcategoriesState } from '../../store';
 import { Category, Subcategory } from '../../types';
+import { sort } from '../../util';
 import { FBSubcategory } from '../types';
 import { subcategoriesCollection } from './';
 import { getAllCategories } from './categories';
@@ -134,7 +135,7 @@ export const getAllSubcategories = (userId: string) =>
         } as Subcategory);
       }
     });
-    return subcategories;
+    return sort(subcategories, 'desc', 'name');
   });
 
 // TODO: UPDATE SUBCATEGORY
