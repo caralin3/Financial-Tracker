@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { subcategoriesState } from '../../store';
-import { Category, FBSubcategory, Subcategory } from '../../types';
+import { Category, Subcategory } from '../../types';
+import { FBSubcategory } from '../types';
 import { subcategoriesCollection } from './';
 import { getAllCategories } from './categories';
 
@@ -136,8 +137,30 @@ export const getAllSubcategories = (userId: string) =>
     return subcategories;
   });
 
-// TODO: READ SUBCATEGORY
-
-// TODO: EDIT SUBCATEGORY
+// TODO: UPDATE SUBCATEGORY
+export const updateSubcategory = (subcategory: Subcategory, dispatch: Dispatch<any>) =>
+  subcategoriesCollection
+    .doc(subcategory.id)
+    .update(subcategory)
+    .then(() => {
+      // Set subcategory in store
+      dispatch(subcategoriesState.editSubcategory(subcategory));
+      console.log('Subcategory updated with ID: ', subcategory.id);
+    })
+    .catch(error => {
+      console.error('Error updating subcategory: ', error);
+    });
 
 // TODO: DELETE SUBCATEGORY
+export const deleteSubcategory = (id: string, dispatch: Dispatch<any>) =>
+  subcategoriesCollection
+    .doc(id)
+    .delete()
+    .then(() => {
+      // Set subcategory in store
+      dispatch(subcategoriesState.deleteSubcategory(id));
+      console.log('Subcategory deleted with ID: ', id);
+    })
+    .catch(error => {
+      console.error('Error deleting subcategory: ', id, error);
+    });

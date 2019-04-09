@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { categoriesState } from '../../store';
-import { Category, FBCategory } from '../../types';
+import { Category } from '../../types';
+import { FBCategory } from '../types';
 import { categoriesCollection } from './';
 
 const createCategoryObject = (name: string, userId: string) => {
@@ -58,8 +59,30 @@ export const getAllCategories = (userId: string) =>
     return categories;
   });
 
-// TODO: READ CATEGORY
-
-// TODO: EDIT CATEGORY
+// TODO: UPDATE CATEGORY
+export const updateCategory = (category: Category, dispatch: Dispatch<any>) =>
+  categoriesCollection
+    .doc(category.id)
+    .update(category)
+    .then(() => {
+      // Set category in store
+      dispatch(categoriesState.editCategory(category));
+      console.log('Category updated with ID: ', category.id);
+    })
+    .catch(error => {
+      console.error('Error updating category: ', error);
+    });
 
 // TODO: DELETE CATEGORY
+export const deleteCategory = (id: string, dispatch: Dispatch<any>) =>
+  categoriesCollection
+    .doc(id)
+    .delete()
+    .then(() => {
+      // Set category in store
+      dispatch(categoriesState.deleteCategory(id));
+      console.log('Category deleted with ID: ', id);
+    })
+    .catch(error => {
+      console.error('Error deleting category: ', id, error);
+    });

@@ -23,7 +23,7 @@ import { requests } from '../firebase/db';
 import { routes } from '../routes';
 import { accountsState } from '../store';
 import { Account, accountType, ApplicationState, User } from '../types';
-import { formatMoney, getArrayTotal, getObjectByType, sort } from '../util';
+import { formatMoney, getArrayTotal, getObjectByType } from '../util';
 
 interface AccountType {
   balance: number;
@@ -71,7 +71,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
 
   const loadData = async () => {
     const accs = await requests.accounts.getAllAccounts(currentUser ? currentUser.id : '');
-    dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+    dispatch(accountsState.setAccounts(accs));
     setLoading(false);
   };
 
