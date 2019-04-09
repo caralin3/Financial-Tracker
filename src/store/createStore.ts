@@ -1,20 +1,12 @@
-import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import * as History from 'history';
 import { applyMiddleware, combineReducers, compose, createStore, Store } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
+import { ApplicationState } from '../types';
 import { accountsState, categoriesState, sessionState, subcategoriesState, transactionsState } from './index';
-
-export interface ApplicationState {
-  router: RouterState;
-  accountsState: accountsState.AccountsState;
-  categoriesState: categoriesState.CategoriesState;
-  sessionState: sessionState.SessionState;
-  subcategoriesState: subcategoriesState.SubcategoriesState;
-  transactionsState: transactionsState.TransactionsState;
-}
 
 export default (history: History.History): Store<ApplicationState> => {
   const middleware =

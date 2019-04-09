@@ -8,7 +8,7 @@ import config from './config';
 import registerServiceWorker from './registerServiceWorker';
 import { createHistory } from './routes';
 import { createStore } from './store';
-import { ApplicationState } from './store/createStore';
+import { ApplicationState } from './types';
 
 if (config.env === 'development') {
   console.log(config);

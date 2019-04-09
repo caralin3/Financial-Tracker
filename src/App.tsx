@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import { theme } from './appearance';
 import { withAuthentication } from './auth/withAuthentication';
 import { createHistory, Router } from './routes';
-import { ApplicationState } from './store/createStore';
-import { User } from './types';
+import { ApplicationState, User } from './types';
 
 interface AppProps {}
 

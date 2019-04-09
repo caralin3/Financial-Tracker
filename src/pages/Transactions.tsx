@@ -9,8 +9,7 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from '../components';
 import { transactions } from '../mock';
 import { routes } from '../routes';
-import { ApplicationState } from '../store/createStore';
-import { User } from '../types';
+import { ApplicationState, User } from '../types';
 import { expenseColumns, formatTableTransaction, getObjectByType, incomeColumns, transferColumns } from '../util';
 
 export interface TransactionsPageProps {

@@ -22,8 +22,7 @@ import { Alert, AlertDialog, CategoryModal, Layout, Loading, SubcategoryModal } 
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
 import { categoriesState, subcategoriesState } from '../store';
-import { ApplicationState } from '../store/createStore';
-import { Category, Subcategory, User } from '../types';
+import { ApplicationState, Category, Subcategory, User } from '../types';
 import { sort } from '../util';
 
 export interface CategoriesPageProps {

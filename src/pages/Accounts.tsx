@@ -21,8 +21,7 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { AccountModal, Alert, AlertDialog, ExpandableCard, Layout, Loading } from '../components';
 import { accounts } from '../mock';
 import { routes } from '../routes';
-import { ApplicationState } from '../store/createStore';
-import { accountType, User } from '../types';
+import { accountType, ApplicationState, User } from '../types';
 import { formatMoney } from '../util';
 
 interface AccountType {

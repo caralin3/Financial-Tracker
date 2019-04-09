@@ -7,8 +7,7 @@ import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Layout, Loading } from '../components';
 // import { routes } from '../routes';
-import { ApplicationState } from '../store/createStore';
-import { User } from '../types';
+import { ApplicationState, User } from '../types';
 
 export interface ReportsPageProps {
   classes: any;
