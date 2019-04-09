@@ -6,8 +6,8 @@ import { accountsCollection } from './';
 // CREATE ACCOUNT
 export const createAccount = (account: FBAccount, dispatch: Dispatch<any>) => {
   accountsCollection
-  .add(account)
-  .then(doc => {
+    .add(account)
+    .then(doc => {
       console.log('Account written with ID: ', doc.id);
       // Set account in store
       dispatch(accountsState.addAccount({ id: doc.id, ...account }));

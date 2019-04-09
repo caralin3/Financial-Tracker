@@ -1,11 +1,26 @@
 import { Grid, TextField } from '@material-ui/core';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { categories } from '../mock';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
+import { requests } from '../firebase/db';
+import { categoriesState } from '../store';
+import { ApplicationState, Category, User } from '../types';
+import { sort } from '../util';
 import { Alert, Loading, ModalForm } from './';
 
 interface RouteParams {
   id: string;
+}
+
+interface DispatchMappedProps {
+  dispatch: Dispatch<any>;
+}
+
+interface StateMappedProps {
+  categories: Category[];
+  currentUser: User | null;
 }
 
 interface CategoryModalProps extends RouteComponentProps<RouteParams> {
@@ -16,8 +31,15 @@ interface CategoryModalProps extends RouteComponentProps<RouteParams> {
   title: string;
 }
 
-const DisconnectedCategoryModal: React.SFC<CategoryModalProps> = props => {
-  const [loading] = React.useState<boolean>(false);
+interface CategoryModalMergedProps
+  extends RouteComponentProps<RouteParams>,
+    StateMappedProps,
+    DispatchMappedProps,
+    CategoryModalProps {}
+
+const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => {
+  const { categories, currentUser, dispatch } = props;
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
 
@@ -27,6 +49,13 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalProps> = props => {
     } = props;
     // TODO: Load category from id
     if (params.id) {
+      setLoading(true);
+      if (categories.length === 0) {
+        setLoading(true);
+        loadCategories();
+      } else {
+        setLoading(false);
+      }
       const [category] = categories.filter(cat => cat.id === params.id);
       console.log(params.id, category);
       if (category) {
@@ -38,6 +67,14 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalProps> = props => {
       }
     }
   }, [props.match.params.id]);
+
+  const loadCategories = async () => {
+    if (currentUser) {
+      const cats = await requests.categories.getAllCategories(currentUser.id);
+      dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
+      setLoading(false);
+    }
+  };
 
   const resetFields = () => {
     setName('');
@@ -113,4 +150,17 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalProps> = props => {
   );
 };
 
-export const CategoryModal = withRouter(DisconnectedCategoryModal);
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+
+const mapStateToProps = (state: ApplicationState) => ({
+  categories: state.categoriesState.categories,
+  currentUser: state.sessionState.currentUser
+});
+
+export const CategoryModal = compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(DisconnectedCategoryModal) as any;

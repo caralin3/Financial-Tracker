@@ -53,7 +53,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     if (params.id) {
       setLoading(true);
       if (accounts.length === 0) {
-        loadData();
+        loadAccounts();
       }
       const [account] = accounts.filter(acc => acc.id === params.id);
       console.log(params.id, account);
@@ -70,10 +70,12 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     }
   }, [props.match.params.id]);
 
-  const loadData = async () => {
-    // FIXME: Change to if current user
-    const accs = await requests.accounts.getAllAccounts(currentUser ? currentUser.id : '');
-    dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+  const loadAccounts = async () => {
+    if (currentUser) {
+      const accs = await requests.accounts.getAllAccounts(currentUser.id);
+      dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+      setLoading(false);
+    }
   };
 
   const resetFields = () => {
@@ -133,6 +135,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
           <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
           <Grid item={true} xs={12}>
             <TextField
+              autoFocus={true}
               id="account-name"
               label="Name"
               fullWidth={true}

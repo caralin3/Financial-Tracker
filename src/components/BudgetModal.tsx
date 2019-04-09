@@ -52,8 +52,8 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     const {
       match: { params }
     } = props;
+    setLoading(true);
     if (categories.length === 0) {
-      setLoading(true);
       loadCategories();
     } else {
       setLoading(false);

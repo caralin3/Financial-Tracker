@@ -32,8 +32,8 @@ export const createInitialCategories = (userId: string, dispatch: Dispatch<any>)
 // CREATE CATEGORY
 export const createCategory = (category: FBCategory, dispatch: Dispatch<any>) => {
   categoriesCollection
-  .add(category)
-  .then(doc => {
+    .add(category)
+    .then(doc => {
       console.log('Category written with ID: ', doc.id);
       // Set category in store
       dispatch(categoriesState.addCategory({ id: doc.id, ...category }));

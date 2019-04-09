@@ -7,9 +7,8 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from '../components';
-import { transactions } from '../mock';
 import { routes } from '../routes';
-import { ApplicationState, User } from '../types';
+import { ApplicationState, Transaction, User } from '../types';
 import { expenseColumns, formatTableTransaction, getObjectByType, incomeColumns, transferColumns } from '../util';
 
 export interface TransactionsPageProps {
@@ -22,6 +21,7 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   currentUser: User | null;
+  transactions: Transaction[];
 }
 
 interface TransactionsMergedProps
@@ -31,13 +31,28 @@ interface TransactionsMergedProps
     TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
-  const [loading] = React.useState<boolean>(false);
+  const { currentUser, transactions } = props;
+  const [loading, setLoading] = React.useState<boolean>(transactions.length !== 0);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [items, setItems] = React.useState<string[]>([]);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [openEdit, setOpenEdit] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (transactions.length === 0) {
+      loadData();
+    }
+  }, [currentUser]);
+
+  const loadData = async () => {
+    if (currentUser) {
+      // const trans = await requests.transactions.getAllTransactions(currentUser.id);
+      // dispatch(transactionsState.setTransactions(sort(trans, 'desc', 'name')));;
+      setLoading(false);
+    }
+  };
 
   const handleDelete = (selected: string[]) => {
     setOpenDialog(true);
@@ -141,7 +156,8 @@ const authCondition = (authUser: any) => !!authUser;
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
 
 const mapStateToProps = (state: ApplicationState) => ({
-  currentUser: state.sessionState.currentUser
+  currentUser: state.sessionState.currentUser,
+  transactions: state.transactionsState.transactions
 });
 
 export const TransactionsPage = compose(

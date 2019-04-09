@@ -66,8 +66,6 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   React.useEffect(() => {
     if (accounts.length === 0) {
       loadData();
-    } else {
-      setLoading(false);
     }
   }, [currentUser]);
 

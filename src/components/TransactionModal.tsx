@@ -10,9 +10,8 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { theme } from '../appearance';
 import { requests } from '../firebase/db';
-import { transactions } from '../mock';
 import { accountsState, categoriesState, subcategoriesState } from '../store';
-import { Account, ApplicationState, Category, Subcategory, transactionType, User } from '../types';
+import { Account, ApplicationState, Category, Subcategory, Transaction, transactionType, User } from '../types';
 import { getOptions, sort } from '../util';
 import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
 
@@ -29,6 +28,7 @@ interface StateMappedProps {
   categories: Category[];
   subcategories: Subcategory[];
   currentUser: User | null;
+  transactions: Transaction[];
 }
 
 interface TransactionModalProps {
@@ -46,8 +46,8 @@ interface TransactionModalMergedProps
     TransactionModalProps {}
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = props => {
-  const { accounts, categories, currentUser, dispatch, subcategories } = props;
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const { accounts, categories, currentUser, dispatch, subcategories, transactions } = props;
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<string>('');
   const [tab, setTab] = React.useState<number>(0);
@@ -66,6 +66,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       match: { params },
       location
     } = props;
+    setLoading(true);
     const query: any = querystring.parse(location.search.slice(1));
     if (accounts.length === 0 || categories.length === 0 || subcategories.length === 0) {
       loadData();
@@ -74,6 +75,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     }
     // TODO: Load transaction from id
     if (query.type) {
+      setLoading(true);
       setEditing(query.type);
       switch (query.type as transactionType) {
         case 'income':
@@ -88,6 +90,12 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       }
     }
     if (params.id) {
+      setLoading(true);
+      if (transactions.length === 0) {
+        loadTransactions();
+      } else {
+        setLoading(false);
+      }
       const [transaction] = transactions.filter(trans => trans.id === params.id);
       console.log(params.id, transaction);
       if (transaction) {
@@ -123,13 +131,23 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   }, [props.match.params.id]);
 
   const loadData = async () => {
-    const accs = await requests.accounts.getAllAccounts(currentUser ? currentUser.id : '');
-    const cats = await requests.categories.getAllCategories(currentUser ? currentUser.id : '');
-    const subs = await requests.subcategories.getAllSubcategories(currentUser ? currentUser.id : '');
-    dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
-    dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
-    dispatch(subcategoriesState.setSubcategories(sort(subs, 'desc', 'name')));
-    setLoading(false);
+    if (currentUser) {
+      const accs = await requests.accounts.getAllAccounts(currentUser.id);
+      const cats = await requests.categories.getAllCategories(currentUser.id);
+      const subs = await requests.subcategories.getAllSubcategories(currentUser.id);
+      dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+      dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
+      dispatch(subcategoriesState.setSubcategories(sort(subs, 'desc', 'name')));
+      setLoading(false);
+    }
+  };
+
+  const loadTransactions = async () => {
+    if (currentUser) {
+      // const trans = await requests.transactions.getAllTransactions(currentUser.id);
+      // dispatch(transactionsState.setTransactions(sort(trans, 'desc', 'name')));;
+      setLoading(false);
+    }
   };
 
   const items = ['One', 'Two', 'Three'];
@@ -473,7 +491,8 @@ const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
-  subcategories: state.subcategoriesState.subcategories
+  subcategories: state.subcategoriesState.subcategories,
+  transactions: state.transactionsState.transactions
 });
 
 export const TransactionModal = compose(

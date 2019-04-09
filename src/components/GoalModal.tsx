@@ -14,8 +14,8 @@ const DisconnectedGoalModal: React.SFC<GoalModalProps> = props => {
   const [loading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
-  const [criteria, setCriteria] = React.useState<goalCriteria>(undefined);
-  const [comparator, setOperation] = React.useState<goalComparator>(undefined);
+  const [criteria, setCriteria] = React.useState<goalCriteria | ''>('');
+  const [comparator, setOperation] = React.useState<goalComparator | ''>('');
   const [item, setItem] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number | undefined>(undefined);
   const [startDate, setStartDate] = React.useState<string>('');

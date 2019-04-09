@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
-import { categoriesState } from '../store';
+import { categoriesState, subcategoriesState } from '../store';
 import { ApplicationState, Category, Subcategory, User } from '../types';
 import { getOptions, sort } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
@@ -49,13 +49,20 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     const {
       match: { params }
     } = props;
+    setLoading(true);
     if (categories.length === 0) {
-      loadData();
+      loadCategories();
     } else {
       setLoading(false);
     }
     // TODO: Load subcategory from id
     if (params.id) {
+      setLoading(true);
+      if (subcategories.length === 0) {
+        loadSubcategories();
+      } else {
+        setLoading(false);
+      }
       const [subcategory] = subcategories.filter(sub => sub.id === params.id);
       console.log(params.id, subcategory);
       if (subcategory) {
@@ -69,10 +76,20 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     }
   }, [props.match.params.id]);
 
-  const loadData = async () => {
-    const cats = await requests.categories.getAllCategories(currentUser ? currentUser.id : '');
-    dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
-    setLoading(false);
+  const loadSubcategories = async () => {
+    if (currentUser) {
+      const subs = await requests.subcategories.getAllSubcategories(currentUser.id);
+      dispatch(subcategoriesState.setSubcategories(sort(subs, 'desc', 'name')));
+      setLoading(false);
+    }
+  };
+
+  const loadCategories = async () => {
+    if (currentUser) {
+      const cats = await requests.categories.getAllCategories(currentUser.id);
+      dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
+      setLoading(false);
+    }
   };
 
   const resetFields = () => {

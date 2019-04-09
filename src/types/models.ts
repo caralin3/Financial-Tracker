@@ -56,11 +56,11 @@ export interface Budget {
   userId: string;
 }
 
-export type goalCriteria = 'account' | 'category' | 'item' | 'subcategory' | undefined;
+export type goalCriteria = 'account' | 'category' | 'item' | 'subcategory';
 
 export type goalFreq = 'monthly' | 'quarterly' | 'yearly' | 'custom' | undefined;
 
-export type goalComparator = '<' | '>' | '===' | '<=' | '>=' | undefined;
+export type goalComparator = '<' | '>' | '===' | '<=' | '>=';
 
 export interface Goal {
   amount: number;

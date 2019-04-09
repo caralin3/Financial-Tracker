@@ -449,13 +449,13 @@ const Table: React.SFC<TableProps> = props => {
                 })
             ) : (
               <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
-                <TableCell colSpan={3} />
+                <TableCell colSpan={2} />
                 <TableCell>No records</TableCell>
               </TableRow>
             )}
             {displayData.length > 0 && emptyRows > 0 && (
               <TableRow style={{ height: 49 * emptyRows }}>
-                <TableCell colSpan={6} />
+                <TableCell colSpan={displayColumns.length} />
               </TableRow>
             )}
           </TableBody>
