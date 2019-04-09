@@ -1,5 +1,17 @@
 import * as moment from 'moment';
-import { Account, accountType, budgetFreq, Category, goalComparator, goalCriteria, goalFreq, Option, Subcategory, Transaction, transactionType } from '../types';
+import {
+  Account,
+  accountType,
+  budgetFreq,
+  Category,
+  goalComparator,
+  goalCriteria,
+  goalFreq,
+  Option,
+  Subcategory,
+  Transaction,
+  transactionType
+} from '../types';
 
 export const removeDups = (arr: any[]) => arr.filter((item, index, self) => self.indexOf(item) === index);
 
@@ -62,11 +74,18 @@ export const transferColumns = [
 export const getObjectByType = (arr: any[], type: accountType | transactionType) =>
   arr.filter(obj => obj.type === type);
 
-export const getExpensesByDates = (frequency: budgetFreq | goalFreq, expenses: Transaction[], startDate?: string, endDate?: string) => {
-  switch(frequency) {
+export const getExpensesByDates = (
+  frequency: budgetFreq | goalFreq,
+  expenses: Transaction[],
+  startDate?: string,
+  endDate?: string
+) => {
+  switch (frequency) {
     case 'custom':
       if (startDate && endDate) {
-        return expenses.filter(trans => moment(new Date(trans.date)).isBetween(new Date(startDate), new Date(endDate), 'day'))
+        return expenses.filter(trans =>
+          moment(new Date(trans.date)).isBetween(new Date(startDate), new Date(endDate), 'day')
+        );
       }
       return [];
     case 'monthly':
@@ -81,10 +100,10 @@ export const getExpensesByDates = (frequency: budgetFreq | goalFreq, expenses: T
     default:
       return [];
   }
-}
+};
 
 export const getExpensesByCriteria = (criteria: goalCriteria, item: string, expenses: Transaction[]) => {
-  switch(criteria) {
+  switch (criteria) {
     case 'account':
       return expenses.filter(trans => trans.from && trans.from.name === item);
     case 'category':
@@ -96,19 +115,19 @@ export const getExpensesByCriteria = (criteria: goalCriteria, item: string, expe
     default:
       return [];
   }
-}
+};
 
 export const comparators = {
   '<': (a: any, b: any) => a < b,
   '<=': (a: any, b: any) => a <= b,
   '===': (a: any, b: any) => a === b,
   '>': (a: any, b: any) => a > b,
-  '>=': (a: any, b: any) => a >= b,
-}
+  '>=': (a: any, b: any) => a >= b
+};
 
 export const getExpensesByAmount = (amount: number, comp: goalComparator, expenses: Transaction[]) => {
   if (comp) {
     return expenses.filter(trans => comparators[comp](trans.amount, amount));
   }
   return [];
-}
+};

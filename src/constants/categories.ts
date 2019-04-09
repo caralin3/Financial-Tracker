@@ -27,12 +27,12 @@ export const getInitialCategories = (userId: string) => {
     createCategoryObject('Travel', userId),
     createCategoryObject('Utilities', userId)
   ];
-}
+};
 
 const getCategoryByName = (categories: Category[], name: string, userId: string) => {
   const [parent] = categories.filter(cat => cat.userId === userId && cat.name === name);
   return parent;
-}
+};
 
 export const getInitialSubcategories = (categories: Category[], userId: string) => {
   return [
@@ -42,8 +42,16 @@ export const getInitialSubcategories = (categories: Category[], userId: string) 
     createSubcategoryObject('Car Repairs', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
     createSubcategoryObject('Gas', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
     createSubcategoryObject('Parking Fees', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
-    createSubcategoryObject('Registration/DMV Fees', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
-    createSubcategoryObject('Transportation Fees', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
+    createSubcategoryObject(
+      'Registration/DMV Fees',
+      getCategoryByName(categories, 'Auto & Transportation', userId),
+      userId
+    ),
+    createSubcategoryObject(
+      'Transportation Fees',
+      getCategoryByName(categories, 'Auto & Transportation', userId),
+      userId
+    ),
 
     createSubcategoryObject('Credit Card', getCategoryByName(categories, 'Debt', userId), userId),
     createSubcategoryObject('Personal Loan', getCategoryByName(categories, 'Debt', userId), userId),
@@ -80,15 +88,15 @@ export const getInitialSubcategories = (categories: Category[], userId: string) 
     createSubcategoryObject('Rent', getCategoryByName(categories, 'Housing', userId), userId),
 
     createSubcategoryObject('Health Insurance', getCategoryByName(categories, 'Insurance', userId), userId),
-    createSubcategoryObject('Homeowner\'s Insurance', getCategoryByName(categories, 'Insurance', userId), userId),
+    createSubcategoryObject("Homeowner's Insurance", getCategoryByName(categories, 'Insurance', userId), userId),
     createSubcategoryObject('Life Insurance', getCategoryByName(categories, 'Insurance', userId), userId),
-    
+
     createSubcategoryObject('Dental Care', getCategoryByName(categories, 'Medical', userId), userId),
     createSubcategoryObject('Medications', getCategoryByName(categories, 'Medical', userId), userId),
     createSubcategoryObject('Primary Care', getCategoryByName(categories, 'Medical', userId), userId),
     createSubcategoryObject('Specialty Care', getCategoryByName(categories, 'Medical', userId), userId),
     createSubcategoryObject('Urgent Care', getCategoryByName(categories, 'Medical', userId), userId),
-    
+
     createSubcategoryObject('Cosmetics', getCategoryByName(categories, 'Personal', userId), userId),
     createSubcategoryObject('Gym Membership', getCategoryByName(categories, 'Personal', userId), userId),
     createSubcategoryObject('Hair Salon', getCategoryByName(categories, 'Personal', userId), userId),
@@ -120,6 +128,6 @@ export const getInitialSubcategories = (categories: Category[], userId: string) 
     createSubcategoryObject('Cell Phone', getCategoryByName(categories, 'Utilities', userId), userId),
     createSubcategoryObject('Electricity', getCategoryByName(categories, 'Utilities', userId), userId),
     createSubcategoryObject('Heating/Oil/Water', getCategoryByName(categories, 'Utilities', userId), userId),
-    createSubcategoryObject('Internet', getCategoryByName(categories, 'Utilities', userId), userId),
+    createSubcategoryObject('Internet', getCategoryByName(categories, 'Utilities', userId), userId)
   ];
-}
+};

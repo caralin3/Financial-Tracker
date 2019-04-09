@@ -10,14 +10,20 @@ interface ProgressBarProps {
   textColor?: TypographyProps['color'];
 }
 
-export const ProgressBar: React.SFC<ProgressBarProps> = ({ endLabel, leftLabel, percent, rightLabel, subLabel, textColor }) => (
+export const ProgressBar: React.SFC<ProgressBarProps> = ({
+  endLabel,
+  leftLabel,
+  percent,
+  rightLabel,
+  subLabel,
+  textColor
+}) => (
   <div className="progressBar">
     <div className={endLabel ? 'progressBar_paddedRow' : 'progressBar_row'}>
       {leftLabel && (
         <Typography className="progressBar_label" color={textColor}>
           {leftLabel} {subLabel && <span className="progressBar_sublabel">({subLabel})</span>}
         </Typography>
-        
       )}
       {rightLabel && (
         <Typography className="progressBar_label" color={textColor}>

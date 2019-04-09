@@ -1,142 +1,138 @@
 import { Dispatch } from 'redux';
-// import { sessionState } from '../../store';
-// import { Category } from '../../types';
-import { categoriesCollection, subcategoriesCollection } from '.';
+import { subcategoriesState } from '../../store';
+import { Category, Subcategory } from '../../types';
+import { subcategoriesCollection } from './';
+import { getAllCategories } from './categories';
 
-// const createSubcategoryObject = (name: string, category: Category, userId: string) => {
-//   return { name, category, userId };
-// };
+const createSubcategoryObject = (name: string, category: Category, userId: string) => {
+  return { name, category, userId };
+};
 
-// const getCategoryByName = (categories: Category[], name: string, userId: string) => {
-//   const [parent] = categories.filter(cat => cat.userId === userId && cat.name === name);
-//   return parent;
-// }
+const getCategoryByName = (categories: Category[], name: string) => {
+  const [parent] = categories.filter(cat => cat.name === name);
+  return parent;
+};
 
 export const createInitialSubcategories = async (userId: string, dispatch: Dispatch<any>) => {
-  // TODO: Get all categories
-  const categories = await categoriesCollection.get();
-  console.log(categories);
+  const categories = await getAllCategories(userId);
 
   const subcategories: any = [
-    // createSubcategoryObject('Auto Insurance', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
-    // createSubcategoryObject('Car Maintenance', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
-    // createSubcategoryObject('Car Payment', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
-    // createSubcategoryObject('Car Repairs', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
-    // createSubcategoryObject('Gas', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
-    // createSubcategoryObject('Parking Fees', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
-    // createSubcategoryObject('Registration/DMV Fees', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
-    // createSubcategoryObject('Transportation Fees', getCategoryByName(categories, 'Auto & Transportation', userId), userId),
+    createSubcategoryObject('Auto Insurance', getCategoryByName(categories, 'Auto & Transportation'), userId),
+    createSubcategoryObject('Car Maintenance', getCategoryByName(categories, 'Auto & Transportation'), userId),
+    createSubcategoryObject('Car Payment', getCategoryByName(categories, 'Auto & Transportation'), userId),
+    createSubcategoryObject('Car Repairs', getCategoryByName(categories, 'Auto & Transportation'), userId),
+    createSubcategoryObject('Gas', getCategoryByName(categories, 'Auto & Transportation'), userId),
+    createSubcategoryObject('Parking Fees', getCategoryByName(categories, 'Auto & Transportation'), userId),
+    createSubcategoryObject('Registration/DMV Fees', getCategoryByName(categories, 'Auto & Transportation'), userId),
+    createSubcategoryObject('Transportation Fees', getCategoryByName(categories, 'Auto & Transportation'), userId),
 
-    // createSubcategoryObject('Credit Card', getCategoryByName(categories, 'Debt', userId), userId),
-    // createSubcategoryObject('Personal Loan', getCategoryByName(categories, 'Debt', userId), userId),
-    // createSubcategoryObject('Student Loans', getCategoryByName(categories, 'Debt', userId), userId),
+    createSubcategoryObject('Credit Card', getCategoryByName(categories, 'Debt'), userId),
+    createSubcategoryObject('Personal Loan', getCategoryByName(categories, 'Debt'), userId),
+    createSubcategoryObject('Student Loans', getCategoryByName(categories, 'Debt'), userId),
 
-    // createSubcategoryObject('College Housing', getCategoryByName(categories, 'Education', userId), userId),
-    // createSubcategoryObject('College Tuition', getCategoryByName(categories, 'Education', userId), userId),
-    // createSubcategoryObject('School Supplies', getCategoryByName(categories, 'Education', userId), userId),
-    // createSubcategoryObject('Textbooks', getCategoryByName(categories, 'Education', userId), userId),
+    createSubcategoryObject('College Housing', getCategoryByName(categories, 'Education'), userId),
+    createSubcategoryObject('College Tuition', getCategoryByName(categories, 'Education'), userId),
+    createSubcategoryObject('School Supplies', getCategoryByName(categories, 'Education'), userId),
+    createSubcategoryObject('Textbooks', getCategoryByName(categories, 'Education'), userId),
 
-    // createSubcategoryObject('Games', getCategoryByName(categories, 'Entertainment', userId), userId),
-    // createSubcategoryObject('Movies', getCategoryByName(categories, 'Entertainment', userId), userId),
-    // createSubcategoryObject('Subscriptions', getCategoryByName(categories, 'Entertainment', userId), userId),
-    // createSubcategoryObject('Tickets/Museum', getCategoryByName(categories, 'Entertainment', userId), userId),
+    createSubcategoryObject('Games', getCategoryByName(categories, 'Entertainment'), userId),
+    createSubcategoryObject('Movies', getCategoryByName(categories, 'Entertainment'), userId),
+    createSubcategoryObject('Subscriptions', getCategoryByName(categories, 'Entertainment'), userId),
+    createSubcategoryObject('Tickets/Museum', getCategoryByName(categories, 'Entertainment'), userId),
 
-    // createSubcategoryObject('Alcohol', getCategoryByName(categories, 'Food', userId), userId),
-    // createSubcategoryObject('Groceries', getCategoryByName(categories, 'Food', userId), userId),
-    // createSubcategoryObject('Fast Food/Take Out', getCategoryByName(categories, 'Food', userId), userId),
-    // createSubcategoryObject('Restaurants', getCategoryByName(categories, 'Food', userId), userId),
+    createSubcategoryObject('Alcohol', getCategoryByName(categories, 'Food'), userId),
+    createSubcategoryObject('Groceries', getCategoryByName(categories, 'Food'), userId),
+    createSubcategoryObject('Fast Food/Take Out', getCategoryByName(categories, 'Food'), userId),
+    createSubcategoryObject('Restaurants', getCategoryByName(categories, 'Food'), userId),
 
-    // createSubcategoryObject('Birthday', getCategoryByName(categories, 'Gifts & Donations', userId), userId),
-    // createSubcategoryObject('Charity', getCategoryByName(categories, 'Gifts & Donations', userId), userId),
-    // createSubcategoryObject('Christmas', getCategoryByName(categories, 'Gifts & Donations', userId), userId),
-    // createSubcategoryObject('Other Occasion', getCategoryByName(categories, 'Gifts & Donations', userId), userId),
+    createSubcategoryObject('Birthday', getCategoryByName(categories, 'Gifts & Donations'), userId),
+    createSubcategoryObject('Charity', getCategoryByName(categories, 'Gifts & Donations'), userId),
+    createSubcategoryObject('Christmas', getCategoryByName(categories, 'Gifts & Donations'), userId),
+    createSubcategoryObject('Other Occasion', getCategoryByName(categories, 'Gifts & Donations'), userId),
 
-    // createSubcategoryObject('Appliances', getCategoryByName(categories, 'Household Supplies', userId), userId),
-    // createSubcategoryObject('Cleaning Supplies', getCategoryByName(categories, 'Household Supplies', userId), userId),
-    // createSubcategoryObject('Laundry', getCategoryByName(categories, 'Household Supplies', userId), userId),
-    // createSubcategoryObject('Toiletries', getCategoryByName(categories, 'Household Supplies', userId), userId),
-    // createSubcategoryObject('Tools', getCategoryByName(categories, 'Household Supplies', userId), userId),
+    createSubcategoryObject('Appliances', getCategoryByName(categories, 'Household Supplies'), userId),
+    createSubcategoryObject('Cleaning Supplies', getCategoryByName(categories, 'Household Supplies'), userId),
+    createSubcategoryObject('Laundry', getCategoryByName(categories, 'Household Supplies'), userId),
+    createSubcategoryObject('Toiletries', getCategoryByName(categories, 'Household Supplies'), userId),
+    createSubcategoryObject('Tools', getCategoryByName(categories, 'Household Supplies'), userId),
 
-    // createSubcategoryObject('Landscaping', getCategoryByName(categories, 'Housing', userId), userId),
-    // createSubcategoryObject('Mortgage', getCategoryByName(categories, 'Housing', userId), userId),
-    // createSubcategoryObject('Rent', getCategoryByName(categories, 'Housing', userId), userId),
+    createSubcategoryObject('Landscaping', getCategoryByName(categories, 'Housing'), userId),
+    createSubcategoryObject('Mortgage', getCategoryByName(categories, 'Housing'), userId),
+    createSubcategoryObject('Rent', getCategoryByName(categories, 'Housing'), userId),
 
-    // createSubcategoryObject('Health Insurance', getCategoryByName(categories, 'Insurance', userId), userId),
-    // createSubcategoryObject('Homeowner\'s Insurance', getCategoryByName(categories, 'Insurance', userId), userId),
-    // createSubcategoryObject('Life Insurance', getCategoryByName(categories, 'Insurance', userId), userId),
-    
-    // createSubcategoryObject('Dental Care', getCategoryByName(categories, 'Medical', userId), userId),
-    // createSubcategoryObject('Medications', getCategoryByName(categories, 'Medical', userId), userId),
-    // createSubcategoryObject('Primary Care', getCategoryByName(categories, 'Medical', userId), userId),
-    // createSubcategoryObject('Specialty Care', getCategoryByName(categories, 'Medical', userId), userId),
-    // createSubcategoryObject('Urgent Care', getCategoryByName(categories, 'Medical', userId), userId),
-    
-    // createSubcategoryObject('Cosmetics', getCategoryByName(categories, 'Personal', userId), userId),
-    // createSubcategoryObject('Gym Membership', getCategoryByName(categories, 'Personal', userId), userId),
-    // createSubcategoryObject('Hair Salon', getCategoryByName(categories, 'Personal', userId), userId),
-    // createSubcategoryObject('Hygiene', getCategoryByName(categories, 'Personal', userId), userId),
-    // createSubcategoryObject('Subscriptions', getCategoryByName(categories, 'Personal', userId), userId),
+    createSubcategoryObject('Health Insurance', getCategoryByName(categories, 'Insurance'), userId),
+    createSubcategoryObject("Homeowner's Insurance", getCategoryByName(categories, 'Insurance'), userId),
+    createSubcategoryObject('Life Insurance', getCategoryByName(categories, 'Insurance'), userId),
 
-    // createSubcategoryObject('401K', getCategoryByName(categories, 'Retirement', userId), userId),
-    // createSubcategoryObject('Financial Planning', getCategoryByName(categories, 'Retirement', userId), userId),
-    // createSubcategoryObject('IRA', getCategoryByName(categories, 'Retirement', userId), userId),
-    // createSubcategoryObject('Roth IRA', getCategoryByName(categories, 'Retirement', userId), userId),
-    // createSubcategoryObject('Investing', getCategoryByName(categories, 'Retirement', userId), userId),
+    createSubcategoryObject('Dental Care', getCategoryByName(categories, 'Medical'), userId),
+    createSubcategoryObject('Medications', getCategoryByName(categories, 'Medical'), userId),
+    createSubcategoryObject('Primary Care', getCategoryByName(categories, 'Medical'), userId),
+    createSubcategoryObject('Specialty Care', getCategoryByName(categories, 'Medical'), userId),
+    createSubcategoryObject('Urgent Care', getCategoryByName(categories, 'Medical'), userId),
 
-    // createSubcategoryObject('Emergency Fund', getCategoryByName(categories, 'Savings', userId), userId),
-    // createSubcategoryObject('Investments', getCategoryByName(categories, 'Savings', userId), userId),
+    createSubcategoryObject('Cosmetics', getCategoryByName(categories, 'Personal'), userId),
+    createSubcategoryObject('Gym Membership', getCategoryByName(categories, 'Personal'), userId),
+    createSubcategoryObject('Hair Salon', getCategoryByName(categories, 'Personal'), userId),
+    createSubcategoryObject('Hygiene', getCategoryByName(categories, 'Personal'), userId),
+    createSubcategoryObject('Subscriptions', getCategoryByName(categories, 'Personal'), userId),
 
-    // createSubcategoryObject('Accessories', getCategoryByName(categories, 'Shopping', userId), userId),
-    // createSubcategoryObject('Clothing', getCategoryByName(categories, 'Shopping', userId), userId),
-    // createSubcategoryObject('Electronics', getCategoryByName(categories, 'Shopping', userId), userId),
-    // createSubcategoryObject('Hobbies', getCategoryByName(categories, 'Shopping', userId), userId),
-    // createSubcategoryObject('Merchandise', getCategoryByName(categories, 'Shopping', userId), userId),
-    // createSubcategoryObject('Sporting Goods', getCategoryByName(categories, 'Shopping', userId), userId),
+    createSubcategoryObject('401K', getCategoryByName(categories, 'Retirement'), userId),
+    createSubcategoryObject('Financial Planning', getCategoryByName(categories, 'Retirement'), userId),
+    createSubcategoryObject('IRA', getCategoryByName(categories, 'Retirement'), userId),
+    createSubcategoryObject('Roth IRA', getCategoryByName(categories, 'Retirement'), userId),
+    createSubcategoryObject('Investing', getCategoryByName(categories, 'Retirement'), userId),
 
-    // createSubcategoryObject('Air Travel', getCategoryByName(categories, 'Travel', userId), userId),
-    // createSubcategoryObject('Hotel', getCategoryByName(categories, 'Travel', userId), userId),
-    // createSubcategoryObject('Rental Car/Taxi/Uber', getCategoryByName(categories, 'Travel', userId), userId),
-    // createSubcategoryObject('Vacation', getCategoryByName(categories, 'Travel', userId), userId),
+    createSubcategoryObject('Emergency Fund', getCategoryByName(categories, 'Savings'), userId),
+    createSubcategoryObject('Investments', getCategoryByName(categories, 'Savings'), userId),
 
-    // createSubcategoryObject('Cable', getCategoryByName(categories, 'Utilities', userId), userId),
-    // createSubcategoryObject('Cell Phone', getCategoryByName(categories, 'Utilities', userId), userId),
-    // createSubcategoryObject('Electricity', getCategoryByName(categories, 'Utilities', userId), userId),
-    // createSubcategoryObject('Heating/Oil/Water', getCategoryByName(categories, 'Utilities', userId), userId),
-    // createSubcategoryObject('Internet', getCategoryByName(categories, 'Utilities', userId), userId),
+    createSubcategoryObject('Accessories', getCategoryByName(categories, 'Shopping'), userId),
+    createSubcategoryObject('Clothing', getCategoryByName(categories, 'Shopping'), userId),
+    createSubcategoryObject('Electronics', getCategoryByName(categories, 'Shopping'), userId),
+    createSubcategoryObject('Hobbies', getCategoryByName(categories, 'Shopping'), userId),
+    createSubcategoryObject('Merchandise', getCategoryByName(categories, 'Shopping'), userId),
+    createSubcategoryObject('Sporting Goods', getCategoryByName(categories, 'Shopping'), userId),
+
+    createSubcategoryObject('Air Travel', getCategoryByName(categories, 'Travel'), userId),
+    createSubcategoryObject('Hotel', getCategoryByName(categories, 'Travel'), userId),
+    createSubcategoryObject('Rental Car/Taxi/Uber', getCategoryByName(categories, 'Travel'), userId),
+    createSubcategoryObject('Vacation', getCategoryByName(categories, 'Travel'), userId),
+
+    createSubcategoryObject('Cable', getCategoryByName(categories, 'Utilities'), userId),
+    createSubcategoryObject('Cell Phone', getCategoryByName(categories, 'Utilities'), userId),
+    createSubcategoryObject('Electricity', getCategoryByName(categories, 'Utilities'), userId),
+    createSubcategoryObject('Heating/Oil/Water', getCategoryByName(categories, 'Utilities'), userId),
+    createSubcategoryObject('Internet', getCategoryByName(categories, 'Utilities'), userId)
   ];
 
   subcategories.forEach((sub: any) => createSubcategory(sub, dispatch));
-}
+};
 
 // CREATE SUBCATEGORY
-// Set category in store
+// Set subcategory in store
 export const createSubcategory = (subcategory: any, dispatch: Dispatch<any>) => {
   subcategoriesCollection
     .add(subcategory)
-    .then((doc) => {
+    .then(doc => {
       console.log('Subcategory written with ID: ', doc.id);
-      // dispatch(sessionState.setSubcategory(subcategory));
+      dispatch(subcategoriesState.addSubcategory({ id: doc.id, ...subcategory }));
     })
-    .catch((error) => {
+    .catch(error => {
       console.error('Error adding subcategory: ', error);
     });
 };
 
+export const getAllSubcategories = (userId: string) =>
+  subcategoriesCollection.get().then(querySnapshot => {
+    const subcategories: Subcategory[] = [];
+    querySnapshot.forEach(doc => {
+      if (doc.data().userId === userId) {
+        subcategories.push({
+          id: doc.id,
+          ...doc.data()
+        } as Subcategory);
+      }
+    });
+    return subcategories;
+  });
+
 // SET SUBCATEGORY
-// Getcategory from db and set in store
-// export const getCurrentUser = (id: string, dispatch: Dispatch<any>) => {
-//   subcategoriesCollection
-//     .doc(id)
-//     .get()
-//     .then((user: any) => {
-//       if (user.data()) {
-//         const currentUser: User = {
-//           email: user.data().email,
-//           firstName: user.data().firstName,
-//           id: user.id,
-//           lastName: user.data().lastName
-//         };
-//         dispatch(sessionState.setCurrentUser(currentUser));
-//       }
-//     });
-// };

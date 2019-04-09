@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
-// import { sessionState } from '../../store';
-import { categoriesCollection } from '.';
+import { categoriesState } from '../../store';
+import { Category } from '../../types';
+import { categoriesCollection } from './';
 
 const createCategoryObject = (name: string, userId: string) => {
   return { name, userId };
@@ -26,21 +27,35 @@ export const createInitialCategories = (userId: string, dispatch: Dispatch<any>)
     createCategoryObject('Utilities', userId)
   ];
   categories.forEach(cat => createCategory(cat, dispatch));
-}
+};
 
 // CREATE CATEGORY
 // Set category in store
 export const createCategory = (category: any, dispatch: Dispatch<any>) => {
   categoriesCollection
     .add(category)
-    .then((doc) => {
+    .then(doc => {
       console.log('Category written with ID: ', doc.id);
-      // dispatch(sessionState.setCategory(category));
+      dispatch(categoriesState.addCategory({ id: doc.id, ...category }));
     })
-    .catch((error) => {
+    .catch(error => {
       console.error('Error adding category: ', error);
     });
 };
+
+export const getAllCategories = (userId: string) =>
+  categoriesCollection.get().then(querySnapshot => {
+    const categories: Category[] = [];
+    querySnapshot.forEach(doc => {
+      if (doc.data().userId === userId) {
+        categories.push({
+          id: doc.id,
+          ...doc.data()
+        } as Category);
+      }
+    });
+    return categories;
+  });
 
 // SET CATEGORY
 // Getcategory from db and set in store

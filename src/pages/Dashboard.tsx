@@ -30,7 +30,16 @@ import {
 import { accounts, budgets, goals, transactions } from '../mock';
 import { ApplicationState } from '../store/createStore';
 import { budgetFreq, Goal, Transaction, User } from '../types';
-import { accountTypeOptions, calcPercent, formatMoney, getArrayTotal, getExpensesByAmount, getExpensesByCriteria, getExpensesByDates, getObjectByType } from '../util';
+import {
+  accountTypeOptions,
+  calcPercent,
+  formatMoney,
+  getArrayTotal,
+  getExpensesByAmount,
+  getExpensesByCriteria,
+  getExpensesByDates,
+  getObjectByType
+} from '../util';
 
 export interface DashboardPageProps {
   classes: any;
@@ -217,7 +226,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         })}
       </List>
     );
-  }
+  };
 
   const dashboardSections = [
     { title: 'Recent Transactions', action: () => setAddingTrans(true), content: recentTransactions },

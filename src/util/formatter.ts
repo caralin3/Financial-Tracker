@@ -7,7 +7,7 @@ export const formatMoney = (val: number, noZeros?: boolean) => {
     return `${num.slice(0, 1)}$${num.slice(1)}`;
   }
   if (noZeros && num.slice(-2) === '00') {
-    return `$${num.slice(0, -3)}`
+    return `$${num.slice(0, -3)}`;
   }
   return `$${num}`;
 };
