@@ -1,16 +1,29 @@
 import { Grid, TextField } from '@material-ui/core';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { accounts } from '../mock';
-import { accountType } from '../types';
-import { accountTypeOptions } from '../util';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
+import { requests } from '../firebase/db';
+import { accountsState } from '../store';
+import { Account, accountType, ApplicationState, User } from '../types';
+import { accountTypeOptions, sort } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
   id: string;
 }
 
-interface AccountModalProps extends RouteComponentProps<RouteParams> {
+interface DispatchMappedProps {
+  dispatch: Dispatch<any>;
+}
+
+interface StateMappedProps {
+  accounts: Account[];
+  currentUser: User | null;
+}
+
+interface AccountModalProps {
   buttonText: string;
   onClose: () => void;
   onSuccess?: () => void;
@@ -18,8 +31,15 @@ interface AccountModalProps extends RouteComponentProps<RouteParams> {
   title: string;
 }
 
-const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
-  const [loading] = React.useState<boolean>(false);
+interface AccountModalMergedProps
+  extends RouteComponentProps<RouteParams>,
+    StateMappedProps,
+    DispatchMappedProps,
+    AccountModalProps {}
+
+const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
+  const { accounts, currentUser, dispatch } = props;
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
   const [balance, setBalance] = React.useState<number | undefined | ''>(undefined);
@@ -31,12 +51,17 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
     } = props;
     // TODO: Load account from id
     if (params.id) {
+      setLoading(true);
+      if (accounts.length === 0) {
+        loadData();
+      }
       const [account] = accounts.filter(acc => acc.id === params.id);
       console.log(params.id, account);
       if (account) {
         setName(account.name);
         setBalance(account.amount);
         setType(account.type);
+        setLoading(false);
       }
     } else {
       if (name && balance && type) {
@@ -44,6 +69,12 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
       }
     }
   }, [props.match.params.id]);
+
+  const loadData = async () => {
+    // FIXME: Change to if current user
+    const accs = await requests.accounts.getAllAccounts(currentUser ? currentUser.id : '');
+    dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+  };
 
   const resetFields = () => {
     setName('');
@@ -138,4 +169,17 @@ const DisconnectedAccountModal: React.SFC<AccountModalProps> = props => {
   );
 };
 
-export const AccountModal = withRouter(DisconnectedAccountModal);
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+
+const mapStateToProps = (state: ApplicationState) => ({
+  accounts: state.accountsState.accounts,
+  currentUser: state.sessionState.currentUser
+});
+
+export const AccountModal = compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(DisconnectedAccountModal) as any;

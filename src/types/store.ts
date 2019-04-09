@@ -1,10 +1,20 @@
 import { RouterState } from 'connected-react-router';
-import { accountsState, categoriesState, sessionState, subcategoriesState, transactionsState } from '../store';
+import {
+  accountsState,
+  budgetsState,
+  categoriesState,
+  goalsState,
+  sessionState,
+  subcategoriesState,
+  transactionsState
+} from '../store';
 
 export interface ApplicationState {
   router: RouterState;
   accountsState: accountsState.AccountsState;
+  budgetsState: budgetsState.BudgetsState;
   categoriesState: categoriesState.CategoriesState;
+  goalsState: goalsState.GoalsState;
   sessionState: sessionState.SessionState;
   subcategoriesState: subcategoriesState.SubcategoriesState;
   transactionsState: transactionsState.TransactionsState;

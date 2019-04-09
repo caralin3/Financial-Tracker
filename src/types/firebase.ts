@@ -1,5 +1,14 @@
-
-import { accountType, budgetFreq, Category, goalComparator, goalCriteria, goalFreq, Subcategory, Transaction, transactionType } from './';
+import {
+  accountType,
+  budgetFreq,
+  Category,
+  goalComparator,
+  goalCriteria,
+  goalFreq,
+  Subcategory,
+  Transaction,
+  transactionType
+} from './';
 
 export interface FBAccount {
   amount: number;

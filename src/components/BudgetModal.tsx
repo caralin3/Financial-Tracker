@@ -1,9 +1,30 @@
 import { FormControlLabel, Grid, Radio, TextField, Typography } from '@material-ui/core';
 import * as React from 'react';
-import { categories } from '../mock';
-import { budgetFreq } from '../types';
-import { getOptions } from '../util';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
+import { requests } from '../firebase/db';
+import { budgets } from '../mock';
+import { categoriesState } from '../store';
+// import { budgetsState, categoriesState } from '../store';
+import { ApplicationState, Budget, budgetFreq, Category, User } from '../types';
+import { getOptions, sort } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
+
+interface RouteParams {
+  id: string;
+}
+
+interface DispatchMappedProps {
+  dispatch: Dispatch<any>;
+}
+
+interface StateMappedProps {
+  budgets: Budget[];
+  categories: Category[];
+  currentUser: User | null;
+}
 
 interface BudgetModalProps {
   buttonText: string;
@@ -12,13 +33,78 @@ interface BudgetModalProps {
   title: string;
 }
 
-const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
-  const [loading] = React.useState<boolean>(false);
+interface BudgetModalMergedProps
+  extends RouteComponentProps<RouteParams>,
+    StateMappedProps,
+    DispatchMappedProps,
+    BudgetModalProps {}
+
+const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
+  const { categories, currentUser, dispatch } = props;
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
-  const [category, setCategory] = React.useState<string>('');
-  const [amount, setAmount] = React.useState<number | undefined>(undefined);
+  const [categoryId, setCategoryId] = React.useState<string>('');
+  const [amount, setAmount] = React.useState<number | undefined | ''>(undefined);
   const [frequency, setFrequency] = React.useState<budgetFreq>(undefined);
+
+  React.useEffect(() => {
+    const {
+      match: { params }
+    } = props;
+    if (categories.length === 0) {
+      setLoading(true);
+      loadCategories();
+    } else {
+      setLoading(false);
+    }
+    // TODO: Load budget from id
+    if (params.id) {
+      setLoading(true);
+      if (budgets.length === 0) {
+        loadBudgets();
+      }
+      const [budget] = budgets.filter(buds => buds.id === params.id);
+      console.log(params.id, budget);
+      if (budget) {
+        if (budget.category) {
+          setCategoryId(budget.category.id);
+        }
+        if (budget.frequency) {
+          setFrequency(budget.frequency);
+        }
+        setAmount(budget.amount);
+      }
+    } else {
+      if (amount || categoryId || frequency) {
+        resetFields();
+      }
+    }
+  }, [props.match.params.id]);
+
+  const loadBudgets = async () => {
+    if (currentUser) {
+      // const buds = await requests.budgets.getAllBudgets(currentUser.id);
+      // dispatch(budgetsState.setBudgets(sort(buds, 'desc', 'name')));
+      setLoading(false);
+    }
+  };
+
+  const loadCategories = async () => {
+    if (currentUser) {
+      const cats = await requests.categories.getAllCategories(currentUser.id);
+      dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
+      setLoading(false);
+    }
+  };
+
+  const resetFields = () => {
+    setCategoryId('');
+    setFrequency(undefined);
+    if (amount) {
+      setAmount('');
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,8 +139,8 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
             <SelectInput
               label="Category"
               autoFocus={true}
-              selected={category}
-              handleChange={e => setCategory(e.target.value)}
+              selected={categoryId}
+              handleChange={e => setCategoryId(e.target.value)}
               options={getOptions(categories)}
             />
           </Grid>
@@ -129,4 +215,18 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalProps> = props => {
   );
 };
 
-export const BudgetModal = DisconnectedBudgetModal;
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+
+const mapStateToProps = (state: ApplicationState) => ({
+  budgets: state.budgetsState.budgets,
+  categories: state.categoriesState.categories,
+  currentUser: state.sessionState.currentUser
+});
+
+export const BudgetModal = compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(DisconnectedBudgetModal) as any;

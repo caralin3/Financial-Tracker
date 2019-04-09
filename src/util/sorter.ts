@@ -19,7 +19,7 @@ export const sort = (arr: any[], dir: 'asc' | 'desc', field: string) => {
     }
     return 0;
   });
-}
+};
 
 export const sortValues = (arr: any[], dir: 'asc' | 'desc') => {
   if (dir === 'desc') {
@@ -42,4 +42,4 @@ export const sortValues = (arr: any[], dir: 'asc' | 'desc') => {
     }
     return 0;
   });
-}
+};

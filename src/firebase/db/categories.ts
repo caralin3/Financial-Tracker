@@ -30,12 +30,12 @@ export const createInitialCategories = (userId: string, dispatch: Dispatch<any>)
 };
 
 // CREATE CATEGORY
-// Set category in store
 export const createCategory = (category: FBCategory, dispatch: Dispatch<any>) => {
   categoriesCollection
-    .add(category)
-    .then(doc => {
+  .add(category)
+  .then(doc => {
       console.log('Category written with ID: ', doc.id);
+      // Set category in store
       dispatch(categoriesState.addCategory({ id: doc.id, ...category }));
     })
     .catch(error => {
@@ -58,21 +58,8 @@ export const getAllCategories = (userId: string) =>
     return categories;
   });
 
-// SET CATEGORY
-// Get category from db and set in store
-// export const getCurrentUser = (id: string, dispatch: Dispatch<any>) => {
-//   categoriesCollection
-//     .doc(id)
-//     .get()
-//     .then((user: any) => {
-//       if (user.data()) {
-//         const currentUser: User = {
-//           email: user.data().email,
-//           firstName: user.data().firstName,
-//           id: user.id,
-//           lastName: user.data().lastName
-//         };
-//         dispatch(sessionState.setCurrentUser(currentUser));
-//       }
-//     });
-// };
+// TODO: READ CATEGORY
+
+// TODO: EDIT CATEGORY
+
+// TODO: DELETE CATEGORY

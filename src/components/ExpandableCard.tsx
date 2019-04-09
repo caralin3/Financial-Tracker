@@ -18,7 +18,7 @@ export const ExpandableCard: React.SFC<ExpandableCardProps> = props => (
   <Card className={props.className} raised={true}>
     <CardHeader
       action={
-        <IconButton onClick={props.onToggle}>{props.expanded ? <ExpandMoreIcon /> : <ExpandLessIcon />}</IconButton>
+        <IconButton onClick={props.onToggle}>{props.expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}</IconButton>
       }
       title={props.title}
     />

@@ -108,12 +108,12 @@ export const createInitialSubcategories = async (userId: string, dispatch: Dispa
 };
 
 // CREATE SUBCATEGORY
-// Set subcategory in store
 export const createSubcategory = (subcategory: FBSubcategory, dispatch: Dispatch<any>) => {
   subcategoriesCollection
-    .add(subcategory)
-    .then(doc => {
+  .add(subcategory)
+  .then(doc => {
       console.log('Subcategory written with ID: ', doc.id);
+      // Set subcategory in store
       dispatch(subcategoriesState.addSubcategory({ id: doc.id, ...subcategory }));
     })
     .catch(error => {
@@ -136,4 +136,8 @@ export const getAllSubcategories = (userId: string) =>
     return subcategories;
   });
 
-// SET SUBCATEGORY
+// TODO: READ SUBCATEGORY
+
+// TODO: EDIT SUBCATEGORY
+
+// TODO: DELETE SUBCATEGORY

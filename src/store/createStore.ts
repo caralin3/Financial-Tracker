@@ -6,7 +6,15 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import thunk from 'redux-thunk';
 import { ApplicationState } from '../types';
-import { accountsState, categoriesState, sessionState, subcategoriesState, transactionsState } from './index';
+import {
+  accountsState,
+  budgetsState,
+  categoriesState,
+  goalsState,
+  sessionState,
+  subcategoriesState,
+  transactionsState
+} from './index';
 
 export default (history: History.History): Store<ApplicationState> => {
   const middleware =
@@ -19,7 +27,9 @@ export default (history: History.History): Store<ApplicationState> => {
 
   const rootReducer = combineReducers<ApplicationState>({
     accountsState: accountsState.reducer,
+    budgetsState: budgetsState.reducer,
     categoriesState: categoriesState.reducer,
+    goalsState: goalsState.reducer,
     router: connectRouter(history),
     sessionState: sessionState.reducer,
     subcategoriesState: subcategoriesState.reducer,
@@ -31,7 +41,6 @@ export default (history: History.History): Store<ApplicationState> => {
     storage
   };
 
-  // FIXME: Fix persitence
   const persistedReducer = persistReducer(persistConfig, rootReducer);
 
   return createStore(persistedReducer, middleware);

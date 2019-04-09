@@ -19,10 +19,11 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { AccountModal, Alert, AlertDialog, ExpandableCard, Layout, Loading } from '../components';
-import { accounts } from '../mock';
+import { requests } from '../firebase/db';
 import { routes } from '../routes';
-import { accountType, ApplicationState, User } from '../types';
-import { formatMoney } from '../util';
+import { accountsState } from '../store';
+import { Account, accountType, ApplicationState, User } from '../types';
+import { formatMoney, getArrayTotal, getObjectByType, sort } from '../util';
 
 interface AccountType {
   balance: number;
@@ -41,14 +42,16 @@ interface DispatchMappedProps {
 }
 
 interface StateMappedProps {
+  accounts: Account[];
   currentUser: User | null;
 }
 
 interface AccountsMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, AccountsPageProps {}
 
 const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
+  const { accounts, currentUser, dispatch } = props;
   const matchMd = useMediaQuery('(min-width:960px)');
-  const [loading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(accounts.length !== 0);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [openEdit, setOpenEdit] = React.useState<boolean>(false);
@@ -59,6 +62,20 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   const [cashExpanded, setCashExpanded] = React.useState<boolean>(false);
   const [bankExpanded, setBankExpanded] = React.useState<boolean>(true);
   const [creditExpanded, setCreditExpanded] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (accounts.length === 0) {
+      loadData();
+    } else {
+      setLoading(false);
+    }
+  }, [currentUser]);
+
+  const loadData = async () => {
+    const accs = await requests.accounts.getAllAccounts(currentUser ? currentUser.id : '');
+    dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+    setLoading(false);
+  };
 
   const handleDelete = (id: string) => {
     setOpenDialog(true);
@@ -82,16 +99,22 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   };
 
   const accountTypes: AccountType[] = [
-    { id: 'cash', label: 'Cash', balance: 50.98, expanded: cashExpanded, toggle: () => setCashExpanded(!cashExpanded) },
     {
-      balance: 20450.98,
+      balance: getArrayTotal(getObjectByType(accounts, 'cash')),
+      expanded: cashExpanded,
+      id: 'cash',
+      label: 'Cash',
+      toggle: () => setCashExpanded(!cashExpanded)
+    },
+    {
+      balance: getArrayTotal(getObjectByType(accounts, 'bank')),
       expanded: bankExpanded,
       id: 'bank',
       label: 'Bank Account',
       toggle: () => setBankExpanded(!bankExpanded)
     },
     {
-      balance: 2050.08,
+      balance: getArrayTotal(getObjectByType(accounts, 'credit')),
       expanded: creditExpanded,
       id: 'credit',
       label: 'Credit',
@@ -177,10 +200,10 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
                 <Grid item={true} xs={12} key={type.id}>
                   <ExpandableCard title={type.label} expanded={type.expanded} onToggle={type.toggle}>
                     <List>
-                      {/* TODO: Handle empty list */}
-                      {accounts
-                        .filter(acc => acc.type === type.id)
-                        .map(acc => (
+                      {getObjectByType(accounts, type.id).length === 0 ? (
+                        <ListItem>No {type.id} accounts</ListItem>
+                      ) : (
+                        getObjectByType(accounts, type.id).map(acc => (
                           <ListItem key={acc.id} className="account_item">
                             <AccountItem
                               label={acc.name}
@@ -190,7 +213,8 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
                               onDelete={() => handleDelete(acc.id)}
                             />
                           </ListItem>
-                        ))}
+                        ))
+                      )}
                     </List>
                   </ExpandableCard>
                 </Grid>
@@ -242,6 +266,7 @@ const authCondition = (authUser: any) => !!authUser;
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
 
 const mapStateToProps = (state: ApplicationState) => ({
+  accounts: state.accountsState.accounts,
   currentUser: state.sessionState.currentUser
 });
 

@@ -3,19 +3,35 @@ import classnames from 'classnames';
 import * as moment from 'moment';
 import * as querystring from 'querystring';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import SwipeableViews from 'react-swipeable-views';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
 import { theme } from '../appearance';
-import { accounts, categories, subcategories, transactions } from '../mock';
-import { transactionType } from '../types';
-import { getOptions } from '../util';
+import { requests } from '../firebase/db';
+import { transactions } from '../mock';
+import { accountsState, categoriesState, subcategoriesState } from '../store';
+import { Account, ApplicationState, Category, Subcategory, transactionType, User } from '../types';
+import { getOptions, sort } from '../util';
 import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
   id: string;
 }
 
-interface TransactionModalProps extends RouteComponentProps<RouteParams> {
+interface DispatchMappedProps {
+  dispatch: Dispatch<any>;
+}
+
+interface StateMappedProps {
+  accounts: Account[];
+  categories: Category[];
+  subcategories: Subcategory[];
+  currentUser: User | null;
+}
+
+interface TransactionModalProps {
   buttonText: string;
   onClose: () => void;
   onSuccess?: () => void;
@@ -23,8 +39,15 @@ interface TransactionModalProps extends RouteComponentProps<RouteParams> {
   title: string;
 }
 
-const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => {
-  const [loading] = React.useState<boolean>(false);
+interface TransactionModalMergedProps
+  extends RouteComponentProps<RouteParams>,
+    StateMappedProps,
+    DispatchMappedProps,
+    TransactionModalProps {}
+
+const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = props => {
+  const { accounts, categories, currentUser, dispatch, subcategories } = props;
+  const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<string>('');
   const [tab, setTab] = React.useState<number>(0);
@@ -44,6 +67,11 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
       location
     } = props;
     const query: any = querystring.parse(location.search.slice(1));
+    if (accounts.length === 0 || categories.length === 0 || subcategories.length === 0) {
+      loadData();
+    } else {
+      setLoading(false);
+    }
     // TODO: Load transaction from id
     if (query.type) {
       setEditing(query.type);
@@ -93,6 +121,16 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
       }
     }
   }, [props.match.params.id]);
+
+  const loadData = async () => {
+    const accs = await requests.accounts.getAllAccounts(currentUser ? currentUser.id : '');
+    const cats = await requests.categories.getAllCategories(currentUser ? currentUser.id : '');
+    const subs = await requests.subcategories.getAllSubcategories(currentUser ? currentUser.id : '');
+    dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+    dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
+    dispatch(subcategoriesState.setSubcategories(sort(subs, 'desc', 'name')));
+    setLoading(false);
+  };
 
   const items = ['One', 'Two', 'Three'];
 
@@ -429,4 +467,19 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalProps> = props => 
   );
 };
 
-export const TransactionModal = withRouter(DisconnectedTransactionModal);
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+
+const mapStateToProps = (state: ApplicationState) => ({
+  accounts: state.accountsState.accounts,
+  categories: state.categoriesState.categories,
+  currentUser: state.sessionState.currentUser,
+  subcategories: state.subcategoriesState.subcategories
+});
+
+export const TransactionModal = compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(DisconnectedTransactionModal) as any;

@@ -18,7 +18,7 @@ export const createUser = (user: User, dispatch: Dispatch<any>) => {
     });
 };
 
-// SET CURRENT USER
+// READ CURRENT USER
 // Get current user from db and set in store
 export const getCurrentUser = (id: string, dispatch: Dispatch<any>) => {
   usersCollection
@@ -36,3 +36,5 @@ export const getCurrentUser = (id: string, dispatch: Dispatch<any>) => {
       }
     });
 };
+
+// TODO: EDIT CURRENT USER

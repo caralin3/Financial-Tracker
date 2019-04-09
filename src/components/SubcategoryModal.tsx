@@ -1,15 +1,30 @@
 import { Grid, TextField } from '@material-ui/core';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { categories, subcategories } from '../mock';
-import { getOptions } from '../util';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
+import { requests } from '../firebase/db';
+import { categoriesState } from '../store';
+import { ApplicationState, Category, Subcategory, User } from '../types';
+import { getOptions, sort } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
   id: string;
 }
 
-interface SubcategoryModalProps extends RouteComponentProps<RouteParams> {
+interface DispatchMappedProps {
+  dispatch: Dispatch<any>;
+}
+
+interface StateMappedProps {
+  categories: Category[];
+  currentUser: User | null;
+  subcategories: Subcategory[];
+}
+
+interface SubcategoryModalProps {
   buttonText: string;
   onClose: () => void;
   onSuccess?: () => void;
@@ -17,8 +32,15 @@ interface SubcategoryModalProps extends RouteComponentProps<RouteParams> {
   title: string;
 }
 
-const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => {
-  const [loading] = React.useState<boolean>(false);
+interface SubcategoryModalMergedProps
+  extends RouteComponentProps<RouteParams>,
+    StateMappedProps,
+    DispatchMappedProps,
+    SubcategoryModalProps {}
+
+const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = props => {
+  const { categories, currentUser, dispatch, subcategories } = props;
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
   const [categoryId, setCategoryId] = React.useState<string>('');
@@ -27,6 +49,11 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => 
     const {
       match: { params }
     } = props;
+    if (categories.length === 0) {
+      loadData();
+    } else {
+      setLoading(false);
+    }
     // TODO: Load subcategory from id
     if (params.id) {
       const [subcategory] = subcategories.filter(sub => sub.id === params.id);
@@ -41,6 +68,12 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => 
       }
     }
   }, [props.match.params.id]);
+
+  const loadData = async () => {
+    const cats = await requests.categories.getAllCategories(currentUser ? currentUser.id : '');
+    dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
+    setLoading(false);
+  };
 
   const resetFields = () => {
     setName('');
@@ -126,4 +159,18 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalProps> = props => 
   );
 };
 
-export const SubcategoryModal = withRouter(DisconnectedSubcategoryModal);
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+
+const mapStateToProps = (state: ApplicationState) => ({
+  categories: state.categoriesState.categories,
+  currentUser: state.sessionState.currentUser,
+  subcategories: state.subcategoriesState.subcategories
+});
+
+export const SubcategoryModal = compose(
+  withRouter,
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
+)(DisconnectedSubcategoryModal) as any;
