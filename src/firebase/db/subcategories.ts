@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { subcategoriesState } from '../../store';
-import { Category, Subcategory } from '../../types';
+import { Category, FBSubcategory, Subcategory } from '../../types';
 import { subcategoriesCollection } from './';
 import { getAllCategories } from './categories';
 
@@ -16,7 +16,7 @@ const getCategoryByName = (categories: Category[], name: string) => {
 export const createInitialSubcategories = async (userId: string, dispatch: Dispatch<any>) => {
   const categories = await getAllCategories(userId);
 
-  const subcategories: any = [
+  const subcategories: FBSubcategory[] = [
     createSubcategoryObject('Auto Insurance', getCategoryByName(categories, 'Auto & Transportation'), userId),
     createSubcategoryObject('Car Maintenance', getCategoryByName(categories, 'Auto & Transportation'), userId),
     createSubcategoryObject('Car Payment', getCategoryByName(categories, 'Auto & Transportation'), userId),
@@ -104,12 +104,12 @@ export const createInitialSubcategories = async (userId: string, dispatch: Dispa
     createSubcategoryObject('Internet', getCategoryByName(categories, 'Utilities'), userId)
   ];
 
-  subcategories.forEach((sub: any) => createSubcategory(sub, dispatch));
+  subcategories.forEach((sub: FBSubcategory) => createSubcategory(sub, dispatch));
 };
 
 // CREATE SUBCATEGORY
 // Set subcategory in store
-export const createSubcategory = (subcategory: any, dispatch: Dispatch<any>) => {
+export const createSubcategory = (subcategory: FBSubcategory, dispatch: Dispatch<any>) => {
   subcategoriesCollection
     .add(subcategory)
     .then(doc => {
@@ -121,6 +121,7 @@ export const createSubcategory = (subcategory: any, dispatch: Dispatch<any>) => 
     });
 };
 
+// READ ALL SUBCATEGORIES
 export const getAllSubcategories = (userId: string) =>
   subcategoriesCollection.get().then(querySnapshot => {
     const subcategories: Subcategory[] = [];

@@ -1,3 +1,10 @@
+export interface User {
+  email: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+}
+
 export type accountType = 'cash' | 'bank' | 'credit';
 
 export interface Account {

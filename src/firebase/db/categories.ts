@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { categoriesState } from '../../store';
-import { Category } from '../../types';
+import { Category, FBCategory } from '../../types';
 import { categoriesCollection } from './';
 
 const createCategoryObject = (name: string, userId: string) => {
@@ -31,7 +31,7 @@ export const createInitialCategories = (userId: string, dispatch: Dispatch<any>)
 
 // CREATE CATEGORY
 // Set category in store
-export const createCategory = (category: any, dispatch: Dispatch<any>) => {
+export const createCategory = (category: FBCategory, dispatch: Dispatch<any>) => {
   categoriesCollection
     .add(category)
     .then(doc => {
@@ -43,6 +43,7 @@ export const createCategory = (category: any, dispatch: Dispatch<any>) => {
     });
 };
 
+// READ ALL CATEGORIES
 export const getAllCategories = (userId: string) =>
   categoriesCollection.get().then(querySnapshot => {
     const categories: Category[] = [];
@@ -58,7 +59,7 @@ export const getAllCategories = (userId: string) =>
   });
 
 // SET CATEGORY
-// Getcategory from db and set in store
+// Get category from db and set in store
 // export const getCurrentUser = (id: string, dispatch: Dispatch<any>) => {
 //   categoriesCollection
 //     .doc(id)
