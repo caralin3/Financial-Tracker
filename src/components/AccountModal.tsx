@@ -50,14 +50,12 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     const {
       match: { params }
     } = props;
-    // TODO: Load account from id
     if (params.id) {
       setLoading(true);
       if (accounts.length === 0) {
         loadAccounts();
       }
       const [account] = accounts.filter(acc => acc.id === params.id);
-      console.log(params.id, account);
       if (account) {
         setName(account.name);
         setAmount(account.amount);
@@ -100,7 +98,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     resetFields();
   };
 
-  // TODO: Handle add
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
       match: { params },
@@ -115,7 +112,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
         userId: currentUser.id
       };
 
-      // TODO: Handle edit
       if (params.id) {
         const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, dispatch);
         if (edited) {
@@ -156,9 +152,9 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
             onClose={() => setSuccess(false)}
             open={success}
             variant="success"
-            message={`${name} has been added`}
+            message={`${name} has been added to ${type}`}
           />
-          <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+          <Alert onClose={() => setError(false)} open={error} variant="error" message="Submission failed" />
           <Grid item={true} xs={12}>
             <TextField
               autoFocus={true}

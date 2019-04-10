@@ -56,6 +56,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [openEdit, setOpenEdit] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [error, setError] = React.useState<boolean>(false);
   const [deleteId, setDeleteId] = React.useState<string>('');
   const [card, setCard] = React.useState<number>(0);
@@ -77,25 +78,34 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
     setLoading(false);
   };
 
+  const [deleteAcc] = accounts.filter(acc => acc.id === deleteId);
+
   const handleDelete = (id: string) => {
     setOpenDialog(true);
     setDeleteId(id);
   };
 
-  // TODO: Handle delete
-  const deleteAccount = async () => await requests.accounts.deleteAccount(deleteId, dispatch);
+  const deleteAccount = async () => {
+    const deleted = await requests.accounts.deleteAccount(deleteId, dispatch);
+    setSuccessMsg(`${deleteAcc.name} has been deleted`)
+    if (deleted) {
+      setSuccess(true);
+    } else {
+      setError(true);
+    }
+  }
 
   const handleEdit = (id: string, type: string) => {
     const { history } = props;
-    console.log(id, type);
+    const [acct] = accounts.filter(acc => acc.id === id);
     history.push(`${routes.accounts}/edit/${id}`);
     setOpenEdit(true);
+    setSuccessMsg(`${acct.name} has been updated`)
   };
 
   const handleConfirm = () => {
     deleteAccount();
     setOpenDialog(false);
-    setSuccess(true);
   };
 
   const accountTypes: AccountType[] = [
@@ -134,14 +144,14 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
       <AlertDialog
         cancelText="Cancel"
         confirmText="Confirm"
-        description={`Deleting ${deleteId}`}
+        description={`${deleteAcc ? deleteAcc.name : ''} with a balance of ${deleteAcc ? formatMoney(deleteAcc.amount) : ''}`}
         onClose={() => setOpenDialog(false)}
         onConfirm={handleConfirm}
         open={openDialog}
-        title="Are you sure you want to delete these accounts?"
+        title="Are you sure you want to delete this account?"
       />
-      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="This is a success message!" />
-      <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
+      <Alert onClose={() => setError(false)} open={error} variant="error" message="An error has occurred, please try again later" />
       <AccountModal title="Add Account" buttonText="Add" open={openAdd} onClose={() => setOpenAdd(false)} />
       <AccountModal
         title="Edit Account"

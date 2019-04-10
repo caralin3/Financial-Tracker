@@ -35,7 +35,7 @@ export const getAllAccounts = (userId: string) =>
     return sort(accounts, 'desc', 'name');
   });
 
-// TODO: UPDATE ACCOUNT
+// UPDATE ACCOUNT
 export const updateAccount = (account: Account, dispatch: Dispatch<any>) =>
   accountsCollection
     .doc(account.id)
@@ -51,7 +51,7 @@ export const updateAccount = (account: Account, dispatch: Dispatch<any>) =>
       return false;
     });
 
-// TODO: DELETE ACCOUNT
+// DELETE ACCOUNT
 export const deleteAccount = (id: string, dispatch: Dispatch<any>) =>
   accountsCollection
     .doc(id)
