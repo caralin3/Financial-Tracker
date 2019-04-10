@@ -13,9 +13,11 @@ export const createBudget = (budget: FBBudget, dispatch: Dispatch<any>) =>
       // Set budget in store
       dispatch(budgetsState.addBudget({ id: doc.id, ...budget }));
       console.log('Budget written with ID: ', doc.id);
+      return true;
     })
     .catch(error => {
       console.error('Error adding budget: ', error);
+      return false;
     });
 
 // READ BUDGETS
@@ -42,9 +44,11 @@ export const updateBudget = (budget: Budget, dispatch: Dispatch<any>) =>
       // Set budget in store
       dispatch(budgetsState.editBudget(budget));
       console.log('Budget updated with ID: ', budget.id);
+      return true;
     })
     .catch(error => {
       console.error('Error updating budget: ', error);
+      return false;
     });
 
 // TODO: DELETE BUDGET
@@ -56,7 +60,9 @@ export const deleteBudget = (id: string, dispatch: Dispatch<any>) =>
       // Set budget in store
       dispatch(budgetsState.deleteBudget(id));
       console.log('Budget deleted with ID: ', id);
+      return true;
     })
     .catch(error => {
       console.error('Error deleting budget: ', id, error);
+      return false;
     });

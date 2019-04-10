@@ -87,20 +87,20 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
 
   const deleteAccount = async () => {
     const deleted = await requests.accounts.deleteAccount(deleteId, dispatch);
-    setSuccessMsg(`${deleteAcc.name} has been deleted`)
+    setSuccessMsg(`${deleteAcc.name} has been deleted`);
     if (deleted) {
       setSuccess(true);
     } else {
       setError(true);
     }
-  }
+  };
 
   const handleEdit = (id: string, type: string) => {
     const { history } = props;
     const [acct] = accounts.filter(acc => acc.id === id);
     history.push(`${routes.accounts}/edit/${id}`);
+    setSuccessMsg(`${acct.name} has been updated`);
     setOpenEdit(true);
-    setSuccessMsg(`${acct.name} has been updated`)
   };
 
   const handleConfirm = () => {
@@ -144,14 +144,21 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
       <AlertDialog
         cancelText="Cancel"
         confirmText="Confirm"
-        description={`${deleteAcc ? deleteAcc.name : ''} with a balance of ${deleteAcc ? formatMoney(deleteAcc.amount) : ''}`}
+        description={`${deleteAcc ? deleteAcc.name : ''} with a balance of ${
+          deleteAcc ? formatMoney(deleteAcc.amount) : ''
+        }`}
         onClose={() => setOpenDialog(false)}
         onConfirm={handleConfirm}
         open={openDialog}
         title="Are you sure you want to delete this account?"
       />
       <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
-      <Alert onClose={() => setError(false)} open={error} variant="error" message="An error has occurred, please try again later" />
+      <Alert
+        onClose={() => setError(false)}
+        open={error}
+        variant="error"
+        message="An error has occurred, please try again later"
+      />
       <AccountModal title="Add Account" buttonText="Add" open={openAdd} onClose={() => setOpenAdd(false)} />
       <AccountModal
         title="Edit Account"

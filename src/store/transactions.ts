@@ -1,4 +1,5 @@
 import { Transaction } from '../types';
+import { sort } from '../util';
 
 export interface SetTransactionsAction {
   transactions: Transaction[];
@@ -67,22 +68,24 @@ export const reducer = (state: TransactionsState = initialState, action: Transac
     case SET_TRANSACTIONS: {
       return {
         ...state,
-        transactions: action.transactions
+        transactions: sort(action.transactions, 'desc', 'date')
       };
     }
     case ADD_TRANSACTION: {
+      const newTrans = [...state.transactions, action.transaction];
       return {
         ...state,
-        transactions: [...state.transactions, action.transaction]
+        transactions: sort(newTrans, 'desc', 'date')
       };
     }
     case EDIT_TRANSACTION: {
+      const newTrans = [
+        ...state.transactions.filter((trans: Transaction) => trans.id !== action.transaction.id),
+        action.transaction
+      ];
       return {
         ...state,
-        transactions: [
-          ...state.transactions.filter((trans: Transaction) => trans.id !== action.transaction.id),
-          action.transaction
-        ]
+        transactions: sort(newTrans, 'desc', 'date')
       };
     }
     case DELETE_TRANSACTION: {

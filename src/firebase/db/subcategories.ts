@@ -110,18 +110,19 @@ export const createInitialSubcategories = async (userId: string, dispatch: Dispa
 };
 
 // CREATE SUBCATEGORY
-export const createSubcategory = (subcategory: FBSubcategory, dispatch: Dispatch<any>) => {
+export const createSubcategory = (subcategory: FBSubcategory, dispatch: Dispatch<any>) =>
   subcategoriesCollection
     .add(subcategory)
     .then(doc => {
       console.log('Subcategory written with ID: ', doc.id);
       // Set subcategory in store
       dispatch(subcategoriesState.addSubcategory({ id: doc.id, ...subcategory }));
+      return true;
     })
     .catch(error => {
       console.error('Error adding subcategory: ', error);
+      return false;
     });
-};
 
 // READ ALL SUBCATEGORIES
 export const getAllSubcategories = (userId: string) =>
@@ -147,9 +148,11 @@ export const updateSubcategory = (subcategory: Subcategory, dispatch: Dispatch<a
       // Set subcategory in store
       dispatch(subcategoriesState.editSubcategory(subcategory));
       console.log('Subcategory updated with ID: ', subcategory.id);
+      return true;
     })
     .catch(error => {
       console.error('Error updating subcategory: ', error);
+      return false;
     });
 
 // TODO: DELETE SUBCATEGORY
@@ -161,7 +164,9 @@ export const deleteSubcategory = (id: string, dispatch: Dispatch<any>) =>
       // Set subcategory in store
       dispatch(subcategoriesState.deleteSubcategory(id));
       console.log('Subcategory deleted with ID: ', id);
+      return true;
     })
     .catch(error => {
       console.error('Error deleting subcategory: ', id, error);
+      return false;
     });

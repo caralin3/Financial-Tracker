@@ -54,6 +54,7 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   const [openEdit, setOpenEdit] = React.useState<boolean>(false);
   const [openSubEdit, setOpenSubEdit] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [error, setError] = React.useState<boolean>(false);
   const [deleteId, setDeleteId] = React.useState<string>('');
 
@@ -83,18 +84,51 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
     }
   };
 
-  // TODO: Handle delete
-  const deleteCategory = () => null;
+  const [deleteCat] = categories.filter(cat => cat.id === deleteId);
+  const [deleteSub] = subcategories.filter(sub => sub.id === deleteId);
 
-  const deleteSubcategory = () => null;
+  const deleteCategory = async () => {
+    const deleted = await requests.categories.deleteCategory(deleteId, dispatch);
+    setSuccessMsg(`${deleteCat.name} has been deleted`);
+    if (deleted) {
+      setSuccess(true);
+    } else {
+      setError(true);
+    }
+  };
+
+  const deleteSubcategory = async () => {
+    const deleted = await requests.subcategories.deleteSubcategory(deleteId, dispatch);
+    setSuccessMsg(`${deleteSub.name} has been deleted`);
+    if (deleted) {
+      setSuccess(true);
+    } else {
+      setError(true);
+    }
+  };
+
+  const handleAdd = (e: React.MouseEvent<HTMLElement>, id?: string) => {
+    const { history } = props;
+    if (id) {
+      history.push(`${routes.categories}/add/${id}`);
+      setSuccessMsg('Subcategory has been added');
+      setOpenSubAdd(true);
+    } else {
+      setSuccessMsg(`Category has been added`);
+      setOpenAdd(true);
+    }
+  };
 
   const handleEdit = (id: string, type: string) => {
     const { history } = props;
-    console.log(id, type);
     history.push(`${routes.categories}/edit/${id}`);
     if (type === 'category') {
+      const [editCat] = categories.filter(cat => cat.id === id);
+      setSuccessMsg(`${editCat.name} has been updated`);
       setOpenEdit(true);
     } else {
+      const [editSub] = subcategories.filter(sub => sub.id === id);
+      setSuccessMsg(`${editSub.name} has been updated`);
       setOpenSubEdit(true);
     }
   };
@@ -111,7 +145,7 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   };
 
   const addButton = (fullWidth: boolean) => (
-    <Button color="primary" onClick={() => setOpenAdd(!openAdd)} variant="contained" fullWidth={fullWidth}>
+    <Button color="primary" onClick={handleAdd} variant="contained" fullWidth={fullWidth}>
       Add Category
     </Button>
   );
@@ -122,7 +156,7 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
       <AlertDialog
         cancelText="Cancel"
         confirmText="Confirm"
-        description={`Deleting ${deleteId}`}
+        description={`${deleteCat ? deleteCat.name : ''}`}
         onClose={() => setOpenDialog(false)}
         onConfirm={() => handleConfirm('category')}
         open={openDialog}
@@ -131,14 +165,19 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
       <AlertDialog
         cancelText="Cancel"
         confirmText="Confirm"
-        description={`Deleting ${deleteId}`}
+        description={`${deleteSub ? deleteSub.name : ''}`}
         onClose={() => setOpenSubDialog(false)}
         onConfirm={() => handleConfirm('subcategory')}
         open={openSubDialog}
         title="Are you sure you want to delete this subcategory?"
       />
-      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="This is a success message!" />
-      <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
+      <Alert
+        onClose={() => setError(false)}
+        open={error}
+        variant="error"
+        message="Submission failed, please try again later."
+      />
       <CategoryModal
         title="Add Category"
         buttonText="Add"
@@ -219,12 +258,7 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
                         ))}
                     </List>
                     <ListItem className="subcategory">
-                      <Button
-                        color="primary"
-                        onClick={() => setOpenSubAdd(!openSubAdd)}
-                        variant="contained"
-                        fullWidth={true}
-                      >
+                      <Button color="primary" onClick={e => handleAdd(e, cat.id)} variant="contained" fullWidth={true}>
                         Add Subcategory
                       </Button>
                     </ListItem>

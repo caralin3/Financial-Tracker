@@ -40,6 +40,7 @@ export const Router = ({ history }: { history: History.History }) => (
       <Route path={`${routes.accounts}/edit/:id`} component={routeMap[routes.accounts]} />
       <Route path={`${routes.accounts}/:id`} component={routeMap[routes.accounts]} />
       <Route path={routes.accounts} component={routeMap[routes.accounts]} />
+      <Route path={`${routes.categories}/add/:id`} component={routeMap[routes.categories]} />
       <Route path={`${routes.categories}/edit/:id`} component={routeMap[routes.categories]} />
       <Route path={routes.categories} component={routeMap[routes.categories]} />
       <Route path={routes.dashboard} component={routeMap[routes.dashboard]} />

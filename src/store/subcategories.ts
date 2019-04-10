@@ -1,4 +1,5 @@
 import { Subcategory } from '../types';
+import { sort } from '../util';
 
 export interface SetSubcategoriesAction {
   subcategories: Subcategory[];
@@ -67,22 +68,24 @@ export const reducer = (state: SubcategoriesState = initialState, action: Subcat
     case SET_SUBCATEGORIES: {
       return {
         ...state,
-        subcategories: action.subcategories
+        subcategories: sort(action.subcategories, 'desc', 'name')
       };
     }
     case ADD_SUBCATEGORY: {
+      const newSubs = [...state.subcategories, action.subcategory];
       return {
         ...state,
-        subcategories: [...state.subcategories, action.subcategory]
+        subcategories: sort(newSubs, 'desc', 'name')
       };
     }
     case EDIT_SUBCATEGORY: {
+      const newSubs = [
+        ...state.subcategories.filter((sub: Subcategory) => sub.id !== action.subcategory.id),
+        action.subcategory
+      ];
       return {
         ...state,
-        subcategories: [
-          ...state.subcategories.filter((sub: Subcategory) => sub.id !== action.subcategory.id),
-          action.subcategory
-        ]
+        subcategories: sort(newSubs, 'desc', 'name')
       };
     }
     case DELETE_SUBCATEGORY: {

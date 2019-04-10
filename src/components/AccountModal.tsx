@@ -154,7 +154,12 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
             variant="success"
             message={`${name} has been added to ${type}`}
           />
-          <Alert onClose={() => setError(false)} open={error} variant="error" message="Submission failed" />
+          <Alert
+            onClose={() => setError(false)}
+            open={error}
+            variant="error"
+            message="Submission failed, please try again later."
+          />
           <Grid item={true} xs={12}>
             <TextField
               autoFocus={true}

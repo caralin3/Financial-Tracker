@@ -1,4 +1,5 @@
 import { Category } from '../types';
+import { sort } from '../util';
 
 export interface SetCategoriesAction {
   categories: Category[];
@@ -63,19 +64,24 @@ export const reducer = (state: CategoriesState = initialState, action: CategoryA
     case SET_CATEGORIES: {
       return {
         ...state,
-        categories: action.categories
+        categories: sort(action.categories, 'desc', 'name')
       };
     }
     case ADD_CATEGORY: {
+      const newCategories = [...state.categories, action.category];
       return {
         ...state,
-        categories: [...state.categories, action.category]
+        categories: sort(newCategories, 'desc', 'name')
       };
     }
     case EDIT_CATEGORY: {
+      const newCategories = [
+        ...state.categories.filter((cat: Category) => cat.id !== action.category.id),
+        action.category
+      ];
       return {
         ...state,
-        categories: [...state.categories.filter((cat: Category) => cat.id !== action.category.id), action.category]
+        categories: sort(newCategories, 'desc', 'name')
       };
     }
     case DELETE_CATEGORY: {

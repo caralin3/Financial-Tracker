@@ -13,9 +13,11 @@ export const createGoal = (goal: FBGoal, dispatch: Dispatch<any>) =>
       // Set goal in store
       dispatch(goalsState.addGoal({ id: doc.id, ...goal }));
       console.log('Goal written with ID: ', doc.id);
+      return true;
     })
     .catch(error => {
       console.error('Error adding goal: ', error);
+      return false;
     });
 
 // READ GOALS
@@ -42,9 +44,11 @@ export const updateGoal = (goal: Goal, dispatch: Dispatch<any>) =>
       // Set goal in store
       dispatch(goalsState.editGoal(goal));
       console.log('Goal updated with ID: ', goal.id);
+      return true;
     })
     .catch(error => {
       console.error('Error updating goal: ', error);
+      return false;
     });
 
 // TODO: DELETE GOAL
@@ -56,7 +60,9 @@ export const deleteGoal = (id: string, dispatch: Dispatch<any>) =>
       // Set goal in store
       dispatch(goalsState.deleteGoal(id));
       console.log('Goal deleted with ID: ', id);
+      return true;
     })
     .catch(error => {
       console.error('Error deleting goal: ', id, error);
+      return false;
     });

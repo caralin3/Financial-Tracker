@@ -92,25 +92,40 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
     resetFields();
   };
 
-  // TODO: Handle add
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
       match: { params },
       onSuccess
     } = props;
     e.preventDefault();
-    // setError(true);
-    console.log(name);
+    if (currentUser) {
+      const newCategory = {
+        name,
+        userId: currentUser.id
+      };
 
-    // TODO: Handle edit
-    if (params.id) {
-      const [category] = categories.filter(cat => cat.id === params.id);
-      console.log(category);
-    }
-
-    handleClose();
-    if (onSuccess) {
-      onSuccess();
+      // TODO: Don't edit if no change
+      if (params.id) {
+        const edited = await requests.categories.updateCategory({ id: params.id, ...newCategory }, dispatch);
+        if (edited) {
+          handleClose();
+          if (onSuccess) {
+            onSuccess();
+          }
+        } else {
+          setError(true);
+        }
+      } else {
+        const added = await requests.categories.createCategory(newCategory, dispatch);
+        if (added) {
+          handleClose();
+          if (onSuccess) {
+            onSuccess();
+          }
+        } else {
+          setError(true);
+        }
+      }
     }
   };
 
@@ -129,7 +144,12 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
         </div>
       ) : (
         <Grid className="categoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-          <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+          <Alert
+            onClose={() => setError(false)}
+            open={error}
+            variant="error"
+            message="Submission failed, please try again later."
+          />
           <Grid item={true} xs={12}>
             <TextField
               id="category-name"

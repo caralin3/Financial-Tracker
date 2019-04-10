@@ -32,18 +32,19 @@ export const createInitialCategories = (userId: string, dispatch: Dispatch<any>)
 };
 
 // CREATE CATEGORY
-export const createCategory = (category: FBCategory, dispatch: Dispatch<any>) => {
+export const createCategory = (category: FBCategory, dispatch: Dispatch<any>) =>
   categoriesCollection
     .add(category)
     .then(doc => {
       console.log('Category written with ID: ', doc.id);
       // Set category in store
       dispatch(categoriesState.addCategory({ id: doc.id, ...category }));
+      return true;
     })
     .catch(error => {
       console.error('Error adding category: ', error);
+      return false;
     });
-};
 
 // READ ALL CATEGORIES
 export const getAllCategories = (userId: string) =>
@@ -60,7 +61,7 @@ export const getAllCategories = (userId: string) =>
     return sort(categories, 'desc', 'name');
   });
 
-// TODO: UPDATE CATEGORY
+// UPDATE CATEGORY
 export const updateCategory = (category: Category, dispatch: Dispatch<any>) =>
   categoriesCollection
     .doc(category.id)
@@ -69,12 +70,14 @@ export const updateCategory = (category: Category, dispatch: Dispatch<any>) =>
       // Set category in store
       dispatch(categoriesState.editCategory(category));
       console.log('Category updated with ID: ', category.id);
+      return true;
     })
     .catch(error => {
       console.error('Error updating category: ', error);
+      return false;
     });
 
-// TODO: DELETE CATEGORY
+// DELETE CATEGORY
 export const deleteCategory = (id: string, dispatch: Dispatch<any>) =>
   categoriesCollection
     .doc(id)
@@ -83,7 +86,9 @@ export const deleteCategory = (id: string, dispatch: Dispatch<any>) =>
       // Set category in store
       dispatch(categoriesState.deleteCategory(id));
       console.log('Category deleted with ID: ', id);
+      return true;
     })
     .catch(error => {
       console.error('Error deleting category: ', id, error);
+      return false;
     });

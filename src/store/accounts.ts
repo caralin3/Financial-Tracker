@@ -1,4 +1,5 @@
 import { Account } from '../types';
+import { sort } from '../util';
 
 export interface SetAccountsAction {
   accounts: Account[];
@@ -63,19 +64,21 @@ export const reducer = (state: AccountsState = initialState, action: AccountActi
     case SET_ACCOUNTS: {
       return {
         ...state,
-        accounts: action.accounts
+        accounts: sort(action.accounts, 'desc', 'name')
       };
     }
     case ADD_ACCOUNT: {
+      const newAccounts = [...state.accounts, action.account];
       return {
         ...state,
-        accounts: [...state.accounts, action.account]
+        accounts: sort(newAccounts, 'desc', 'name')
       };
     }
     case EDIT_ACCOUNT: {
+      const newAccounts = [...state.accounts.filter((acc: Account) => acc.id !== action.account.id), action.account];
       return {
         ...state,
-        accounts: [...state.accounts.filter((acc: Account) => acc.id !== action.account.id), action.account]
+        accounts: sort(newAccounts, 'desc', 'name')
       };
     }
     case DELETE_ACCOUNT: {

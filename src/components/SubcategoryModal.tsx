@@ -47,7 +47,8 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
 
   React.useEffect(() => {
     const {
-      match: { params }
+      match: { params },
+      location
     } = props;
     setLoading(true);
     if (categories.length === 0) {
@@ -55,23 +56,27 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     } else {
       setLoading(false);
     }
-    // TODO: Load subcategory from id
-    if (params.id) {
-      setLoading(true);
-      if (subcategories.length === 0) {
-        loadSubcategories();
-      } else {
-        setLoading(false);
-      }
-      const [subcategory] = subcategories.filter(sub => sub.id === params.id);
-      console.log(params.id, subcategory);
-      if (subcategory) {
-        setName(subcategory.name);
-        setCategoryId(subcategory.category.id);
+    if (location.pathname.includes('add')) {
+      if (params.id) {
+        setCategoryId(params.id);
       }
     } else {
-      if (name && categoryId) {
-        resetFields();
+      if (params.id) {
+        setLoading(true);
+        if (subcategories.length === 0) {
+          loadSubcategories();
+        } else {
+          setLoading(false);
+        }
+        const [subcategory] = subcategories.filter(sub => sub.id === params.id);
+        if (subcategory) {
+          setName(subcategory.name);
+          setCategoryId(subcategory.category.id);
+        }
+      } else {
+        if (name && categoryId) {
+          resetFields();
+        }
       }
     }
   }, [props.match.params.id]);
@@ -110,26 +115,43 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     resetFields();
   };
 
-  // TODO: Handle add
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
       match: { params },
+      location,
       onSuccess
     } = props;
     e.preventDefault();
-    const [category] = categories.filter(cat => cat.id === categoryId);
-    console.log(category, name);
-    // setError(true);
+    if (currentUser) {
+      const [category] = categories.filter(cat => cat.id === categoryId);
+      const newSubcategory = {
+        category,
+        name,
+        userId: currentUser.id
+      };
 
-    // TODO: Handle edit
-    if (params.id) {
-      const [subcategory] = subcategories.filter(sub => sub.id === params.id);
-      console.log(subcategory);
-    }
-
-    handleClose();
-    if (onSuccess) {
-      onSuccess();
+      // TODO: Don't edit if no change
+      if (location.pathname.includes('edit') && params.id) {
+        const edited = await requests.subcategories.updateSubcategory({ id: params.id, ...newSubcategory }, dispatch);
+        if (edited) {
+          handleClose();
+          if (onSuccess) {
+            onSuccess();
+          }
+        } else {
+          setError(true);
+        }
+      } else {
+        const added = await requests.subcategories.createSubcategory(newSubcategory, dispatch);
+        if (added) {
+          handleClose();
+          if (onSuccess) {
+            onSuccess();
+          }
+        } else {
+          setError(true);
+        }
+      }
     }
   };
 

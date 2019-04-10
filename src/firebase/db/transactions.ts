@@ -13,9 +13,11 @@ export const createTransaction = (transaction: FBTransaction, dispatch: Dispatch
       // Set transaction in store
       dispatch(transactionsState.addTransaction({ id: doc.id, ...transaction }));
       console.log('Transaction written with ID: ', doc.id);
+      return true;
     })
     .catch(error => {
       console.error('Error adding transaction: ', error);
+      return false;
     });
 
 // READ TRANSACTIONS
@@ -42,9 +44,11 @@ export const updateTransaction = (transaction: Transaction, dispatch: Dispatch<a
       // Set transaction in store
       dispatch(transactionsState.editTransaction(transaction));
       console.log('Transaction updated with ID: ', transaction.id);
+      return true;
     })
     .catch(error => {
       console.error('Error updating transaction: ', error);
+      return false;
     });
 
 // TODO: DELETE TRANSACTION
@@ -56,7 +60,9 @@ export const deleteTransaction = (id: string, dispatch: Dispatch<any>) =>
       // Set transaction in store
       dispatch(transactionsState.deleteTransaction(id));
       console.log('Transaction deleted with ID: ', id);
+      return true;
     })
     .catch(error => {
       console.error('Error deleting transaction: ', id, error);
+      return false;
     });
