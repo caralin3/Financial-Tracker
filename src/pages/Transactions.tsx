@@ -1,5 +1,6 @@
 import { Theme, withStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -7,7 +8,9 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from '../components';
+import { requests } from '../firebase/db';
 import { routes } from '../routes';
+import { transactionsState } from '../store';
 import { ApplicationState, Transaction, User } from '../types';
 import { expenseColumns, formatTableTransaction, getObjectByType, incomeColumns, transferColumns } from '../util';
 
@@ -31,9 +34,10 @@ interface TransactionsMergedProps
     TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
-  const { currentUser, transactions } = props;
-  const [loading, setLoading] = React.useState<boolean>(transactions.length !== 0);
+  const { currentUser, dispatch, transactions } = props;
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [error, setError] = React.useState<boolean>(false);
   const [items, setItems] = React.useState<string[]>([]);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
@@ -42,14 +46,15 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
 
   React.useEffect(() => {
     if (transactions.length === 0) {
+      setLoading(true);
       loadData();
     }
   }, [currentUser]);
 
   const loadData = async () => {
     if (currentUser) {
-      // const trans = await requests.transactions.getAllTransactions(currentUser.id);
-      // dispatch(transactionsState.setTransactions(trans));;
+      const trans = await requests.transactions.getAllTransactions(currentUser.id);
+      dispatch(transactionsState.setTransactions(trans));
       setLoading(false);
     }
   };
@@ -59,15 +64,24 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
     setItems(selected);
   };
 
-  // TODO: Handle delete
   const deleteTransaction = () => {
-    console.log(items);
+    items.forEach(async (id) => {
+      const deleted = await requests.transactions.deleteTransaction(id, dispatch);
+      if (deleted) {
+        setSuccessMsg(`Transactions have been deleted`);
+        setSuccess(true);
+      } else {
+        setError(true);
+      }
+    })
   };
 
   const handleEdit = (id: string, type: string) => {
     const { history } = props;
     console.log(id, type);
     history.push(`${routes.transactions}/edit/${id}?type=${type}`);
+    const [editTrans] = transactions.filter(trans => trans.id === id);
+    setSuccessMsg(`Transaction from ${moment(new Date(editTrans.date)).format('MM/DD/YYYY')} has been updated`);
     setOpenEdit(true);
   };
 
@@ -93,14 +107,18 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
       <AlertDialog
         cancelText="Cancel"
         confirmText="Confirm"
-        description={`Deleting ${items}`}
         onClose={() => setOpenDialog(false)}
         onConfirm={handleConfirm}
         open={openDialog}
         title="Are you sure you want to delete these transactions?"
       />
-      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="This is a success message!" />
-      <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
+      <Alert
+        onClose={() => setError(false)}
+        open={error}
+        variant="error"
+        message="Submission failed, please try again later."
+      />
       <TransactionModal
         title="Add Transaction"
         buttonText="Add"

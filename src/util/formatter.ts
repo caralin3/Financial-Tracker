@@ -12,6 +12,11 @@ export const formatMoney = (val: number, noZeros?: boolean) => {
   return `$${num}`;
 };
 
+export const formatDateTime = (val: string) => {
+  const date = new Date(val).toISOString().replace(/-/g, '\/').replace(/T.+/, '');
+  return date;
+}
+
 export const formatEmptyString = (val: string | undefined) => {
   if (!val) {
     return 'N/A';

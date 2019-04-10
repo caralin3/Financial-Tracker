@@ -68,14 +68,14 @@ export const reducer = (state: TransactionsState = initialState, action: Transac
     case SET_TRANSACTIONS: {
       return {
         ...state,
-        transactions: sort(action.transactions, 'desc', 'date')
+        transactions: sort(action.transactions, 'asc', 'date')
       };
     }
     case ADD_TRANSACTION: {
       const newTrans = [...state.transactions, action.transaction];
       return {
         ...state,
-        transactions: sort(newTrans, 'desc', 'date')
+        transactions: sort(newTrans, 'asc', 'date')
       };
     }
     case EDIT_TRANSACTION: {
@@ -85,7 +85,7 @@ export const reducer = (state: TransactionsState = initialState, action: Transac
       ];
       return {
         ...state,
-        transactions: sort(newTrans, 'desc', 'date')
+        transactions: sort(newTrans, 'asc', 'date')
       };
     }
     case DELETE_TRANSACTION: {

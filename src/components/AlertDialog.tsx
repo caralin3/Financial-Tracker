@@ -11,7 +11,7 @@ export interface AlertDialogProps {
   classes: any;
   confirmText: string;
   cancelText: string;
-  description: string;
+  description?: string;
   onClose: () => void;
   onConfirm: () => void;
   open: boolean;

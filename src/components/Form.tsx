@@ -1,4 +1,13 @@
-import { Button, FormControl, InputLabel, MenuItem, OutlinedInput, Select, TextField } from '@material-ui/core';
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  TextField,
+  Typography
+} from '@material-ui/core';
 import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -29,7 +38,9 @@ export const Form: React.SFC<FormProps> = props => (
 interface SelectInputProps {
   autoFocus?: boolean;
   className?: string;
+  error?: boolean;
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  helperText?: string;
   label: string;
   selected: any;
   options: Option[];
@@ -47,7 +58,7 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
   });
 
   return (
-    <FormControl className={props.className} fullWidth={true} variant="outlined">
+    <FormControl className={props.className} fullWidth={true} variant="outlined" error={props.error}>
       <InputLabel ref={ref => (inputLabelRef = ref)} htmlFor={`outlined-${props.label}-select`}>
         {props.label}
       </InputLabel>
@@ -55,6 +66,7 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
         autoFocus={props.autoFocus}
         value={props.selected}
         onChange={props.handleChange}
+        error={props.error}
         input={<OutlinedInput labelWidth={labelWidth} name={props.label} id={`outlined-${props.label}-select`} />}
       >
         {props.options.map(op => (
@@ -63,6 +75,9 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
           </MenuItem>
         ))}
       </Select>
+      <Typography className="form_select-helper" color="error" variant="caption">
+        {props.helperText}
+      </Typography>
     </FormControl>
   );
 };
@@ -71,6 +86,8 @@ interface AutoTextFieldProps {
   autoFocus?: boolean;
   className?: string;
   dataList: string[];
+  error?: boolean;
+  helperText?: string;
   id: string;
   label: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -109,6 +126,8 @@ export const AutoTextField: React.SFC<AutoTextFieldProps> = props => {
         value={value}
         onChange={onChange}
         margin="normal"
+        helperText={props.helperText}
+        error={props.error}
         variant="outlined"
         inputProps={{
           list: 'items'

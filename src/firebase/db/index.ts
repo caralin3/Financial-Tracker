@@ -1,10 +1,10 @@
 import { db } from '../fb';
 import * as accounts from './accounts';
-// import * as budgets from './budgets';
+import * as budgets from './budgets';
 import * as categories from './categories';
-// import * as goals from './goals';
+import * as goals from './goals';
 import * as subcategories from './subcategories';
-// import * as transactions from './transactions';
+import * as transactions from './transactions';
 import * as users from './users';
 
 // firebase collections
@@ -18,10 +18,10 @@ export const transactionsCollection = db.collection('transactions');
 
 export const requests = {
   accounts,
-  // budgets,
+  budgets,
   categories,
-  // goals,
+  goals,
   subcategories,
-  // transactions,
+  transactions,
   users
 };

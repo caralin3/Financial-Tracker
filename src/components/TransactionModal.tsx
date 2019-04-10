@@ -10,9 +10,10 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { theme } from '../appearance';
 import { requests } from '../firebase/db';
-import { accountsState, categoriesState, subcategoriesState } from '../store';
+import { FBTransaction } from '../firebase/types';
+import { accountsState, categoriesState, subcategoriesState, transactionsState } from '../store';
 import { Account, ApplicationState, Category, Subcategory, Transaction, transactionType, User } from '../types';
-import { getOptions } from '../util';
+import { formatDateTime, getOptions } from '../util';
 import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
@@ -49,13 +50,15 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   const { accounts, categories, currentUser, dispatch, subcategories, transactions } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<string>('');
+  const [submit, setSubmit] = React.useState<boolean>(false);
   const [tab, setTab] = React.useState<number>(0);
   const [from, setFrom] = React.useState<string>('');
   const [to, setTo] = React.useState<string>('');
   const [item, setItem] = React.useState<string>('');
   const [date, setDate] = React.useState<string>('');
-  const [amount, setAmount] = React.useState<number | undefined | ''>(undefined);
+  const [amount, setAmount] = React.useState<number>(0);
   const [categoryId, setCategoryId] = React.useState<string>('');
   const [subcategoryId, setSubcategoryId] = React.useState<string>('');
   const [note, setNote] = React.useState<string>('');
@@ -120,7 +123,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
         if (transaction.to) {
           setTo(transaction.to.id);
         }
-        setDate(moment(transaction.date).format('YYYY-MM-DD'));
+        setDate(moment(new Date(transaction.date)).format('YYYY-MM-DD'));
         setAmount(transaction.amount);
       }
     } else {
@@ -144,8 +147,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
 
   const loadTransactions = async () => {
     if (currentUser) {
-      // const trans = await requests.transactions.getAllTransactions(currentUser.id);
-      // dispatch(transactionsState.setTransactions(trans));;
+      const trans = await requests.transactions.getAllTransactions(currentUser.id);
+      dispatch(transactionsState.setTransactions(trans));
       setLoading(false);
     }
   };
@@ -162,9 +165,36 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     setTags('');
     setTo('');
     if (amount) {
-      setAmount('');
+      setAmount(0);
     }
   };
+
+  const isValidAmount = () => amount > 0;
+
+  const isValidCategoryId = () => categoryId.trim().length > 0;
+
+  const isValidDate = () => date.trim().length > 0;
+
+  const isValidItem = () => item.trim().length > 0;
+
+  const isValidFrom = () => from.trim().length > 0;
+
+  const isValidSubcategoryId = () => subcategoryId.trim().length > 0;
+
+  const isValidTo = () => to.trim().length > 0;
+
+  const isValid = () => {
+    switch (tab) {
+      case 0: // expense
+        return isValidAmount() && isValidDate() && isValidItem() && isValidFrom() && isValidCategoryId() && isValidSubcategoryId();
+      case 1: // income
+        return isValidAmount() && isValidDate() && isValidItem() && isValidTo();
+      case 2: // transfer
+        return isValidAmount() && isValidDate() && isValidFrom() && isValidTo();
+      default:
+        return false;
+    }
+  }
 
   const handleClose = () => {
     const {
@@ -183,17 +213,52 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     resetFields();
   };
 
-  // TODO: Handle add
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // TODO: Form validations
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
       match: { params }
     } = props;
     e.preventDefault();
-    setError(true);
+    setSubmit(true);
+    if (currentUser) {
+      const [fromAcc] = accounts.filter(acc => acc.id === from);
+      const [toAcc] = accounts.filter(acc => acc.id === to);
+      const [categ] = categories.filter(cat => cat.id === categoryId);
+      const [subcat] = subcategories.filter(sub => sub.id === subcategoryId);
 
-    // TODO: Handle edit
-    if (params.id) {
-      handleClose();
+      const newTransaction = {
+        amount,
+        category: categ || '',
+        date: formatDateTime(date),
+        from: fromAcc || '',
+        item,
+        note,
+        subcategory: subcat || '',
+        tags, // TODO: Comma separated tags
+        to: toAcc || '',
+        type: tab === 0 ? 'expense' : tab === 1 ? 'income' : 'transfer'
+      } as FBTransaction;
+
+      // TODO: Handle edit
+      if (params.id) {
+        // const edited = await requests.transactions.updateTransaction({ id: params.id, ...newTransaction }, dispatch);
+        // if (edited) {
+        //   handleClose();
+        // } else {
+        //   setError(true);
+        // }
+      } else {
+        if (isValid()) {
+          const added = await requests.transactions.createTransaction(newTransaction, dispatch);
+          if (added) {
+            console.log(newTransaction);
+            setSuccess(true);
+            setSubmit(false);
+          } else {
+            setError(true);
+          }
+        }
+      }
     }
   };
 
@@ -210,6 +275,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           <SelectInput
             label="From"
             autoFocus={true}
+            helperText={submit && !isValidFrom() ? 'Required' : undefined}
+            error={submit && !isValidFrom()}
             selected={from}
             handleChange={e => setFrom(e.target.value)}
             options={getOptions(accounts)}
@@ -222,6 +289,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Item"
             onChange={e => setItem(e.target.value.trim())}
             dataList={items}
+            helperText={submit && !isValidItem() ? 'Required' : undefined}
+            error={submit && !isValidItem()}
             value={item}
           />
         </Grid>
@@ -237,6 +306,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             }}
             margin="normal"
             type="date"
+            helperText={submit && !isValidDate() ? 'Required' : undefined}
+            error={submit && !isValidDate()}
             variant="outlined"
           />
         </Grid>
@@ -246,8 +317,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Amount"
             fullWidth={true}
             value={amount}
-            onChange={e => setAmount(parseFloat(e.target.value))}
+            onChange={e => setAmount(parseFloat(e.target.value) || 0)}
             type="number"
+            helperText={submit && !isValidAmount() ? 'Must be greater than zero' : undefined}
+            error={submit && !isValidAmount()}
             margin="normal"
             variant="outlined"
           />
@@ -257,6 +330,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Category"
             selected={categoryId}
             handleChange={e => setCategoryId(e.target.value)}
+            helperText={submit && !isValidCategoryId() ? 'Required' : undefined}
+            error={submit && !isValidCategoryId()}
             options={getOptions(categories)}
           />
         </Grid>
@@ -265,6 +340,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Subcategory"
             selected={subcategoryId}
             handleChange={e => setSubcategoryId(e.target.value)}
+            helperText={submit && !isValidSubcategoryId() ? 'Required' : undefined}
+            error={submit && !isValidSubcategoryId()}
             options={getOptions(subcategories.filter(sub => sub.category.id === categoryId))}
           />
         </Grid>
@@ -305,6 +382,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             id="income-item"
             label="Item"
             onChange={e => setItem(e.target.value.trim())}
+            helperText={submit && !isValidItem() ? 'Required' : undefined}
+            error={submit && !isValidItem()}
             dataList={items}
             value={item}
           />
@@ -314,6 +393,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="To"
             selected={to}
             handleChange={e => setTo(e.target.value)}
+            helperText={submit && !isValidTo() ? 'Required' : undefined}
+            error={submit && !isValidTo()}
             options={getOptions(accounts)}
           />
         </Grid>
@@ -329,6 +410,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             }}
             margin="normal"
             type="date"
+            helperText={submit && !isValidDate() ? 'Required' : undefined}
+            error={submit && !isValidDate()}
             variant="outlined"
           />
         </Grid>
@@ -338,8 +421,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Amount"
             fullWidth={true}
             value={amount}
-            onChange={e => setAmount(parseFloat(e.target.value))}
+            onChange={e => setAmount(parseFloat(e.target.value) || 0)}
             type="number"
+            helperText={submit && !isValidAmount() ? 'Must be greater than zero' : undefined}
+            error={submit && !isValidAmount()}
             margin="normal"
             variant="outlined"
           />
@@ -376,6 +461,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="From"
             selected={from}
             handleChange={e => setFrom(e.target.value)}
+            helperText={submit && !isValidFrom() ? 'Required' : undefined}
+            error={submit && !isValidFrom()}
             options={getOptions(accounts)}
           />
         </Grid>
@@ -384,6 +471,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="To"
             selected={to}
             handleChange={e => setTo(e.target.value)}
+            helperText={submit && !isValidTo() ? 'Required' : undefined}
+            error={submit && !isValidTo()}
             options={getOptions(accounts)}
           />
         </Grid>
@@ -399,6 +488,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             }}
             margin="normal"
             type="date"
+            helperText={submit && !isValidDate() ? 'Required' : undefined}
+            error={submit && !isValidDate()}
             variant="outlined"
           />
         </Grid>
@@ -408,8 +499,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Amount"
             fullWidth={true}
             value={amount}
-            onChange={e => setAmount(parseFloat(e.target.value))}
+            onChange={e => setAmount(parseFloat(e.target.value) || 0)}
             type="number"
+            helperText={submit && !isValidAmount() ? 'Must be greater than zero' : undefined}
+            error={submit && !isValidAmount()}
             margin="normal"
             variant="outlined"
           />
@@ -447,7 +540,14 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       open={props.open}
       handleClose={handleClose}
     >
-      <Alert onClose={() => setError(false)} open={error} variant="error" message="This is an error message!" />
+      {/* FIXME: Standardize alert messages */}
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="Transaction has been added!" />
+      <Alert
+        onClose={() => setError(false)}
+        open={error}
+        variant="error"
+        message="Submission failed, please try again later."
+      />
       <Tabs
         className="transModal_tabs"
         value={tab}

@@ -150,7 +150,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
               />
               <ListItemText
                 primaryTypographyProps={{ className: 'dashboard_item-date' }}
-                primary={moment(trans.date).format('MMM DD')}
+                primary={moment(new Date(trans.date)).format('MMM DD')}
               />
             </div>
           </ListItem>
