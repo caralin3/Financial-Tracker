@@ -125,10 +125,10 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography variant="h6" id="tableTitle">
-            {tableTitle}
-          </Typography>
-        )}
+            <Typography variant="h6" id="tableTitle">
+              {tableTitle}
+            </Typography>
+          )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
@@ -148,37 +148,37 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             </Tooltip>
           </div>
         ) : (
-          <div className={classes.actionButtons}>
-            <Tooltip title="Export">
-              <IconButton aria-label="Export" onClick={() => null}>
-                <CloudDownloadIcon />
-              </IconButton>
-            </Tooltip>
-            <Popup
-              open={openColumns}
-              onClick={() => handleClick(!openColumns, false)}
-              content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
-              tooltip="View Colmns"
-              trigger={<ViewColumnIcon />}
-            />
-            <Popup
-              class="table_filters"
-              open={openFilters}
-              onClick={() => handleClick(false, !openFilters)}
-              content={
-                <Filters
-                  data={data}
-                  filters={columns}
-                  count={filterCount}
-                  onResetFilters={handleReset}
-                  onSelectFilter={onSelectFilter}
-                />
-              }
-              tooltip="Filters"
-              trigger={<FilterListIcon />}
-            />
-          </div>
-        )}
+            <div className={classes.actionButtons}>
+              <Tooltip title="Export">
+                <IconButton aria-label="Export" onClick={() => null}>
+                  <CloudDownloadIcon />
+                </IconButton>
+              </Tooltip>
+              <Popup
+                open={openColumns}
+                onClick={() => handleClick(!openColumns, false)}
+                content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
+                tooltip="View Colmns"
+                trigger={<ViewColumnIcon />}
+              />
+              <Popup
+                class="table_filters"
+                open={openFilters}
+                onClick={() => handleClick(false, !openFilters)}
+                content={
+                  <Filters
+                    data={data}
+                    filters={columns}
+                    count={filterCount}
+                    onResetFilters={handleReset}
+                    onSelectFilter={onSelectFilter}
+                  />
+                }
+                tooltip="Filters"
+                trigger={<FilterListIcon />}
+              />
+            </div>
+          )}
       </div>
     </MuiToolbar>
   );
@@ -195,13 +195,13 @@ const toolbarStyles = (theme: Theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          color: theme.palette.secondary.main
-        }
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        color: theme.palette.secondary.main
+      }
       : {
-          backgroundColor: theme.palette.secondary.dark,
-          color: theme.palette.text.primary
-        },
+        backgroundColor: theme.palette.secondary.dark,
+        color: theme.palette.text.primary
+      },
   root: {
     paddingRight: theme.spacing.unit
   },
@@ -260,7 +260,7 @@ interface TableProps {
 
 const Table: React.SFC<TableProps> = props => {
   const { classes, data, defaultSort, onDelete, onEdit, columns, title } = props;
-  const [displayData, setDisplayData] = React.useState<any[]>(data);
+  const [displayData, setDisplayData] = React.useState<any[]>([]);
   const [displayColumns, setDisplayColumns] = React.useState<Column[]>(columns);
   const [order, setOrder] = React.useState<sortDir | undefined>(defaultSort ? defaultSort.dir : undefined);
   const [orderBy, setOrderBy] = React.useState<string>(defaultSort ? defaultSort.orderBy : '');
@@ -268,6 +268,10 @@ const Table: React.SFC<TableProps> = props => {
   const [page, setPage] = React.useState<number>(0);
   const [selected, setSelected] = React.useState<string[]>([]);
   const [filters, setFilters] = React.useState<{ [key: string]: string | number }>({});
+
+  React.useEffect(() => {
+    setDisplayData(data);
+  }, [data])
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, displayData.length - page * rowsPerPage);
 
@@ -448,11 +452,11 @@ const Table: React.SFC<TableProps> = props => {
                   );
                 })
             ) : (
-              <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
-                <TableCell colSpan={2} />
-                <TableCell>No records</TableCell>
-              </TableRow>
-            )}
+                <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
+                  <TableCell colSpan={2} />
+                  <TableCell>No records</TableCell>
+                </TableRow>
+              )}
             {displayData.length > 0 && emptyRows > 0 && (
               <TableRow style={{ height: 49 * emptyRows }}>
                 <TableCell colSpan={displayColumns.length} />

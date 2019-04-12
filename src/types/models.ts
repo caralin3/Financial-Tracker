@@ -33,14 +33,13 @@ export type transactionType = 'expense' | 'income' | 'transfer';
 export interface Transaction {
   amount: number;
   category?: Category;
-  // createdAt: string;
   date: string;
   from?: Account;
   id: string;
   item?: string;
   note?: string;
   subcategory?: Subcategory;
-  tags?: string;
+  tags?: string[];
   to?: Account;
   type: transactionType;
   userId: string;

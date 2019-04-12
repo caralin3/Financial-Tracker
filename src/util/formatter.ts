@@ -13,8 +13,12 @@ export const formatMoney = (val: number, noZeros?: boolean) => {
 };
 
 export const formatDateTime = (val: string) => {
-  const date = new Date(val).toISOString().replace(/-/g, '\/').replace(/T.+/, '');
-  return date;
+  const d = new Date();
+  const h = (d.getHours() < 10 ? '0' : '') + d.getHours();
+  const m = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+  const s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
+  const time = `${h}:${m}:${s}`;
+  return new Date(`${val} ${time}`).toISOString();
 }
 
 export const formatEmptyString = (val: string | undefined) => {
@@ -44,7 +48,7 @@ export const formatTableTransaction = (transactions: Transaction[]) => {
     item: formatEmptyString(trans.item),
     note: formatEmptyString(trans.note),
     subcategory: formatTableData(trans.subcategory),
-    tags: formatEmptyString(trans.tags),
+    tags: formatEmptyString(trans.tags ? trans.tags.join(', ') : ''),
     to: formatTableData(trans.to)
   }));
 };

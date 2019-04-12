@@ -12,7 +12,7 @@ const createTransaction = (
   item: string | undefined,
   note: string | undefined,
   subcategory: Subcategory | undefined,
-  tags: string | undefined,
+  tags: string[] | undefined,
   to: Account | undefined,
   type: transactionType
 ): Transaction => {
@@ -31,7 +31,7 @@ export const transactions: Transaction[] = [
     'Netflix',
     '',
     subcategories[10],
-    '',
+    [],
     undefined,
     'expense'
   ),
@@ -43,7 +43,7 @@ export const transactions: Transaction[] = [
     'Work',
     '',
     undefined,
-    '',
+    [],
     accounts[0],
     'income'
   ),
@@ -55,7 +55,7 @@ export const transactions: Transaction[] = [
     undefined,
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'transfer'
   ),
@@ -67,7 +67,7 @@ export const transactions: Transaction[] = [
     'Amazon',
     '',
     subcategories[1],
-    '',
+    [],
     undefined,
     'expense'
   ),
@@ -79,7 +79,7 @@ export const transactions: Transaction[] = [
     'Work',
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'income'
   ),
@@ -91,7 +91,7 @@ export const transactions: Transaction[] = [
     undefined,
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'transfer'
   ),
@@ -103,7 +103,7 @@ export const transactions: Transaction[] = [
     'Amazon',
     '',
     subcategories[2],
-    '',
+    [],
     undefined,
     'expense'
   ),
@@ -115,7 +115,7 @@ export const transactions: Transaction[] = [
     'Shoprite',
     '',
     subcategories[0],
-    '',
+    [],
     undefined,
     'expense'
   ),
@@ -127,7 +127,7 @@ export const transactions: Transaction[] = [
     'Pizza',
     '',
     subcategories[6],
-    '',
+    [],
     undefined,
     'expense'
   ),
@@ -139,7 +139,7 @@ export const transactions: Transaction[] = [
     'Work',
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'income'
   ),
@@ -151,7 +151,7 @@ export const transactions: Transaction[] = [
     undefined,
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'transfer'
   ),
@@ -163,7 +163,7 @@ export const transactions: Transaction[] = [
     'Zoo',
     '',
     subcategories[3],
-    '',
+    [],
     undefined,
     'expense'
   ),
@@ -175,7 +175,7 @@ export const transactions: Transaction[] = [
     'Work',
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'income'
   ),
@@ -187,7 +187,7 @@ export const transactions: Transaction[] = [
     undefined,
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'transfer'
   ),
@@ -199,7 +199,7 @@ export const transactions: Transaction[] = [
     'Gym',
     '',
     subcategories[0],
-    '',
+    [],
     undefined,
     'expense'
   ),
@@ -211,7 +211,7 @@ export const transactions: Transaction[] = [
     'Work',
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'income'
   ),
@@ -223,7 +223,7 @@ export const transactions: Transaction[] = [
     undefined,
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'transfer'
   ),
@@ -235,7 +235,7 @@ export const transactions: Transaction[] = [
     'CD',
     '',
     subcategories[3],
-    '',
+    [],
     undefined,
     'expense'
   ),
@@ -247,7 +247,7 @@ export const transactions: Transaction[] = [
     'Work',
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'income'
   ),
@@ -259,7 +259,7 @@ export const transactions: Transaction[] = [
     undefined,
     '',
     undefined,
-    '',
+    [],
     accounts[index(accounts.length)],
     'transfer'
   )

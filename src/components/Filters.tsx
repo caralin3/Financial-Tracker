@@ -118,6 +118,7 @@ export const Filters: React.SFC<FiltersProps> = props => {
         </Button>
       </div>
       <Grid className="filters_grid" container={true} spacing={24}>
+        {/* FIXME: Fix tags array filter */}
         {filters.map((col, index) => (
           <Grid item={true} xs={12} md={6} key={col.id}>
             <SelectInput

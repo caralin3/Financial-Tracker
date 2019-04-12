@@ -42,9 +42,9 @@ interface TransactionModalProps {
 
 interface TransactionModalMergedProps
   extends RouteComponentProps<RouteParams>,
-    StateMappedProps,
-    DispatchMappedProps,
-    TransactionModalProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  TransactionModalProps { }
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = props => {
   const { accounts, categories, currentUser, dispatch, subcategories, transactions } = props;
@@ -100,7 +100,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
         setLoading(false);
       }
       const [transaction] = transactions.filter(trans => trans.id === params.id);
-      console.log(params.id, transaction);
       if (transaction) {
         if (transaction.category) {
           setCategoryId(transaction.category.id);
@@ -118,7 +117,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           setSubcategoryId(transaction.subcategory.id);
         }
         if (transaction.tags) {
-          setTags(transaction.tags);
+          setTags(transaction.tags.join(', '));
         }
         if (transaction.to) {
           setTo(transaction.to.id);
@@ -225,33 +224,33 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       const [toAcc] = accounts.filter(acc => acc.id === to);
       const [categ] = categories.filter(cat => cat.id === categoryId);
       const [subcat] = subcategories.filter(sub => sub.id === subcategoryId);
+      const allTags = tags ? tags.split(',').map(tag => tag.trim()) : [];
 
-      const newTransaction = {
-        amount,
-        category: categ || '',
-        date: formatDateTime(date),
-        from: fromAcc || '',
-        item,
-        note,
-        subcategory: subcat || '',
-        tags, // TODO: Comma separated tags
-        to: toAcc || '',
-        type: tab === 0 ? 'expense' : tab === 1 ? 'income' : 'transfer'
-      } as FBTransaction;
+      if (isValid()) {
+        const newTransaction = {
+          amount,
+          category: categ || '',
+          date: formatDateTime(date),
+          from: fromAcc || '',
+          item,
+          note,
+          subcategory: subcat || '',
+          tags: allTags,
+          to: toAcc || '',
+          type: tab === 0 ? 'expense' : tab === 1 ? 'income' : 'transfer',
+          userId: currentUser.id,
+        } as FBTransaction;
 
-      // TODO: Handle edit
-      if (params.id) {
-        // const edited = await requests.transactions.updateTransaction({ id: params.id, ...newTransaction }, dispatch);
-        // if (edited) {
-        //   handleClose();
-        // } else {
-        //   setError(true);
-        // }
-      } else {
-        if (isValid()) {
+        if (params.id) {
+          const edited = await requests.transactions.updateTransaction({ id: params.id, ...newTransaction }, dispatch);
+          if (edited) {
+            handleClose();
+          } else {
+            setError(true);
+          }
+        } else {
           const added = await requests.transactions.createTransaction(newTransaction, dispatch);
           if (added) {
-            console.log(newTransaction);
             setSuccess(true);
             setSubmit(false);
           } else {

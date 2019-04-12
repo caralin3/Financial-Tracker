@@ -41,13 +41,12 @@ export interface FBSubcategory {
 export interface FBTransaction {
   amount: number;
   category?: Category;
-  // createdAt: string;
   date: string;
   from?: Account | undefined;
   item?: string;
   note?: string;
   subcategory?: Subcategory;
-  tags?: string;
+  tags?: string[];
   to?: Account | undefined;
   type: transactionType;
   userId: string;
