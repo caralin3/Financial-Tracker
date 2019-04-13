@@ -139,7 +139,7 @@ export const getAllSubcategories = (userId: string) =>
     return sort(subcategories, 'desc', 'name');
   });
 
-// TODO: UPDATE SUBCATEGORY
+// UPDATE SUBCATEGORY
 export const updateSubcategory = (subcategory: Subcategory, dispatch: Dispatch<any>) =>
   subcategoriesCollection
     .doc(subcategory.id)
@@ -155,7 +155,7 @@ export const updateSubcategory = (subcategory: Subcategory, dispatch: Dispatch<a
       return false;
     });
 
-// TODO: DELETE SUBCATEGORY
+// DELETE SUBCATEGORY
 export const deleteSubcategory = (id: string, dispatch: Dispatch<any>) =>
   subcategoriesCollection
     .doc(id)

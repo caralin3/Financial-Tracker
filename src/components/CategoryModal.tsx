@@ -32,9 +32,9 @@ interface CategoryModalProps extends RouteComponentProps<RouteParams> {
 
 interface CategoryModalMergedProps
   extends RouteComponentProps<RouteParams>,
-    StateMappedProps,
-    DispatchMappedProps,
-    CategoryModalProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  CategoryModalProps { }
 
 const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => {
   const { categories, currentUser, dispatch } = props;
@@ -46,7 +46,6 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
     const {
       match: { params }
     } = props;
-    // TODO: Load category from id
     if (params.id) {
       setLoading(true);
       if (categories.length === 0) {
@@ -143,28 +142,28 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
           <Loading />
         </div>
       ) : (
-        <Grid className="categoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-          <Alert
-            onClose={() => setError(false)}
-            open={error}
-            variant="error"
-            message="Submission failed, please try again later."
-          />
-          <Grid item={true} xs={12}>
-            <TextField
-              id="category-name"
-              label="Category Name"
-              autoFocus={true}
-              fullWidth={true}
-              value={name}
-              onChange={e => setName(e.target.value.trim())}
-              type="text"
-              margin="normal"
-              variant="outlined"
+          <Grid className="categoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+            <Alert
+              onClose={() => setError(false)}
+              open={error}
+              variant="error"
+              message="Submission failed, please try again later."
             />
+            <Grid item={true} xs={12}>
+              <TextField
+                id="category-name"
+                label="Category Name"
+                autoFocus={true}
+                fullWidth={true}
+                value={name}
+                onChange={e => setName(e.target.value.trim())}
+                type="text"
+                margin="normal"
+                variant="outlined"
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      )}
+        )}
     </ModalForm>
   );
 };

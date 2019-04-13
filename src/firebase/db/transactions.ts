@@ -35,7 +35,7 @@ export const getAllTransactions = (userId: string) =>
     return sort(transactions, 'asc', 'date');
   });
 
-// TODO: UPDATE TRANSACTION
+// UPDATE TRANSACTION
 export const updateTransaction = (transaction: Transaction, dispatch: Dispatch<any>) =>
   transactionsCollection
     .doc(transaction.id)
@@ -51,7 +51,7 @@ export const updateTransaction = (transaction: Transaction, dispatch: Dispatch<a
       return false;
     });
 
-// TODO: DELETE TRANSACTION
+// DELETE TRANSACTION
 export const deleteTransaction = (id: string, dispatch: Dispatch<any>) =>
   transactionsCollection
     .doc(id)

@@ -76,7 +76,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     } else {
       setLoading(false);
     }
-    // TODO: Load transaction from id
     if (query.type) {
       setLoading(true);
       setEditing(query.type);
@@ -212,7 +211,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     resetFields();
   };
 
-  // TODO: Form validations
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
       match: { params }
