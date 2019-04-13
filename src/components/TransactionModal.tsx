@@ -42,9 +42,9 @@ interface TransactionModalProps {
 
 interface TransactionModalMergedProps
   extends RouteComponentProps<RouteParams>,
-  StateMappedProps,
-  DispatchMappedProps,
-  TransactionModalProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    TransactionModalProps {}
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = props => {
   const { accounts, categories, currentUser, dispatch, subcategories, transactions } = props;
@@ -184,7 +184,14 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   const isValid = () => {
     switch (tab) {
       case 0: // expense
-        return isValidAmount() && isValidDate() && isValidItem() && isValidFrom() && isValidCategoryId() && isValidSubcategoryId();
+        return (
+          isValidAmount() &&
+          isValidDate() &&
+          isValidItem() &&
+          isValidFrom() &&
+          isValidCategoryId() &&
+          isValidSubcategoryId()
+        );
       case 1: // income
         return isValidAmount() && isValidDate() && isValidItem() && isValidTo();
       case 2: // transfer
@@ -192,7 +199,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       default:
         return false;
     }
-  }
+  };
 
   const handleClose = () => {
     const {
@@ -225,7 +232,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       const allTags = tags ? tags.split(',').map(tag => tag.trim()) : [];
 
       if (isValid()) {
-        const newTransaction = {
+        const newTransaction: FBTransaction = {
           amount,
           category: categ || '',
           date: formatDateTime(date),
@@ -236,8 +243,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           tags: allTags,
           to: toAcc || '',
           type: tab === 0 ? 'expense' : tab === 1 ? 'income' : 'transfer',
-          userId: currentUser.id,
-        } as FBTransaction;
+          userId: currentUser.id
+        };
 
         if (params.id) {
           const edited = await requests.transactions.updateTransaction({ id: params.id, ...newTransaction }, dispatch);

@@ -32,9 +32,9 @@ interface CategoryModalProps extends RouteComponentProps<RouteParams> {
 
 interface CategoryModalMergedProps
   extends RouteComponentProps<RouteParams>,
-  StateMappedProps,
-  DispatchMappedProps,
-  CategoryModalProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    CategoryModalProps {}
 
 const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => {
   const { categories, currentUser, dispatch } = props;
@@ -103,6 +103,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
         userId: currentUser.id
       };
 
+      // TODO: Handle validation
       // TODO: Don't edit if no change
       if (params.id) {
         const edited = await requests.categories.updateCategory({ id: params.id, ...newCategory }, dispatch);
@@ -142,28 +143,28 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
           <Loading />
         </div>
       ) : (
-          <Grid className="categoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-            <Alert
-              onClose={() => setError(false)}
-              open={error}
-              variant="error"
-              message="Submission failed, please try again later."
+        <Grid className="categoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+          <Alert
+            onClose={() => setError(false)}
+            open={error}
+            variant="error"
+            message="Submission failed, please try again later."
+          />
+          <Grid item={true} xs={12}>
+            <TextField
+              id="category-name"
+              label="Category Name"
+              autoFocus={true}
+              fullWidth={true}
+              value={name}
+              onChange={e => setName(e.target.value.trim())}
+              type="text"
+              margin="normal"
+              variant="outlined"
             />
-            <Grid item={true} xs={12}>
-              <TextField
-                id="category-name"
-                label="Category Name"
-                autoFocus={true}
-                fullWidth={true}
-                value={name}
-                onChange={e => setName(e.target.value.trim())}
-                type="text"
-                margin="normal"
-                variant="outlined"
-              />
-            </Grid>
           </Grid>
-        )}
+        </Grid>
+      )}
     </ModalForm>
   );
 };

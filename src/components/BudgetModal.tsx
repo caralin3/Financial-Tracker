@@ -5,9 +5,9 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
+import { FBBudget } from '../firebase/types';
 import { budgets } from '../mock';
-import { categoriesState } from '../store';
-// import { budgetsState, categoriesState } from '../store';
+import { budgetsState, categoriesState } from '../store';
 import { ApplicationState, Budget, budgetFreq, Category, User } from '../types';
 import { getOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
@@ -28,7 +28,8 @@ interface StateMappedProps {
 
 interface BudgetModalProps {
   buttonText: string;
-  handleClose: () => void;
+  onClose: () => void;
+  onSuccess?: () => void;
   open: boolean;
   title: string;
 }
@@ -45,7 +46,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [categoryId, setCategoryId] = React.useState<string>('');
-  const [amount, setAmount] = React.useState<number | undefined | ''>(undefined);
+  const [amount, setAmount] = React.useState<number>(0);
   const [frequency, setFrequency] = React.useState<budgetFreq>(undefined);
 
   React.useEffect(() => {
@@ -84,8 +85,8 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
 
   const loadBudgets = async () => {
     if (currentUser) {
-      // const buds = await requests.budgets.getAllBudgets(currentUser.id);
-      // dispatch(budgetsState.setBudgets(buds));
+      const buds = await requests.budgets.getAllBudgets(currentUser.id);
+      dispatch(budgetsState.setBudgets(buds));
       setLoading(false);
     }
   };
@@ -102,15 +103,73 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     setCategoryId('');
     setFrequency(undefined);
     if (amount) {
-      setAmount('');
+      setAmount(0);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleClose = () => {
+    const {
+      history,
+      match: { params },
+      onClose,
+      onSuccess
+    } = props;
+    if (params.id) {
+      history.goBack();
+    }
+    onClose();
+    if (onSuccess) {
+      onSuccess();
+    }
+    resetFields();
+  };
+
+  const isValidAmount = () => amount > 0;
+
+  const isValidCategoryId = () => categoryId.trim().length > 0;
+
+  const isValidFrequency = () => {
+    if (frequency) {
+      return frequency.trim().length > 0;
+    }
+    return false;
+  };
+
+  const isValid = () => isValidAmount() && isValidCategoryId() && isValidFrequency();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const {
+      match: { params }
+    } = props;
     e.preventDefault();
-    // props.handleClose();
-    // setError(true);
-    setSuccess(true);
+    if (currentUser) {
+      if (isValid()) {
+        const [category] = categories.filter(cat => cat.id === categoryId);
+        const newBudget: FBBudget = {
+          amount,
+          category,
+          frequency,
+          userId: currentUser.id
+        };
+
+        // TODO: Don't edit if no change
+        if (params.id) {
+          const edited = await requests.budgets.updateBudget({ id: params.id, ...newBudget }, dispatch);
+          if (edited) {
+            handleClose();
+          } else {
+            setError(true);
+          }
+        } else {
+          const added = await requests.budgets.createBudget(newBudget, dispatch);
+          if (added) {
+            handleClose();
+          } else {
+            setError(true);
+          }
+        }
+      }
+    }
   };
 
   return (
@@ -120,7 +179,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
       formButton={props.buttonText}
       formSubmit={handleSubmit}
       open={props.open}
-      handleClose={props.handleClose}
+      handleClose={handleClose}
     >
       {loading ? (
         <div className="budgetModal_loading">
@@ -201,6 +260,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
               </Grid>
             </Grid>
           </Grid>
+          {/* TODO: Update text */}
           <Grid item={true} style={{ display: 'flex' }}>
             <Typography style={{ fontWeight: 'bold', paddingRight: 5 }} color="default" variant="body1">
               $50

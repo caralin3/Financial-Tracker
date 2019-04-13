@@ -65,7 +65,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
   };
 
   const deleteTransaction = () => {
-    items.forEach(async (id) => {
+    items.forEach(async id => {
       const deleted = await requests.transactions.deleteTransaction(id, dispatch);
       if (deleted) {
         setSuccessMsg(`Transactions have been deleted`);
@@ -73,7 +73,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
       } else {
         setError(true);
       }
-    })
+    });
   };
 
   const handleEdit = (id: string, type: string) => {

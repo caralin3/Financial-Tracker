@@ -29,7 +29,7 @@ import {
   TransactionModal
 } from '../components';
 import { requests } from '../firebase/db';
-import { accountsState } from '../store';
+import { accountsState, budgetsState } from '../store';
 import { Account, ApplicationState, Budget, budgetFreq, Goal, Transaction, User } from '../types';
 import {
   accountTypeOptions,
@@ -69,7 +69,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const { accounts, budgets, currentUser, goals, dispatch, transactions } = props;
   const [loading] = React.useState<boolean>(false);
   const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(accounts.length !== 0);
-  // const [loadingBudgets, setLoadingBudgets] = React.useState<boolean>(true);
+  const [loadingBudgets, setLoadingBudgets] = React.useState<boolean>(true);
   // const [loadingGoals, setLoadingGoals] = React.useState<boolean>(true);
   // const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(true);
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
@@ -85,6 +85,11 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     } else {
       setLoadingAccounts(false);
     }
+    if (budgets.length === 0) {
+      loadBudgets();
+    } else {
+      setLoadingBudgets(false);
+    }
   }, [currentUser]);
 
   const loadAccounts = async () => {
@@ -93,11 +98,11 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     setLoadingAccounts(false);
   };
 
-  // const loadBudgets = async () => {
-  //   const buds = await requests.budgets.getAllBudgets(currentUser ? currentUser.id : '');
-  //   dispatch(budgetsState.setAccounts(sort(buds, 'desc', 'name')));
-  //   setLoadingBudgets(false);
-  // };
+  const loadBudgets = async () => {
+    const buds = await requests.budgets.getAllBudgets(currentUser ? currentUser.id : '');
+    dispatch(budgetsState.setBudgets(sort(buds, 'desc', 'name')));
+    setLoadingBudgets(false);
+  };
 
   // const loadGoals = async () => {
   //   const gls = await requests.goals.getAllGoals(currentUser ? currentUser.id : '');
@@ -168,7 +173,9 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
 
     return (
       <List className="dashboard_card">
-        {budgets.length === 0 ? (
+        {loadingBudgets ? (
+          <Loading />
+        ) : budgets.length === 0 ? (
           <ListItem>No budgets</ListItem>
         ) : (
           budgets.map(budget => {
@@ -315,7 +322,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
       <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)} />
-      <BudgetModal title="Add Budget" buttonText="Add" open={addingBudget} handleClose={() => setAddingBudget(false)} />
+      <BudgetModal title="Add Budget" buttonText="Add" open={addingBudget} onClose={() => setAddingBudget(false)} />
       <GoalModal title="Add Goal" buttonText="Add" open={addingGoal} handleClose={() => setAddingGoal(false)} />
       <TransactionModal
         title="Add Transaction"

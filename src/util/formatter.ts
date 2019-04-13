@@ -19,7 +19,7 @@ export const formatDateTime = (val: string) => {
   const s = (d.getSeconds() < 10 ? '0' : '') + d.getSeconds();
   const time = `${h}:${m}:${s}`;
   return new Date(`${val} ${time}`).toISOString();
-}
+};
 
 export const formatEmptyString = (val: string | undefined) => {
   if (!val) {
