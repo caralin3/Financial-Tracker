@@ -28,10 +28,34 @@ export const accountTypeOptions = [
   createOption('Credit', 'credit')
 ];
 
+export const goalCriteriaOptions = [
+  createOption('Account', 'account'),
+  createOption('Category', 'category'),
+  createOption('Item', 'item'),
+  createOption('Subcategory', 'subcategory')
+];
+
+export const goalComparatorOptions = [
+  createOption('Less than', '<'),
+  createOption('Greater than', '>'),
+  createOption('Equal to', '==='),
+  createOption('Less than or equal to', '<='),
+  createOption('Greater than or equal to', '>=')
+];
+
 export const getOptions = (data: Account[] | Category[] | Subcategory[]) => {
   const options: Option[] = [];
   data.forEach(d => {
     options.push(createOption(d.name, d.id));
+  });
+  return options;
+};
+
+export const getTransOptions = (data: Transaction[]) => {
+  const options: Option[] = [];
+  data.forEach(d => {
+    const label = d.item ? d.item : d.from ? d.from.name : '';
+    options.push(createOption(label, d.id));
   });
   return options;
 };

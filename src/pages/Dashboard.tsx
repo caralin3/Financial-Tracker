@@ -29,7 +29,7 @@ import {
   TransactionModal
 } from '../components';
 import { requests } from '../firebase/db';
-import { accountsState, budgetsState } from '../store';
+import { accountsState, budgetsState, transactionsState } from '../store';
 import { Account, ApplicationState, Budget, budgetFreq, Goal, Transaction, User } from '../types';
 import {
   accountTypeOptions,
@@ -71,7 +71,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(accounts.length !== 0);
   const [loadingBudgets, setLoadingBudgets] = React.useState<boolean>(true);
   // const [loadingGoals, setLoadingGoals] = React.useState<boolean>(true);
-  // const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(true);
+  const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(true);
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
   const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
   const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
@@ -80,27 +80,24 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const [selected, setSelected] = React.useState<number>(2);
 
   React.useEffect(() => {
-    if (accounts.length === 0) {
-      loadAccounts();
-    } else {
-      setLoadingAccounts(false);
-    }
-    if (budgets.length === 0) {
-      loadBudgets();
-    } else {
-      setLoadingBudgets(false);
-    }
+    loadAccounts();
+    loadBudgets();
+    loadTransactions();
   }, [currentUser]);
 
   const loadAccounts = async () => {
-    const accs = await requests.accounts.getAllAccounts(currentUser ? currentUser.id : '');
-    dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+    if (accounts.length === 0) {
+      const accs = await requests.accounts.getAllAccounts(currentUser ? currentUser.id : '');
+      dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+    }
     setLoadingAccounts(false);
   };
 
   const loadBudgets = async () => {
-    const buds = await requests.budgets.getAllBudgets(currentUser ? currentUser.id : '');
-    dispatch(budgetsState.setBudgets(sort(buds, 'desc', 'name')));
+    if (budgets.length === 0) {
+      const buds = await requests.budgets.getAllBudgets(currentUser ? currentUser.id : '');
+      dispatch(budgetsState.setBudgets(sort(buds, 'desc', 'name')));
+    }
     setLoadingBudgets(false);
   };
 
@@ -110,11 +107,13 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   //   setLoadingGoals(false);
   // };
 
-  // const loadTransactions = async () => {
-  //   const trans = await requests.transactions.getAllTransactions(currentUser ? currentUser.id : '');
-  //   dispatch(transactionsState.setTransactions(sort(trans, 'desc', 'date')));
-  //   setLoadingTransactions(false);
-  // };
+  const loadTransactions = async () => {
+    if (transactions.length === 0) {
+      const trans = await requests.transactions.getAllTransactions(currentUser ? currentUser.id : '');
+      dispatch(transactionsState.setTransactions(sort(trans, 'desc', 'date')));
+    }
+    setLoadingTransactions(false);
+  };
 
   const menuItems = [
     { label: 'This Week', value: 0 },
@@ -130,7 +129,9 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
 
   const recentTransactions = (
     <List className="dashboard_card">
-      {transactions.length === 0 ? (
+      {loadingTransactions ? (
+        <Loading />
+      ) : transactions.length === 0 ? (
         <ListItem>No recent transactions</ListItem>
       ) : (
         transactions.slice(0, 10).map(trans => (
@@ -323,7 +324,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     >
       <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)} />
       <BudgetModal title="Add Budget" buttonText="Add" open={addingBudget} onClose={() => setAddingBudget(false)} />
-      <GoalModal title="Add Goal" buttonText="Add" open={addingGoal} handleClose={() => setAddingGoal(false)} />
+      <GoalModal title="Add Goal" buttonText="Add" open={addingGoal} onClose={() => setAddingGoal(false)} />
       <TransactionModal
         title="Add Transaction"
         buttonText="Add"

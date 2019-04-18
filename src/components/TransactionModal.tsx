@@ -247,6 +247,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
         };
 
         if (params.id) {
+          // FIXME: Update account balance
           const edited = await requests.transactions.updateTransaction({ id: params.id, ...newTransaction }, dispatch);
           if (edited) {
             handleClose();
