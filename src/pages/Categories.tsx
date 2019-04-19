@@ -89,6 +89,7 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
 
   const deleteCategory = async () => {
     const deleted = await requests.categories.deleteCategory(deleteId, dispatch);
+    // TODO: Delete subcategories
     setSuccessMsg(`${deleteCat.name} has been deleted`);
     if (deleted) {
       setSuccess(true);
