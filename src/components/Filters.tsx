@@ -37,10 +37,25 @@ export const Filters: React.SFC<FiltersProps> = props => {
   }, [count]);
 
   const createOps = (col: Column) => {
+    // console.log(col.label);
     const options: Option[] = [{ label: 'All', value: 'all' }];
-    data.forEach(d => {
-      options.push({ label: d[col.id], value: d[col.id] });
-    });
+    if (col.label === 'Date') {
+      data.forEach(d => {
+        // console.log(d[col.id]);
+        // options.push({ label: d[col.id], value: d[col.id] });
+      });
+    } else if (col.label === 'Tags') {
+      data.forEach(d => {
+        const tags = d[col.id].split(',');
+        tags.forEach((tag: string) => {
+          options.push({ label: tag.trim(), value: tag.trim() });
+        })
+      });
+    } else {
+      data.forEach(d => {
+        options.push({ label: d[col.id], value: d[col.id] });
+      });
+    }
     return removeDupObjs(options);
   };
 
@@ -118,7 +133,6 @@ export const Filters: React.SFC<FiltersProps> = props => {
         </Button>
       </div>
       <Grid className="filters_grid" container={true} spacing={24}>
-        {/* FIXME: Fix tags array filter */}
         {/* FIXME: Fix date filter */}
         {filters.map((col, index) => (
           <Grid item={true} xs={12} md={6} key={col.id}>

@@ -369,7 +369,13 @@ const Table: React.SFC<TableProps> = props => {
   const filter = (dataFilters: { [key: string]: string | number }) => {
     const conditions: Array<(d: any) => boolean> = [];
     Object.keys(dataFilters).forEach(col => {
-      conditions.push((d: any) => d[col] === dataFilters[col]);
+      conditions.push((d: any) => {
+        if (col === 'tags') {
+          const tags: any[] = d[col].split(', ');
+          return tags.indexOf(dataFilters[col]) !== -1
+        }
+        return d[col] === dataFilters[col];
+      });
     });
 
     const filteredData = data.filter((d: any) => conditions.every(cond => cond(d)));
