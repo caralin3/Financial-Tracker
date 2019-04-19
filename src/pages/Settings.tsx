@@ -25,7 +25,7 @@ interface SettingsMergedProps extends RouteComponentProps, StateMappedProps, Dis
 
 const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = props => {
   const [loading] = React.useState<boolean>(false);
-
+  // TODO: Change user info and password
   return <Layout title="Settings">{loading ? <Loading /> : <div>Settings</div>}</Layout>;
 };
 

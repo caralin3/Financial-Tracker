@@ -149,6 +149,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
           </div>
         ) : (
           <div className={classes.actionButtons}>
+            {/* TODO: Export and Import data */}
             <Tooltip title="Export">
               <IconButton aria-label="Export" onClick={() => null}>
                 <CloudDownloadIcon />
@@ -382,6 +383,7 @@ const Table: React.SFC<TableProps> = props => {
 
   const editType = title.endsWith('s') ? title.toLowerCase().slice(0, title.length - 1) : title.toLowerCase();
 
+  // FIXME: Data table styles
   return (
     <Paper className={classNames([classes.root, 'table'])} elevation={8}>
       <TableToolbar

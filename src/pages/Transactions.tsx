@@ -1,4 +1,4 @@
-import { Theme, withStyles } from '@material-ui/core';
+// import { Theme, withStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import * as moment from 'moment';
 import * as React from 'react';
@@ -167,7 +167,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
   );
 };
 
-const styles = (theme: Theme) => ({});
+// const styles = (theme: Theme) => ({});
 
 const authCondition = (authUser: any) => !!authUser;
 
@@ -180,7 +180,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export const TransactionsPage = compose(
   withAuthorization(authCondition),
-  withStyles(styles as any, { withTheme: true }),
+  // withStyles(styles as any, { withTheme: true }),
   withRouter,
   connect(
     mapStateToProps,

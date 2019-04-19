@@ -1,4 +1,4 @@
-import { Theme, withStyles } from '@material-ui/core';
+// import { Theme, withStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -218,6 +218,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       return getArrayTotal(filteredExpenses);
     };
 
+    // TODO: Edit budgets on click
     return (
       <List className="dashboard_card">
         {loadingBudgets ? (
@@ -322,6 +323,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       return getArrayTotal(amountFilteredExps);
     };
 
+    // TODO: Edit goals on click
     return (
       <List className="dashboard_card">
         {loadingGoals ? (
@@ -440,7 +442,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   );
 };
 
-const styles = (theme: Theme) => ({});
+// const styles = (theme: Theme) => ({});
 
 const authCondition = (authUser: any) => !!authUser;
 
@@ -456,7 +458,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export const DashboardPage = compose(
   withAuthorization(authCondition),
-  withStyles(styles as any, { withTheme: true }),
+  // withStyles(styles as any, { withTheme: true }),
   withRouter,
   connect(
     mapStateToProps,
