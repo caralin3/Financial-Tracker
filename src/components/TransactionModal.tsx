@@ -334,7 +334,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             helperText={submit && !isValidFrom() ? 'Required' : undefined}
             error={submit && !isValidFrom()}
             selected={from}
-            handleChange={e => setFrom(e.target.value)}
+            handleChange={e => {
+              setFrom(e.target.value);
+              setSubmit(false);
+            }}
             options={getOptions(accounts)}
           />
         </Grid>
@@ -343,7 +346,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             className="transModal_field--item"
             id="expense-item"
             label="Item"
-            onChange={e => setItem(e.target.value.trim())}
+            onChange={e => {
+              setItem(e.target.value.trim());
+              setSubmit(false);
+            }}
             dataList={items}
             helperText={submit && !isValidItem() ? 'Required' : undefined}
             error={submit && !isValidItem()}
@@ -356,7 +362,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Date"
             fullWidth={true}
             value={date}
-            onChange={e => setDate(e.target.value)}
+            onChange={e => {
+              setDate(e.target.value);
+              setSubmit(false);
+            }}
             InputLabelProps={{
               shrink: true
             }}
@@ -373,7 +382,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Amount"
             fullWidth={true}
             value={amount}
-            onChange={e => setAmount(parseFloat(e.target.value) || 0)}
+            onChange={e => {
+              setAmount(parseFloat(e.target.value) || 0);
+              setSubmit(false);
+            }}
             type="number"
             helperText={submit && !isValidAmount() ? 'Must be greater than zero' : undefined}
             error={submit && !isValidAmount()}
@@ -385,7 +397,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           <SelectInput
             label="Category"
             selected={categoryId}
-            handleChange={e => setCategoryId(e.target.value)}
+            handleChange={e => {
+              setCategoryId(e.target.value);
+              setSubmit(false);
+            }}
             helperText={submit && !isValidCategoryId() ? 'Required' : undefined}
             error={submit && !isValidCategoryId()}
             options={getOptions(categories)}
@@ -395,7 +410,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           <SelectInput
             label="Subcategory"
             selected={subcategoryId}
-            handleChange={e => setSubcategoryId(e.target.value)}
+            handleChange={e => {
+              setSubcategoryId(e.target.value);
+              setSubmit(false);
+            }}
             helperText={submit && !isValidSubcategoryId() ? 'Required' : undefined}
             error={submit && !isValidSubcategoryId()}
             options={getOptions(subcategories.filter(sub => sub.category.id === categoryId))}
@@ -407,7 +425,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
               className="transModal_field--item"
               id="expense-note"
               label="Note"
-              onChange={e => setNote(e.target.value.trim())}
+              onChange={e => {
+                setNote(e.target.value.trim());
+                setSubmit(false);
+              }}
               dataList={items}
               value={note}
             />
@@ -419,7 +440,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
               className="transModal_field--item"
               id="expense-tags"
               label="Tags"
-              onChange={e => setTags(e.target.value.trim())}
+              onChange={e => {
+                setTags(e.target.value.trim());
+                setSubmit(false);
+              }}
               dataList={items}
               value={tags}
             />
@@ -437,7 +461,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             className="transModal_field--item"
             id="income-item"
             label="Item"
-            onChange={e => setItem(e.target.value.trim())}
+            onChange={e => {
+              setItem(e.target.value.trim());
+              setSubmit(false);
+            }}
             helperText={submit && !isValidItem() ? 'Required' : undefined}
             error={submit && !isValidItem()}
             dataList={items}
@@ -448,7 +475,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           <SelectInput
             label="To"
             selected={to}
-            handleChange={e => setTo(e.target.value)}
+            handleChange={e => {
+              setTo(e.target.value);
+              setSubmit(false);
+            }}
             helperText={submit && !isValidTo() ? 'Required' : undefined}
             error={submit && !isValidTo()}
             options={getOptions(accounts)}
@@ -460,7 +490,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Date"
             fullWidth={true}
             value={date}
-            onChange={e => setDate(e.target.value)}
+            onChange={e => {
+              setDate(e.target.value);
+              setSubmit(false);
+            }}
             InputLabelProps={{
               shrink: true
             }}
@@ -477,7 +510,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Amount"
             fullWidth={true}
             value={amount}
-            onChange={e => setAmount(parseFloat(e.target.value) || 0)}
+            onChange={e => {
+              setAmount(parseFloat(e.target.value) || 0);
+              setSubmit(false);
+            }}
             type="number"
             helperText={submit && !isValidAmount() ? 'Must be greater than zero' : undefined}
             error={submit && !isValidAmount()}
@@ -490,7 +526,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             className="transModal_field--item"
             id="income-note"
             label="Note"
-            onChange={e => setNote(e.target.value.trim())}
+            onChange={e => {
+              setNote(e.target.value.trim());
+              setSubmit(false);
+            }}
             dataList={items}
             value={note}
           />
@@ -500,7 +539,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             className="transModal_field--item"
             id="income-tags"
             label="Tags"
-            onChange={e => setTags(e.target.value.trim())}
+            onChange={e => {
+              setTags(e.target.value.trim());
+              setSubmit(false);
+            }}
             dataList={items}
             value={tags}
           />
@@ -516,7 +558,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           <SelectInput
             label="From"
             selected={from}
-            handleChange={e => setFrom(e.target.value)}
+            handleChange={e => {
+              setFrom(e.target.value);
+              setSubmit(false);
+            }}
             helperText={submit && !isValidFrom() ? 'Required' : undefined}
             error={submit && !isValidFrom()}
             options={getOptions(accounts)}
@@ -526,7 +571,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           <SelectInput
             label="To"
             selected={to}
-            handleChange={e => setTo(e.target.value)}
+            handleChange={e => {
+              setTo(e.target.value);
+              setSubmit(false);
+            }}
             helperText={submit && !isValidTo() ? 'Required' : undefined}
             error={submit && !isValidTo()}
             options={getOptions(accounts)}
@@ -538,7 +586,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Date"
             fullWidth={true}
             value={date}
-            onChange={e => setDate(e.target.value)}
+            onChange={e => {
+              setDate(e.target.value);
+              setSubmit(false);
+            }}
             InputLabelProps={{
               shrink: true
             }}
@@ -555,7 +606,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             label="Amount"
             fullWidth={true}
             value={amount}
-            onChange={e => setAmount(parseFloat(e.target.value) || 0)}
+            onChange={e => {
+              setAmount(parseFloat(e.target.value) || 0);
+              setSubmit(false);
+            }}
             type="number"
             helperText={submit && !isValidAmount() ? 'Must be greater than zero' : undefined}
             error={submit && !isValidAmount()}
@@ -568,7 +622,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             className="transModal_field--item"
             id="transfer-note"
             label="Note"
-            onChange={e => setNote(e.target.value.trim())}
+            onChange={e => {
+              setNote(e.target.value.trim());
+              setSubmit(false);
+            }}
             dataList={items}
             value={note}
           />
@@ -578,7 +635,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             className="transModal_field--item"
             id="transfer-tags"
             label="Tags"
-            onChange={e => setTags(e.target.value.trim())}
+            onChange={e => {
+              setTags(e.target.value.trim());
+              setSubmit(false);
+            }}
             dataList={items}
             value={tags}
           />

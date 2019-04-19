@@ -42,6 +42,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+  const [submit, setSubmit] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number>(0);
   const [type, setType] = React.useState<accountType | ''>('');
@@ -96,7 +97,15 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     }
     onClose();
     resetFields();
+    setSubmit(false);
   };
+
+  // TODO: Handle unique name
+  const isValidName = () => {
+    return name.trim().length > 0;
+  };
+
+  const isValidType = () => type.trim().length > 0;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
@@ -104,6 +113,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
       onSuccess
     } = props;
     e.preventDefault();
+    setSubmit(true);
     if (currentUser) {
       const newAccount = {
         amount,
@@ -112,22 +122,25 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
         userId: currentUser.id
       };
 
-      if (params.id) {
-        const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, dispatch);
-        if (edited) {
-          handleClose();
-          if (onSuccess) {
-            onSuccess();
+      if (isValidName() && isValidType()) {
+        if (params.id) {
+          const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, dispatch);
+          if (edited) {
+            handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
+          } else {
+            setError(true);
           }
         } else {
-          setError(true);
-        }
-      } else {
-        const added = await requests.accounts.createAccount(newAccount, dispatch);
-        if (added) {
-          setSuccess(true);
-        } else {
-          setError(true);
+          const added = await requests.accounts.createAccount(newAccount, dispatch);
+          if (added) {
+            setSuccess(true);
+            setSubmit(false);
+          } else {
+            setError(true);
+          }
         }
       }
     }
@@ -167,7 +180,12 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
               label="Name"
               fullWidth={true}
               value={name}
-              onChange={e => setName(e.target.value.trim())}
+              onChange={e => {
+                setName(e.target.value.trim());
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidName() ? 'Required' : undefined}
+              error={submit && !isValidName()}
               type="text"
               margin="normal"
               variant="outlined"
@@ -189,7 +207,12 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
             <SelectInput
               label="Account Type"
               selected={type}
-              handleChange={e => setType(e.target.value as accountType)}
+              handleChange={e => {
+                setType(e.target.value as accountType);
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidType() ? 'Required' : undefined}
+              error={submit && !isValidType()}
               options={accountTypeOptions}
             />
           </Grid>

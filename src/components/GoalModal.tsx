@@ -58,6 +58,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+  const [submit, setSubmit] = React.useState<boolean>(false);
   const [criteria, setCriteria] = React.useState<goalCriteria>('');
   const [comparator, setComparator] = React.useState<goalComparator>('');
   const [item, setItem] = React.useState<string>('');
@@ -135,20 +136,18 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
       onSuccess();
     }
     resetFields();
+    setSubmit(false);
   };
 
   const isValidCriteria = () => (criteria ? criteria.trim().length > 0 : false);
 
   const isValidComparator = () => (comparator ? comparator.trim().length > 0 : false);
 
-  const isValidFrequency = () => {
-    if (frequency) {
-      return frequency.trim().length > 0;
-    }
-    return false;
-  };
+  const isValidItem = () => (item ? item.trim().length > 0 : false);
 
-  const isValid = () => isValidCriteria() && isValidComparator() && isValidFrequency();
+  const isValidFrequency = () => frequency ? frequency.trim().length > 0 : false;
+
+  const isValid = () => isValidCriteria() && isValidComparator() && isValidItem() && isValidFrequency();
 
   const getItem = () => {
     switch (criteria) {
@@ -191,6 +190,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
       match: { params }
     } = props;
     e.preventDefault();
+    setSubmit(true);
     if (currentUser) {
       if (isValid()) {
         const newGoal: FBGoal = {
@@ -222,7 +222,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     }
   };
 
-  // TODO: Show validation errors
+  // TODO: Show validation frequency error
   return (
     <ModalForm
       disabled={false}
@@ -250,7 +250,12 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
               label="Goal Based On"
               autoFocus={true}
               selected={criteria}
-              handleChange={e => setCriteria(e.target.value as goalCriteria)}
+              handleChange={e => {
+                setCriteria(e.target.value as goalCriteria);
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidCriteria() ? 'Required' : undefined}
+              error={submit && !isValidCriteria()}
               options={goalCriteriaOptions}
             />
           </Grid>
@@ -261,7 +266,12 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
                 <SelectInput
                   label="Comparator"
                   selected={comparator}
-                  handleChange={e => setComparator(e.target.value as goalComparator)}
+                  handleChange={e => {
+                    setComparator(e.target.value as goalComparator);
+                    setSubmit(false);
+                  }}
+                  helperText={submit && !isValidComparator() ? 'Required' : undefined}
+                  error={submit && !isValidComparator()}
                   options={goalComparatorOptions}
                 />
               </Grid>
@@ -272,7 +282,10 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
                   label="Amount"
                   fullWidth={true}
                   value={amount}
-                  onChange={e => setAmount(parseFloat(e.target.value))}
+                  onChange={e => {
+                    setAmount(parseFloat(e.target.value) || 0);
+                    setSubmit(false);
+                  }}
                   type="number"
                   margin="normal"
                   variant="outlined"
@@ -283,7 +296,12 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
                 <SelectInput
                   label="Item"
                   selected={item}
-                  handleChange={e => setItem(e.target.value)}
+                  handleChange={e => {
+                    setItem(e.target.value);
+                    setSubmit(false);
+                  }}
+                  helperText={submit && !isValidItem() ? 'Required' : undefined}
+                  error={submit && !isValidItem()}
                   options={itemOptions()}
                 />
               </Grid>

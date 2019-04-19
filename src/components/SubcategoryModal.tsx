@@ -42,6 +42,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
   const { categories, currentUser, dispatch, subcategories } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+  const [submit, setSubmit] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
   const [categoryId, setCategoryId] = React.useState<string>('');
 
@@ -113,9 +114,16 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     }
     onClose();
     resetFields();
+    setSubmit(false);
   };
 
-  // TODO: Handle validations
+  // TODO: Handle unique name
+  const isValidName = () => {
+    return name.trim().length > 0;
+  };
+
+  const isValidCategoryId = () => categoryId.trim().length > 0;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
       match: { params },
@@ -123,6 +131,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       onSuccess
     } = props;
     e.preventDefault();
+    setSubmit(true);
     if (currentUser) {
       const [category] = categories.filter(cat => cat.id === categoryId);
       const newSubcategory = {
@@ -132,25 +141,27 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       };
 
       // TODO: Don't edit if no change
-      if (location.pathname.includes('edit') && params.id) {
-        const edited = await requests.subcategories.updateSubcategory({ id: params.id, ...newSubcategory }, dispatch);
-        if (edited) {
-          handleClose();
-          if (onSuccess) {
-            onSuccess();
+      if (isValidName() && isValidCategoryId()) {
+        if (location.pathname.includes('edit') && params.id) {
+          const edited = await requests.subcategories.updateSubcategory({ id: params.id, ...newSubcategory }, dispatch);
+          if (edited) {
+            handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
+          } else {
+            setError(true);
           }
         } else {
-          setError(true);
-        }
-      } else {
-        const added = await requests.subcategories.createSubcategory(newSubcategory, dispatch);
-        if (added) {
-          handleClose();
-          if (onSuccess) {
-            onSuccess();
+          const added = await requests.subcategories.createSubcategory(newSubcategory, dispatch);
+          if (added) {
+            handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
+          } else {
+            setError(true);
           }
-        } else {
-          setError(true);
         }
       }
     }
@@ -177,7 +188,12 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
               label="Category"
               selected={categoryId}
               autoFocus={true}
-              handleChange={e => setCategoryId(e.target.value)}
+              handleChange={e => {
+                setCategoryId(e.target.value);
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidCategoryId() ? 'Required' : undefined}
+              error={submit && !isValidCategoryId()}
               options={getOptions(categories)}
             />
           </Grid>
@@ -187,7 +203,12 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
               label="Subcategory Name"
               fullWidth={true}
               value={name}
-              onChange={e => setName(e.target.value.trim())}
+              onChange={e => {
+                setName(e.target.value.trim());
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidName() ? 'Required' : undefined}
+              error={submit && !isValidName()}
               type="text"
               margin="normal"
               variant="outlined"

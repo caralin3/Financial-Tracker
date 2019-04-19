@@ -45,6 +45,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+  const [submit, setSubmit] = React.useState<boolean>(false);
   const [categoryId, setCategoryId] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number>(0);
   const [frequency, setFrequency] = React.useState<budgetFreq>(undefined);
@@ -122,16 +123,12 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
       onSuccess();
     }
     resetFields();
+    setSubmit(false);
   };
 
   const isValidCategoryId = () => categoryId.trim().length > 0;
 
-  const isValidFrequency = () => {
-    if (frequency) {
-      return frequency.trim().length > 0;
-    }
-    return false;
-  };
+  const isValidFrequency = () => frequency ? frequency.trim().length > 0 : false;
 
   const isValid = () => isValidCategoryId() && isValidFrequency();
 
@@ -140,6 +137,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
       match: { params }
     } = props;
     e.preventDefault();
+    setSubmit(true);
     if (currentUser) {
       if (isValid()) {
         const [category] = categories.filter(cat => cat.id === categoryId);
@@ -170,7 +168,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     }
   };
 
-  // TODO: Show validation errors
+  // TODO: Show validation frequency error
   return (
     <ModalForm
       disabled={false}
@@ -198,7 +196,12 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
               label="Category"
               autoFocus={true}
               selected={categoryId}
-              handleChange={e => setCategoryId(e.target.value)}
+              handleChange={e => {
+                setCategoryId(e.target.value);
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidCategoryId() ? 'Required' : undefined}
+              error={submit && !isValidCategoryId()}
               options={getOptions(categories)}
             />
           </Grid>
@@ -208,7 +211,10 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
               label="Amount"
               fullWidth={true}
               value={amount}
-              onChange={e => setAmount(parseFloat(e.target.value))}
+              onChange={e => {
+                setAmount(parseFloat(e.target.value) || 0);
+                setSubmit(false);
+              }}
               type="number"
               margin="normal"
               variant="outlined"

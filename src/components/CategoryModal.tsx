@@ -40,6 +40,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
   const { categories, currentUser, dispatch } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+  const [submit, setSubmit] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -89,6 +90,12 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
     }
     onClose();
     resetFields();
+    setSubmit(false);
+  };
+
+  // TODO: Handle unique name
+  const isValidName = () => {
+    return name.trim().length > 0;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -97,33 +104,35 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
       onSuccess
     } = props;
     e.preventDefault();
+    setSubmit(true);
     if (currentUser) {
       const newCategory = {
         name,
         userId: currentUser.id
       };
 
-      // TODO: Handle validation
       // TODO: Don't edit if no change
-      if (params.id) {
-        const edited = await requests.categories.updateCategory({ id: params.id, ...newCategory }, dispatch);
-        if (edited) {
-          handleClose();
-          if (onSuccess) {
-            onSuccess();
+      if (isValidName()) {
+        if (params.id) {
+          const edited = await requests.categories.updateCategory({ id: params.id, ...newCategory }, dispatch);
+          if (edited) {
+            handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
+          } else {
+            setError(true);
           }
         } else {
-          setError(true);
-        }
-      } else {
-        const added = await requests.categories.createCategory(newCategory, dispatch);
-        if (added) {
-          handleClose();
-          if (onSuccess) {
-            onSuccess();
+          const added = await requests.categories.createCategory(newCategory, dispatch);
+          if (added) {
+            handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
+          } else {
+            setError(true);
           }
-        } else {
-          setError(true);
         }
       }
     }
@@ -157,7 +166,12 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
               autoFocus={true}
               fullWidth={true}
               value={name}
-              onChange={e => setName(e.target.value.trim())}
+              onChange={e => {
+                setName(e.target.value.trim());
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidName() ? 'Required' : undefined}
+              error={submit && !isValidName()}
               type="text"
               margin="normal"
               variant="outlined"
