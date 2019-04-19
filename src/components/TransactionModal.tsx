@@ -247,16 +247,67 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
         };
 
         if (params.id) {
-          // FIXME: Update account balance
+          const [oldTrans] = transactions.filter(trans => trans.id === params.id);
+          const prevAmount = oldTrans.amount;
           const edited = await requests.transactions.updateTransaction({ id: params.id, ...newTransaction }, dispatch);
-          if (edited) {
+          let accountUpdated: boolean = false;
+          if (newTransaction.type ==='expense') {
+            const updatedAcc: Account = {
+              ...fromAcc,
+              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
+            }
+            accountUpdated = await requests.accounts.updateAccount(updatedAcc, dispatch);
+          } else if (newTransaction.type === 'income') {
+            const updatedAcc: Account = {
+              ...toAcc,
+              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
+            }
+            accountUpdated = await requests.accounts.updateAccount(updatedAcc, dispatch);
+          } else {
+            const updatedFromAcc: Account = {
+              ...fromAcc,
+              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
+            }
+            const updatedToAcc: Account = {
+              ...toAcc,
+              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
+            }
+            accountUpdated = await requests.accounts.updateAccount(updatedFromAcc, dispatch);
+            accountUpdated = await requests.accounts.updateAccount(updatedToAcc, dispatch);
+          }
+          if (edited && accountUpdated) {
             handleClose();
           } else {
             setError(true);
           }
         } else {
           const added = await requests.transactions.createTransaction(newTransaction, dispatch);
-          if (added) {
+          let accountUpdated: boolean = false;
+          if (newTransaction.type ==='expense') {
+            const updatedAcc: Account = {
+              ...fromAcc,
+              amount: fromAcc.amount - newTransaction.amount,
+            }
+            accountUpdated = await requests.accounts.updateAccount(updatedAcc, dispatch);
+          } else if (newTransaction.type === 'income') {
+            const updatedAcc: Account = {
+              ...toAcc,
+              amount: toAcc.amount + newTransaction.amount,
+            }
+            accountUpdated = await requests.accounts.updateAccount(updatedAcc, dispatch);
+          } else {
+            const updatedFromAcc: Account = {
+              ...fromAcc,
+              amount: fromAcc.amount - newTransaction.amount,
+            }
+            const updatedToAcc: Account = {
+              ...toAcc,
+              amount: toAcc.amount + newTransaction.amount,
+            }
+            accountUpdated = await requests.accounts.updateAccount(updatedFromAcc, dispatch);
+            accountUpdated = await requests.accounts.updateAccount(updatedToAcc, dispatch);
+          }
+          if (added && accountUpdated) {
             setSuccess(true);
             setSubmit(false);
           } else {
