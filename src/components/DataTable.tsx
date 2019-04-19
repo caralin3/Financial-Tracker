@@ -22,6 +22,7 @@ import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Column } from '../types';
+import { getTransactionByRange } from '../util';
 import { Columns, Filters, Popup } from './';
 
 interface TableHeadProps {
@@ -373,6 +374,10 @@ const Table: React.SFC<TableProps> = props => {
         if (col === 'tags') {
           const tags: any[] = d[col].split(', ');
           return tags.indexOf(dataFilters[col]) !== -1
+        }
+        if (col === 'date') {
+          const matching = getTransactionByRange(dataFilters[col] as string, [d]);
+          return matching.length > 0;
         }
         return d[col] === dataFilters[col];
       });
