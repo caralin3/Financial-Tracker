@@ -137,9 +137,9 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     resetFields();
   };
 
-  const isValidCriteria = () => criteria ? criteria.trim().length > 0 : false;
+  const isValidCriteria = () => (criteria ? criteria.trim().length > 0 : false);
 
-  const isValidComparator = () => comparator ? comparator.trim().length > 0 : false;
+  const isValidComparator = () => (comparator ? comparator.trim().length > 0 : false);
 
   const isValidFrequency = () => {
     if (frequency) {
@@ -182,7 +182,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
       case 'subcategory':
         return getOptions(subcategories);
       default:
-      return getOptions(accounts);
+        return getOptions(accounts);
     }
   };
 

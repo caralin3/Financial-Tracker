@@ -98,6 +98,31 @@ export const transferColumns = [
 export const getObjectByType = (arr: any[], type: accountType | transactionType) =>
   arr.filter(obj => obj.type === type);
 
+export const getTransactionByRange = (range: string, transactions: Transaction[]) => {
+  switch (range) {
+    case 'This Week':
+      return transactions.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'week'));
+    case 'Last Week':
+      const lastWeek = moment(new Date())
+        .clone()
+        .subtract(1, 'week')
+        .format();
+      return transactions.filter(trans => moment(new Date(trans.date)).isSame(lastWeek, 'week'));
+    case 'This Month':
+      return transactions.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'month'));
+    case 'Last Month':
+      const lastMonth = moment(new Date())
+        .clone()
+        .subtract(1, 'month')
+        .format();
+      return transactions.filter(trans => moment(new Date(trans.date)).isSame(lastMonth, 'month'));
+    case 'This Year':
+      return transactions.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'year'));
+    default:
+      return [];
+  }
+};
+
 export const getExpensesByDates = (
   frequency: budgetFreq | goalFreq,
   expenses: Transaction[],

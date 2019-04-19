@@ -29,7 +29,7 @@ import {
   TransactionModal
 } from '../components';
 import { requests } from '../firebase/db';
-import { accountsState, budgetsState, transactionsState } from '../store';
+import { accountsState, budgetsState, goalsState, transactionsState } from '../store';
 import { Account, ApplicationState, Budget, budgetFreq, Goal, Transaction, User } from '../types';
 import {
   accountTypeOptions,
@@ -40,6 +40,7 @@ import {
   getExpensesByCriteria,
   getExpensesByDates,
   getObjectByType,
+  getTransactionByRange,
   sort
 } from '../util';
 
@@ -68,9 +69,9 @@ interface DashboardMergedProps
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const { accounts, budgets, currentUser, goals, dispatch, transactions } = props;
   const [loading] = React.useState<boolean>(false);
-  const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(accounts.length !== 0);
+  const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(true);
   const [loadingBudgets, setLoadingBudgets] = React.useState<boolean>(true);
-  // const [loadingGoals, setLoadingGoals] = React.useState<boolean>(true);
+  const [loadingGoals, setLoadingGoals] = React.useState<boolean>(true);
   const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(true);
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
   const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
@@ -78,12 +79,63 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const [addingTrans, setAddingTrans] = React.useState<boolean>(false);
   const [expanded, setExpanded] = React.useState<number>(1);
   const [selected, setSelected] = React.useState<number>(2);
+  const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
+  const [subheader, setSubheader] = React.useState<string>('');
+  const menuItems = [
+    { label: 'This Week', value: 0 },
+    { label: 'Last Week', value: 1 },
+    { label: 'This Month', value: 2 },
+    { label: 'Last Month', value: 3 },
+    { label: 'This Year', value: 4 }
+  ];
+
+  const getSubheader = (range: string) => {
+    switch (range) {
+      case 'This Week':
+        const begin = moment(new Date())
+          .startOf('week')
+          .format('MM/DD/YY');
+        const end = moment(new Date())
+          .endOf('week')
+          .format('MM/DD/YY');
+        return `${begin} - ${end}`;
+      case 'Last Week':
+        const beginLast = moment(new Date())
+          .subtract(1, 'week')
+          .startOf('week')
+          .format('MM/DD/YY');
+        const endLast = moment(new Date())
+          .subtract(1, 'week')
+          .endOf('week')
+          .format('MM/DD/YY');
+        return `${beginLast} - ${endLast}`;
+      case 'This Month':
+        return moment(new Date()).format('MMMM YYYY');
+      case 'Last Month':
+        const lastMonth = moment(new Date())
+          .clone()
+          .subtract(1, 'month')
+          .format();
+        return moment(lastMonth).format('MMMM YYYY');
+      case 'This Year':
+        return moment(new Date()).format('YYYY');
+      default:
+        return '';
+    }
+  };
 
   React.useEffect(() => {
     loadAccounts();
     loadBudgets();
+    loadGoals();
     loadTransactions();
   }, [currentUser]);
+
+  React.useEffect(() => {
+    const range = menuItems[selected].label;
+    setCurrentTrans(getTransactionByRange(range, transactions));
+    setSubheader(getSubheader(range));
+  }, [selected]);
 
   const loadAccounts = async () => {
     if (accounts.length === 0) {
@@ -101,11 +153,13 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     setLoadingBudgets(false);
   };
 
-  // const loadGoals = async () => {
-  //   const gls = await requests.goals.getAllGoals(currentUser ? currentUser.id : '');
-  //   dispatch(goalsState.setGoals(sort(gls, 'desc', 'name')));
-  //   setLoadingGoals(false);
-  // };
+  const loadGoals = async () => {
+    if (goals.length === 0) {
+      const gls = await requests.goals.getAllGoals(currentUser ? currentUser.id : '');
+      dispatch(goalsState.setGoals(sort(gls, 'desc', 'name')));
+    }
+    setLoadingGoals(false);
+  };
 
   const loadTransactions = async () => {
     if (transactions.length === 0) {
@@ -115,14 +169,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     setLoadingTransactions(false);
   };
 
-  const menuItems = [
-    { label: 'This Week', value: 0 },
-    { label: 'Last Week', value: 1 },
-    { label: 'This Month', value: 2 },
-    { label: 'Last Month', value: 3 },
-    { label: 'Custom Range', value: 4 }
-  ];
-
   const handleMenu = (e: any) => {
     setSelected(e.currentTarget.attributes.getNamedItem('data-value').value);
   };
@@ -131,10 +177,10 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     <List className="dashboard_card">
       {loadingTransactions ? (
         <Loading />
-      ) : transactions.length === 0 ? (
+      ) : currentTrans.length === 0 ? (
         <ListItem>No recent transactions</ListItem>
       ) : (
-        transactions.slice(0, 10).map(trans => (
+        currentTrans.slice(0, 10).map(trans => (
           <ListItem key={trans.id} className="dashboard_item">
             <div className="dashboard_fullRow">
               <ListItemText
@@ -167,7 +213,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
 
   const budgetItems = () => {
     const calcSpent = (freq: budgetFreq, categoryId: string) => {
-      const expenses = getObjectByType(transactions, 'expense').filter(trans => trans.category.id === categoryId);
+      const expenses = getObjectByType(currentTrans, 'expense').filter(trans => trans.category.id === categoryId);
       const filteredExpenses = getExpensesByDates(freq, expenses);
       return getArrayTotal(filteredExpenses);
     };
@@ -269,17 +315,18 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const goalItems = () => {
     const calcSpent = (goal: Goal) => {
       const item = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
-      const expenses = getObjectByType(transactions, 'expense');
+      const expenses = getObjectByType(currentTrans, 'expense');
       const dateFilteredExps = getExpensesByDates(goal.frequency, expenses, goal.startDate, goal.endDate);
       const criteriaFilteredExps = getExpensesByCriteria(goal.criteria, item, dateFilteredExps);
       const amountFilteredExps = getExpensesByAmount(goal.amount, goal.comparator, criteriaFilteredExps);
-      // console.log(dateFilteredExps, criteriaFilteredExps, amountFilteredExps);
       return getArrayTotal(amountFilteredExps);
     };
 
     return (
       <List className="dashboard_card">
-        {goals.length === 0 ? (
+        {loadingGoals ? (
+          <Loading />
+        ) : goals.length === 0 ? (
           <ListItem>No goals</ListItem>
         ) : (
           goals.map(goal => {
@@ -312,9 +359,8 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   ];
 
   const username = currentUser ? `${currentUser.firstName}'s` : '';
-
-  const expenseTotal = getArrayTotal(getObjectByType(transactions, 'expense'));
-  const incomeTotal = getArrayTotal(getObjectByType(transactions, 'income'));
+  const expenseTotal = getArrayTotal(getObjectByType(currentTrans, 'expense'));
+  const incomeTotal = getArrayTotal(getObjectByType(currentTrans, 'income'));
   const net = incomeTotal - expenseTotal;
 
   return (
@@ -383,7 +429,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
           </Grid>
           {dashboardSections.map(section => (
             <Grid item={true} md={6} sm={12} xs={12} key={section.title}>
-              <DashboardCard className="gridItem" title={section.title} onClick={section.action}>
+              <DashboardCard className="gridItem" title={section.title} subheader={subheader} onClick={section.action}>
                 {section.content}
               </DashboardCard>
             </Grid>

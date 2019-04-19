@@ -10,6 +10,7 @@ export interface AlertDialogProps {
   className?: string;
   classes: any;
   onClick: () => void;
+  subheader?: string;
   title: string;
 }
 
@@ -17,6 +18,7 @@ const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = props => (
   <Card className={props.className} raised={true}>
     <CardHeader
       classes={{
+        subheader: props.classes.subheader,
         title: props.classes.title
       }}
       action={
@@ -25,12 +27,17 @@ const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = props => (
         </IconButton>
       }
       title={props.title}
+      subheader={props.subheader}
     />
     <CardContent>{props.children}</CardContent>
   </Card>
 );
 
 const styles = (theme: Theme) => ({
+  subheader: {
+    color: theme.palette.primary.dark,
+    fontSize: 16
+  },
   title: {
     color: theme.palette.primary.main,
     fontWeight: 'bold',

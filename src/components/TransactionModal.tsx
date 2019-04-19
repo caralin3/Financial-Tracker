@@ -251,27 +251,27 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           const prevAmount = oldTrans.amount;
           const edited = await requests.transactions.updateTransaction({ id: params.id, ...newTransaction }, dispatch);
           let accountUpdated: boolean = false;
-          if (newTransaction.type ==='expense') {
+          if (newTransaction.type === 'expense') {
             const updatedAcc: Account = {
               ...fromAcc,
-              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
-            }
+              amount: fromAcc.amount + prevAmount - newTransaction.amount
+            };
             accountUpdated = await requests.accounts.updateAccount(updatedAcc, dispatch);
           } else if (newTransaction.type === 'income') {
             const updatedAcc: Account = {
               ...toAcc,
-              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
-            }
+              amount: toAcc.amount - prevAmount + newTransaction.amount
+            };
             accountUpdated = await requests.accounts.updateAccount(updatedAcc, dispatch);
           } else {
             const updatedFromAcc: Account = {
               ...fromAcc,
-              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
-            }
+              amount: fromAcc.amount + prevAmount - newTransaction.amount
+            };
             const updatedToAcc: Account = {
               ...toAcc,
-              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
-            }
+              amount: toAcc.amount - prevAmount + newTransaction.amount
+            };
             accountUpdated = await requests.accounts.updateAccount(updatedFromAcc, dispatch);
             accountUpdated = await requests.accounts.updateAccount(updatedToAcc, dispatch);
           }
@@ -283,27 +283,27 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
         } else {
           const added = await requests.transactions.createTransaction(newTransaction, dispatch);
           let accountUpdated: boolean = false;
-          if (newTransaction.type ==='expense') {
+          if (newTransaction.type === 'expense') {
             const updatedAcc: Account = {
               ...fromAcc,
-              amount: fromAcc.amount - newTransaction.amount,
-            }
+              amount: fromAcc.amount - newTransaction.amount
+            };
             accountUpdated = await requests.accounts.updateAccount(updatedAcc, dispatch);
           } else if (newTransaction.type === 'income') {
             const updatedAcc: Account = {
               ...toAcc,
-              amount: toAcc.amount + newTransaction.amount,
-            }
+              amount: toAcc.amount + newTransaction.amount
+            };
             accountUpdated = await requests.accounts.updateAccount(updatedAcc, dispatch);
           } else {
             const updatedFromAcc: Account = {
               ...fromAcc,
-              amount: fromAcc.amount - newTransaction.amount,
-            }
+              amount: fromAcc.amount - newTransaction.amount
+            };
             const updatedToAcc: Account = {
               ...toAcc,
-              amount: toAcc.amount + newTransaction.amount,
-            }
+              amount: toAcc.amount + newTransaction.amount
+            };
             accountUpdated = await requests.accounts.updateAccount(updatedFromAcc, dispatch);
             accountUpdated = await requests.accounts.updateAccount(updatedToAcc, dispatch);
           }
