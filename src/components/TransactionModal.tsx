@@ -587,6 +587,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     </Typography>
   );
 
+  // FIXME: Tab order
   return (
     <ModalForm
       disabled={false}

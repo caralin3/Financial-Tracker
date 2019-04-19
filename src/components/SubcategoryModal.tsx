@@ -115,6 +115,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     resetFields();
   };
 
+  // TODO: Handle validations
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
       match: { params },

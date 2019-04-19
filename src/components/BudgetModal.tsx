@@ -124,8 +124,6 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     resetFields();
   };
 
-  const isValidAmount = () => amount > 0;
-
   const isValidCategoryId = () => categoryId.trim().length > 0;
 
   const isValidFrequency = () => {
@@ -135,7 +133,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     return false;
   };
 
-  const isValid = () => isValidAmount() && isValidCategoryId() && isValidFrequency();
+  const isValid = () => isValidCategoryId() && isValidFrequency();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
@@ -172,6 +170,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     }
   };
 
+  // TODO: Show validation errors
   return (
     <ModalForm
       disabled={false}

@@ -222,6 +222,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     }
   };
 
+  // TODO: Show validation errors
   return (
     <ModalForm
       disabled={false}
@@ -322,7 +323,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
                   </Grid>
                 </Grid>
               </Grid>
-              {/* TODO: Handle keyboard */}
               {frequency === 'custom' && (
                 <Grid item={true} xs={12} sm={6}>
                   <TextField
