@@ -58,8 +58,8 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
-  const [criteria, setCriteria] = React.useState<goalCriteria>(undefined);
-  const [comparator, setComparator] = React.useState<goalComparator>(undefined);
+  const [criteria, setCriteria] = React.useState<goalCriteria>('');
+  const [comparator, setComparator] = React.useState<goalComparator>('');
   const [item, setItem] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number>(0);
   const [startDate, setStartDate] = React.useState<string>('');
@@ -112,8 +112,8 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   };
 
   const resetFields = () => {
-    setCriteria(undefined);
-    setComparator(undefined);
+    setCriteria('');
+    setComparator('');
     setFrequency(undefined);
     if (amount) {
       setAmount(0);
@@ -222,8 +222,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     }
   };
 
-  console.log(criteria, comparator);
-
   return (
     <ModalForm
       disabled={false}
@@ -259,7 +257,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
             <Grid container={true} justify="center">
               <Grid className="goalModal_row" item={true} xs={12} sm={6}>
                 <Typography className="goalModal_fieldText--spend">I want to spend</Typography>
-                {/* FIXME: Selected value */}
                 <SelectInput
                   label="Comparator"
                   selected={comparator}
@@ -325,6 +322,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
                   </Grid>
                 </Grid>
               </Grid>
+              {/* TODO: Handle keyboard */}
               {frequency === 'custom' && (
                 <Grid item={true} xs={12} sm={6}>
                   <TextField
@@ -359,14 +357,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
                   />
                 </Grid>
               )}
-              <Grid item={true} style={{ display: 'flex' }}>
-                <Typography style={{ fontWeight: 'bold', paddingRight: 5 }} color="default" variant="body1">
-                  $50
-                </Typography>
-                <Typography color="default" variant="body1">
-                  is saved each month
-                </Typography>
-              </Grid>
             </Grid>
           )}
         </Grid>

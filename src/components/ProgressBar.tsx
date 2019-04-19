@@ -36,7 +36,7 @@ export const ProgressBar: React.SFC<ProgressBarProps> = ({
         <span className="progressBar_bar">
           <span
             className={percent <= 100 ? 'progressBar_progress' : 'progressBar_over'}
-            style={{ width: `${percent}%` }}
+            style={{ visibility: percent === 0 ? 'hidden' : 'visible', width: `${percent}%` }}
           />
         </span>
       </div>

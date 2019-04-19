@@ -273,7 +273,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       const dateFilteredExps = getExpensesByDates(goal.frequency, expenses, goal.startDate, goal.endDate);
       const criteriaFilteredExps = getExpensesByCriteria(goal.criteria, item, dateFilteredExps);
       const amountFilteredExps = getExpensesByAmount(goal.amount, goal.comparator, criteriaFilteredExps);
-      console.log(dateFilteredExps, criteriaFilteredExps, amountFilteredExps);
+      // console.log(dateFilteredExps, criteriaFilteredExps, amountFilteredExps);
       return getArrayTotal(amountFilteredExps);
     };
 
