@@ -33,9 +33,9 @@ interface AccountModalProps {
 
 interface AccountModalMergedProps
   extends RouteComponentProps<RouteParams>,
-    StateMappedProps,
-    DispatchMappedProps,
-    AccountModalProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  AccountModalProps { }
 
 const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   const { accounts, currentUser, dispatch } = props;
@@ -123,6 +123,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
       };
 
       if (isValidName() && isValidType()) {
+        // TODO: Update transactions
         if (params.id) {
           const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, dispatch);
           if (edited) {
@@ -160,64 +161,64 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
           <Loading />
         </div>
       ) : (
-        <Grid className="accountModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-          <Alert
-            onClose={() => setSuccess(false)}
-            open={success}
-            variant="success"
-            message={`${name} has been added to ${type}`}
-          />
-          <Alert
-            onClose={() => setError(false)}
-            open={error}
-            variant="error"
-            message="Submission failed, please try again later."
-          />
-          <Grid item={true} xs={12}>
-            <TextField
-              autoFocus={true}
-              id="account-name"
-              label="Name"
-              fullWidth={true}
-              value={name}
-              onChange={e => {
-                setName(e.target.value.trim());
-                setSubmit(false);
-              }}
-              helperText={submit && !isValidName() ? 'Required' : undefined}
-              error={submit && !isValidName()}
-              type="text"
-              margin="normal"
-              variant="outlined"
+          <Grid className="accountModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+            <Alert
+              onClose={() => setSuccess(false)}
+              open={success}
+              variant="success"
+              message={`${name} has been added to ${type}`}
             />
-          </Grid>
-          <Grid item={true} xs={12}>
-            <TextField
-              id="account-amount"
-              label="Balance"
-              fullWidth={true}
-              value={amount}
-              onChange={e => setAmount(parseFloat(e.target.value))}
-              type="number"
-              margin="normal"
-              variant="outlined"
+            <Alert
+              onClose={() => setError(false)}
+              open={error}
+              variant="error"
+              message="Submission failed, please try again later."
             />
+            <Grid item={true} xs={12}>
+              <TextField
+                autoFocus={true}
+                id="account-name"
+                label="Name"
+                fullWidth={true}
+                value={name}
+                onChange={e => {
+                  setName(e.target.value.trim());
+                  setSubmit(false);
+                }}
+                helperText={submit && !isValidName() ? 'Required' : undefined}
+                error={submit && !isValidName()}
+                type="text"
+                margin="normal"
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                id="account-amount"
+                label="Balance"
+                fullWidth={true}
+                value={amount}
+                onChange={e => setAmount(parseFloat(e.target.value))}
+                type="number"
+                margin="normal"
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <SelectInput
+                label="Account Type"
+                selected={type}
+                handleChange={e => {
+                  setType(e.target.value as accountType);
+                  setSubmit(false);
+                }}
+                helperText={submit && !isValidType() ? 'Required' : undefined}
+                error={submit && !isValidType()}
+                options={accountTypeOptions}
+              />
+            </Grid>
           </Grid>
-          <Grid item={true} xs={12}>
-            <SelectInput
-              label="Account Type"
-              selected={type}
-              handleChange={e => {
-                setType(e.target.value as accountType);
-                setSubmit(false);
-              }}
-              helperText={submit && !isValidType() ? 'Required' : undefined}
-              error={submit && !isValidType()}
-              options={accountTypeOptions}
-            />
-          </Grid>
-        </Grid>
-      )}
+        )}
     </ModalForm>
   );
 };

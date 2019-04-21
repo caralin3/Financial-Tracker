@@ -143,6 +143,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       // TODO: Don't edit if no change
       if (isValidName() && isValidCategoryId()) {
         if (location.pathname.includes('edit') && params.id) {
+          // TODO: Update transactions
           const edited = await requests.subcategories.updateSubcategory({ id: params.id, ...newSubcategory }, dispatch);
           if (edited) {
             handleClose();

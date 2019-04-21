@@ -39,6 +39,7 @@ export const Filters: React.SFC<FiltersProps> = props => {
   const createOps = (col: Column) => {
     const options: Option[] = [{ label: 'All', value: 'all' }];
     if (col.label === 'Date') {
+      // FIXME: Fix date filters to show months and years that are present
       const dateOptions: Option[] = [
         { label: 'This Week', value: 'This Week' },
         { label: 'Last Week', value: 'Last Week' },
