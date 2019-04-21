@@ -1,7 +1,5 @@
 declare module 'blob' {
-  interface BlobProps {
-    // Blob: () => void;
-  }
+  interface BlobProps { }
 
-  export default class Blob extends React.Component<BlobProps> {}
+  export default class Blob extends React.Component<BlobProps> { }
 }
