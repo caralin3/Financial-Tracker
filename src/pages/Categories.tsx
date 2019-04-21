@@ -40,13 +40,13 @@ interface StateMappedProps {
 
 interface CategoriesMergedProps
   extends RouteComponentProps,
-    StateMappedProps,
-    DispatchMappedProps,
-    CategoriesPageProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  CategoriesPageProps { }
 
 const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   const { categories, currentUser, dispatch, subcategories } = props;
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
   const [openSubAdd, setOpenSubAdd] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
@@ -59,19 +59,20 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   const [deleteId, setDeleteId] = React.useState<string>('');
 
   React.useEffect(() => {
-    if (categories.length === 0 || subcategories.length === 0) {
-      loadData();
-    } else {
-      setLoading(false);
-    }
+    loadData();
   }, [currentUser]);
 
   const loadData = async () => {
-    const cats = await requests.categories.getAllCategories(currentUser ? currentUser.id : '');
-    const subs = await requests.subcategories.getAllSubcategories(currentUser ? currentUser.id : '');
-    dispatch(categoriesState.setCategories(cats));
-    dispatch(subcategoriesState.setSubcategories(subs));
-    setLoading(false);
+    if (currentUser) {
+      const cats = await requests.categories.getAllCategories(currentUser ? currentUser.id : '');
+      const subs = await requests.subcategories.getAllSubcategories(currentUser ? currentUser.id : '');
+      if (categories.length !== cats.length || subcategories.length !== subs.length) {
+        setLoading(true);
+        dispatch(categoriesState.setCategories(cats));
+        dispatch(subcategoriesState.setSubcategories(subs));
+      }
+      setLoading(false);
+    }
   };
 
   const handleDelete = (id: string, type: string) => {
@@ -89,7 +90,10 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
 
   const deleteCategory = async () => {
     const deleted = await requests.categories.deleteCategory(deleteId, dispatch);
-    // TODO: Delete subcategories
+    const subs = subcategories.filter(sub => sub.category.id === deleteId);
+    await subs.forEach(async sub => {
+      await requests.subcategories.deleteSubcategory(sub.id, dispatch);
+    });
     setSuccessMsg(`${deleteCat.name} has been deleted`);
     if (deleted) {
       setSuccess(true);
@@ -210,66 +214,66 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
       {loading ? (
         <Loading />
       ) : (
-        <Grid container={true} spacing={24}>
-          {categories.map(cat => (
-            <Grid item={true} xs={12} md={6} key={cat.id}>
-              <ExpansionPanel className="category" elevation={8}>
-                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon className="category_expand" />}>
-                  <Typography className="category_title">{cat.name}</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails className="category_sub">
-                  <List className="category_list">
-                    <ListItem className="category_actions">
-                      <ListItemText primary="Category Actions" primaryTypographyProps={{ color: 'primary' }} />
-                      <div>
-                        <IconButton className="subcategory_button" onClick={() => handleEdit(cat.id, 'category')}>
-                          <EditIcon color="primary" />
-                        </IconButton>
-                        <IconButton className="subcategory_button" onClick={() => handleDelete(cat.id, 'category')}>
-                          <DeleteIcon color="error" />
-                        </IconButton>
-                      </div>
-                    </ListItem>
-                    {subcategories.filter(sub => sub.category.id === cat.id).length > 0 && (
-                      <ListItem className="subcategory">
-                        <ListItemText primary="Subcategories" primaryTypographyProps={{ color: 'primary' }} />
+          <Grid container={true} spacing={24}>
+            {categories.map(cat => (
+              <Grid item={true} xs={12} md={6} key={cat.id}>
+                <ExpansionPanel className="category" elevation={8}>
+                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon className="category_expand" />}>
+                    <Typography className="category_title">{cat.name}</Typography>
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails className="category_sub">
+                    <List className="category_list">
+                      <ListItem className="category_actions">
+                        <ListItemText primary="Category Actions" primaryTypographyProps={{ color: 'primary' }} />
+                        <div>
+                          <IconButton className="subcategory_button" onClick={() => handleEdit(cat.id, 'category')}>
+                            <EditIcon color="primary" />
+                          </IconButton>
+                          <IconButton className="subcategory_button" onClick={() => handleDelete(cat.id, 'category')}>
+                            <DeleteIcon color="error" />
+                          </IconButton>
+                        </div>
                       </ListItem>
-                    )}
-                    <List className="category_subs">
-                      {subcategories
-                        .filter(sub => sub.category.id === cat.id)
-                        .map(sub => (
-                          <ListItem className="subcategory" key={sub.id}>
-                            <ListItemText primary={sub.name} />
-                            <div>
-                              <IconButton
-                                className="subcategory_button"
-                                onClick={() => handleEdit(sub.id, 'subcategory')}
-                              >
-                                <EditIcon color="primary" />
-                              </IconButton>
-                              <IconButton
-                                className="subcategory_button"
-                                onClick={() => handleDelete(sub.id, 'subcategory')}
-                              >
-                                <DeleteIcon color="error" />
-                              </IconButton>
-                            </div>
-                          </ListItem>
-                        ))}
-                    </List>
-                    <ListItem className="subcategory">
-                      <Button color="primary" onClick={e => handleAdd(e, cat.id)} variant="contained" fullWidth={true}>
-                        Add Subcategory
+                      {subcategories.filter(sub => sub.category.id === cat.id).length > 0 && (
+                        <ListItem className="subcategory">
+                          <ListItemText primary="Subcategories" primaryTypographyProps={{ color: 'primary' }} />
+                        </ListItem>
+                      )}
+                      <List className="category_subs">
+                        {subcategories
+                          .filter(sub => sub.category.id === cat.id)
+                          .map(sub => (
+                            <ListItem className="subcategory" key={sub.id}>
+                              <ListItemText primary={sub.name} />
+                              <div>
+                                <IconButton
+                                  className="subcategory_button"
+                                  onClick={() => handleEdit(sub.id, 'subcategory')}
+                                >
+                                  <EditIcon color="primary" />
+                                </IconButton>
+                                <IconButton
+                                  className="subcategory_button"
+                                  onClick={() => handleDelete(sub.id, 'subcategory')}
+                                >
+                                  <DeleteIcon color="error" />
+                                </IconButton>
+                              </div>
+                            </ListItem>
+                          ))}
+                      </List>
+                      <ListItem className="subcategory">
+                        <Button color="primary" onClick={e => handleAdd(e, cat.id)} variant="contained" fullWidth={true}>
+                          Add Subcategory
                       </Button>
-                    </ListItem>
-                  </List>
-                </ExpansionPanelDetails>
-              </ExpansionPanel>
-            </Grid>
-          ))}
-        </Grid>
-      )}
+                      </ListItem>
+                    </List>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              </Grid>
+            ))}
+          </Grid>
+        )}
     </Layout>
   );
 };

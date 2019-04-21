@@ -129,7 +129,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
           await subs.forEach(async sub => {
             const updatedSubcategory: Subcategory = {
               ...sub,
-              category: { id: params.id, ...newCategory },
+              category: { id: params.id, ...newCategory }
             };
             await requests.subcategories.updateSubcategory(updatedSubcategory, dispatch);
           });
@@ -207,7 +207,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
 const mapStateToProps = (state: ApplicationState) => ({
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
-  subcategories: state.subcategoriesState.subcategories,
+  subcategories: state.subcategoriesState.subcategories
 });
 
 export const CategoryModal = compose(

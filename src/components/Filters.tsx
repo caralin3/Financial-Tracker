@@ -52,7 +52,7 @@ export const Filters: React.SFC<FiltersProps> = props => {
         const tags = d[col.id].split(',');
         tags.forEach((tag: string) => {
           options.push({ label: tag.trim(), value: tag.trim() });
-        })
+        });
       });
     } else {
       data.forEach(d => {

@@ -128,7 +128,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
 
   const isValidCategoryId = () => categoryId.trim().length > 0;
 
-  const isValidFrequency = () => frequency ? frequency.trim().length > 0 : false;
+  const isValidFrequency = () => (frequency ? frequency.trim().length > 0 : false);
 
   const isValid = () => isValidCategoryId() && isValidFrequency();
 

@@ -29,9 +29,9 @@ interface StateMappedProps {
 
 interface TransactionsMergedProps
   extends RouteComponentProps,
-    StateMappedProps,
-    DispatchMappedProps,
-    TransactionsPageProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  TransactionsPageProps { }
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
   const { currentUser, dispatch, transactions } = props;
@@ -45,16 +45,16 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
   const [openEdit, setOpenEdit] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (transactions.length === 0) {
-      setLoading(true);
-      loadData();
-    }
+    loadTransactions();
   }, [currentUser]);
 
-  const loadData = async () => {
+  const loadTransactions = async () => {
     if (currentUser) {
       const trans = await requests.transactions.getAllTransactions(currentUser.id);
-      dispatch(transactionsState.setTransactions(trans));
+      if (transactions.length !== trans.length) {
+        setLoading(true);
+        dispatch(transactionsState.setTransactions(trans));
+      }
       setLoading(false);
     }
   };
@@ -136,33 +136,33 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
       {loading ? (
         <Loading />
       ) : (
-        <div>
-          <DataTable
-            data={expenses}
-            defaultSort={{ dir: 'desc', orderBy: 'date' }}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            columns={expenseColumns}
-            title="Expenses"
-          />
-          <DataTable
-            data={income}
-            defaultSort={{ dir: 'desc', orderBy: 'date' }}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            columns={incomeColumns}
-            title="Income"
-          />
-          <DataTable
-            data={transfers}
-            defaultSort={{ dir: 'desc', orderBy: 'date' }}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            columns={transferColumns}
-            title="Transfers"
-          />
-        </div>
-      )}
+          <div>
+            <DataTable
+              data={expenses}
+              defaultSort={{ dir: 'desc', orderBy: 'date' }}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              columns={expenseColumns}
+              title="Expenses"
+            />
+            <DataTable
+              data={income}
+              defaultSort={{ dir: 'desc', orderBy: 'date' }}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              columns={incomeColumns}
+              title="Income"
+            />
+            <DataTable
+              data={transfers}
+              defaultSort={{ dir: 'desc', orderBy: 'date' }}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              columns={transferColumns}
+              title="Transfers"
+            />
+          </div>
+        )}
     </Layout>
   );
 };

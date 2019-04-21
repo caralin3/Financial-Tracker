@@ -145,7 +145,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
 
   const isValidItem = () => (item ? item.trim().length > 0 : false);
 
-  const isValidFrequency = () => frequency ? frequency.trim().length > 0 : false;
+  const isValidFrequency = () => (frequency ? frequency.trim().length > 0 : false);
 
   const isValid = () => isValidCriteria() && isValidComparator() && isValidItem() && isValidFrequency();
 

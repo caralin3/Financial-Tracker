@@ -373,7 +373,7 @@ const Table: React.SFC<TableProps> = props => {
       conditions.push((d: any) => {
         if (col === 'tags') {
           const tags: any[] = d[col].split(', ');
-          return tags.indexOf(dataFilters[col]) !== -1
+          return tags.indexOf(dataFilters[col]) !== -1;
         }
         if (col === 'date') {
           const matching = getTransactionByRange(dataFilters[col] as string, [d]);

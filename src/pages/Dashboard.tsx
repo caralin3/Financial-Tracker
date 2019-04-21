@@ -29,8 +29,15 @@ import {
   TransactionModal
 } from '../components';
 import { requests } from '../firebase/db';
-import { accountsState, budgetsState, goalsState, transactionsState } from '../store';
-import { Account, ApplicationState, Budget, budgetFreq, Goal, Transaction, User } from '../types';
+import {
+  accountsState,
+  budgetsState,
+  categoriesState,
+  goalsState,
+  subcategoriesState,
+  transactionsState
+} from '../store';
+import { Account, ApplicationState, Budget, budgetFreq, Category, Goal, Transaction, User } from '../types';
 import {
   accountTypeOptions,
   calcPercent,
@@ -54,6 +61,7 @@ interface DispatchMappedProps {
 
 interface StateMappedProps {
   accounts: Account[];
+  categories: Category[];
   currentUser: User | null;
   budgets: Budget[];
   goals: Goal[];
@@ -62,17 +70,17 @@ interface StateMappedProps {
 
 interface DashboardMergedProps
   extends RouteComponentProps<any>,
-    StateMappedProps,
-    DispatchMappedProps,
-    DashboardPageProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  DashboardPageProps { }
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
-  const { accounts, budgets, currentUser, goals, dispatch, transactions } = props;
-  const [loading] = React.useState<boolean>(false);
-  const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(true);
-  const [loadingBudgets, setLoadingBudgets] = React.useState<boolean>(true);
-  const [loadingGoals, setLoadingGoals] = React.useState<boolean>(true);
-  const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(true);
+  const { accounts, budgets, categories, currentUser, goals, dispatch, transactions } = props;
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(false);
+  const [loadingBudgets, setLoadingBudgets] = React.useState<boolean>(false);
+  const [loadingGoals, setLoadingGoals] = React.useState<boolean>(false);
+  const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(false);
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
   const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
   const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
@@ -138,35 +146,60 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   }, [selected]);
 
   const loadAccounts = async () => {
-    if (accounts.length === 0) {
-      const accs = await requests.accounts.getAllAccounts(currentUser ? currentUser.id : '');
-      dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+    if (currentUser) {
+      const accs = await requests.accounts.getAllAccounts(currentUser.id);
+      if (accounts.length !== accs.length) {
+        setLoadingAccounts(true);
+        dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
+      }
+      setLoadingAccounts(false);
     }
-    setLoadingAccounts(false);
   };
 
   const loadBudgets = async () => {
-    if (budgets.length === 0) {
-      const buds = await requests.budgets.getAllBudgets(currentUser ? currentUser.id : '');
-      dispatch(budgetsState.setBudgets(sort(buds, 'desc', 'name')));
+    if (currentUser) {
+      const buds = await requests.budgets.getAllBudgets(currentUser.id);
+      if (budgets.length !== buds.length) {
+        setLoadingBudgets(true);
+        dispatch(budgetsState.setBudgets(sort(buds, 'desc', 'name')));
+      }
+      setLoadingBudgets(false);
     }
-    setLoadingBudgets(false);
   };
 
   const loadGoals = async () => {
-    if (goals.length === 0) {
-      const gls = await requests.goals.getAllGoals(currentUser ? currentUser.id : '');
-      dispatch(goalsState.setGoals(sort(gls, 'desc', 'name')));
+    if (currentUser) {
+      const gls = await requests.goals.getAllGoals(currentUser.id);
+      if (goals.length !== gls.length) {
+        setLoadingGoals(true);
+        dispatch(goalsState.setGoals(sort(gls, 'desc', 'name')));
+      }
+      setLoadingGoals(false);
     }
-    setLoadingGoals(false);
+  };
+
+  const loadCategories = async () => {
+    if (currentUser) {
+      const cats = await requests.categories.getAllCategories(currentUser.id);
+      const subs = await requests.subcategories.getAllSubcategories(currentUser.id);
+      if (categories.length !== cats.length) {
+        setLoading(true);
+        dispatch(categoriesState.setCategories(cats));
+        dispatch(subcategoriesState.setSubcategories(subs));
+      }
+      setLoading(false);
+    }
   };
 
   const loadTransactions = async () => {
-    if (transactions.length === 0) {
-      const trans = await requests.transactions.getAllTransactions(currentUser ? currentUser.id : '');
-      dispatch(transactionsState.setTransactions(sort(trans, 'desc', 'date')));
+    if (currentUser) {
+      const trans = await requests.transactions.getAllTransactions(currentUser.id);
+      if (transactions.length !== trans.length) {
+        setLoadingTransactions(true);
+        dispatch(transactionsState.setTransactions(sort(trans, 'desc', 'date')));
+      }
+      setLoadingTransactions(false);
     }
-    setLoadingTransactions(false);
   };
 
   const handleMenu = (e: any) => {
@@ -180,34 +213,34 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       ) : currentTrans.length === 0 ? (
         <ListItem>No recent transactions</ListItem>
       ) : (
-        currentTrans.slice(0, 10).map(trans => (
-          <ListItem key={trans.id} className="dashboard_item">
-            <div className="dashboard_fullRow">
-              <ListItemText
-                primaryTypographyProps={{ className: 'dashboard_item-label dashboard_bold' }}
-                primary={trans.type === 'expense' ? trans.item : trans.to && trans.to.name}
-              />
-              <ListItemText
-                primary={formatMoney(trans.amount)}
-                primaryTypographyProps={{
-                  className: `dashboard_item-amount dashboard_bold ${trans.type === 'income' && 'dashboard_green'}`,
-                  color: trans.type === 'expense' ? 'error' : 'default'
-                }}
-              />
-            </div>
-            <div className="dashboard_fullRow">
-              <ListItemText
-                primaryTypographyProps={{ className: 'dashboard_item-label' }}
-                primary={trans.type !== 'income' ? trans.from && trans.from.name : trans.item}
-              />
-              <ListItemText
-                primaryTypographyProps={{ className: 'dashboard_item-date' }}
-                primary={moment(new Date(trans.date)).format('MMM DD')}
-              />
-            </div>
-          </ListItem>
-        ))
-      )}
+            currentTrans.slice(0, 10).map(trans => (
+              <ListItem key={trans.id} className="dashboard_item">
+                <div className="dashboard_fullRow">
+                  <ListItemText
+                    primaryTypographyProps={{ className: 'dashboard_item-label dashboard_bold' }}
+                    primary={trans.type === 'expense' ? trans.item : trans.to && trans.to.name}
+                  />
+                  <ListItemText
+                    primary={formatMoney(trans.amount)}
+                    primaryTypographyProps={{
+                      className: `dashboard_item-amount dashboard_bold ${trans.type === 'income' && 'dashboard_green'}`,
+                      color: trans.type === 'expense' ? 'error' : 'default'
+                    }}
+                  />
+                </div>
+                <div className="dashboard_fullRow">
+                  <ListItemText
+                    primaryTypographyProps={{ className: 'dashboard_item-label' }}
+                    primary={trans.type !== 'income' ? trans.from && trans.from.name : trans.item}
+                  />
+                  <ListItemText
+                    primaryTypographyProps={{ className: 'dashboard_item-date' }}
+                    primary={moment(new Date(trans.date)).format('MMM DD')}
+                  />
+                </div>
+              </ListItem>
+            ))
+          )}
     </List>
   );
 
@@ -226,24 +259,24 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         ) : budgets.length === 0 ? (
           <ListItem>No budgets</ListItem>
         ) : (
-          budgets.map(budget => {
-            const spent = calcSpent(budget.frequency, budget.category.id);
-            const total = budget.amount;
-            const percent = calcPercent(spent, total);
-            return (
-              <ListItem key={budget.id}>
-                <ProgressBar
-                  percent={percent}
-                  endLabel={`${percent.toFixed(0)}%`}
-                  leftLabel={budget.category.name}
-                  rightLabel={`${formatMoney(spent, true)} of ${formatMoney(total, true)}`}
-                  subLabel={budget.frequency}
-                  textColor="primary"
-                />
-              </ListItem>
-            );
-          })
-        )}
+              budgets.map(budget => {
+                const spent = calcSpent(budget.frequency, budget.category.id);
+                const total = budget.amount;
+                const percent = calcPercent(spent, total);
+                return (
+                  <ListItem key={budget.id}>
+                    <ProgressBar
+                      percent={percent}
+                      endLabel={`${percent.toFixed(0)}%`}
+                      leftLabel={budget.category.name}
+                      rightLabel={`${formatMoney(spent, true)} of ${formatMoney(total, true)}`}
+                      subLabel={budget.frequency}
+                      textColor="primary"
+                    />
+                  </ListItem>
+                );
+              })
+            )}
       </List>
     );
   };
@@ -263,53 +296,53 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       ) : accounts.length === 0 ? (
         <ListItem>No accounts</ListItem>
       ) : (
-        accountTypeOptions.map((accType, index) => (
-          <ListItem key={accType.value} className="dashboard_listItem">
-            <ExpansionPanel
-              className="dashboard_item-panel"
-              expanded={expanded === index + 1}
-              onChange={handleExpansion(index)}
-            >
-              <ExpansionPanelSummary className="dashboard_fullRow">
-                <div className="dashboard_row">
-                  <ListItemText
-                    primaryTypographyProps={{ className: 'dashboard_item-label dashboard_bold' }}
-                    primary={accType.label}
-                  />
-                  {expanded === index + 1 ? <ExpandLessIcon color="primary" /> : <ExpandMoreIcon color="primary" />}
-                </div>
-                <ListItemText
-                  primaryTypographyProps={{ className: 'dashboard_item-amount dashboard_bold' }}
-                  primary={formatMoney(getArrayTotal(getObjectByType(accounts, accType.value)))}
-                />
-              </ExpansionPanelSummary>
-              <ExpansionPanelDetails className="dashboard_fullRow">
-                <List className="dashboard_list">
-                  {getObjectByType(accounts, accType.value).length === 0 ? (
-                    <ListItem>No {accType.value} accounts</ListItem>
-                  ) : (
-                    getObjectByType(accounts, accType.value)
-                      .slice(0, 10)
-                      .map(acc => (
-                        <ListItem key={acc.id} button={true} className="dashboard_fullRow">
-                          <ListItemText
-                            primaryTypographyProps={{ className: 'dashboard_item-label' }}
-                            primary={acc.name}
-                          />
-                          <ListItemText
-                            className="dashboard_item-amount"
-                            primaryTypographyProps={{ className: 'dashboard_item-amount dashboard_bold' }}
-                            primary={formatMoney(acc.amount)}
-                          />
-                        </ListItem>
-                      ))
-                  )}
-                </List>
-              </ExpansionPanelDetails>
-            </ExpansionPanel>
-          </ListItem>
-        ))
-      )}
+            accountTypeOptions.map((accType, index) => (
+              <ListItem key={accType.value} className="dashboard_listItem">
+                <ExpansionPanel
+                  className="dashboard_item-panel"
+                  expanded={expanded === index + 1}
+                  onChange={handleExpansion(index)}
+                >
+                  <ExpansionPanelSummary className="dashboard_fullRow">
+                    <div className="dashboard_row">
+                      <ListItemText
+                        primaryTypographyProps={{ className: 'dashboard_item-label dashboard_bold' }}
+                        primary={accType.label}
+                      />
+                      {expanded === index + 1 ? <ExpandLessIcon color="primary" /> : <ExpandMoreIcon color="primary" />}
+                    </div>
+                    <ListItemText
+                      primaryTypographyProps={{ className: 'dashboard_item-amount dashboard_bold' }}
+                      primary={formatMoney(getArrayTotal(getObjectByType(accounts, accType.value)))}
+                    />
+                  </ExpansionPanelSummary>
+                  <ExpansionPanelDetails className="dashboard_fullRow">
+                    <List className="dashboard_list">
+                      {getObjectByType(accounts, accType.value).length === 0 ? (
+                        <ListItem>No {accType.value} accounts</ListItem>
+                      ) : (
+                          getObjectByType(accounts, accType.value)
+                            .slice(0, 10)
+                            .map(acc => (
+                              <ListItem key={acc.id} button={true} className="dashboard_fullRow">
+                                <ListItemText
+                                  primaryTypographyProps={{ className: 'dashboard_item-label' }}
+                                  primary={acc.name}
+                                />
+                                <ListItemText
+                                  className="dashboard_item-amount"
+                                  primaryTypographyProps={{ className: 'dashboard_item-amount dashboard_bold' }}
+                                  primary={formatMoney(acc.amount)}
+                                />
+                              </ListItem>
+                            ))
+                        )}
+                    </List>
+                  </ExpansionPanelDetails>
+                </ExpansionPanel>
+              </ListItem>
+            ))
+          )}
     </List>
   );
 
@@ -331,30 +364,37 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         ) : goals.length === 0 ? (
           <ListItem>No goals</ListItem>
         ) : (
-          goals.map(goal => {
-            const label = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
-            const spent = calcSpent(goal);
-            const total = goal.amount;
-            const percent = calcPercent(spent, total);
-            return (
-              <ListItem key={goal.id}>
-                <ProgressBar
-                  percent={percent}
-                  leftLabel={label}
-                  rightLabel={`${formatMoney(spent, true)} ${goal.comparator} ${formatMoney(total, true)}`}
-                  subLabel={goal.frequency}
-                  textColor="primary"
-                />
-              </ListItem>
-            );
-          })
-        )}
+              goals.map(goal => {
+                const label = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
+                const spent = calcSpent(goal);
+                const total = goal.amount;
+                const percent = calcPercent(spent, total);
+                return (
+                  <ListItem key={goal.id}>
+                    <ProgressBar
+                      percent={percent}
+                      leftLabel={label}
+                      rightLabel={`${formatMoney(spent, true)} ${goal.comparator} ${formatMoney(total, true)}`}
+                      subLabel={goal.frequency}
+                      textColor="primary"
+                    />
+                  </ListItem>
+                );
+              })
+            )}
       </List>
     );
   };
 
   const dashboardSections = [
-    { title: 'Recent Transactions', action: () => setAddingTrans(true), content: recentTransactions },
+    {
+      action: () => {
+        loadCategories();
+        setAddingTrans(true);
+      },
+      content: recentTransactions,
+      title: 'Recent Transactions'
+    },
     { title: 'Accounts', action: () => setAddingAccount(true), content: accountItems },
     { title: 'Budgets', action: () => setAddingBudget(true), content: budgetItems() },
     { title: 'Goals', action: () => setAddingGoal(true), content: goalItems() }
@@ -391,53 +431,53 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       {loading ? (
         <Loading />
       ) : (
-        <Grid container={true} spacing={32}>
-          <Grid item={true} xs={12}>
-            <Card className="totals" raised={true}>
-              <Typography className="totals_title" variant="h5">
-                Totals
+          <Grid container={true} spacing={32}>
+            <Grid item={true} xs={12}>
+              <Card className="totals" raised={true}>
+                <Typography className="totals_title" variant="h5">
+                  Totals
               </Typography>
-              <span className="totals_amounts">
-                <span className="totals_amount">
-                  <Typography className="totals_label" variant="h6">
-                    Expenses
+                <span className="totals_amounts">
+                  <span className="totals_amount">
+                    <Typography className="totals_label" variant="h6">
+                      Expenses
                   </Typography>
-                  <Typography className="totals_number" variant="h5">
-                    {formatMoney(expenseTotal)}
+                    <Typography className="totals_number" variant="h5">
+                      {formatMoney(expenseTotal)}
+                    </Typography>
+                  </span>
+                  <span className="totals_amount">
+                    <Typography className="totals_label" variant="h6">
+                      Income
                   </Typography>
+                    <Typography className="totals_number" variant="h5">
+                      {formatMoney(incomeTotal)}
+                    </Typography>
+                  </span>
+                  <span className="totals_amount">
+                    <Typography className="totals_label" variant="h6">
+                      Net
+                  </Typography>
+                    <Typography
+                      className={`totals_number ${net > 0 && 'dashboard_green'}`}
+                      variant="h5"
+                      color={net < 0 ? 'error' : 'default'}
+                    >
+                      {formatMoney(net)}
+                    </Typography>
+                  </span>
                 </span>
-                <span className="totals_amount">
-                  <Typography className="totals_label" variant="h6">
-                    Income
-                  </Typography>
-                  <Typography className="totals_number" variant="h5">
-                    {formatMoney(incomeTotal)}
-                  </Typography>
-                </span>
-                <span className="totals_amount">
-                  <Typography className="totals_label" variant="h6">
-                    Net
-                  </Typography>
-                  <Typography
-                    className={`totals_number ${net > 0 && 'dashboard_green'}`}
-                    variant="h5"
-                    color={net < 0 ? 'error' : 'default'}
-                  >
-                    {formatMoney(net)}
-                  </Typography>
-                </span>
-              </span>
-            </Card>
-          </Grid>
-          {dashboardSections.map(section => (
-            <Grid item={true} md={6} sm={12} xs={12} key={section.title}>
-              <DashboardCard className="gridItem" title={section.title} subheader={subheader} onClick={section.action}>
-                {section.content}
-              </DashboardCard>
+              </Card>
             </Grid>
-          ))}
-        </Grid>
-      )}
+            {dashboardSections.map(section => (
+              <Grid item={true} md={6} sm={12} xs={12} key={section.title}>
+                <DashboardCard className="gridItem" title={section.title} subheader={subheader} onClick={section.action}>
+                  {section.content}
+                </DashboardCard>
+              </Grid>
+            ))}
+          </Grid>
+        )}
     </Layout>
   );
 };
@@ -451,6 +491,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
 const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,
   budgets: state.budgetsState.budgets,
+  categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
   goals: state.goalsState.goals,
   transactions: state.transactionsState.transactions
