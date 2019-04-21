@@ -14,16 +14,19 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import BackupIcon from '@material-ui/icons/Backup';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
+import Blob from 'blob';
 import classNames from 'classnames';
+import * as moment from 'moment';
 import * as React from 'react';
 import { Column } from '../types';
 import { getTransactionByRange } from '../util';
-import { Columns, Filters, Popup } from './';
+import { Alert, Columns, Filters, Popup } from './';
 
 interface TableHeadProps {
   numSelected: number;
@@ -103,6 +106,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
   } = props;
   const [openColumns, setOpenColumns] = React.useState<boolean>(false);
   const [openFilters, setOpenFilters] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
 
   const handleClick = (cols: boolean, filters: boolean) => {
     setOpenColumns(cols);
@@ -114,22 +118,147 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
     onResetFilters();
   };
 
+  const convertToCSV = (csvData: any) => {
+    let str = '';
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < csvData.length; i++) {
+      let line = '';
+      // tslint:disable-next-line:forin
+      for (const index in csvData[i]) {
+        if (line !== '') {
+          line += ',';
+        }
+        line += csvData[i][index];
+      }
+      str += line + '\r\n';
+    }
+    return str;
+  };
+
+  const downloadData = (headers: object, exportData: object[], fileName: string) => {
+    exportData.unshift(headers);
+
+    // Convert Object to JSON
+    const jsonObject = JSON.stringify(exportData);
+
+    const csv = convertToCSV(JSON.parse(jsonObject));
+
+    const exportedFilename = fileName + '.csv' || 'export.csv';
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+
+    if (navigator.msSaveBlob) {
+      // IE 10+
+      navigator.msSaveBlob(blob, exportedFilename);
+    } else {
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        // feature detection
+        // Browsers that support HTML5 download attribute
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', exportedFilename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  };
+
+  const exportTransactions = () => {
+    const date = moment(new Date()).format('MMDDYYYY_hhmmss');
+    if (data[0].type === 'expense') {
+      // tslint:disable:object-literal-sort-keys
+      const expenseHeaders = {
+        item: 'Item',
+        from: 'From',
+        category: 'Category',
+        subcategory: 'Subcategory',
+        note: 'Note',
+        tags: 'Tags',
+        date: 'Date',
+        amount: 'Amount'
+      };
+      const expenses = data.map((d: any) => ({
+        item: d.item,
+        from: d.from,
+        category: d.category,
+        subcategory: d.subcategory,
+        note: d.note || 'N/A',
+        tags: d.tags ? d.tags.replace(/,/g, ' ') : 'N/A',
+        date: d.date,
+        amount: d.amount
+      }));
+      const fileName = `expenses_${date}`;
+      downloadData(expenseHeaders, expenses, fileName);
+    } else if (data[0].type === 'income') {
+      const incomeHeaders = {
+        item: 'Item',
+        to: 'To',
+        note: 'Note',
+        tags: 'Tags',
+        date: 'Date',
+        amount: 'Amount'
+      };
+      const income = data.map((d: any) => ({
+        item: d.item,
+        to: d.to,
+        note: d.note || 'N/A',
+        tags: d.tags ? d.tags.replace(/,/g, ' ') : 'N/A',
+        date: d.date,
+        amount: d.amount
+      }));
+      const fileName = `income_${date}`;
+      downloadData(incomeHeaders, income, fileName);
+    } else if (data[0].type === 'transfer') {
+      const transferHeaders = {
+        from: 'From',
+        to: 'To',
+        note: 'Note',
+        tags: 'Tags',
+        date: 'Date',
+        amount: 'Amount'
+      };
+      const transfers = data.map((d: any) => ({
+        from: d.from,
+        to: d.to,
+        note: d.note || 'N/A',
+        tags: d.tags ? d.tags.replace(/,/g, ' ') : 'N/A',
+        date: d.date,
+        amount: d.amount
+      }));
+      const fileName = `transfers_${date}`;
+      downloadData(transferHeaders, transfers, fileName);
+    }
+    // tslint:enable:object-literal-sort-keys
+    setSuccess(true);
+  };
+
+  const type = data.length > 0 ? data[0].type.slice(0, 1).toUpperCase() + data[0].type.slice(1) + 's' : '';
+
   return (
     <MuiToolbar
       className={classNames(classes.root, {
         [classes.highlight]: numSelected > 0
       })}
     >
+      <Alert
+        onClose={() => setSuccess(false)}
+        open={success}
+        variant="success"
+        message={`${type} have been exported.`}
+      />
       <div className={classes.title}>
         {numSelected > 0 ? (
           <Typography color="inherit" variant="subtitle1">
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography variant="h6" id="tableTitle">
-            {tableTitle}
-          </Typography>
-        )}
+            <Typography variant="h6" id="tableTitle">
+              {tableTitle}
+            </Typography>
+          )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
@@ -149,38 +278,46 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             </Tooltip>
           </div>
         ) : (
-          <div className={classes.actionButtons}>
-            {/* TODO: Export and Import data */}
-            <Tooltip title="Export">
-              <IconButton aria-label="Export" onClick={() => null}>
-                <CloudDownloadIcon />
-              </IconButton>
-            </Tooltip>
-            <Popup
-              open={openColumns}
-              onClick={() => handleClick(!openColumns, false)}
-              content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
-              tooltip="View Colmns"
-              trigger={<ViewColumnIcon />}
-            />
-            <Popup
-              class="table_filters"
-              open={openFilters}
-              onClick={() => handleClick(false, !openFilters)}
-              content={
-                <Filters
-                  data={data}
-                  filters={columns}
-                  count={filterCount}
-                  onResetFilters={handleReset}
-                  onSelectFilter={onSelectFilter}
-                />
-              }
-              tooltip="Filters"
-              trigger={<FilterListIcon />}
-            />
-          </div>
-        )}
+            <div className={classes.actionButtons}>
+              {/* TODO: Export and Import data */}
+              <input accept=".csv" className={classes.input} id="import-file" type="file" />
+              <label htmlFor="import-file">
+                <Tooltip title="Import">
+                  <IconButton aria-label="Import" component="span" onClick={() => null}>
+                    <CloudDownloadIcon />
+                  </IconButton>
+                </Tooltip>
+              </label>
+              <Tooltip title="Export">
+                <IconButton aria-label="Export" onClick={exportTransactions}>
+                  <BackupIcon />
+                </IconButton>
+              </Tooltip>
+              <Popup
+                open={openColumns}
+                onClick={() => handleClick(!openColumns, false)}
+                content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
+                tooltip="View Colmns"
+                trigger={<ViewColumnIcon />}
+              />
+              <Popup
+                class="table_filters"
+                open={openFilters}
+                onClick={() => handleClick(false, !openFilters)}
+                content={
+                  <Filters
+                    data={data}
+                    filters={columns}
+                    count={filterCount}
+                    onResetFilters={handleReset}
+                    onSelectFilter={onSelectFilter}
+                  />
+                }
+                tooltip="Filters"
+                trigger={<FilterListIcon />}
+              />
+            </div>
+          )}
       </div>
     </MuiToolbar>
   );
@@ -197,13 +334,16 @@ const toolbarStyles = (theme: Theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          color: theme.palette.secondary.main
-        }
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        color: theme.palette.secondary.main
+      }
       : {
-          backgroundColor: theme.palette.secondary.dark,
-          color: theme.palette.text.primary
-        },
+        backgroundColor: theme.palette.secondary.dark,
+        color: theme.palette.text.primary
+      },
+  input: {
+    display: 'none'
+  },
   root: {
     paddingRight: theme.spacing.unit
   },
@@ -465,11 +605,11 @@ const Table: React.SFC<TableProps> = props => {
                   );
                 })
             ) : (
-              <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
-                <TableCell colSpan={2} />
-                <TableCell>No records</TableCell>
-              </TableRow>
-            )}
+                <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
+                  <TableCell colSpan={2} />
+                  <TableCell>No records</TableCell>
+                </TableRow>
+              )}
             {displayData.length > 0 && emptyRows > 0 && (
               <TableRow style={{ height: 49 * emptyRows }}>
                 <TableCell colSpan={displayColumns.length} />

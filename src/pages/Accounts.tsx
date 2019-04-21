@@ -46,7 +46,7 @@ interface StateMappedProps {
   currentUser: User | null;
 }
 
-interface AccountsMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, AccountsPageProps { }
+interface AccountsMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, AccountsPageProps {}
 
 const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   const { accounts, currentUser, dispatch } = props;
@@ -147,7 +147,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
         confirmText="Confirm"
         description={`${deleteAcc ? deleteAcc.name : ''} with a balance of ${
           deleteAcc ? formatMoney(deleteAcc.amount) : ''
-          }`}
+        }`}
         onClose={() => setOpenDialog(false)}
         onConfirm={handleConfirm}
         open={openDialog}
@@ -171,76 +171,76 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
       {loading ? (
         <Loading />
       ) : (
-          <div className="accounts">
-            <Grid container={true} spacing={24}>
-              {matchMd ? (
-                accountTypes.map(type => (
-                  <Grid key={type.id} item={true} xs={12} md={4}>
-                    <Card className="accounts_card" raised={true}>
-                      <Typography className="accounts_label" color="primary">
-                        {type.label}
-                      </Typography>
-                      <Typography className="accounts_balance" variant="h5">
-                        {formatMoney(type.balance)}
-                      </Typography>
-                    </Card>
-                  </Grid>
-                ))
-              ) : (
-                  <Grid item={true} xs={12}>
-                    <SwipeableViews enableMouseEvents={true} onChangeIndex={index => setCard(index)}>
-                      {accountTypes.map(type => (
-                        <Grid className="accounts_mobile" key={type.id} item={true} xs={12}>
-                          <Card className="accounts_card" raised={true}>
-                            <Typography className="accounts_label" color="primary">
-                              {type.label}
-                            </Typography>
-                            <Typography className="accounts_balance" variant="h5">
-                              {formatMoney(type.balance)}
-                            </Typography>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </SwipeableViews>
-                    <div className="accounts_dots">
-                      {accountTypes.map((t, index) =>
-                        card === index ? (
-                          <LensIcon key={t.id} className="accounts_dot" color="primary" />
-                        ) : (
-                            <PanoramaFishEyeIcon key={t.id} className="accounts_dot" color="primary" />
-                          )
+        <div className="accounts">
+          <Grid container={true} spacing={24}>
+            {matchMd ? (
+              accountTypes.map(type => (
+                <Grid key={type.id} item={true} xs={12} md={4}>
+                  <Card className="accounts_card" raised={true}>
+                    <Typography className="accounts_label" color="primary">
+                      {type.label}
+                    </Typography>
+                    <Typography className="accounts_balance" variant="h5">
+                      {formatMoney(type.balance)}
+                    </Typography>
+                  </Card>
+                </Grid>
+              ))
+            ) : (
+              <Grid item={true} xs={12}>
+                <SwipeableViews enableMouseEvents={true} onChangeIndex={index => setCard(index)}>
+                  {accountTypes.map(type => (
+                    <Grid className="accounts_mobile" key={type.id} item={true} xs={12}>
+                      <Card className="accounts_card" raised={true}>
+                        <Typography className="accounts_label" color="primary">
+                          {type.label}
+                        </Typography>
+                        <Typography className="accounts_balance" variant="h5">
+                          {formatMoney(type.balance)}
+                        </Typography>
+                      </Card>
+                    </Grid>
+                  ))}
+                </SwipeableViews>
+                <div className="accounts_dots">
+                  {accountTypes.map((t, index) =>
+                    card === index ? (
+                      <LensIcon key={t.id} className="accounts_dot" color="primary" />
+                    ) : (
+                      <PanoramaFishEyeIcon key={t.id} className="accounts_dot" color="primary" />
+                    )
+                  )}
+                </div>
+              </Grid>
+            )}
+            {accountTypes.map(type => {
+              return (
+                <Grid item={true} xs={12} key={type.id}>
+                  <ExpandableCard title={type.label} expanded={type.expanded} onToggle={type.toggle}>
+                    <List>
+                      {getObjectByType(accounts, type.id).length === 0 ? (
+                        <ListItem>No {type.id} accounts</ListItem>
+                      ) : (
+                        getObjectByType(accounts, type.id).map(acc => (
+                          <ListItem key={acc.id} className="account_item">
+                            <AccountItem
+                              label={acc.name}
+                              balance={acc.amount}
+                              link={''}
+                              onEdit={() => handleEdit(acc.id, type.id)}
+                              onDelete={() => handleDelete(acc.id)}
+                            />
+                          </ListItem>
+                        ))
                       )}
-                    </div>
-                  </Grid>
-                )}
-              {accountTypes.map(type => {
-                return (
-                  <Grid item={true} xs={12} key={type.id}>
-                    <ExpandableCard title={type.label} expanded={type.expanded} onToggle={type.toggle}>
-                      <List>
-                        {getObjectByType(accounts, type.id).length === 0 ? (
-                          <ListItem>No {type.id} accounts</ListItem>
-                        ) : (
-                            getObjectByType(accounts, type.id).map(acc => (
-                              <ListItem key={acc.id} className="account_item">
-                                <AccountItem
-                                  label={acc.name}
-                                  balance={acc.amount}
-                                  link={''}
-                                  onEdit={() => handleEdit(acc.id, type.id)}
-                                  onDelete={() => handleDelete(acc.id)}
-                                />
-                              </ListItem>
-                            ))
-                          )}
-                      </List>
-                    </ExpandableCard>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </div>
-        )}
+                    </List>
+                  </ExpandableCard>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </div>
+      )}
     </Layout>
   );
 };

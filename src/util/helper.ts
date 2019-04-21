@@ -22,6 +22,12 @@ export const createOption = (label: string, value: string | number): Option => {
   return { label, value };
 };
 
+export const transTypeOptions = [
+  createOption('Expenses', 'expense'),
+  createOption('Income', 'income'),
+  createOption('Transfers', 'transfer')
+];
+
 export const accountTypeOptions = [
   createOption('Bank Account', 'bank'),
   createOption('Cash', 'cash'),

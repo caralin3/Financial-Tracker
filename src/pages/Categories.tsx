@@ -40,9 +40,9 @@ interface StateMappedProps {
 
 interface CategoriesMergedProps
   extends RouteComponentProps,
-  StateMappedProps,
-  DispatchMappedProps,
-  CategoriesPageProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    CategoriesPageProps {}
 
 const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   const { categories, currentUser, dispatch, subcategories } = props;
@@ -214,66 +214,66 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
       {loading ? (
         <Loading />
       ) : (
-          <Grid container={true} spacing={24}>
-            {categories.map(cat => (
-              <Grid item={true} xs={12} md={6} key={cat.id}>
-                <ExpansionPanel className="category" elevation={8}>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon className="category_expand" />}>
-                    <Typography className="category_title">{cat.name}</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails className="category_sub">
-                    <List className="category_list">
-                      <ListItem className="category_actions">
-                        <ListItemText primary="Category Actions" primaryTypographyProps={{ color: 'primary' }} />
-                        <div>
-                          <IconButton className="subcategory_button" onClick={() => handleEdit(cat.id, 'category')}>
-                            <EditIcon color="primary" />
-                          </IconButton>
-                          <IconButton className="subcategory_button" onClick={() => handleDelete(cat.id, 'category')}>
-                            <DeleteIcon color="error" />
-                          </IconButton>
-                        </div>
-                      </ListItem>
-                      {subcategories.filter(sub => sub.category.id === cat.id).length > 0 && (
-                        <ListItem className="subcategory">
-                          <ListItemText primary="Subcategories" primaryTypographyProps={{ color: 'primary' }} />
-                        </ListItem>
-                      )}
-                      <List className="category_subs">
-                        {subcategories
-                          .filter(sub => sub.category.id === cat.id)
-                          .map(sub => (
-                            <ListItem className="subcategory" key={sub.id}>
-                              <ListItemText primary={sub.name} />
-                              <div>
-                                <IconButton
-                                  className="subcategory_button"
-                                  onClick={() => handleEdit(sub.id, 'subcategory')}
-                                >
-                                  <EditIcon color="primary" />
-                                </IconButton>
-                                <IconButton
-                                  className="subcategory_button"
-                                  onClick={() => handleDelete(sub.id, 'subcategory')}
-                                >
-                                  <DeleteIcon color="error" />
-                                </IconButton>
-                              </div>
-                            </ListItem>
-                          ))}
-                      </List>
+        <Grid container={true} spacing={24}>
+          {categories.map(cat => (
+            <Grid item={true} xs={12} md={6} key={cat.id}>
+              <ExpansionPanel className="category" elevation={8}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon className="category_expand" />}>
+                  <Typography className="category_title">{cat.name}</Typography>
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className="category_sub">
+                  <List className="category_list">
+                    <ListItem className="category_actions">
+                      <ListItemText primary="Category Actions" primaryTypographyProps={{ color: 'primary' }} />
+                      <div>
+                        <IconButton className="subcategory_button" onClick={() => handleEdit(cat.id, 'category')}>
+                          <EditIcon color="primary" />
+                        </IconButton>
+                        <IconButton className="subcategory_button" onClick={() => handleDelete(cat.id, 'category')}>
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </div>
+                    </ListItem>
+                    {subcategories.filter(sub => sub.category.id === cat.id).length > 0 && (
                       <ListItem className="subcategory">
-                        <Button color="primary" onClick={e => handleAdd(e, cat.id)} variant="contained" fullWidth={true}>
-                          Add Subcategory
-                      </Button>
+                        <ListItemText primary="Subcategories" primaryTypographyProps={{ color: 'primary' }} />
                       </ListItem>
+                    )}
+                    <List className="category_subs">
+                      {subcategories
+                        .filter(sub => sub.category.id === cat.id)
+                        .map(sub => (
+                          <ListItem className="subcategory" key={sub.id}>
+                            <ListItemText primary={sub.name} />
+                            <div>
+                              <IconButton
+                                className="subcategory_button"
+                                onClick={() => handleEdit(sub.id, 'subcategory')}
+                              >
+                                <EditIcon color="primary" />
+                              </IconButton>
+                              <IconButton
+                                className="subcategory_button"
+                                onClick={() => handleDelete(sub.id, 'subcategory')}
+                              >
+                                <DeleteIcon color="error" />
+                              </IconButton>
+                            </div>
+                          </ListItem>
+                        ))}
                     </List>
-                  </ExpansionPanelDetails>
-                </ExpansionPanel>
-              </Grid>
-            ))}
-          </Grid>
-        )}
+                    <ListItem className="subcategory">
+                      <Button color="primary" onClick={e => handleAdd(e, cat.id)} variant="contained" fullWidth={true}>
+                        Add Subcategory
+                      </Button>
+                    </ListItem>
+                  </List>
+                </ExpansionPanelDetails>
+              </ExpansionPanel>
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Layout>
   );
 };
