@@ -17,6 +17,7 @@ interface AppMergedProps extends StateMappedProps, AppProps {}
 
 class DisconnectedApp extends React.Component<AppMergedProps> {
   private history: History.History = createHistory();
+  // TODO: Load all firebase data here and not on other pages to improve performance
 
   public render() {
     return (

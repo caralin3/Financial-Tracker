@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { accountsState } from '../store';
-import { Account, accountType, ApplicationState, User } from '../types';
+import { Account, accountType, ApplicationState, Transaction, User } from '../types';
 import { accountTypeOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
@@ -21,6 +21,7 @@ interface DispatchMappedProps {
 interface StateMappedProps {
   accounts: Account[];
   currentUser: User | null;
+  transactions: Transaction[];
 }
 
 interface AccountModalProps {
@@ -110,7 +111,8 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
       match: { params },
-      onSuccess
+      onSuccess,
+      transactions,
     } = props;
     e.preventDefault();
     setSubmit(true);
@@ -126,6 +128,31 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
         // TODO: Update transactions
         if (params.id) {
           const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, dispatch);
+
+          // Update from in transactions
+          const fromTrans = transactions.filter(t => t.from && t.from.id === params.id);
+          if (fromTrans.length > 0) {
+            await fromTrans.forEach(async tran => {
+              const updatedTrans: Transaction = {
+                ...tran,
+                from: { id: params.id, ...newAccount }
+              };
+              await requests.transactions.updateTransaction(updatedTrans, dispatch);
+            });
+          }
+
+          // Update to in transactions
+          const toTrans = transactions.filter(t => t.to && t.to.id === params.id);
+          if (toTrans.length > 0) {
+            await toTrans.forEach(async tran => {
+              const updatedTrans: Transaction = {
+                ...tran,
+                to: { id: params.id, ...newAccount }
+              };
+              await requests.transactions.updateTransaction(updatedTrans, dispatch);
+            });
+          }
+
           if (edited) {
             handleClose();
             if (onSuccess) {
@@ -182,7 +209,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
                 fullWidth={true}
                 value={name}
                 onChange={e => {
-                  setName(e.target.value.trim());
+                  setName(e.target.value);
                   setSubmit(false);
                 }}
                 helperText={submit && !isValidName() ? 'Required' : undefined}
@@ -227,7 +254,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
 
 const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,
-  currentUser: state.sessionState.currentUser
+  currentUser: state.sessionState.currentUser,
+  transactions: state.transactionsState.transactions,
 });
 
 export const AccountModal = compose(

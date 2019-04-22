@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { categoriesState, subcategoriesState } from '../store';
-import { ApplicationState, Category, Subcategory, User } from '../types';
+import { ApplicationState, Category, Subcategory, Transaction, User } from '../types';
 import { getOptions, sort } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
@@ -22,6 +22,7 @@ interface StateMappedProps {
   categories: Category[];
   currentUser: User | null;
   subcategories: Subcategory[];
+  transactions: Transaction[];
 }
 
 interface SubcategoryModalProps {
@@ -128,7 +129,8 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     const {
       match: { params },
       location,
-      onSuccess
+      onSuccess,
+      transactions,
     } = props;
     e.preventDefault();
     setSubmit(true);
@@ -143,8 +145,20 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       // TODO: Don't edit if no change
       if (isValidName() && isValidCategoryId()) {
         if (location.pathname.includes('edit') && params.id) {
-          // TODO: Update transactions
           const edited = await requests.subcategories.updateSubcategory({ id: params.id, ...newSubcategory }, dispatch);
+
+          // Update transactions
+          const trans = transactions.filter(t => t.subcategory && t.subcategory.id === params.id);
+          if (trans.length > 0) {
+            await trans.forEach(async tran => {
+              const updatedTrans: Transaction = {
+                ...tran,
+                subcategory: { id: params.id, ...newSubcategory }
+              };
+              await requests.transactions.updateTransaction(updatedTrans, dispatch);
+            });
+          }
+
           if (edited) {
             handleClose();
             if (onSuccess) {
@@ -226,7 +240,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
 const mapStateToProps = (state: ApplicationState) => ({
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
-  subcategories: state.subcategoriesState.subcategories
+  subcategories: state.subcategoriesState.subcategories,
+  transactions: state.transactionsState.transactions,
 });
 
 export const SubcategoryModal = compose(

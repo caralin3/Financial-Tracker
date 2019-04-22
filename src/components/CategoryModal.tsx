@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { categoriesState, subcategoriesState } from '../store';
-import { ApplicationState, Category, Subcategory, User } from '../types';
+import { ApplicationState, Budget, Category, Subcategory, Transaction, User } from '../types';
 import { Alert, Loading, ModalForm } from './';
 
 interface RouteParams {
@@ -18,9 +18,11 @@ interface DispatchMappedProps {
 }
 
 interface StateMappedProps {
+  budgets: Budget[];
   categories: Category[];
   currentUser: User | null;
   subcategories: Subcategory[];
+  transactions: Transaction[];
 }
 
 interface CategoryModalProps extends RouteComponentProps<RouteParams> {
@@ -110,8 +112,10 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
+      budgets,
       match: { params },
-      onSuccess
+      onSuccess,
+      transactions,
     } = props;
     e.preventDefault();
     setSubmit(true);
@@ -124,8 +128,8 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
       // TODO: Don't edit if no change
       if (isValidName()) {
         if (params.id) {
-          // TODO: Update transactions
           const edited = await requests.categories.updateCategory({ id: params.id, ...newCategory }, dispatch);
+          // Update subcategories
           const subs = subcategories.filter(sub => sub.category.id === params.id);
           await subs.forEach(async sub => {
             const updatedSubcategory: Subcategory = {
@@ -134,6 +138,30 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
             };
             await requests.subcategories.updateSubcategory(updatedSubcategory, dispatch);
           });
+
+          // Update transactions
+          const trans = transactions.filter(t => t.category && t.category.id === params.id);
+          if (trans.length > 0) {
+            await trans.forEach(async tran => {
+              const updatedTrans: Transaction = {
+                ...tran,
+                category: { id: params.id, ...newCategory }
+              };
+              await requests.transactions.updateTransaction(updatedTrans, dispatch);
+            });
+          }
+
+          // Update budgets
+          const buds = budgets.filter(b => b.category.id === params.id);
+          if (buds.length > 0) {
+            await buds.forEach(async bud => {
+              const updatedBudget: Budget = {
+                ...bud,
+                category: { id: params.id, ...newCategory }
+              };
+              await requests.budgets.updateBudget(updatedBudget, dispatch);
+            });
+          }
 
           if (edited) {
             handleClose();
@@ -206,9 +234,11 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
 
 const mapStateToProps = (state: ApplicationState) => ({
+  budgets: state.budgetsState.budgets,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
-  subcategories: state.subcategoriesState.subcategories
+  subcategories: state.subcategoriesState.subcategories,
+  transactions: state.transactionsState.transactions
 });
 
 export const CategoryModal = compose(
