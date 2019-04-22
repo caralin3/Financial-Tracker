@@ -7,7 +7,6 @@ import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { FBBudget } from '../firebase/types';
 import { budgets } from '../mock';
-import { budgetsState, categoriesState } from '../store';
 import { ApplicationState, Budget, budgetFreq, Category, User } from '../types';
 import { getOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
@@ -54,18 +53,9 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     const {
       match: { params }
     } = props;
-    setLoading(true);
-    if (categories.length === 0) {
-      loadCategories();
-    } else {
-      setLoading(false);
-    }
     // TODO: Load budget from id
     if (params.id) {
       setLoading(true);
-      if (budgets.length === 0) {
-        loadBudgets();
-      }
       const [budget] = budgets.filter(buds => buds.id === params.id);
       console.log(params.id, budget);
       if (budget) {
@@ -77,28 +67,13 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
         }
         setAmount(budget.amount);
       }
+      setLoading(false);
     } else {
       if (amount || categoryId || frequency) {
         resetFields();
       }
     }
   }, [props.match.params.id]);
-
-  const loadBudgets = async () => {
-    if (currentUser) {
-      const buds = await requests.budgets.getAllBudgets(currentUser.id);
-      dispatch(budgetsState.setBudgets(buds));
-      setLoading(false);
-    }
-  };
-
-  const loadCategories = async () => {
-    if (currentUser) {
-      const cats = await requests.categories.getAllCategories(currentUser.id);
-      dispatch(categoriesState.setCategories(cats));
-      setLoading(false);
-    }
-  };
 
   const resetFields = () => {
     setCategoryId('');

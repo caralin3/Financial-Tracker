@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
-import { categoriesState, subcategoriesState } from '../store';
+// import { categoriesState, subcategoriesState } from '../store';
 import { ApplicationState, Budget, Category, Subcategory, Transaction, User } from '../types';
 import { Alert, Loading, ModalForm } from './';
 
@@ -52,40 +52,17 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
     } = props;
     if (params.id) {
       setLoading(true);
-      loadCategories();
-      loadSubcategories();
       const [category] = categories.filter(cat => cat.id === params.id);
-      console.log(params.id, category);
       if (category) {
         setName(category.name);
       }
+      setLoading(false);
     } else {
       if (name) {
         resetFields();
       }
     }
   }, [props.match.params.id]);
-
-  const loadCategories = async () => {
-    if (currentUser) {
-      if (categories.length === 0) {
-        const cats = await requests.categories.getAllCategories(currentUser.id);
-        dispatch(categoriesState.setCategories(cats));
-      }
-      setLoading(false);
-    }
-  };
-
-  const loadSubcategories = async () => {
-    setLoading(true);
-    if (currentUser) {
-      if (subcategories.length === 0) {
-        const subs = await requests.subcategories.getAllSubcategories(currentUser.id);
-        dispatch(subcategoriesState.setSubcategories(subs));
-      }
-      setLoading(false);
-    }
-  };
 
   const resetFields = () => {
     setName('');

@@ -1,4 +1,4 @@
-import { Theme, withStyles } from '@material-ui/core';
+// import { Theme, withStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -21,7 +21,6 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, CategoryModal, Layout, Loading, SubcategoryModal } from '../components';
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
-import { categoriesState, subcategoriesState } from '../store';
 import { ApplicationState, Category, Subcategory, User } from '../types';
 
 export interface CategoriesPageProps {
@@ -45,8 +44,8 @@ interface CategoriesMergedProps
     CategoriesPageProps {}
 
 const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
-  const { categories, currentUser, dispatch, subcategories } = props;
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const { categories, dispatch, subcategories } = props;
+  const [loading] = React.useState<boolean>(false);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
   const [openSubAdd, setOpenSubAdd] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
@@ -57,23 +56,6 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [error, setError] = React.useState<boolean>(false);
   const [deleteId, setDeleteId] = React.useState<string>('');
-
-  React.useEffect(() => {
-    loadData();
-  }, [currentUser]);
-
-  const loadData = async () => {
-    if (currentUser) {
-      const cats = await requests.categories.getAllCategories(currentUser ? currentUser.id : '');
-      const subs = await requests.subcategories.getAllSubcategories(currentUser ? currentUser.id : '');
-      if (categories.length !== cats.length || subcategories.length !== subs.length) {
-        setLoading(true);
-        dispatch(categoriesState.setCategories(cats));
-        dispatch(subcategoriesState.setSubcategories(subs));
-      }
-      setLoading(false);
-    }
-  };
 
   const handleDelete = (id: string, type: string) => {
     if (type === 'category') {
@@ -278,7 +260,7 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   );
 };
 
-const styles = (theme: Theme) => ({});
+// const styles = (theme: Theme) => ({});
 
 const authCondition = (authUser: any) => !!authUser;
 
@@ -292,7 +274,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export const CategoriesPage = compose(
   withAuthorization(authCondition),
-  withStyles(styles as any, { withTheme: true }),
+  // withStyles(styles as any, { withTheme: true }),
   withRouter,
   connect(
     mapStateToProps,

@@ -14,6 +14,7 @@ import { AutoTextField, Form, SelectInput } from './Form';
 import { GoalModal } from './GoalModal';
 import { Layout } from './Layout';
 import { Loading } from './Loading';
+import { LoadingModal } from './LoadingModal';
 import { LoginForm } from './LoginForm';
 import { ModalForm } from './ModalForm';
 import { Popup } from './Popup';
@@ -41,6 +42,7 @@ export {
   GoalModal,
   Layout,
   Loading,
+  LoadingModal,
   LoginForm,
   ModalForm,
   Popup,

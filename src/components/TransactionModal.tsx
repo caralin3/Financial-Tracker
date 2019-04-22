@@ -11,7 +11,6 @@ import { Dispatch } from 'redux';
 import { theme } from '../appearance';
 import { requests } from '../firebase/db';
 import { FBTransaction } from '../firebase/types';
-import { accountsState, categoriesState, subcategoriesState, transactionsState } from '../store';
 import { Account, ApplicationState, Category, Subcategory, Transaction, transactionType, User } from '../types';
 import { formatDateTime, getOptions } from '../util';
 import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
@@ -69,13 +68,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       match: { params },
       location
     } = props;
-    setLoading(true);
     const query: any = querystring.parse(location.search.slice(1));
-    if (accounts.length === 0 || categories.length === 0 || subcategories.length === 0) {
-      loadData();
-    } else {
-      setLoading(false);
-    }
     if (query.type) {
       setLoading(true);
       setEditing(query.type);
@@ -90,14 +83,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           setTab(0);
           break;
       }
+      setLoading(false);
     }
     if (params.id) {
       setLoading(true);
-      if (transactions.length === 0) {
-        loadTransactions();
-      } else {
-        setLoading(false);
-      }
       const [transaction] = transactions.filter(trans => trans.id === params.id);
       if (transaction) {
         if (transaction.category) {
@@ -124,6 +113,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
         setDate(moment(new Date(transaction.date)).format('YYYY-MM-DD'));
         setAmount(transaction.amount);
       }
+      setLoading(false);
     } else {
       if ((amount && date) || from || item || note || to || categoryId || subcategoryId) {
         resetFields();
@@ -131,26 +121,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     }
   }, [props.match.params.id]);
 
-  const loadData = async () => {
-    if (currentUser) {
-      const accs = await requests.accounts.getAllAccounts(currentUser.id);
-      const cats = await requests.categories.getAllCategories(currentUser.id);
-      const subs = await requests.subcategories.getAllSubcategories(currentUser.id);
-      dispatch(accountsState.setAccounts(accs));
-      dispatch(categoriesState.setCategories(cats));
-      dispatch(subcategoriesState.setSubcategories(subs));
-      setLoading(false);
-    }
-  };
-
-  const loadTransactions = async () => {
-    if (currentUser) {
-      const trans = await requests.transactions.getAllTransactions(currentUser.id);
-      dispatch(transactionsState.setTransactions(trans));
-      setLoading(false);
-    }
-  };
-
+  // TODO: Handle items
   const items = ['One', 'Two', 'Three'];
 
   const resetFields = () => {

@@ -28,15 +28,6 @@ import {
   ProgressBar,
   TransactionModal
 } from '../components';
-import { requests } from '../firebase/db';
-import {
-  accountsState,
-  budgetsState,
-  categoriesState,
-  goalsState,
-  subcategoriesState,
-  transactionsState
-} from '../store';
 import { Account, ApplicationState, Budget, budgetFreq, Category, Goal, Transaction, User } from '../types';
 import {
   accountTypeOptions,
@@ -48,7 +39,6 @@ import {
   getExpensesByDates,
   getObjectByType,
   getTransactionByRange,
-  sort
 } from '../util';
 
 export interface DashboardPageProps {
@@ -75,7 +65,7 @@ interface DashboardMergedProps
     DashboardPageProps {}
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
-  const { accounts, budgets, categories, currentUser, goals, dispatch, transactions } = props;
+  const { accounts, budgets, currentUser, goals, transactions } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(false);
   const [loadingBudgets, setLoadingBudgets] = React.useState<boolean>(false);
@@ -133,74 +123,19 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   };
 
   React.useEffect(() => {
-    loadAccounts();
-    loadBudgets();
-    loadGoals();
-    loadTransactions();
+    // TODO: Handle loading
+    setLoading(false);
+    setLoadingAccounts(false);
+    setLoadingBudgets(false);
+    setLoadingGoals(false);
+    setLoadingTransactions(false);
   }, [currentUser]);
 
   React.useEffect(() => {
     const range = menuItems[selected].label;
     setCurrentTrans(getTransactionByRange(range, transactions));
     setSubheader(getSubheader(range));
-  }, [selected]);
-
-  const loadAccounts = async () => {
-    if (currentUser) {
-      const accs = await requests.accounts.getAllAccounts(currentUser.id);
-      if (accounts.length !== accs.length) {
-        setLoadingAccounts(true);
-        dispatch(accountsState.setAccounts(sort(accs, 'desc', 'name')));
-      }
-      setLoadingAccounts(false);
-    }
-  };
-
-  const loadBudgets = async () => {
-    if (currentUser) {
-      const buds = await requests.budgets.getAllBudgets(currentUser.id);
-      if (budgets.length !== buds.length) {
-        setLoadingBudgets(true);
-        dispatch(budgetsState.setBudgets(sort(buds, 'desc', 'name')));
-      }
-      setLoadingBudgets(false);
-    }
-  };
-
-  const loadGoals = async () => {
-    if (currentUser) {
-      const gls = await requests.goals.getAllGoals(currentUser.id);
-      if (goals.length !== gls.length) {
-        setLoadingGoals(true);
-        dispatch(goalsState.setGoals(sort(gls, 'desc', 'name')));
-      }
-      setLoadingGoals(false);
-    }
-  };
-
-  const loadCategories = async () => {
-    if (currentUser) {
-      const cats = await requests.categories.getAllCategories(currentUser.id);
-      const subs = await requests.subcategories.getAllSubcategories(currentUser.id);
-      if (categories.length !== cats.length) {
-        setLoading(true);
-        dispatch(categoriesState.setCategories(cats));
-        dispatch(subcategoriesState.setSubcategories(subs));
-      }
-      setLoading(false);
-    }
-  };
-
-  const loadTransactions = async () => {
-    if (currentUser) {
-      const trans = await requests.transactions.getAllTransactions(currentUser.id);
-      if (transactions.length !== trans.length) {
-        setLoadingTransactions(true);
-        dispatch(transactionsState.setTransactions(sort(trans, 'desc', 'date')));
-      }
-      setLoadingTransactions(false);
-    }
-  };
+  }, [selected, transactions, accounts, budgets, goals]);
 
   const handleMenu = (e: any) => {
     setSelected(e.currentTarget.attributes.getNamedItem('data-value').value);
@@ -387,14 +322,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   };
 
   const dashboardSections = [
-    {
-      action: () => {
-        loadCategories();
-        setAddingTrans(true);
-      },
-      content: recentTransactions,
-      title: 'Recent Transactions'
-    },
+    { action: () => setAddingTrans(true), content: recentTransactions, title: 'Recent Transactions' },
     { title: 'Accounts', action: () => setAddingAccount(true), content: accountItems },
     { title: 'Budgets', action: () => setAddingBudget(true), content: budgetItems() },
     { title: 'Goals', action: () => setAddingGoal(true), content: goalItems() }

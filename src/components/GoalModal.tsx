@@ -6,7 +6,6 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { FBGoal } from '../firebase/types';
-import { goalsState } from '../store';
 import {
   Account,
   ApplicationState,
@@ -80,9 +79,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     // TODO: Load goal from id
     if (params.id) {
       setLoading(true);
-      if (goals.length === 0) {
-        loadGoals();
-      }
       const [goal] = goals.filter(go => go.id === params.id);
       console.log(params.id, goal);
       if (goal) {
@@ -97,6 +93,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
         }
         setAmount(goal.amount);
       }
+      setLoading(false);
     } else {
       if (amount || criteria || comparator || frequency) {
         resetFields();
@@ -104,13 +101,13 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     }
   }, [props.match.params.id]);
 
-  const loadGoals = async () => {
-    if (currentUser) {
-      const gols = await requests.goals.getAllGoals(currentUser.id);
-      dispatch(goalsState.setGoals(gols));
-      setLoading(false);
-    }
-  };
+  // const loadGoals = async () => {
+  //   if (currentUser) {
+  //     const gols = await requests.goals.getAllGoals(currentUser.id);
+  //     dispatch(goalsState.setGoals(gols));
+  //     setLoading(false);
+  //   }
+  // };
 
   const resetFields = () => {
     setCriteria('');

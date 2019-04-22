@@ -5,7 +5,6 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
-import { accountsState } from '../store';
 import { Account, accountType, ApplicationState, Transaction, User } from '../types';
 import { accountTypeOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
@@ -14,6 +13,7 @@ interface RouteParams {
   id: string;
 }
 
+// TODO: Map dispatch to functions instead
 interface DispatchMappedProps {
   dispatch: Dispatch<any>;
 }
@@ -54,9 +54,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     } = props;
     if (params.id) {
       setLoading(true);
-      if (accounts.length === 0) {
-        loadAccounts();
-      }
       const [account] = accounts.filter(acc => acc.id === params.id);
       if (account) {
         setName(account.name);
@@ -70,14 +67,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
       }
     }
   }, [props.match.params.id]);
-
-  const loadAccounts = async () => {
-    if (currentUser) {
-      const accs = await requests.accounts.getAllAccounts(currentUser.id);
-      dispatch(accountsState.setAccounts(accs));
-      setLoading(false);
-    }
-  };
 
   const resetFields = () => {
     setName('');
@@ -125,7 +114,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
       };
 
       if (isValidName() && isValidType()) {
-        // TODO: Update transactions
         if (params.id) {
           const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, dispatch);
 

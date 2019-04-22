@@ -5,9 +5,8 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
-import { categoriesState, subcategoriesState } from '../store';
 import { ApplicationState, Category, Subcategory, Transaction, User } from '../types';
-import { getOptions, sort } from '../util';
+import { getOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
@@ -52,12 +51,6 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       match: { params },
       location
     } = props;
-    setLoading(true);
-    if (categories.length === 0) {
-      loadCategories();
-    } else {
-      setLoading(false);
-    }
     if (location.pathname.includes('add')) {
       if (params.id) {
         setCategoryId(params.id);
@@ -65,16 +58,12 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     } else {
       if (params.id) {
         setLoading(true);
-        if (subcategories.length === 0) {
-          loadSubcategories();
-        } else {
-          setLoading(false);
-        }
         const [subcategory] = subcategories.filter(sub => sub.id === params.id);
         if (subcategory) {
           setName(subcategory.name);
           setCategoryId(subcategory.category.id);
         }
+        setLoading(false);
       } else {
         if (name && categoryId) {
           resetFields();
@@ -82,22 +71,6 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       }
     }
   }, [props.match.params.id]);
-
-  const loadSubcategories = async () => {
-    if (currentUser) {
-      const subs = await requests.subcategories.getAllSubcategories(currentUser.id);
-      dispatch(subcategoriesState.setSubcategories(sort(subs, 'desc', 'name')));
-      setLoading(false);
-    }
-  };
-
-  const loadCategories = async () => {
-    if (currentUser) {
-      const cats = await requests.categories.getAllCategories(currentUser.id);
-      dispatch(categoriesState.setCategories(sort(cats, 'desc', 'name')));
-      setLoading(false);
-    }
-  };
 
   const resetFields = () => {
     setName('');

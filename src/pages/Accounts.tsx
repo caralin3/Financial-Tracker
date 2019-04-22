@@ -21,7 +21,6 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { AccountModal, Alert, AlertDialog, ExpandableCard, Layout, Loading } from '../components';
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
-import { accountsState } from '../store';
 import { Account, accountType, ApplicationState, User } from '../types';
 import { formatMoney, getArrayTotal, getObjectByType } from '../util';
 
@@ -49,9 +48,9 @@ interface StateMappedProps {
 interface AccountsMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, AccountsPageProps {}
 
 const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
-  const { accounts, currentUser, dispatch } = props;
+  const { accounts, dispatch } = props;
   const matchMd = useMediaQuery('(min-width:960px)');
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading] = React.useState<boolean>(false);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [openEdit, setOpenEdit] = React.useState<boolean>(false);
@@ -63,21 +62,6 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   const [cashExpanded, setCashExpanded] = React.useState<boolean>(false);
   const [bankExpanded, setBankExpanded] = React.useState<boolean>(true);
   const [creditExpanded, setCreditExpanded] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    loadAccounts();
-  }, [currentUser]);
-
-  const loadAccounts = async () => {
-    if (currentUser) {
-      const accs = await requests.accounts.getAllAccounts(currentUser.id);
-      if (accounts.length !== accs.length) {
-        setLoading(true);
-        dispatch(accountsState.setAccounts(accs));
-      }
-      setLoading(false);
-    }
-  };
 
   const [deleteAcc] = accounts.filter(acc => acc.id === deleteId);
 

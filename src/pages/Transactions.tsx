@@ -10,7 +10,6 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from '../components';
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
-import { transactionsState } from '../store';
 import { ApplicationState, Transaction, User } from '../types';
 import { expenseColumns, formatTableTransaction, getObjectByType, incomeColumns, transferColumns } from '../util';
 
@@ -34,8 +33,8 @@ interface TransactionsMergedProps
     TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
-  const { currentUser, dispatch, transactions } = props;
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const { dispatch, transactions } = props;
+  const [loading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [error, setError] = React.useState<boolean>(false);
@@ -43,21 +42,6 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [openEdit, setOpenEdit] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    loadTransactions();
-  }, [currentUser]);
-
-  const loadTransactions = async () => {
-    if (currentUser) {
-      const trans = await requests.transactions.getAllTransactions(currentUser.id);
-      if (transactions.length !== trans.length) {
-        setLoading(true);
-        dispatch(transactionsState.setTransactions(trans));
-      }
-      setLoading(false);
-    }
-  };
 
   const handleDelete = (selected: string[]) => {
     setOpenDialog(true);
@@ -78,7 +62,6 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
 
   const handleEdit = (id: string, type: string) => {
     const { history } = props;
-    console.log(id, type);
     history.push(`${routes.transactions}/edit/${id}?type=${type}`);
     const [editTrans] = transactions.filter(trans => trans.id === id);
     setSuccessMsg(`Transaction from ${moment(new Date(editTrans.date)).format('MM/DD/YYYY')} has been updated`);
