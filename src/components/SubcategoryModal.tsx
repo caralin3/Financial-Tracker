@@ -114,7 +114,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       const [category] = categories.filter(cat => cat.id === categoryId);
       const newSubcategory = {
         category,
-        name,
+        name: name.trim(),
         userId: currentUser.id
       };
 
@@ -167,6 +167,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
+      loading={submit}
       open={props.open}
       handleClose={handleClose}
     >
@@ -198,7 +199,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
               fullWidth={true}
               value={name}
               onChange={e => {
-                setName(e.target.value.trim());
+                setName(e.target.value);
                 setSubmit(false);
               }}
               helperText={submit && !isValidName() ? 'Required' : undefined}

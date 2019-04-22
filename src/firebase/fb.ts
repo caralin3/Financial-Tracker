@@ -18,7 +18,6 @@ if (!firebase.apps.length) {
 
 export const auth = firebase.auth();
 export const db = firebase.firestore();
-export const currentUser = auth.currentUser;
 
 // date issue fix according to firebase
 // const settings = {

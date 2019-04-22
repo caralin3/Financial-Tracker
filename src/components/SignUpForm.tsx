@@ -6,8 +6,16 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { auth, db } from '../firebase';
 import { routes } from '../routes';
-import { categoriesState, sessionState, subcategoriesState } from '../store';
-import { Category, Subcategory, User } from '../types';
+import {
+  accountsState,
+  budgetsState,
+  categoriesState,
+  goalsState,
+  sessionState,
+  subcategoriesState,
+  transactionsState
+} from '../store';
+import { Account, Budget, Category, Goal, Subcategory, Transaction, User } from '../types';
 import { Form } from './';
 
 interface SignUpFormProps extends RouteComponentProps {}
@@ -15,12 +23,19 @@ interface SignUpFormProps extends RouteComponentProps {}
 interface DispatchMappedProps {
   addCategory: (cat: Category) => void;
   addSubcategory: (sub: Subcategory) => void;
+  setAccounts: (accounts: Account[]) => void;
+  setBudgets: (budgets: Budget[]) => void;
+  setCategories: (categories: Category[]) => void;
   setCurrentUser: (user: User) => void;
+  setGoals: (goals: Goal[]) => void;
+  setSubcategories: (subcategories: Subcategory[]) => void;
+  setTransactions: (transactions: Transaction[]) => void;
 }
 
 interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps {}
 
 const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>('');
   const [error, setError] = React.useState<string | null>(null);
   const [firstName, setFirstname] = React.useState<string>('');
@@ -45,8 +60,20 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
     );
   };
 
+  const initializeStore = async () => {
+    const { setAccounts, setBudgets, setCategories, setGoals, setSubcategories, setTransactions } = props;
+    setAccounts([]);
+    setBudgets([]);
+    setCategories([]);
+    setGoals([]);
+    setSubcategories([]);
+    setTransactions([]);
+    setSubmitting(false);
+  }
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const { addCategory, addSubcategory, history, setCurrentUser } = props;
+    setSubmitting(true);
     event.preventDefault();
     auth
       .doCreateUserWithEmailAndPassword(email, password)
@@ -57,8 +84,10 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           id: user.user.uid,
           lastName
         };
-        // Create a user in database
-        await db.requests.users.createUser(currentUser, setCurrentUser);
+        await Promise.all([
+          initializeStore(),
+          db.requests.users.createUser(currentUser, setCurrentUser)
+        ]);
         await db.requests.categories.createInitialCategories(currentUser.id, addCategory);
         await db.requests.subcategories.createInitialSubcategories(currentUser.id, addSubcategory);
       })
@@ -79,7 +108,7 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
 
   return (
     <div className="signupForm">
-      <Form buttonText="Sign Up" disabled={!isValid()} submit={handleSubmit}>
+      <Form buttonText="Sign Up" disabled={!isValid()} loading={submitting} submit={handleSubmit}>
         {error && <p className="signupForm_error">{error}</p>}
         <TextField
           autoFocus={true}
@@ -133,7 +162,13 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   addCategory: (cat: Category) => dispatch(categoriesState.addCategory(cat)),
   addSubcategory: (sub: Subcategory) => dispatch(subcategoriesState.addSubcategory(sub)),
-  setCurrentUser: (user: User) => dispatch(sessionState.setCurrentUser(user))
+  setAccounts: (accounts: Account[]) => dispatch(accountsState.setAccounts(accounts)),
+  setBudgets: (budgets: Budget[]) => dispatch(budgetsState.setBudgets(budgets)),
+  setCategories: (categories: Category[]) => dispatch(categoriesState.setCategories(categories)),
+  setCurrentUser: (user: User) => dispatch(sessionState.setCurrentUser(user)),
+  setGoals: (goals: Goal[]) => dispatch(goalsState.setGoals(goals)),
+  setSubcategories: (subcategories: Subcategory[]) => dispatch(subcategoriesState.setSubcategories(subcategories)),
+  setTransactions: (transactions: Transaction[]) => dispatch(transactionsState.setTransactions(transactions))
 });
 
 export const SignUpForm = compose(

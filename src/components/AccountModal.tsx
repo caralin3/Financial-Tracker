@@ -110,7 +110,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     if (currentUser) {
       const newAccount = {
         amount,
-        name,
+        name: name.trim(),
         type: type as accountType,
         userId: currentUser.id
       };
@@ -170,6 +170,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
+      loading={submit}
       open={props.open}
       handleClose={handleClose}
     >

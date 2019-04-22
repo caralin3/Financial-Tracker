@@ -111,15 +111,11 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
       history,
       match: { params },
       onClose,
-      onSuccess
     } = props;
     if (params.id) {
       history.goBack();
     }
     onClose();
-    if (onSuccess) {
-      onSuccess();
-    }
     resetFields();
     setSubmit(false);
   };
@@ -173,7 +169,8 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
-      match: { params }
+      match: { params },
+      onSuccess
     } = props;
     e.preventDefault();
     setSubmit(true);
@@ -193,6 +190,9 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
           const edited = await requests.goals.updateGoal({ id: params.id, ...newGoal }, editGoal);
           if (edited) {
             handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
           } else {
             setError(true);
           }
@@ -200,6 +200,9 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
           const added = await requests.goals.createGoal(newGoal, addGoal);
           if (added) {
             handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
           } else {
             setError(true);
           }
@@ -215,6 +218,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
+      loading={submit}
       open={props.open}
       handleClose={handleClose}
     >

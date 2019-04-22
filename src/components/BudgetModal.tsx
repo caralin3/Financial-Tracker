@@ -89,16 +89,12 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     const {
       history,
       match: { params },
-      onClose,
-      onSuccess
+      onClose
     } = props;
     if (params.id) {
       history.goBack();
     }
     onClose();
-    if (onSuccess) {
-      onSuccess();
-    }
     resetFields();
     setSubmit(false);
   };
@@ -111,7 +107,8 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
-      match: { params }
+      match: { params },
+      onSuccess
     } = props;
     e.preventDefault();
     setSubmit(true);
@@ -130,6 +127,9 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
           const edited = await requests.budgets.updateBudget({ id: params.id, ...newBudget }, editBudget);
           if (edited) {
             handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
           } else {
             setError(true);
           }
@@ -137,6 +137,9 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
           const added = await requests.budgets.createBudget(newBudget, addBudget);
           if (added) {
             handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
           } else {
             setError(true);
           }
@@ -152,6 +155,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
+      loading={submit}
       open={props.open}
       handleClose={handleClose}
     >

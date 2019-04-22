@@ -1,13 +1,12 @@
-import {
-  Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  TextField,
-  Typography
-} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -15,21 +14,22 @@ import { Option } from '../types';
 
 export interface FormProps {
   buttonText: string;
-  fieldsClass?: string;
   disabled?: boolean;
+  loading?: boolean;
   submit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export const Form: React.SFC<FormProps> = props => (
-  <form className="form" onSubmit={props.submit}>
-    {props.children}
+export const Form: React.SFC<FormProps> = ({ buttonText, children, disabled, loading, submit }) => (
+  <form className="form" onSubmit={submit}>
+    {children}
     <div
       className={classNames('form_button', {
-        ['form_button-disabled']: props.disabled
+        ['form_button-disabled']: disabled || loading,
       })}
     >
-      <Button color="primary" type="submit" disabled={props.disabled} variant="contained">
-        {props.buttonText}
+      <Button color="primary" type="submit" disabled={disabled || loading} variant="contained">
+        {buttonText}
+        {loading && <CircularProgress color="primary" size={24} className="form_button--loading" />}
       </Button>
     </div>
   </form>

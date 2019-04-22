@@ -1,20 +1,76 @@
 import { TextField } from '@material-ui/core';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { compose } from 'recompose';
+import { Dispatch } from 'redux';
 import { auth } from '../firebase';
+import { requests } from '../firebase/db';
+import { auth as fbAuth } from '../firebase/fb';
 import { routes } from '../routes';
+import {
+  accountsState,
+  budgetsState,
+  categoriesState,
+  goalsState,
+  subcategoriesState,
+  transactionsState
+} from '../store';
+import { Account, Budget, Category, Goal, Subcategory, Transaction } from '../types';
 import { Form } from './';
 
-interface LoginFormProps extends RouteComponentProps {}
+interface LoginFormProps {}
 
-const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
-  const [submitting, setSubmitting] = React.useState<boolean>(true);
+interface DispatchMappedProps {
+  setAccounts: (accounts: Account[]) => void;
+  setBudgets: (budgets: Budget[]) => void;
+  setCategories: (categories: Category[]) => void;
+  setGoals: (goals: Goal[]) => void;
+  setSubcategories: (subcategories: Subcategory[]) => void;
+  setTransactions: (transactions: Transaction[]) => void;
+}
+
+interface LoginFormMergedProps extends RouteComponentProps, DispatchMappedProps, LoginFormProps {}
+
+const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = props => {
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>('');
   const [error, setError] = React.useState<string | null>(null);
   const [password, setPassword] = React.useState<string>('');
 
+  React.useEffect(() => {
+    setSubmitting(false);
+  }, []);
+
+  const initializeStore = async (userId: string) => {
+    const {
+      history,
+      setAccounts,
+      setBudgets,
+      setCategories,
+      setGoals,
+      setSubcategories,
+      setTransactions
+    } = props;
+    const [accs, buds, cats, gols, subs, trans] = await Promise.all([
+      requests.accounts.getAllAccounts(userId),
+      requests.budgets.getAllBudgets(userId),
+      requests.categories.getAllCategories(userId),
+      requests.goals.getAllGoals(userId),
+      requests.subcategories.getAllSubcategories(userId),
+      requests.transactions.getAllTransactions(userId)
+    ]);
+    setAccounts(accs);
+    setBudgets(buds);
+    setCategories(cats);
+    setGoals(gols);
+    setSubcategories(subs);
+    setTransactions(trans);
+    history.push(routes.dashboard);
+    setSubmitting(false);
+  }
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const { history } = props;
     setSubmitting(true);
     event.preventDefault();
     auth
@@ -23,8 +79,10 @@ const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
         setEmail('');
         setError(null);
         setPassword('');
-        history.push(routes.dashboard);
-        setSubmitting(false);
+        if (fbAuth.currentUser) {
+          const userId = fbAuth.currentUser.uid;
+          initializeStore(userId);
+        }
       })
       .catch((err: any) => {
         setError(err.message);
@@ -62,4 +120,16 @@ const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
   );
 };
 
-export const LoginForm = withRouter(DisconnectedLoginForm);
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  setAccounts: (accounts: Account[]) => dispatch(accountsState.setAccounts(accounts)),
+  setBudgets: (budgets: Budget[]) => dispatch(budgetsState.setBudgets(budgets)),
+  setCategories: (categories: Category[]) => dispatch(categoriesState.setCategories(categories)),
+  setGoals: (goals: Goal[]) => dispatch(goalsState.setGoals(goals)),
+  setSubcategories: (subcategories: Subcategory[]) => dispatch(subcategoriesState.setSubcategories(subcategories)),
+  setTransactions: (transactions: Transaction[]) => dispatch(transactionsState.setTransactions(transactions))
+});
+
+export const LoginForm = compose(
+  withRouter,
+  connect(null, mapDispatchToProps)
+)(DisconnectedLoginForm);
