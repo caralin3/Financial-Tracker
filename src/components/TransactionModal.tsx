@@ -54,6 +54,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   const [success, setSuccess] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<string>('');
   const [submit, setSubmit] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [tab, setTab] = React.useState<number>(0);
   const [from, setFrom] = React.useState<string>('');
   const [to, setTo] = React.useState<string>('');
@@ -185,6 +186,8 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     }
     onClose();
     resetFields();
+    setSubmit(false);
+    setSubmitting(false);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -194,6 +197,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     } = props;
     e.preventDefault();
     setSubmit(true);
+    setSubmitting(true);
     if (currentUser) {
       const [fromAcc] = accounts.filter(acc => acc.id === from);
       const [toAcc] = accounts.filter(acc => acc.id === to);
@@ -234,10 +238,13 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
           if (added) {
             setSuccess(true);
             setSubmit(false);
+            setSubmitting(false);
           } else {
             setError(true);
           }
         }
+      } else {
+        setSubmitting(false);
       }
     }
   };
@@ -517,11 +524,11 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
-      loading={submit}
+      loading={submitting}
       open={props.open}
       handleClose={handleClose}
     >
-      {/* FIXME: Standardize alert messages */}
+      {/* FIXME: Double check alert messages */}
       <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="Transaction has been added!" />
       <Alert
         onClose={() => setError(false)}

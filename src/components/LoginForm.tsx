@@ -43,15 +43,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = props => {
   }, []);
 
   const initializeStore = async (userId: string) => {
-    const {
-      history,
-      setAccounts,
-      setBudgets,
-      setCategories,
-      setGoals,
-      setSubcategories,
-      setTransactions
-    } = props;
+    const { history, setAccounts, setBudgets, setCategories, setGoals, setSubcategories, setTransactions } = props;
     const [accs, buds, cats, gols, subs, trans] = await Promise.all([
       requests.accounts.getAllAccounts(userId),
       requests.budgets.getAllBudgets(userId),
@@ -68,7 +60,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = props => {
     setTransactions(trans);
     history.push(routes.dashboard);
     setSubmitting(false);
-  }
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     setSubmitting(true);
@@ -131,5 +123,8 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
 
 export const LoginForm = compose(
   withRouter,
-  connect(null, mapDispatchToProps)
+  connect(
+    null,
+    mapDispatchToProps
+  )
 )(DisconnectedLoginForm);

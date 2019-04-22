@@ -46,6 +46,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number>(0);
   const [type, setType] = React.useState<accountType | ''>('');
@@ -90,11 +91,14 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     onClose();
     resetFields();
     setSubmit(false);
+    setSubmitting(false);
   };
 
-  // TODO: Handle unique name
-  const isValidName = () => {
-    return name.trim().length > 0;
+  const isValidName = () => name.trim().length > 0;
+
+  const isDuplicate = () => {
+    const dups = accounts.filter(acc => acc.name === name.trim()) || [];
+    return dups.length > 0;
   };
 
   const isValidType = () => type.trim().length > 0;
@@ -107,6 +111,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     } = props;
     e.preventDefault();
     setSubmit(true);
+    setSubmitting(true);
     if (currentUser) {
       const newAccount = {
         amount,
@@ -115,7 +120,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
         userId: currentUser.id
       };
 
-      if (isValidName() && isValidType()) {
+      if (isValidName() && isValidType() && !isDuplicate()) {
         if (params.id) {
           const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, editAccount);
 
@@ -156,10 +161,13 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
           if (added) {
             setSuccess(true);
             setSubmit(false);
+            setSubmitting(false);
           } else {
             setError(true);
           }
         }
+      } else {
+        setSubmitting(false);
       }
     }
   };
@@ -170,7 +178,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
-      loading={submit}
+      loading={submitting}
       open={props.open}
       handleClose={handleClose}
     >
@@ -203,8 +211,10 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
                 setName(e.target.value);
                 setSubmit(false);
               }}
-              helperText={submit && !isValidName() ? 'Required' : undefined}
-              error={submit && !isValidName()}
+              helperText={
+                submit ? (!isValidName() ? 'Required' : isDuplicate() ? 'Name is already taken' : undefined) : undefined
+              }
+              error={submit && (!isValidName() || isDuplicate())}
               type="text"
               margin="normal"
               variant="outlined"

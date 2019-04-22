@@ -60,6 +60,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [criteria, setCriteria] = React.useState<goalCriteria>('');
   const [comparator, setComparator] = React.useState<goalComparator>('');
   const [item, setItem] = React.useState<string>('');
@@ -110,7 +111,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     const {
       history,
       match: { params },
-      onClose,
+      onClose
     } = props;
     if (params.id) {
       history.goBack();
@@ -118,6 +119,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     onClose();
     resetFields();
     setSubmit(false);
+    setSubmitting(false);
   };
 
   const isValidCriteria = () => (criteria ? criteria.trim().length > 0 : false);
@@ -174,6 +176,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     } = props;
     e.preventDefault();
     setSubmit(true);
+    setSubmitting(true);
     if (currentUser) {
       if (isValid()) {
         const newGoal: FBGoal = {
@@ -207,18 +210,19 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
             setError(true);
           }
         }
+      } else {
+        setSubmitting(false);
       }
     }
   };
 
-  // TODO: Show validation frequency error
   return (
     <ModalForm
       disabled={false}
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
-      loading={submit}
+      loading={submitting}
       open={props.open}
       handleClose={handleClose}
     >
@@ -250,7 +254,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
             />
           </Grid>
           {criteria && (
-            <Grid container={true} justify="center">
+            <Grid container={true} alignItems="center" justify="center">
               <Grid className="goalModal_row" item={true} xs={12} sm={6}>
                 <Typography className="goalModal_fieldText--spend">I want to spend</Typography>
                 <SelectInput
@@ -295,13 +299,16 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
                   options={itemOptions()}
                 />
               </Grid>
-              <Grid item={true} xs={12} sm={2}>
-                <Typography className="modal-title" color="primary" variant="body1">
+              <Grid item={true} xs={12} sm={12} md={submit && !isValidFrequency() ? 3 : 2}>
+                <Typography color="primary" variant="body1" style={{ alignItems: 'flex-end', display: 'flex' }}>
                   Frequency
+                  {submit && !isValidFrequency() && (<Typography color="error" variant="caption" style={{ paddingLeft: '10px' }}>
+                  Required
+                  </Typography>)}
                 </Typography>
               </Grid>
-              <Grid item={true} xs={12} sm={10}>
-                <Grid container={true} spacing={0}>
+              <Grid item={true} xs={12} sm={12} md={submit && !isValidFrequency() ? 9 : 10}>
+                <Grid container={true} spacing={0} alignItems="center" justify="center">
                   <Grid item={true} xs={4}>
                     <FormControlLabel
                       value="monthly"

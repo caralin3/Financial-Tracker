@@ -46,6 +46,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
   const [categoryId, setCategoryId] = React.useState<string>('');
 
@@ -92,11 +93,14 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     onClose();
     resetFields();
     setSubmit(false);
+    setSubmitting(false);
   };
 
-  // TODO: Handle unique name
-  const isValidName = () => {
-    return name.trim().length > 0;
+  const isValidName = () => name.trim().length > 0;
+
+  const isDuplicate = () => {
+    const dups = subcategories.filter(sub => sub.name === name.trim() && sub.category.id === categoryId) || [];
+    return dups.length > 0;
   };
 
   const isValidCategoryId = () => categoryId.trim().length > 0;
@@ -110,6 +114,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
     } = props;
     e.preventDefault();
     setSubmit(true);
+    setSubmitting(true);
     if (currentUser) {
       const [category] = categories.filter(cat => cat.id === categoryId);
       const newSubcategory = {
@@ -119,7 +124,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       };
 
       // TODO: Don't edit if no change
-      if (isValidName() && isValidCategoryId()) {
+      if (isValidName() && isValidCategoryId() && !isDuplicate()) {
         if (location.pathname.includes('edit') && params.id) {
           const edited = await requests.subcategories.updateSubcategory(
             { id: params.id, ...newSubcategory },
@@ -157,6 +162,8 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
             setError(true);
           }
         }
+      } else {
+        setSubmitting(false);
       }
     }
   };
@@ -167,7 +174,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
-      loading={submit}
+      loading={submitting}
       open={props.open}
       handleClose={handleClose}
     >
@@ -202,8 +209,10 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
                 setName(e.target.value);
                 setSubmit(false);
               }}
-              helperText={submit && !isValidName() ? 'Required' : undefined}
-              error={submit && !isValidName()}
+              helperText={
+                submit ? (!isValidName() ? 'Required' : isDuplicate() ? 'Name is already taken' : undefined) : undefined
+              }
+              error={submit && (!isValidName() || isDuplicate())}
               type="text"
               margin="normal"
               variant="outlined"

@@ -24,10 +24,10 @@ export const Form: React.SFC<FormProps> = ({ buttonText, children, disabled, loa
     {children}
     <div
       className={classNames('form_button', {
-        ['form_button-disabled']: disabled || loading,
+        ['form_button-disabled']: disabled || loading
       })}
     >
-      <Button color="primary" type="submit" disabled={disabled || loading} variant="contained">
+      <Button id="expense_button" color="primary" type="submit" disabled={disabled || loading} variant="contained">
         {buttonText}
         {loading && <CircularProgress color="primary" size={24} className="form_button--loading" />}
       </Button>
@@ -58,7 +58,7 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
   });
 
   return (
-    <FormControl className={props.className} fullWidth={true} variant="outlined" error={props.error}>
+    <FormControl className={props.className} fullWidth={true} margin="normal" variant="outlined" error={props.error}>
       <InputLabel ref={ref => (inputLabelRef = ref)} htmlFor={`outlined-${props.label}-select`}>
         {props.label}
       </InputLabel>
@@ -91,6 +91,7 @@ interface AutoTextFieldProps {
   id: string;
   label: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   value: string;
 }
 
@@ -129,6 +130,7 @@ export const AutoTextField: React.SFC<AutoTextFieldProps> = props => {
         helperText={props.helperText}
         error={props.error}
         variant="outlined"
+        onKeyDown={props.onKeyDown}
         inputProps={{
           list: 'items'
         }}

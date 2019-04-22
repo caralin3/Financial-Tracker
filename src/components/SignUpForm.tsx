@@ -69,7 +69,7 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
     setSubcategories([]);
     setTransactions([]);
     setSubmitting(false);
-  }
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const { addCategory, addSubcategory, history, setCurrentUser } = props;
@@ -84,10 +84,7 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           id: user.user.uid,
           lastName
         };
-        await Promise.all([
-          initializeStore(),
-          db.requests.users.createUser(currentUser, setCurrentUser)
-        ]);
+        await Promise.all([initializeStore(), db.requests.users.createUser(currentUser, setCurrentUser)]);
         await db.requests.categories.createInitialCategories(currentUser.id, addCategory);
         await db.requests.subcategories.createInitialSubcategories(currentUser.id, addSubcategory);
       })

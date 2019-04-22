@@ -57,6 +57,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [name, setName] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -93,11 +94,14 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
     onClose();
     resetFields();
     setSubmit(false);
+    setSubmitting(false);
   };
 
-  // TODO: Handle unique name
-  const isValidName = () => {
-    return name.trim().length > 0;
+  const isValidName = () => name.trim().length > 0;
+
+  const isDuplicate = () => {
+    const dups = categories.filter(cat => cat.name === name.trim()) || [];
+    return dups.length > 0;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -109,6 +113,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
     } = props;
     e.preventDefault();
     setSubmit(true);
+    setSubmitting(true);
     if (currentUser) {
       const newCategory = {
         name: name.trim(),
@@ -116,7 +121,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
       };
 
       // TODO: Don't edit if no change
-      if (isValidName()) {
+      if (isValidName() && !isDuplicate()) {
         if (params.id) {
           const edited = await requests.categories.updateCategory({ id: params.id, ...newCategory }, editCategory);
           // Update subcategories
@@ -172,6 +177,8 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
             setError(true);
           }
         }
+      } else {
+        setSubmitting(false);
       }
     }
   };
@@ -182,7 +189,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
-      loading={submit}
+      loading={submitting}
       open={props.open}
       handleClose={handleClose}
     >
@@ -209,8 +216,10 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
                 setName(e.target.value);
                 setSubmit(false);
               }}
-              helperText={submit && !isValidName() ? 'Required' : undefined}
-              error={submit && !isValidName()}
+              helperText={
+                submit ? (!isValidName() ? 'Required' : isDuplicate() ? 'Name is already taken' : undefined) : undefined
+              }
+              error={submit && (!isValidName() || isDuplicate())}
               type="text"
               margin="normal"
               variant="outlined"

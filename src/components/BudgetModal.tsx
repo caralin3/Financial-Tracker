@@ -47,6 +47,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [categoryId, setCategoryId] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number>(0);
   const [frequency, setFrequency] = React.useState<budgetFreq>(undefined);
@@ -97,6 +98,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     onClose();
     resetFields();
     setSubmit(false);
+    setSubmitting(false);
   };
 
   const isValidCategoryId = () => categoryId.trim().length > 0;
@@ -112,6 +114,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
     } = props;
     e.preventDefault();
     setSubmit(true);
+    setSubmitting(true);
     if (currentUser) {
       if (isValid()) {
         const [category] = categories.filter(cat => cat.id === categoryId);
@@ -144,6 +147,8 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
             setError(true);
           }
         }
+      } else {
+        setSubmitting(false);
       }
     }
   };
@@ -155,7 +160,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
       formTitle={props.title}
       formButton={props.buttonText}
       formSubmit={handleSubmit}
-      loading={submit}
+      loading={submitting}
       open={props.open}
       handleClose={handleClose}
     >
@@ -201,12 +206,15 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
               variant="outlined"
             />
           </Grid>
-          <Grid item={true} xs={12} sm={2}>
-            <Typography className="modal-title" color="primary" variant="body1">
+          <Grid item={true} xs={12} md={12} lg={submit && !isValidFrequency() ? 3 : 2}>
+            <Typography color="primary" variant="body1" style={{ alignItems: 'flex-end', display: 'flex' }}>
               Frequency
+              {submit && !isValidFrequency() && (<Typography color="error" variant="caption" style={{ paddingLeft: '10px' }}>
+              Required
+              </Typography>)}
             </Typography>
           </Grid>
-          <Grid item={true} xs={12} sm={10}>
+          <Grid item={true} xs={12} md={12} lg={submit && !isValidFrequency() ? 9 : 10}>
             <Grid container={true} spacing={0}>
               <Grid item={true} xs={6} sm={3}>
                 <FormControlLabel
@@ -244,6 +252,11 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                   onChange={(e: any) => setFrequency(e.target.value)}
                 />
               </Grid>
+              {/* <Grid item={true} xs={6} sm={2}>
+                <Typography color="error" variant="caption">
+                  * Required
+                </Typography>
+              </Grid> */}
             </Grid>
           </Grid>
           {/* TODO: Update text */}
