@@ -5,6 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
+import { accountsState, transactionsState } from '../store';
 import { Account, accountType, ApplicationState, Transaction, User } from '../types';
 import { accountTypeOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
@@ -13,9 +14,10 @@ interface RouteParams {
   id: string;
 }
 
-// TODO: Map dispatch to functions instead
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  addAccount: (acc: Account) => void;
+  editAccount: (acc: Account) => void;
+  editTransaction: (trans: Transaction) => void;
 }
 
 interface StateMappedProps {
@@ -34,12 +36,12 @@ interface AccountModalProps {
 
 interface AccountModalMergedProps
   extends RouteComponentProps<RouteParams>,
-  StateMappedProps,
-  DispatchMappedProps,
-  AccountModalProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    AccountModalProps {}
 
 const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
-  const { accounts, currentUser, dispatch } = props;
+  const { accounts, addAccount, currentUser, editAccount, editTransaction } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -101,7 +103,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
     const {
       match: { params },
       onSuccess,
-      transactions,
+      transactions
     } = props;
     e.preventDefault();
     setSubmit(true);
@@ -115,7 +117,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
 
       if (isValidName() && isValidType()) {
         if (params.id) {
-          const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, dispatch);
+          const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, editAccount);
 
           // Update from in transactions
           const fromTrans = transactions.filter(t => t.from && t.from.id === params.id);
@@ -125,7 +127,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
                 ...tran,
                 from: { id: params.id, ...newAccount }
               };
-              await requests.transactions.updateTransaction(updatedTrans, dispatch);
+              await requests.transactions.updateTransaction(updatedTrans, editTransaction);
             });
           }
 
@@ -137,7 +139,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
                 ...tran,
                 to: { id: params.id, ...newAccount }
               };
-              await requests.transactions.updateTransaction(updatedTrans, dispatch);
+              await requests.transactions.updateTransaction(updatedTrans, editTransaction);
             });
           }
 
@@ -150,7 +152,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
             setError(true);
           }
         } else {
-          const added = await requests.accounts.createAccount(newAccount, dispatch);
+          const added = await requests.accounts.createAccount(newAccount, addAccount);
           if (added) {
             setSuccess(true);
             setSubmit(false);
@@ -176,74 +178,78 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
           <Loading />
         </div>
       ) : (
-          <Grid className="accountModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-            <Alert
-              onClose={() => setSuccess(false)}
-              open={success}
-              variant="success"
-              message={`${name} has been added to ${type}`}
+        <Grid className="accountModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+          <Alert
+            onClose={() => setSuccess(false)}
+            open={success}
+            variant="success"
+            message={`${name} has been added to ${type}`}
+          />
+          <Alert
+            onClose={() => setError(false)}
+            open={error}
+            variant="error"
+            message="Submission failed, please try again later."
+          />
+          <Grid item={true} xs={12}>
+            <TextField
+              autoFocus={true}
+              id="account-name"
+              label="Name"
+              fullWidth={true}
+              value={name}
+              onChange={e => {
+                setName(e.target.value);
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidName() ? 'Required' : undefined}
+              error={submit && !isValidName()}
+              type="text"
+              margin="normal"
+              variant="outlined"
             />
-            <Alert
-              onClose={() => setError(false)}
-              open={error}
-              variant="error"
-              message="Submission failed, please try again later."
-            />
-            <Grid item={true} xs={12}>
-              <TextField
-                autoFocus={true}
-                id="account-name"
-                label="Name"
-                fullWidth={true}
-                value={name}
-                onChange={e => {
-                  setName(e.target.value);
-                  setSubmit(false);
-                }}
-                helperText={submit && !isValidName() ? 'Required' : undefined}
-                error={submit && !isValidName()}
-                type="text"
-                margin="normal"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <TextField
-                id="account-amount"
-                label="Balance"
-                fullWidth={true}
-                value={amount}
-                onChange={e => setAmount(parseFloat(e.target.value))}
-                type="number"
-                margin="normal"
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item={true} xs={12}>
-              <SelectInput
-                label="Account Type"
-                selected={type}
-                handleChange={e => {
-                  setType(e.target.value as accountType);
-                  setSubmit(false);
-                }}
-                helperText={submit && !isValidType() ? 'Required' : undefined}
-                error={submit && !isValidType()}
-                options={accountTypeOptions}
-              />
-            </Grid>
           </Grid>
-        )}
+          <Grid item={true} xs={12}>
+            <TextField
+              id="account-amount"
+              label="Balance"
+              fullWidth={true}
+              value={amount}
+              onChange={e => setAmount(parseFloat(e.target.value))}
+              type="number"
+              margin="normal"
+              variant="outlined"
+            />
+          </Grid>
+          <Grid item={true} xs={12}>
+            <SelectInput
+              label="Account Type"
+              selected={type}
+              handleChange={e => {
+                setType(e.target.value as accountType);
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidType() ? 'Required' : undefined}
+              error={submit && !isValidType()}
+              options={accountTypeOptions}
+            />
+          </Grid>
+        </Grid>
+      )}
     </ModalForm>
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  addAccount: (acc: Account) => dispatch(accountsState.addAccount(acc)),
+  editAccount: (acc: Account) => dispatch(accountsState.editAccount(acc)),
+  editTransaction: (trans: Transaction) => dispatch(transactionsState.editTransaction(trans))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,
   currentUser: state.sessionState.currentUser,
-  transactions: state.transactionsState.transactions,
+  transactions: state.transactionsState.transactions
 });
 
 export const AccountModal = compose(

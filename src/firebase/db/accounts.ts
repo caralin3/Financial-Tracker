@@ -1,17 +1,15 @@
-import { Dispatch } from 'redux';
-import { accountsState } from '../../store';
 import { Account } from '../../types';
 import { sort } from '../../util';
 import { FBAccount } from '../types';
 import { accountsCollection } from './';
 
 // CREATE ACCOUNT
-export const createAccount = (account: FBAccount, dispatch: Dispatch<any>) =>
+export const createAccount = (account: FBAccount, addAccount: (acc: Account) => void) =>
   accountsCollection
     .add(account)
     .then(doc => {
       // Set account in store
-      dispatch(accountsState.addAccount({ id: doc.id, ...account }));
+      addAccount({ id: doc.id, ...account });
       console.log('Account written with ID: ', doc.id);
       return true;
     })
@@ -36,13 +34,13 @@ export const getAllAccounts = (userId: string) =>
   });
 
 // UPDATE ACCOUNT
-export const updateAccount = (account: Account, dispatch: Dispatch<any>) =>
+export const updateAccount = (account: Account, editAccount: (acc: Account) => void) =>
   accountsCollection
     .doc(account.id)
     .update(account)
     .then(() => {
-      // Set account in store
-      dispatch(accountsState.editAccount(account));
+      // Edit account in store
+      editAccount(account);
       console.log('Account updated with ID: ', account.id);
       return true;
     })
@@ -52,13 +50,13 @@ export const updateAccount = (account: Account, dispatch: Dispatch<any>) =>
     });
 
 // DELETE ACCOUNT
-export const deleteAccount = (id: string, dispatch: Dispatch<any>) =>
+export const deleteAccount = (id: string, removeAccount: (id: string) => void) =>
   accountsCollection
     .doc(id)
     .delete()
     .then(() => {
-      // Set account in store
-      dispatch(accountsState.deleteAccount(id));
+      // Delete account in store
+      removeAccount(id);
       console.log('Account deleted with ID: ', id);
       return true;
     })

@@ -11,6 +11,7 @@ import { Dispatch } from 'redux';
 import { theme } from '../appearance';
 import { requests } from '../firebase/db';
 import { FBTransaction } from '../firebase/types';
+import { transactionsState } from '../store';
 import { Account, ApplicationState, Category, Subcategory, Transaction, transactionType, User } from '../types';
 import { formatDateTime, getOptions } from '../util';
 import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
@@ -20,7 +21,8 @@ interface RouteParams {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  addTransaction: (trans: Transaction) => void;
+  editTransaction: (trans: Transaction) => void;
 }
 
 interface StateMappedProps {
@@ -46,7 +48,7 @@ interface TransactionModalMergedProps
     TransactionModalProps {}
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = props => {
-  const { accounts, categories, currentUser, dispatch, subcategories, transactions } = props;
+  const { accounts, addTransaction, categories, currentUser, editTransaction, subcategories, transactions } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
@@ -176,22 +178,19 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     const {
       history,
       match: { params },
-      onClose,
-      onSuccess
+      onClose
     } = props;
     if (params.id) {
       history.goBack();
     }
     onClose();
-    if (onSuccess) {
-      onSuccess();
-    }
     resetFields();
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const {
-      match: { params }
+      match: { params },
+      onSuccess
     } = props;
     e.preventDefault();
     setSubmit(true);
@@ -218,14 +217,20 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
         };
 
         if (params.id) {
-          const edited = await requests.transactions.updateTransaction({ id: params.id, ...newTransaction }, dispatch);
+          const edited = await requests.transactions.updateTransaction(
+            { id: params.id, ...newTransaction },
+            editTransaction
+          );
           if (edited) {
             handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
           } else {
             setError(true);
           }
         } else {
-          const added = await requests.transactions.createTransaction(newTransaction, dispatch);
+          const added = await requests.transactions.createTransaction(newTransaction, addTransaction);
           if (added) {
             setSuccess(true);
             setSubmit(false);
@@ -560,7 +565,10 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  addTransaction: (trans: Transaction) => dispatch(transactionsState.addTransaction(trans)),
+  editTransaction: (trans: Transaction) => dispatch(transactionsState.editTransaction(trans))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,

@@ -12,7 +12,6 @@ import {
   Typography,
   withStyles
 } from '@material-ui/core';
-// import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
@@ -23,10 +22,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import classNames from 'classnames';
 import * as React from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
-import { Dispatch } from 'redux';
 import { theme } from '../appearance';
 import { auth } from '../firebase';
 import { routes } from '../routes';
@@ -37,9 +35,7 @@ interface NavigationProps extends RouteComponentProps {
   theme: any;
 }
 
-interface DispatchMappedProps {}
-
-interface SignUpMergedProps extends DispatchMappedProps, NavigationProps {}
+interface NavigationMergedProps extends NavigationProps {}
 
 interface NavigationState {
   expanded: boolean;
@@ -47,7 +43,7 @@ interface NavigationState {
   selected: string;
 }
 
-class DisconnectedNavigation extends React.Component<SignUpMergedProps, NavigationState> {
+class DisconnectedNavigation extends React.Component<NavigationMergedProps, NavigationState> {
   public readonly state: NavigationState = {
     expanded: true,
     open: false,
@@ -284,15 +280,7 @@ const styles = {
   }
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
-  dispatch
-});
-
 export const Navigation = compose(
   withRouter,
-  withStyles(styles as any, { withTheme: true }),
-  connect(
-    null,
-    mapDispatchToProps
-  )
+  withStyles(styles as any, { withTheme: true })
 )(DisconnectedNavigation);

@@ -1,6 +1,4 @@
 import { TextField } from '@material-ui/core';
-// import { Grid, TextField } from '@material-ui/core';
-// import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -8,13 +6,16 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { auth, db } from '../firebase';
 import { routes } from '../routes';
-import { User } from '../types';
+import { categoriesState, sessionState, subcategoriesState } from '../store';
+import { Category, Subcategory, User } from '../types';
 import { Form } from './';
 
 interface SignUpFormProps extends RouteComponentProps {}
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  addCategory: (cat: Category) => void;
+  addSubcategory: (sub: Subcategory) => void;
+  setCurrentUser: (user: User) => void;
 }
 
 interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps {}
@@ -26,7 +27,6 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
   const [lastName, setLastname] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = React.useState<string>('');
-  // const md = useMediaQuery('(min-width:768px)');
 
   const isValidEmail = (value: string = email): boolean => {
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -46,8 +46,7 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const { dispatch, history } = props;
-
+    const { addCategory, addSubcategory, history, setCurrentUser } = props;
     event.preventDefault();
     auth
       .doCreateUserWithEmailAndPassword(email, password)
@@ -59,9 +58,9 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           lastName
         };
         // Create a user in database
-        await db.requests.users.createUser(currentUser, dispatch);
-        await db.requests.categories.createInitialCategories(currentUser.id, dispatch);
-        await db.requests.subcategories.createInitialSubcategories(currentUser.id, dispatch);
+        await db.requests.users.createUser(currentUser, setCurrentUser);
+        await db.requests.categories.createInitialCategories(currentUser.id, addCategory);
+        await db.requests.subcategories.createInitialSubcategories(currentUser.id, addSubcategory);
       })
       .then(() => {
         setEmail('');
@@ -82,12 +81,6 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
     <div className="signupForm">
       <Form buttonText="Sign Up" disabled={!isValid()} submit={handleSubmit}>
         {error && <p className="signupForm_error">{error}</p>}
-        {/* <Grid
-          className="signupForm_gridContainer"
-          container={true}
-          spacing={md ? 24 : 0}
-        >
-          <Grid item={true} md="auto"> */}
         <TextField
           autoFocus={true}
           id="signupForm_firstName"
@@ -96,8 +89,6 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           margin="normal"
           error={!!error}
         />
-        {/* </Grid>
-          <Grid item={true} md="auto"> */}
         <TextField
           id="signupForm_lastName"
           label="Last Name"
@@ -105,8 +96,6 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           margin="normal"
           error={!!error}
         />
-        {/* </Grid>
-          <Grid item={true} md="auto"> */}
         <TextField
           className="signupForm_email"
           id="signupForm_email"
@@ -116,14 +105,6 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           margin="normal"
           onChange={e => setEmail(e.target.value.trim())}
         />
-        {/* </Grid>
-        </Grid>
-        <Grid
-          className="signupForm_gridContainer"
-          container={true}
-          spacing={md ? 24 : 0}
-        >
-          <Grid item={true} md="auto"> */}
         <TextField
           id="signupForm_password"
           label="Password"
@@ -134,8 +115,6 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           error={!!error}
           variant="standard"
         />
-        {/* </Grid>
-          <Grid item={true} md="auto"> */}
         <TextField
           id="signupForm_confirmPassword"
           label="Confirm Password"
@@ -146,15 +125,15 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
           error={!!error}
           variant="standard"
         />
-        {/* </Grid>
-        </Grid> */}
       </Form>
     </div>
   );
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
-  dispatch
+  addCategory: (cat: Category) => dispatch(categoriesState.addCategory(cat)),
+  addSubcategory: (sub: Subcategory) => dispatch(subcategoriesState.addSubcategory(sub)),
+  setCurrentUser: (user: User) => dispatch(sessionState.setCurrentUser(user))
 });
 
 export const SignUpForm = compose(

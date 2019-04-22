@@ -6,6 +6,7 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { FBGoal } from '../firebase/types';
+import { goalsState } from '../store';
 import {
   Account,
   ApplicationState,
@@ -26,7 +27,8 @@ interface RouteParams {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  addGoal: (goal: Goal) => void;
+  editGoal: (goal: Goal) => void;
 }
 
 interface StateMappedProps {
@@ -53,7 +55,7 @@ interface GoalModalMergedProps
     GoalModalProps {}
 
 const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
-  const { accounts, categories, currentUser, dispatch, goals, subcategories, transactions } = props;
+  const { accounts, addGoal, categories, currentUser, editGoal, goals, subcategories, transactions } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -70,12 +72,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     const {
       match: { params }
     } = props;
-    // setLoading(true);
-    // if (categories.length === 0) {
-    //   loadCategories();
-    // } else {
-    //   setLoading(false);
-    // }
     // TODO: Load goal from id
     if (params.id) {
       setLoading(true);
@@ -100,14 +96,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
       }
     }
   }, [props.match.params.id]);
-
-  // const loadGoals = async () => {
-  //   if (currentUser) {
-  //     const gols = await requests.goals.getAllGoals(currentUser.id);
-  //     dispatch(goalsState.setGoals(gols));
-  //     setLoading(false);
-  //   }
-  // };
 
   const resetFields = () => {
     setCriteria('');
@@ -174,6 +162,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
       case 'category':
         return getOptions(categories);
       case 'item':
+        // FIXME: Options for items
         return getTransOptions(transactions);
       case 'subcategory':
         return getOptions(subcategories);
@@ -201,14 +190,14 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
 
         // TODO: Don't edit if no change
         if (params.id) {
-          const edited = await requests.goals.updateGoal({ id: params.id, ...newGoal }, dispatch);
+          const edited = await requests.goals.updateGoal({ id: params.id, ...newGoal }, editGoal);
           if (edited) {
             handleClose();
           } else {
             setError(true);
           }
         } else {
-          const added = await requests.goals.createGoal(newGoal, dispatch);
+          const added = await requests.goals.createGoal(newGoal, addGoal);
           if (added) {
             handleClose();
           } else {
@@ -380,7 +369,10 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  addGoal: (goal: Goal) => dispatch(goalsState.addGoal(goal)),
+  editGoal: (goal: Goal) => dispatch(goalsState.editGoal(goal))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,

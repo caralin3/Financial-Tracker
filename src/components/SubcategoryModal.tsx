@@ -5,6 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
+import { subcategoriesState, transactionsState } from '../store';
 import { ApplicationState, Category, Subcategory, Transaction, User } from '../types';
 import { getOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
@@ -14,7 +15,9 @@ interface RouteParams {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  addSubcategory: (sub: Subcategory) => void;
+  editSubcategory: (sub: Subcategory) => void;
+  editTransaction: (trans: Transaction) => void;
 }
 
 interface StateMappedProps {
@@ -39,7 +42,7 @@ interface SubcategoryModalMergedProps
     SubcategoryModalProps {}
 
 const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = props => {
-  const { categories, currentUser, dispatch, subcategories } = props;
+  const { addSubcategory, categories, currentUser, editSubcategory, editTransaction, subcategories } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
@@ -103,7 +106,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       match: { params },
       location,
       onSuccess,
-      transactions,
+      transactions
     } = props;
     e.preventDefault();
     setSubmit(true);
@@ -118,7 +121,10 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
       // TODO: Don't edit if no change
       if (isValidName() && isValidCategoryId()) {
         if (location.pathname.includes('edit') && params.id) {
-          const edited = await requests.subcategories.updateSubcategory({ id: params.id, ...newSubcategory }, dispatch);
+          const edited = await requests.subcategories.updateSubcategory(
+            { id: params.id, ...newSubcategory },
+            editSubcategory
+          );
 
           // Update transactions
           const trans = transactions.filter(t => t.subcategory && t.subcategory.id === params.id);
@@ -128,7 +134,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
                 ...tran,
                 subcategory: { id: params.id, ...newSubcategory }
               };
-              await requests.transactions.updateTransaction(updatedTrans, dispatch);
+              await requests.transactions.updateTransaction(updatedTrans, editTransaction);
             });
           }
 
@@ -141,7 +147,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
             setError(true);
           }
         } else {
-          const added = await requests.subcategories.createSubcategory(newSubcategory, dispatch);
+          const added = await requests.subcategories.createSubcategory(newSubcategory, addSubcategory);
           if (added) {
             handleClose();
             if (onSuccess) {
@@ -208,13 +214,17 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  addSubcategory: (sub: Subcategory) => dispatch(subcategoriesState.addSubcategory(sub)),
+  editSubcategory: (sub: Subcategory) => dispatch(subcategoriesState.editSubcategory(sub)),
+  editTransaction: (trans: Transaction) => dispatch(transactionsState.editTransaction(trans))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
   subcategories: state.subcategoriesState.subcategories,
-  transactions: state.transactionsState.transactions,
+  transactions: state.transactionsState.transactions
 });
 
 export const SubcategoryModal = compose(

@@ -8,13 +8,14 @@ import { Form } from './';
 interface LoginFormProps extends RouteComponentProps {}
 
 const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
+  const [submitting, setSubmitting] = React.useState<boolean>(true);
   const [email, setEmail] = React.useState<string>('');
   const [error, setError] = React.useState<string | null>(null);
   const [password, setPassword] = React.useState<string>('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     const { history } = props;
-
+    setSubmitting(true);
     event.preventDefault();
     auth
       .doSignInWithEmailAndPassword(email, password)
@@ -23,6 +24,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
         setError(null);
         setPassword('');
         history.push(routes.dashboard);
+        setSubmitting(false);
       })
       .catch((err: any) => {
         setError(err.message);
@@ -36,7 +38,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormProps> = props => {
 
   return (
     <div className="loginForm">
-      <Form buttonText="Log In" submit={handleSubmit}>
+      <Form buttonText="Log In" loading={submitting} submit={handleSubmit}>
         {error && <p className="loginForm_error">{error}</p>}
         <TextField
           autoFocus={true}

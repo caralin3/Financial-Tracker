@@ -1,5 +1,3 @@
-import { Dispatch } from 'redux';
-import { categoriesState } from '../../store';
 import { Category } from '../../types';
 import { sort } from '../../util';
 import { FBCategory } from '../types';
@@ -9,7 +7,7 @@ const createCategoryObject = (name: string, userId: string) => {
   return { name, userId };
 };
 
-export const createInitialCategories = (userId: string, dispatch: Dispatch<any>) => {
+export const createInitialCategories = (userId: string, addCategory: (cat: Category) => void) => {
   const categories = [
     createCategoryObject('Housing', userId),
     createCategoryObject('Food', userId),
@@ -28,17 +26,17 @@ export const createInitialCategories = (userId: string, dispatch: Dispatch<any>)
     createCategoryObject('Travel', userId),
     createCategoryObject('Utilities', userId)
   ];
-  categories.forEach(cat => createCategory(cat, dispatch));
+  categories.forEach(cat => createCategory(cat, addCategory));
 };
 
 // CREATE CATEGORY
-export const createCategory = (category: FBCategory, dispatch: Dispatch<any>) =>
+export const createCategory = (category: FBCategory, addCategory: (cat: Category) => void) =>
   categoriesCollection
     .add(category)
     .then(doc => {
       console.log('Category written with ID: ', doc.id);
       // Set category in store
-      dispatch(categoriesState.addCategory({ id: doc.id, ...category }));
+      addCategory({ id: doc.id, ...category });
       return true;
     })
     .catch(error => {
@@ -62,13 +60,13 @@ export const getAllCategories = (userId: string) =>
   });
 
 // UPDATE CATEGORY
-export const updateCategory = (category: Category, dispatch: Dispatch<any>) =>
+export const updateCategory = (category: Category, editCategory: (cat: Category) => void) =>
   categoriesCollection
     .doc(category.id)
     .update(category)
     .then(() => {
-      // Set category in store
-      dispatch(categoriesState.editCategory(category));
+      // Edit category in store
+      editCategory(category);
       console.log('Category updated with ID: ', category.id);
       return true;
     })
@@ -78,13 +76,13 @@ export const updateCategory = (category: Category, dispatch: Dispatch<any>) =>
     });
 
 // DELETE CATEGORY
-export const deleteCategory = (id: string, dispatch: Dispatch<any>) =>
+export const deleteCategory = (id: string, removeCategory: (id: string) => void) =>
   categoriesCollection
     .doc(id)
     .delete()
     .then(() => {
-      // Set category in store
-      dispatch(categoriesState.deleteCategory(id));
+      // Delete category in store
+      removeCategory(id);
       console.log('Category deleted with ID: ', id);
       return true;
     })

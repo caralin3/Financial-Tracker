@@ -7,6 +7,7 @@ import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { FBBudget } from '../firebase/types';
 import { budgets } from '../mock';
+import { budgetsState } from '../store';
 import { ApplicationState, Budget, budgetFreq, Category, User } from '../types';
 import { getOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
@@ -16,7 +17,8 @@ interface RouteParams {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  addBudget: (bud: Budget) => void;
+  editBudget: (bud: Budget) => void;
 }
 
 interface StateMappedProps {
@@ -40,7 +42,7 @@ interface BudgetModalMergedProps
     BudgetModalProps {}
 
 const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
-  const { categories, currentUser, dispatch } = props;
+  const { addBudget, categories, currentUser, editBudget } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -125,14 +127,14 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
 
         // TODO: Don't edit if no change
         if (params.id) {
-          const edited = await requests.budgets.updateBudget({ id: params.id, ...newBudget }, dispatch);
+          const edited = await requests.budgets.updateBudget({ id: params.id, ...newBudget }, editBudget);
           if (edited) {
             handleClose();
           } else {
             setError(true);
           }
         } else {
-          const added = await requests.budgets.createBudget(newBudget, dispatch);
+          const added = await requests.budgets.createBudget(newBudget, addBudget);
           if (added) {
             handleClose();
           } else {
@@ -255,7 +257,10 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  addBudget: (bud: Budget) => dispatch(budgetsState.addBudget(bud)),
+  editBudget: (bud: Budget) => dispatch(budgetsState.editBudget(bud))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   budgets: state.budgetsState.budgets,

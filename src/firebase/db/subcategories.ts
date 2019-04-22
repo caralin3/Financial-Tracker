@@ -1,5 +1,3 @@
-import { Dispatch } from 'redux';
-import { subcategoriesState } from '../../store';
 import { Category, Subcategory } from '../../types';
 import { sort } from '../../util';
 import { FBSubcategory } from '../types';
@@ -15,7 +13,7 @@ const getCategoryByName = (categories: Category[], name: string) => {
   return parent;
 };
 
-export const createInitialSubcategories = async (userId: string, dispatch: Dispatch<any>) => {
+export const createInitialSubcategories = async (userId: string, addSubcategory: (sub: Subcategory) => void) => {
   const categories = await getAllCategories(userId);
 
   const subcategories: FBSubcategory[] = [
@@ -106,17 +104,17 @@ export const createInitialSubcategories = async (userId: string, dispatch: Dispa
     createSubcategoryObject('Internet', getCategoryByName(categories, 'Utilities'), userId)
   ];
 
-  subcategories.forEach((sub: FBSubcategory) => createSubcategory(sub, dispatch));
+  subcategories.forEach((sub: FBSubcategory) => createSubcategory(sub, addSubcategory));
 };
 
 // CREATE SUBCATEGORY
-export const createSubcategory = (subcategory: FBSubcategory, dispatch: Dispatch<any>) =>
+export const createSubcategory = (subcategory: FBSubcategory, addSubcategory: (sub: Subcategory) => void) =>
   subcategoriesCollection
     .add(subcategory)
     .then(doc => {
       console.log('Subcategory written with ID: ', doc.id);
       // Set subcategory in store
-      dispatch(subcategoriesState.addSubcategory({ id: doc.id, ...subcategory }));
+      addSubcategory({ id: doc.id, ...subcategory });
       return true;
     })
     .catch(error => {
@@ -140,13 +138,13 @@ export const getAllSubcategories = (userId: string) =>
   });
 
 // UPDATE SUBCATEGORY
-export const updateSubcategory = (subcategory: Subcategory, dispatch: Dispatch<any>) =>
+export const updateSubcategory = (subcategory: Subcategory, editSubcategory: (sub: Subcategory) => void) =>
   subcategoriesCollection
     .doc(subcategory.id)
     .update(subcategory)
     .then(() => {
-      // Set subcategory in store
-      dispatch(subcategoriesState.editSubcategory(subcategory));
+      // Edit subcategory in store
+      editSubcategory(subcategory);
       console.log('Subcategory updated with ID: ', subcategory.id);
       return true;
     })
@@ -156,13 +154,13 @@ export const updateSubcategory = (subcategory: Subcategory, dispatch: Dispatch<a
     });
 
 // DELETE SUBCATEGORY
-export const deleteSubcategory = (id: string, dispatch: Dispatch<any>) =>
+export const deleteSubcategory = (id: string, removeSubcategory: (id: string) => void) =>
   subcategoriesCollection
     .doc(id)
     .delete()
     .then(() => {
-      // Set subcategory in store
-      dispatch(subcategoriesState.deleteSubcategory(id));
+      // Delete subcategory in store
+      removeSubcategory(id);
       console.log('Subcategory deleted with ID: ', id);
       return true;
     })

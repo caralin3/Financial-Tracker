@@ -1,11 +1,9 @@
-import { Dispatch } from 'redux';
-import { sessionState } from '../../store';
 import { User } from '../../types';
 import { usersCollection } from './';
 
 // CREATE USER
 // Set current user in store
-export const createUser = (user: User, dispatch: Dispatch<any>) => {
+export const createUser = (user: User, setCurrentUser: (user: User | null) => void) => {
   usersCollection
     .doc(user.id)
     .set({
@@ -14,13 +12,13 @@ export const createUser = (user: User, dispatch: Dispatch<any>) => {
       lastName: user.lastName
     })
     .then(() => {
-      dispatch(sessionState.setCurrentUser(user));
+      setCurrentUser(user);
     });
 };
 
 // READ CURRENT USER
 // Get current user from db and set in store
-export const getCurrentUser = (id: string, dispatch: Dispatch<any>) => {
+export const getCurrentUser = (id: string, setCurrentUser: (user: User | null) => void) => {
   usersCollection
     .doc(id)
     .get()
@@ -32,7 +30,7 @@ export const getCurrentUser = (id: string, dispatch: Dispatch<any>) => {
           id: user.id,
           lastName: user.data().lastName
         };
-        dispatch(sessionState.setCurrentUser(currentUser));
+        setCurrentUser(currentUser);
       }
     });
 };

@@ -8,7 +8,14 @@ import { withAuthentication } from './auth/withAuthentication';
 import { LoadingModal } from './components';
 import { requests } from './firebase/db';
 import { createHistory, Router } from './routes';
-import { accountsState, budgetsState, categoriesState, goalsState, subcategoriesState, transactionsState } from './store';
+import {
+  accountsState,
+  budgetsState,
+  categoriesState,
+  goalsState,
+  subcategoriesState,
+  transactionsState
+} from './store';
 import { Account, ApplicationState, Budget, Category, Goal, Subcategory, Transaction, User } from './types';
 
 interface AppProps {}
@@ -40,13 +47,15 @@ interface AppMergedProps extends DispatchMappedProps, StateMappedProps, AppProps
 
 class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
   public history: History.History = createHistory();
-  
+
   public readonly state: AppState = {
-    loading: false,
-  }
-  
+    loading: false
+  };
+
   public componentDidMount() {
-    this.setState({ loading: true });
+    if (this.props.currentUser) {
+      this.setState({ loading: true });
+    }
     this.initializeStore();
   }
 
@@ -55,14 +64,22 @@ class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
 
     return (
       <MuiThemeProvider theme={theme}>
-        {loading && <LoadingModal open={true} onClose={() => null} />}
+        <LoadingModal open={loading} />
         <Router history={this.history} />
       </MuiThemeProvider>
     );
   }
 
   private initializeStore = async () => {
-    const { currentUser, setAccounts, setBudgets, setCategories, setGoals, setSubcategories, setTransactions } = this.props;
+    const {
+      currentUser,
+      setAccounts,
+      setBudgets,
+      setCategories,
+      setGoals,
+      setSubcategories,
+      setTransactions
+    } = this.props;
     if (currentUser) {
       const [accs, buds, cats, gols, subs, trans] = await Promise.all([
         requests.accounts.getAllAccounts(currentUser.id),
@@ -70,7 +87,7 @@ class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
         requests.categories.getAllCategories(currentUser.id),
         requests.goals.getAllGoals(currentUser.id),
         requests.subcategories.getAllSubcategories(currentUser.id),
-        requests.transactions.getAllTransactions(currentUser.id),
+        requests.transactions.getAllTransactions(currentUser.id)
       ]);
       setAccounts(accs);
       setBudgets(buds);
@@ -80,18 +97,16 @@ class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
       setTransactions(trans);
       this.setState({ loading: false });
     }
-  }
+  };
 }
 
-const mapDispatchToProps = (
-  dispatch: Dispatch<any>
-): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   setAccounts: (accounts: Account[]) => dispatch(accountsState.setAccounts(accounts)),
   setBudgets: (budgets: Budget[]) => dispatch(budgetsState.setBudgets(budgets)),
   setCategories: (categories: Category[]) => dispatch(categoriesState.setCategories(categories)),
   setGoals: (goals: Goal[]) => dispatch(goalsState.setGoals(goals)),
-  setSubcategories: (subcategories: Subcategory[]) =>dispatch(subcategoriesState.setSubcategories(subcategories)),
-  setTransactions: (transactions: Transaction[]) => dispatch(transactionsState.setTransactions(transactions)),
+  setSubcategories: (subcategories: Subcategory[]) => dispatch(subcategoriesState.setSubcategories(subcategories)),
+  setTransactions: (transactions: Transaction[]) => dispatch(transactionsState.setTransactions(transactions))
 });
 
 const mapStateToProps = (state: ApplicationState) => ({
@@ -104,6 +119,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   transactions: state.transactionsState.transactions
 });
 
-const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(DisconnectedApp);
+const ConnectedApp = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DisconnectedApp);
 
 export const App = withAuthentication(ConnectedApp) as any;

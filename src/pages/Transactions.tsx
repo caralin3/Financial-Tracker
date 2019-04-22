@@ -10,6 +10,7 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from '../components';
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
+import { transactionsState } from '../store';
 import { ApplicationState, Transaction, User } from '../types';
 import { expenseColumns, formatTableTransaction, getObjectByType, incomeColumns, transferColumns } from '../util';
 
@@ -18,7 +19,7 @@ export interface TransactionsPageProps {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  removeTransaction: (id: string) => void;
 }
 
 interface StateMappedProps {
@@ -33,7 +34,7 @@ interface TransactionsMergedProps
     TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
-  const { dispatch, transactions } = props;
+  const { removeTransaction, transactions } = props;
   const [loading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [successMsg, setSuccessMsg] = React.useState<string>('');
@@ -50,7 +51,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
 
   const deleteTransaction = () => {
     items.forEach(async id => {
-      const deleted = await requests.transactions.deleteTransaction(id, dispatch);
+      const deleted = await requests.transactions.deleteTransaction(id, removeTransaction);
       if (deleted) {
         setSuccessMsg(`Transactions have been deleted`);
         setSuccess(true);
@@ -154,7 +155,9 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  removeTransaction: (id: string) => dispatch(transactionsState.deleteTransaction(id))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser,

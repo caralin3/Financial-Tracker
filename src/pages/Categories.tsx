@@ -21,6 +21,7 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, CategoryModal, Layout, Loading, SubcategoryModal } from '../components';
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
+import { categoriesState, subcategoriesState } from '../store';
 import { ApplicationState, Category, Subcategory, User } from '../types';
 
 export interface CategoriesPageProps {
@@ -28,7 +29,8 @@ export interface CategoriesPageProps {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  removeCategory: (id: string) => void;
+  removeSubcategory: (id: string) => void;
 }
 
 interface StateMappedProps {
@@ -44,7 +46,7 @@ interface CategoriesMergedProps
     CategoriesPageProps {}
 
 const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
-  const { categories, dispatch, subcategories } = props;
+  const { categories, removeCategory, removeSubcategory, subcategories } = props;
   const [loading] = React.useState<boolean>(false);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
   const [openSubAdd, setOpenSubAdd] = React.useState<boolean>(false);
@@ -71,10 +73,10 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   const [deleteSub] = subcategories.filter(sub => sub.id === deleteId);
 
   const deleteCategory = async () => {
-    const deleted = await requests.categories.deleteCategory(deleteId, dispatch);
+    const deleted = await requests.categories.deleteCategory(deleteId, removeCategory);
     const subs = subcategories.filter(sub => sub.category.id === deleteId);
     await subs.forEach(async sub => {
-      await requests.subcategories.deleteSubcategory(sub.id, dispatch);
+      await requests.subcategories.deleteSubcategory(sub.id, removeSubcategory);
     });
     setSuccessMsg(`${deleteCat.name} has been deleted`);
     if (deleted) {
@@ -85,7 +87,7 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   };
 
   const deleteSubcategory = async () => {
-    const deleted = await requests.subcategories.deleteSubcategory(deleteId, dispatch);
+    const deleted = await requests.subcategories.deleteSubcategory(deleteId, removeSubcategory);
     setSuccessMsg(`${deleteSub.name} has been deleted`);
     if (deleted) {
       setSuccess(true);
@@ -264,7 +266,10 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  removeCategory: (id: string) => dispatch(categoriesState.deleteCategory(id)),
+  removeSubcategory: (id: string) => dispatch(subcategoriesState.deleteSubcategory(id))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   categories: state.categoriesState.categories,

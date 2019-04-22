@@ -1,17 +1,15 @@
-import { Dispatch } from 'redux';
-import { goalsState } from '../../store';
 import { Goal } from '../../types';
 import { sort } from '../../util';
 import { FBGoal } from '../types';
 import { goalsCollection } from './';
 
 // CREATE GOAL
-export const createGoal = (goal: FBGoal, dispatch: Dispatch<any>) =>
+export const createGoal = (goal: FBGoal, addGoal: (goal: Goal) => void) =>
   goalsCollection
     .add(goal)
     .then(doc => {
       // Set goal in store
-      dispatch(goalsState.addGoal({ id: doc.id, ...goal }));
+      addGoal({ id: doc.id, ...goal });
       console.log('Goal written with ID: ', doc.id);
       return true;
     })
@@ -36,13 +34,13 @@ export const getAllGoals = (userId: string) =>
   });
 
 // TODO: UPDATE GOAL
-export const updateGoal = (goal: Goal, dispatch: Dispatch<any>) =>
+export const updateGoal = (goal: Goal, editGoal: (goal: Goal) => void) =>
   goalsCollection
     .doc(goal.id)
     .update(goal)
     .then(() => {
-      // Set goal in store
-      dispatch(goalsState.editGoal(goal));
+      // Edit goal in store
+      editGoal(goal);
       console.log('Goal updated with ID: ', goal.id);
       return true;
     })
@@ -52,13 +50,13 @@ export const updateGoal = (goal: Goal, dispatch: Dispatch<any>) =>
     });
 
 // TODO: DELETE GOAL
-export const deleteGoal = (id: string, dispatch: Dispatch<any>) =>
+export const deleteGoal = (id: string, removeGoal: (id: string) => void) =>
   goalsCollection
     .doc(id)
     .delete()
     .then(() => {
-      // Set goal in store
-      dispatch(goalsState.deleteGoal(id));
+      // Delete goal in store
+      removeGoal(id);
       console.log('Goal deleted with ID: ', id);
       return true;
     })

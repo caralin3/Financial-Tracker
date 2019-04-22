@@ -1,17 +1,15 @@
-import { Dispatch } from 'redux';
-import { transactionsState } from '../../store';
 import { Transaction } from '../../types';
 import { sort } from '../../util';
 import { FBTransaction } from '../types';
 import { transactionsCollection } from './';
 
 // CREATE TRANSACTION
-export const createTransaction = (transaction: FBTransaction, dispatch: Dispatch<any>) =>
+export const createTransaction = (transaction: FBTransaction, addTransaction: (trans: Transaction) => void) =>
   transactionsCollection
     .add(transaction)
     .then(doc => {
       // Set transaction in store
-      dispatch(transactionsState.addTransaction({ id: doc.id, ...transaction }));
+      addTransaction({ id: doc.id, ...transaction });
       console.log('Transaction written with ID: ', doc.id);
       return true;
     })
@@ -36,13 +34,13 @@ export const getAllTransactions = (userId: string) =>
   });
 
 // UPDATE TRANSACTION
-export const updateTransaction = (transaction: Transaction, dispatch: Dispatch<any>) =>
+export const updateTransaction = (transaction: Transaction, editTransaction: (trans: Transaction) => void) =>
   transactionsCollection
     .doc(transaction.id)
     .update(transaction)
     .then(() => {
-      // Set transaction in store
-      dispatch(transactionsState.editTransaction(transaction));
+      // Edit transaction in store
+      editTransaction(transaction);
       console.log('Transaction updated with ID: ', transaction.id);
       return true;
     })
@@ -52,13 +50,13 @@ export const updateTransaction = (transaction: Transaction, dispatch: Dispatch<a
     });
 
 // DELETE TRANSACTION
-export const deleteTransaction = (id: string, dispatch: Dispatch<any>) =>
+export const deleteTransaction = (id: string, removeTransaction: (id: string) => void) =>
   transactionsCollection
     .doc(id)
     .delete()
     .then(() => {
-      // Set transaction in store
-      dispatch(transactionsState.deleteTransaction(id));
+      // Delete transaction in store
+      removeTransaction(id);
       console.log('Transaction deleted with ID: ', id);
       return true;
     })

@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
-// import { categoriesState, subcategoriesState } from '../store';
+import { budgetsState, categoriesState, subcategoriesState, transactionsState } from '../store';
 import { ApplicationState, Budget, Category, Subcategory, Transaction, User } from '../types';
 import { Alert, Loading, ModalForm } from './';
 
@@ -14,7 +14,11 @@ interface RouteParams {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  addCategory: (cat: Category) => void;
+  editBudget: (bud: Budget) => void;
+  editCategory: (cat: Category) => void;
+  editSubcategory: (sub: Subcategory) => void;
+  editTransaction: (trans: Transaction) => void;
 }
 
 interface StateMappedProps {
@@ -35,12 +39,21 @@ interface CategoryModalProps extends RouteComponentProps<RouteParams> {
 
 interface CategoryModalMergedProps
   extends RouteComponentProps<RouteParams>,
-  StateMappedProps,
-  DispatchMappedProps,
-  CategoryModalProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    CategoryModalProps {}
 
 const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => {
-  const { categories, currentUser, dispatch, subcategories } = props;
+  const {
+    addCategory,
+    categories,
+    currentUser,
+    editBudget,
+    editCategory,
+    editSubcategory,
+    editTransaction,
+    subcategories
+  } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
@@ -92,7 +105,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
       budgets,
       match: { params },
       onSuccess,
-      transactions,
+      transactions
     } = props;
     e.preventDefault();
     setSubmit(true);
@@ -105,7 +118,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
       // TODO: Don't edit if no change
       if (isValidName()) {
         if (params.id) {
-          const edited = await requests.categories.updateCategory({ id: params.id, ...newCategory }, dispatch);
+          const edited = await requests.categories.updateCategory({ id: params.id, ...newCategory }, editCategory);
           // Update subcategories
           const subs = subcategories.filter(sub => sub.category.id === params.id);
           await subs.forEach(async sub => {
@@ -113,7 +126,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
               ...sub,
               category: { id: params.id, ...newCategory }
             };
-            await requests.subcategories.updateSubcategory(updatedSubcategory, dispatch);
+            await requests.subcategories.updateSubcategory(updatedSubcategory, editSubcategory);
           });
 
           // Update transactions
@@ -124,7 +137,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
                 ...tran,
                 category: { id: params.id, ...newCategory }
               };
-              await requests.transactions.updateTransaction(updatedTrans, dispatch);
+              await requests.transactions.updateTransaction(updatedTrans, editTransaction);
             });
           }
 
@@ -136,7 +149,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
                 ...bud,
                 category: { id: params.id, ...newCategory }
               };
-              await requests.budgets.updateBudget(updatedBudget, dispatch);
+              await requests.budgets.updateBudget(updatedBudget, editBudget);
             });
           }
 
@@ -149,7 +162,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
             setError(true);
           }
         } else {
-          const added = await requests.categories.createCategory(newCategory, dispatch);
+          const added = await requests.categories.createCategory(newCategory, addCategory);
           if (added) {
             handleClose();
             if (onSuccess) {
@@ -177,38 +190,44 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
           <Loading />
         </div>
       ) : (
-          <Grid className="categoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-            <Alert
-              onClose={() => setError(false)}
-              open={error}
-              variant="error"
-              message="Submission failed, please try again later."
+        <Grid className="categoryModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
+          <Alert
+            onClose={() => setError(false)}
+            open={error}
+            variant="error"
+            message="Submission failed, please try again later."
+          />
+          <Grid item={true} xs={12}>
+            <TextField
+              id="category-name"
+              label="Category Name"
+              autoFocus={true}
+              fullWidth={true}
+              value={name}
+              onChange={e => {
+                setName(e.target.value.trim());
+                setSubmit(false);
+              }}
+              helperText={submit && !isValidName() ? 'Required' : undefined}
+              error={submit && !isValidName()}
+              type="text"
+              margin="normal"
+              variant="outlined"
             />
-            <Grid item={true} xs={12}>
-              <TextField
-                id="category-name"
-                label="Category Name"
-                autoFocus={true}
-                fullWidth={true}
-                value={name}
-                onChange={e => {
-                  setName(e.target.value.trim());
-                  setSubmit(false);
-                }}
-                helperText={submit && !isValidName() ? 'Required' : undefined}
-                error={submit && !isValidName()}
-                type="text"
-                margin="normal"
-                variant="outlined"
-              />
-            </Grid>
           </Grid>
-        )}
+        </Grid>
+      )}
     </ModalForm>
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  addCategory: (cat: Category) => dispatch(categoriesState.addCategory(cat)),
+  editBudget: (bud: Budget) => dispatch(budgetsState.editBudget(bud)),
+  editCategory: (cat: Category) => dispatch(categoriesState.editCategory(cat)),
+  editSubcategory: (sub: Subcategory) => dispatch(subcategoriesState.editSubcategory(sub)),
+  editTransaction: (trans: Transaction) => dispatch(transactionsState.editTransaction(trans))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   budgets: state.budgetsState.budgets,

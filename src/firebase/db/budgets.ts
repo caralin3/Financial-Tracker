@@ -1,17 +1,15 @@
-import { Dispatch } from 'redux';
-import { budgetsState } from '../../store';
 import { Budget } from '../../types';
 import { sort } from '../../util';
 import { FBBudget } from '../types';
 import { budgetsCollection } from './';
 
 // CREATE BUDGET
-export const createBudget = (budget: FBBudget, dispatch: Dispatch<any>) =>
+export const createBudget = (budget: FBBudget, addBudget: (bud: Budget) => void) =>
   budgetsCollection
     .add(budget)
     .then(doc => {
       // Set budget in store
-      dispatch(budgetsState.addBudget({ id: doc.id, ...budget }));
+      addBudget({ id: doc.id, ...budget });
       console.log('Budget written with ID: ', doc.id);
       return true;
     })
@@ -36,13 +34,13 @@ export const getAllBudgets = (userId: string) =>
   });
 
 // TODO: UPDATE BUDGET
-export const updateBudget = (budget: Budget, dispatch: Dispatch<any>) =>
+export const updateBudget = (budget: Budget, editBudget: (bud: Budget) => void) =>
   budgetsCollection
     .doc(budget.id)
     .update(budget)
     .then(() => {
-      // Set budget in store
-      dispatch(budgetsState.editBudget(budget));
+      // Edit budget in store
+      editBudget(budget);
       console.log('Budget updated with ID: ', budget.id);
       return true;
     })
@@ -52,13 +50,13 @@ export const updateBudget = (budget: Budget, dispatch: Dispatch<any>) =>
     });
 
 // TODO: DELETE BUDGET
-export const deleteBudget = (id: string, dispatch: Dispatch<any>) =>
+export const deleteBudget = (id: string, removeBudget: (id: string) => void) =>
   budgetsCollection
     .doc(id)
     .delete()
     .then(() => {
-      // Set budget in store
-      dispatch(budgetsState.deleteBudget(id));
+      // Delete budget in store
+      removeBudget(id);
       console.log('Budget deleted with ID: ', id);
       return true;
     })

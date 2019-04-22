@@ -21,6 +21,7 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { AccountModal, Alert, AlertDialog, ExpandableCard, Layout, Loading } from '../components';
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
+import { accountsState } from '../store';
 import { Account, accountType, ApplicationState, User } from '../types';
 import { formatMoney, getArrayTotal, getObjectByType } from '../util';
 
@@ -37,7 +38,7 @@ export interface AccountsPageProps {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  removeAccount: (id: string) => void;
 }
 
 interface StateMappedProps {
@@ -48,7 +49,7 @@ interface StateMappedProps {
 interface AccountsMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, AccountsPageProps {}
 
 const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
-  const { accounts, dispatch } = props;
+  const { accounts, removeAccount } = props;
   const matchMd = useMediaQuery('(min-width:960px)');
   const [loading] = React.useState<boolean>(false);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
@@ -71,7 +72,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   };
 
   const deleteAccount = async () => {
-    const deleted = await requests.accounts.deleteAccount(deleteId, dispatch);
+    const deleted = await requests.accounts.deleteAccount(deleteId, removeAccount);
     setSuccessMsg(`${deleteAcc.name} has been deleted`);
     if (deleted) {
       setSuccess(true);
@@ -265,7 +266,9 @@ const AccountItem: React.SFC<AccountItemProps> = props => (
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  removeAccount: (id: string) => dispatch(accountsState.deleteAccount(id))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,

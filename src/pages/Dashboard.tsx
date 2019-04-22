@@ -15,7 +15,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
-import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import {
   AccountModal,
@@ -38,15 +37,11 @@ import {
   getExpensesByCriteria,
   getExpensesByDates,
   getObjectByType,
-  getTransactionByRange,
+  getTransactionByRange
 } from '../util';
 
 export interface DashboardPageProps {
   classes: any;
-}
-
-interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
 }
 
 interface StateMappedProps {
@@ -58,11 +53,7 @@ interface StateMappedProps {
   transactions: Transaction[];
 }
 
-interface DashboardMergedProps
-  extends RouteComponentProps<any>,
-    StateMappedProps,
-    DispatchMappedProps,
-    DashboardPageProps {}
+interface DashboardMergedProps extends RouteComponentProps<any>, StateMappedProps, DashboardPageProps {}
 
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const { accounts, budgets, currentUser, goals, transactions } = props;
@@ -414,8 +405,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
-
 const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,
   budgets: state.budgetsState.budgets,
@@ -431,6 +420,6 @@ export const DashboardPage = compose(
   withRouter,
   connect(
     mapStateToProps,
-    mapDispatchToProps
+    null
   )
 )(DisconnectedDashboardPage);

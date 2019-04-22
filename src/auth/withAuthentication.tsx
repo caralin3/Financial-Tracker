@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { db, firebase } from '../firebase';
 import { sessionState } from '../store';
+import { User } from '../types';
 
 interface WithAuthProps {}
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  setCurrentUser: (user: User | null) => void;
 }
 
 interface StateMappedProps {}
@@ -21,12 +22,12 @@ export const withAuthentication = (Component: any) => {
     public readonly state: WithAuthState = {};
 
     public componentDidMount() {
-      const { dispatch } = this.props;
+      const { setCurrentUser } = this.props;
       firebase.auth.onAuthStateChanged((user: any) => {
         if (user) {
-          db.requests.users.getCurrentUser(user.uid, dispatch);
+          db.requests.users.getCurrentUser(user.uid, setCurrentUser);
         } else {
-          dispatch(sessionState.setCurrentUser(null));
+          setCurrentUser(null);
         }
       });
     }
@@ -36,7 +37,9 @@ export const withAuthentication = (Component: any) => {
     }
   }
 
-  const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({ dispatch });
+  const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+    setCurrentUser: (user: User) => dispatch(sessionState.setCurrentUser(user))
+  });
 
   return connect(
     null,
