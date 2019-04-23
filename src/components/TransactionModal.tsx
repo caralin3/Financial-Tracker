@@ -13,7 +13,7 @@ import { requests } from '../firebase/db';
 import { FBTransaction } from '../firebase/types';
 import { transactionsState } from '../store';
 import { Account, ApplicationState, Category, Subcategory, Transaction, transactionType, User } from '../types';
-import { formatDateTime, getOptions } from '../util';
+import { formatDateTime, getOptions, removeDups } from '../util';
 import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
@@ -123,9 +123,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       }
     }
   }, [props.match.params.id]);
-
-  // TODO: Handle items
-  const items = ['One', 'Two', 'Three'];
 
   const resetFields = () => {
     setCategoryId('');
@@ -249,6 +246,20 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     }
   };
 
+  // FIXME: Data lists
+  const expenseItems = removeDups(transactions.filter(trans => trans.type === 'expense').map(trans => trans.item && trans.item));
+  const incomeItems = removeDups(transactions.filter(trans => trans.type === 'income').map(trans => trans.item && trans.item));
+  const noteList = removeDups(transactions.map(trans => trans.note && trans.note).filter(n => n !== '' && n !== 'N/A'));
+  const tagList = () => {
+    const allTags: string[] = [];
+    transactions.map(trans => {
+      if (trans.tags) {
+        allTags.push.apply(allTags, trans.tags.filter(t => t !== '' && t !== 'N/A'));
+      }
+    });
+    return removeDups(allTags);
+  }
+
   const loadingProgress = (
     <Typography className="transModal_fields transModal_fields--loading" component="div" dir={theme.direction}>
       <Loading />
@@ -275,7 +286,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             id="expense-item"
             label="Item"
             onChange={e => setItem(e.target.value)}
-            dataList={items}
+            dataList={expenseItems}
             helperText={submit && !isValidItem() ? 'Required' : undefined}
             error={submit && !isValidItem()}
             value={item}
@@ -339,7 +350,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
               id="expense-note"
               label="Note"
               onChange={e => setNote(e.target.value)}
-              dataList={items}
+              dataList={noteList}
               value={note}
             />
           </Grid>
@@ -351,7 +362,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
               id="expense-tags"
               label="Tags"
               onChange={e => setTags(e.target.value)}
-              dataList={items}
+              dataList={expenseItems}
               value={tags}
             />
           </Grid>
@@ -371,7 +382,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             onChange={e => setItem(e.target.value)}
             helperText={submit && !isValidItem() ? 'Required' : undefined}
             error={submit && !isValidItem()}
-            dataList={items}
+            dataList={incomeItems}
             value={item}
           />
         </Grid>
@@ -422,7 +433,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             id="income-note"
             label="Note"
             onChange={e => setNote(e.target.value)}
-            dataList={items}
+            dataList={noteList}
             value={note}
           />
         </Grid>
@@ -432,7 +443,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             id="income-tags"
             label="Tags"
             onChange={e => setTags(e.target.value)}
-            dataList={items}
+            dataList={tagList()}
             value={tags}
           />
         </Grid>
@@ -500,7 +511,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             id="transfer-note"
             label="Note"
             onChange={e => setNote(e.target.value)}
-            dataList={items}
+            dataList={noteList}
             value={note}
           />
         </Grid>
@@ -510,7 +521,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
             id="transfer-tags"
             label="Tags"
             onChange={e => setTags(e.target.value)}
-            dataList={items}
+            dataList={tagList()}
             value={tags}
           />
         </Grid>
