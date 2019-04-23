@@ -9,7 +9,7 @@ import { FBBudget } from '../firebase/types';
 import { budgets } from '../mock';
 import { budgetsState } from '../store';
 import { ApplicationState, Budget, budgetFreq, Category, User } from '../types';
-import { getOptions } from '../util';
+import { formatMoney, getOptions } from '../util';
 import { Alert, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
@@ -51,6 +51,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   const [categoryId, setCategoryId] = React.useState<string>('');
   const [amount, setAmount] = React.useState<number>(0);
   const [frequency, setFrequency] = React.useState<budgetFreq>(undefined);
+  const [monthlySavings, setMonthlySavings] = React.useState<number>(0);
 
   React.useEffect(() => {
     const {
@@ -197,7 +198,17 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                 fullWidth={true}
                 value={amount}
                 onChange={e => {
-                  setAmount(parseFloat(e.target.value) || 0);
+                  const total = parseFloat(e.target.value) || 0;
+                  let freq = 1;
+                  if (frequency === 'quarterly') {
+                    freq = 3;
+                  } else if (frequency === 'semi-annually') {
+                    freq = 6;
+                  } else if (frequency === 'yearly') {
+                    freq = 12;
+                  }
+                  setAmount(total);
+                  setMonthlySavings(Math.ceil(total / freq));
                   setSubmit(false);
                 }}
                 type="number"
@@ -223,7 +234,10 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                     control={<Radio color="primary" checked={frequency === 'monthly'} />}
                     label="Monthly"
                     labelPlacement="end"
-                    onChange={(e: any) => setFrequency(e.target.value)}
+                    onChange={(e: any) => {
+                      setFrequency(e.target.value);
+                      setMonthlySavings(amount);
+                    }}
                   />
                 </Grid>
                 <Grid item={true} xs={6} sm={3}>
@@ -232,7 +246,10 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                     control={<Radio color="primary" checked={frequency === 'quarterly'} />}
                     label="Quarterly"
                     labelPlacement="end"
-                    onChange={(e: any) => setFrequency(e.target.value)}
+                    onChange={(e: any) => {
+                      setFrequency(e.target.value);
+                      setMonthlySavings(Math.ceil(amount / 3));
+                    }}
                   />
                 </Grid>
                 <Grid item={true} xs={6} sm={3}>
@@ -241,7 +258,10 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                     control={<Radio color="primary" checked={frequency === 'semi-annually'} />}
                     label="Semi-annually"
                     labelPlacement="end"
-                    onChange={(e: any) => setFrequency(e.target.value)}
+                    onChange={(e: any) => {
+                      setFrequency(e.target.value);
+                      setMonthlySavings(Math.ceil(amount / 6));
+                    }}
                   />
                 </Grid>
                 <Grid item={true} xs={6} sm={3}>
@@ -250,20 +270,24 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                     control={<Radio color="primary" checked={frequency === 'yearly'} />}
                     label="Yearly"
                     labelPlacement="end"
-                    onChange={(e: any) => setFrequency(e.target.value)}
+                    onChange={(e: any) => {
+                      setFrequency(e.target.value);
+                      setMonthlySavings(Math.ceil(amount / 12));
+                    }}
                   />
                 </Grid>
               </Grid>
             </Grid>
-            {/* TODO: Update text */}
-            <Grid item={true} style={{ display: 'flex' }}>
-              <Typography style={{ fontWeight: 'bold', paddingRight: 5 }} color="default" variant="body1">
-                $50
-            </Typography>
-              <Typography color="default" variant="body1">
-                is saved each month
-            </Typography>
-            </Grid>
+            {frequency && (
+              <Grid item={true} style={{ display: 'flex' }}>
+                <Typography style={{ fontWeight: 'bold', paddingRight: 5 }} color="default" variant="body1">
+                  {formatMoney(monthlySavings)}
+                </Typography>
+                <Typography color="default" variant="body1">
+                  should be saved each month
+              </Typography>
+              </Grid>
+            )}
           </Grid>
         )}
     </ModalForm>
