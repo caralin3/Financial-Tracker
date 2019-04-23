@@ -11,7 +11,7 @@ import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
 import { transactionsState } from '../store';
-import { ApplicationState, Transaction, User } from '../types';
+import { Account, ApplicationState, Category, Subcategory, Transaction, User } from '../types';
 import { expenseColumns, formatTableTransaction, getObjectByType, incomeColumns, transferColumns } from '../util';
 
 export interface TransactionsPageProps {
@@ -19,11 +19,15 @@ export interface TransactionsPageProps {
 }
 
 interface DispatchMappedProps {
+  addTransaction: (trans: Transaction) => void;
   removeTransaction: (id: string) => void;
 }
 
 interface StateMappedProps {
+  accounts: Account[];
+  categories: Category[];
   currentUser: User | null;
+  subcategories: Subcategory[];
   transactions: Transaction[];
 }
 
@@ -34,7 +38,7 @@ interface TransactionsMergedProps
     TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
-  const { removeTransaction, transactions } = props;
+  const { accounts, addTransaction, categories, currentUser, removeTransaction, subcategories, transactions } = props;
   const [loading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [successMsg, setSuccessMsg] = React.useState<string>('');
@@ -122,28 +126,43 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
       ) : (
         <div>
           <DataTable
+            accounts={accounts}
+            addTransaction={addTransaction}
+            categories={categories}
+            columns={expenseColumns}
             data={expenses}
             defaultSort={{ dir: 'desc', orderBy: 'date' }}
             onDelete={handleDelete}
             onEdit={handleEdit}
-            columns={expenseColumns}
+            subcategories={subcategories}
             title="Expenses"
+            userId={currentUser ? currentUser.id : ''}
           />
           <DataTable
+            accounts={accounts}
+            addTransaction={addTransaction}
+            categories={categories}
+            columns={incomeColumns}
             data={income}
             defaultSort={{ dir: 'desc', orderBy: 'date' }}
             onDelete={handleDelete}
             onEdit={handleEdit}
-            columns={incomeColumns}
+            subcategories={subcategories}
             title="Income"
+            userId={currentUser ? currentUser.id : ''}
           />
           <DataTable
+            accounts={accounts}
+            addTransaction={addTransaction}
+            categories={categories}
+            columns={transferColumns}
             data={transfers}
             defaultSort={{ dir: 'desc', orderBy: 'date' }}
             onDelete={handleDelete}
             onEdit={handleEdit}
-            columns={transferColumns}
+            subcategories={subcategories}
             title="Transfers"
+            userId={currentUser ? currentUser.id : ''}
           />
         </div>
       )}
@@ -156,11 +175,15 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
 const authCondition = (authUser: any) => !!authUser;
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  addTransaction: (trans: Transaction) => dispatch(transactionsState.addTransaction(trans)),
   removeTransaction: (id: string) => dispatch(transactionsState.deleteTransaction(id))
 });
 
 const mapStateToProps = (state: ApplicationState) => ({
+  accounts: state.accountsState.accounts,
+  categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionsState.transactions
 });
 

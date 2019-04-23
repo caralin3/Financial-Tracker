@@ -24,8 +24,10 @@ import Blob from 'blob';
 import classNames from 'classnames';
 import * as moment from 'moment';
 import * as React from 'react';
-import { Column } from '../types';
-import { getTransactionByRange } from '../util';
+import { requests } from '../firebase/db';
+import { FBTransaction } from '../firebase/types';
+import { Account, Category, Column, Subcategory, Transaction } from '../types';
+import { formatDateTime, getTransactionByRange } from '../util';
 import { Alert, Columns, Filters, Popup } from './';
 
 interface TableHeadProps {
@@ -75,6 +77,9 @@ export const TableHead: React.SFC<TableHeadProps> = props => {
 };
 
 interface TableToolbarProps {
+  accounts: Account[];
+  addTransaction: (trans: Transaction) => void;
+  categories: Category[];
   classes: any;
   columns: Column[];
   data: any[];
@@ -86,11 +91,16 @@ interface TableToolbarProps {
   onResetFilters: () => void;
   onSelectColumns: (columns: Column[]) => void;
   onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
+  subcategories: Subcategory[];
   tableTitle: string;
+  userId: string;
 }
 
 export const Toolbar: React.SFC<TableToolbarProps> = props => {
   const {
+    accounts,
+    addTransaction,
+    categories,
     classes,
     columns,
     data,
@@ -102,11 +112,15 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
     onResetFilters,
     onSelectColumns,
     onSelectFilter,
-    tableTitle
+    subcategories,
+    tableTitle,
+    userId
   } = props;
+  const fileInput = React.useRef(null);
   const [openColumns, setOpenColumns] = React.useState<boolean>(false);
   const [openFilters, setOpenFilters] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
+  const [message, setMessage] = React.useState<string>('');
 
   const handleClick = (cols: boolean, filters: boolean) => {
     setOpenColumns(cols);
@@ -133,6 +147,66 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
       str += line + '\r\n';
     }
     return str;
+  };
+
+  const convertCSVtoJSON = (csvText: string) => {
+    const allLines = csvText.split(/\r\n|\n/);
+    const headers = allLines[0].split(/\t|,/);
+    const result = [];
+
+    for (let i = 1; i < allLines.length; i++) {
+      const obj = {};
+      const currentline = allLines[i].split(',');
+      for (let j = 0; j < headers.length; j++) {
+        if (currentline[j] && currentline[j] !== '') {
+          obj[headers[j]] = currentline[j];
+        }
+      }
+      if (Object.keys(obj).length > 0) {
+        result.push(obj);
+      }
+    }
+
+    return JSON.stringify(result);
+  };
+
+  const handleImport = (e: any) => {
+    const csv = e.target ? e.target.result : '';
+    const importedData = JSON.parse(convertCSVtoJSON(csv));
+    importedData.forEach(async (d: any) => {
+      const [from] = accounts.filter(acc => acc.name === d.From);
+      const [to] = accounts.filter(acc => acc.name === d.To);
+      const [category] = categories.filter(cat => cat.name === d.Category);
+      const [subcategory] = subcategories.filter(sub => sub.name === d.Subcategory);
+      const allTags = d.Tags ? d.Tags.split(' ').map((tag: string) => tag.trim()) : [];
+      const newTrans: FBTransaction = {
+        amount: parseFloat(d.Amount.replace(/[^\d.-]/g, '')),
+        category: category || '',
+        date: formatDateTime(d.Date),
+        from: from || '',
+        item: d.Item ? d.Item.trim() : '',
+        note: d.Note ? d.Note.trim() : '',
+        subcategory: subcategory || '',
+        tags: allTags,
+        to: to || '',
+        type: category ? 'expense' : d.Item ? 'income' : 'transfer',
+        userId
+      };
+      await requests.transactions.createTransaction(newTrans, addTransaction);
+    });
+    setMessage('Transactions have been imported.');
+    setSuccess(true);
+  };
+
+  const readCSVFile = () => {
+    const reader = new FileReader();
+    if (fileInput) {
+      reader.readAsText((fileInput.current as any).files[0]);
+      reader.onload = (e: any) => handleImport(e);
+      reader.onerror = () => {
+        console.log('Could not import file');
+      };
+    }
   };
 
   const downloadData = (headers: object, exportData: object[], fileName: string) => {
@@ -167,6 +241,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
   };
 
   const exportTransactions = () => {
+    console.log('Export', tableTitle);
     const date = moment(new Date()).format('MMDDYYYY_hhmmss');
     if (data[0].type === 'expense') {
       // tslint:disable:object-literal-sort-keys
@@ -232,10 +307,9 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
       downloadData(transferHeaders, transfers, fileName);
     }
     // tslint:enable:object-literal-sort-keys
+    setMessage(`${tableTitle} have been exported.`);
     setSuccess(true);
   };
-
-  const type = data.length > 0 ? data[0].type.slice(0, 1).toUpperCase() + data[0].type.slice(1) + 's' : '';
 
   return (
     <MuiToolbar
@@ -243,12 +317,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
         [classes.highlight]: numSelected > 0
       })}
     >
-      <Alert
-        onClose={() => setSuccess(false)}
-        open={success}
-        variant="success"
-        message={`${type} have been exported.`}
-      />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={message} />
       <div className={classes.title}>
         {numSelected > 0 ? (
           <Typography color="inherit" variant="subtitle1">
@@ -279,11 +348,17 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
           </div>
         ) : (
           <div className={classes.actionButtons}>
-            {/* TODO: Export and Import data */}
-            <input accept=".csv" className={classes.input} id="import-file" type="file" />
+            <input
+              ref={fileInput}
+              accept=".csv"
+              className={classes.input}
+              onChange={readCSVFile}
+              id="import-file"
+              type="file"
+            />
             <label htmlFor="import-file">
               <Tooltip title="Import">
-                <IconButton aria-label="Import" component="span" onClick={() => null}>
+                <IconButton aria-label="Import" component="span">
                   <CloudDownloadIcon />
                 </IconButton>
               </Tooltip>
@@ -391,17 +466,35 @@ export const TableFilterList = withStyles(filterListStyles)(FilterList);
 export type sortDir = 'desc' | 'asc';
 
 interface TableProps {
+  accounts: Account[];
+  addTransaction: (trans: Transaction) => void;
+  categories: Category[];
   classes: any;
+  columns: Column[];
   data: any[];
   defaultSort?: { dir: sortDir; orderBy: string };
   onDelete: (selected: string[]) => void;
   onEdit: (id: string, type: string) => void;
-  columns: Column[];
+  subcategories: Subcategory[];
   title: string;
+  userId: string;
 }
 
 const Table: React.SFC<TableProps> = props => {
-  const { classes, data, defaultSort, onDelete, onEdit, columns, title } = props;
+  const {
+    accounts,
+    addTransaction,
+    categories,
+    classes,
+    columns,
+    data,
+    defaultSort,
+    onDelete,
+    onEdit,
+    subcategories,
+    title,
+    userId
+  } = props;
   const [displayData, setDisplayData] = React.useState<any[]>([]);
   const [displayColumns, setDisplayColumns] = React.useState<Column[]>(columns);
   const [order, setOrder] = React.useState<sortDir | undefined>(defaultSort ? defaultSort.dir : undefined);
@@ -538,17 +631,25 @@ const Table: React.SFC<TableProps> = props => {
   return (
     <Paper className={classNames([classes.root, 'table'])} elevation={8}>
       <TableToolbar
+        accounts={accounts}
+        addTransaction={addTransaction}
+        categories={categories}
         columns={columns}
         data={data}
         displayColumns={displayColumns}
         filterCount={Object.keys(filters).length}
         numSelected={selected.length}
-        onDelete={() => onDelete(selected)}
+        onDelete={() => {
+          onDelete(selected);
+          setSelected([]);
+        }}
         onEdit={() => onEdit(selected[0], editType)}
         onResetFilters={handleResetFilters}
         onSelectColumns={handleSelectColumns}
-        onSelectFilter={(e, col) => handleSelectFilter(e.target.value, col)}
+        onSelectFilter={(e: any, col: any) => handleSelectFilter(e.target.value, col)}
+        subcategories={subcategories}
         tableTitle={title}
+        userId={userId}
       />
       <TableFilterList filters={filters} onDeleteFilter={handleDeleteFilter} />
       <div className="table_wrapper">

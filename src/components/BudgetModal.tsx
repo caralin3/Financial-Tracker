@@ -209,9 +209,11 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
           <Grid item={true} xs={12} md={12} lg={submit && !isValidFrequency() ? 3 : 2}>
             <Typography color="primary" variant="body1" style={{ alignItems: 'flex-end', display: 'flex' }}>
               Frequency
-              {submit && !isValidFrequency() && (<Typography color="error" variant="caption" style={{ paddingLeft: '10px' }}>
-              Required
-              </Typography>)}
+              {submit && !isValidFrequency() && (
+                <Typography color="error" variant="caption" style={{ paddingLeft: '10px' }}>
+                  Required
+                </Typography>
+              )}
             </Typography>
           </Grid>
           <Grid item={true} xs={12} md={12} lg={submit && !isValidFrequency() ? 9 : 10}>
