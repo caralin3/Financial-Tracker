@@ -33,7 +33,7 @@ export interface SessionState {
 
 const initialState: SessionState = {
   currentUser: null,
-  drawerExpanded: true,
+  drawerExpanded: true
 };
 
 // Session reducer manages the authUser object

@@ -340,7 +340,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         disableScroll();
       },
       content: recentTransactions,
-      title: 'Recent Transactions',
+      title: 'Recent Transactions'
     },
     {
       action: () => {
@@ -348,7 +348,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         disableScroll();
       },
       content: accountItems,
-      title: 'Accounts',
+      title: 'Accounts'
     },
     {
       action: () => {
@@ -356,7 +356,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         disableScroll();
       },
       content: budgetItems(),
-      title: 'Budgets',
+      title: 'Budgets'
     },
     {
       action: () => {
@@ -364,7 +364,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         disableScroll();
       },
       content: goalItems(),
-      title: 'Goals',
+      title: 'Goals'
     }
   ];
 

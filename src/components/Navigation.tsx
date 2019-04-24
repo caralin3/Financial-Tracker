@@ -46,11 +46,7 @@ interface StateMappedProps {
   drawerExpanded: boolean;
 }
 
-interface NavigationMergedProps extends
-  RouteComponentProps,
-  StateMappedProps,
-  DispatchMappedProps,
-  NavigationProps {}
+interface NavigationMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, NavigationProps {}
 
 interface NavigationState {
   open: boolean;
@@ -294,15 +290,18 @@ const styles = {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
-  setDrawerExpanded: (open: boolean) => dispatch(sessionState.setDrawerExpanded(open)),
+  setDrawerExpanded: (open: boolean) => dispatch(sessionState.setDrawerExpanded(open))
 });
 
 const mapStateToProps = (state: ApplicationState) => ({
-  drawerExpanded: state.sessionState.drawerExpanded,
+  drawerExpanded: state.sessionState.drawerExpanded
 });
 
 export const Navigation = compose(
   withRouter,
   withStyles(styles as any, { withTheme: true }),
-  connect(mapStateToProps, mapDispatchToProps)
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )
 )(DisconnectedNavigation);
