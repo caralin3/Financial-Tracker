@@ -7,6 +7,8 @@ import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Layout, Loading } from '../components';
 // import { routes } from '../routes';
+// import { requests } from '../firebase/db';
+import { sessionState } from '../store';
 import { ApplicationState, User } from '../types';
 
 export interface SettingsPageProps {
@@ -14,7 +16,7 @@ export interface SettingsPageProps {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  setCurrentUser: (user: User) => void;
 }
 
 interface StateMappedProps {
@@ -23,17 +25,31 @@ interface StateMappedProps {
 
 interface SettingsMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, SettingsPageProps {}
 
-const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = props => {
+const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser, setCurrentUser }) => {
   const [loading] = React.useState<boolean>(false);
+  // const [updatedUser, setUpdatedUser] = React.useState<User | null>(null);
+
   // TODO: Change user info and password
-  return <Layout title="Settings">{loading ? <Loading /> : <div>Settings</div>}</Layout>;
+  // const handleEditUser = async () => {
+  //   if (updatedUser) {
+  //     const updated = await requests.users.updateUserInfo(updatedUser, setCurrentUser);
+  //     console.log(updated);
+
+  //   }
+  // }
+
+  // const handleChangePassword = () => {}
+
+  // const handleResetPassword = () => {}
+
+  return <Layout title="Settings">{loading ? <Loading /> : <div>Coming Soon, {currentUser && currentUser.firstName}!</div>}</Layout>;
 };
 
 const styles = (theme: Theme) => ({});
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ setCurrentUser: (user: User) => dispatch(sessionState.setCurrentUser(user)) });
 
 const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser

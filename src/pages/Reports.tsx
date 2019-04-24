@@ -27,7 +27,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = props => {
   const [loading] = React.useState<boolean>(false);
   // TODO: Add editable budgets and goals
   // TODO: Create reports
-  return <Layout title="Reports">{loading ? <Loading /> : <div>Reports</div>}</Layout>;
+  return <Layout title="Reports">{loading ? <Loading /> : <div>Coming Soon!</div>}</Layout>;
 };
 
 const styles = (theme: Theme) => ({});
