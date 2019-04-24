@@ -33,7 +33,7 @@ export const getAllBudgets = (userId: string) =>
     return sort(budgets, 'desc', 'category.name');
   });
 
-// TODO: UPDATE BUDGET
+// UPDATE BUDGET
 export const updateBudget = (budget: Budget, editBudget: (bud: Budget) => void) =>
   budgetsCollection
     .doc(budget.id)

@@ -123,7 +123,6 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
         userId: currentUser.id
       };
 
-      // TODO: Don't edit if no change
       if (isValidName() && isValidCategoryId() && !isDuplicate()) {
         if (location.pathname.includes('edit') && params.id) {
           const edited = await requests.subcategories.updateSubcategory(

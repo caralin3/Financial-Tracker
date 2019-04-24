@@ -18,6 +18,7 @@ import { compose } from 'recompose';
 import { withAuthorization } from '../auth/withAuthorization';
 import {
   AccountModal,
+  Alert,
   BudgetModal,
   DashboardCard,
   DropdownMenu,
@@ -27,6 +28,7 @@ import {
   ProgressBar,
   TransactionModal
 } from '../components';
+import { routes } from '../routes';
 import { Account, ApplicationState, Budget, budgetFreq, Category, Goal, Transaction, User } from '../types';
 import {
   accountTypeOptions,
@@ -58,6 +60,8 @@ interface DashboardMergedProps extends RouteComponentProps<any>, StateMappedProp
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const { accounts, budgets, currentUser, goals, transactions } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(false);
   const [loadingBudgets, setLoadingBudgets] = React.useState<boolean>(false);
   const [loadingGoals, setLoadingGoals] = React.useState<boolean>(false);
@@ -66,6 +70,8 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
   const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
   const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
   const [addingTrans, setAddingTrans] = React.useState<boolean>(false);
+  const [editingBudget, setEditingBudget] = React.useState<boolean>(false);
+  const [editingGoal, setEditingGoal] = React.useState<boolean>(false);
   const [expanded, setExpanded] = React.useState<number>(1);
   const [selected, setSelected] = React.useState<number>(2);
   const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
@@ -177,7 +183,13 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       return getArrayTotal(filteredExpenses);
     };
 
-    // TODO: Edit budgets on click
+    const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
+      const { history } = props;
+      history.push(`${routes.dashboard}/edit/${id}`);
+      setSuccessMsg(`Budget has been updated`);
+      setEditingBudget(true);
+    };
+
     return (
       <List className="dashboard_card">
         {loadingBudgets ? (
@@ -190,7 +202,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
             const total = budget.amount;
             const percent = calcPercent(spent, total);
             return (
-              <ListItem key={budget.id}>
+              <ListItem key={budget.id} button={true} onClick={e => handleClick(e, budget.id)}>
                 <ProgressBar
                   percent={percent}
                   endLabel={`${percent.toFixed(0)}%`}
@@ -282,7 +294,13 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       return getArrayTotal(amountFilteredExps);
     };
 
-    // TODO: Edit goals on click
+    const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
+      const { history } = props;
+      history.push(`${routes.dashboard}/edit/${id}`);
+      setSuccessMsg(`Goal has been updated`);
+      setEditingGoal(true);
+    };
+
     return (
       <List className="dashboard_card">
         {loadingGoals ? (
@@ -296,7 +314,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
             const total = goal.amount;
             const percent = calcPercent(spent, total);
             return (
-              <ListItem key={goal.id}>
+              <ListItem key={goal.id} button={true} onClick={e => handleClick(e, goal.id)}>
                 <ProgressBar
                   percent={percent}
                   leftLabel={label}
@@ -329,6 +347,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
       title={`${username} Dashboard`}
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
       <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)} />
       <BudgetModal title="Add Budget" buttonText="Add" open={addingBudget} onClose={() => setAddingBudget(false)} />
       <GoalModal title="Add Goal" buttonText="Add" open={addingGoal} onClose={() => setAddingGoal(false)} />
@@ -337,6 +356,20 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
         buttonText="Add"
         open={addingTrans}
         onClose={() => setAddingTrans(false)}
+      />
+      <BudgetModal
+        title="Edit Budget"
+        buttonText="Edit"
+        open={editingBudget}
+        onClose={() => setEditingBudget(false)}
+        onSuccess={() => setSuccess(true)}
+      />
+      <GoalModal
+        title="Edit Goal"
+        buttonText="Edit"
+        open={editingGoal}
+        onClose={() => setEditingGoal(false)}
+        onSuccess={() => setSuccess(true)}
       />
       <div className="show-small">
         <DropdownMenu

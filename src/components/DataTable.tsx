@@ -26,7 +26,7 @@ import * as moment from 'moment';
 import * as React from 'react';
 import { requests } from '../firebase/db';
 import { FBTransaction } from '../firebase/types';
-import { Account, Category, Column, Subcategory, Transaction } from '../types';
+import { Account, Category, Column, Option, Subcategory, Transaction } from '../types';
 import { formatDateTime, getTransactionByRange } from '../util';
 import { Alert, Columns, Filters, Popup } from './';
 
@@ -83,6 +83,7 @@ interface TableToolbarProps {
   classes: any;
   columns: Column[];
   data: any[];
+  dateOptions: Option[];
   displayColumns: any[];
   filterCount: number;
   numSelected: number;
@@ -104,6 +105,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
     classes,
     columns,
     data,
+    dateOptions,
     displayColumns,
     filterCount,
     onDelete,
@@ -323,10 +325,10 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             {numSelected} selected
           </Typography>
         ) : (
-            <Typography variant="h6" id="tableTitle">
-              {tableTitle}
-            </Typography>
-          )}
+          <Typography variant="h6" id="tableTitle">
+            {tableTitle}
+          </Typography>
+        )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
@@ -346,52 +348,53 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             </Tooltip>
           </div>
         ) : (
-            <div className={classes.actionButtons}>
-              <input
-                ref={fileInput}
-                accept=".csv"
-                className={classes.input}
-                onChange={readCSVFile}
-                id="import-file"
-                type="file"
-              />
-              <label htmlFor="import-file">
-                <Tooltip title="Import">
-                  <IconButton aria-label="Import" component="span">
-                    <CloudDownloadIcon />
-                  </IconButton>
-                </Tooltip>
-              </label>
-              <Tooltip title="Export">
-                <IconButton aria-label="Export" onClick={exportTransactions}>
-                  <BackupIcon />
+          <div className={classes.actionButtons}>
+            <input
+              ref={fileInput}
+              accept=".csv"
+              className={classes.input}
+              onChange={readCSVFile}
+              id="import-file"
+              type="file"
+            />
+            <label htmlFor="import-file">
+              <Tooltip title="Import">
+                <IconButton aria-label="Import" component="span">
+                  <CloudDownloadIcon />
                 </IconButton>
               </Tooltip>
-              <Popup
-                open={openColumns}
-                onClick={() => handleClick(!openColumns, false)}
-                content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
-                tooltip="View Colmns"
-                trigger={<ViewColumnIcon />}
-              />
-              <Popup
-                class="table_filters"
-                open={openFilters}
-                onClick={() => handleClick(false, !openFilters)}
-                content={
-                  <Filters
-                    data={data}
-                    filters={columns}
-                    count={filterCount}
-                    onResetFilters={handleReset}
-                    onSelectFilter={onSelectFilter}
-                  />
-                }
-                tooltip="Filters"
-                trigger={<FilterListIcon />}
-              />
-            </div>
-          )}
+            </label>
+            <Tooltip title="Export">
+              <IconButton aria-label="Export" onClick={exportTransactions}>
+                <BackupIcon />
+              </IconButton>
+            </Tooltip>
+            <Popup
+              open={openColumns}
+              onClick={() => handleClick(!openColumns, false)}
+              content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
+              tooltip="View Colmns"
+              trigger={<ViewColumnIcon />}
+            />
+            <Popup
+              class="table_filters"
+              open={openFilters}
+              onClick={() => handleClick(false, !openFilters)}
+              content={
+                <Filters
+                  data={data}
+                  dateOptions={dateOptions}
+                  filters={columns}
+                  count={filterCount}
+                  onResetFilters={handleReset}
+                  onSelectFilter={onSelectFilter}
+                />
+              }
+              tooltip="Filters"
+              trigger={<FilterListIcon />}
+            />
+          </div>
+        )}
       </div>
     </MuiToolbar>
   );
@@ -408,13 +411,13 @@ const toolbarStyles = (theme: Theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        color: theme.palette.secondary.main
-      }
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+          color: theme.palette.secondary.main
+        }
       : {
-        backgroundColor: theme.palette.secondary.dark,
-        color: theme.palette.text.primary
-      },
+          backgroundColor: theme.palette.secondary.dark,
+          color: theme.palette.text.primary
+        },
   input: {
     display: 'none'
   },
@@ -471,6 +474,7 @@ interface TableProps {
   classes: any;
   columns: Column[];
   data: any[];
+  dateOptions: Option[];
   defaultSort?: { dir: sortDir; orderBy: string };
   onDelete: (selected: string[]) => void;
   onEdit: (id: string, type: string) => void;
@@ -486,6 +490,7 @@ const Table: React.SFC<TableProps> = props => {
     categories,
     classes,
     columns,
+    dateOptions,
     data,
     defaultSort,
     onDelete,
@@ -635,6 +640,7 @@ const Table: React.SFC<TableProps> = props => {
         categories={categories}
         columns={columns}
         data={data}
+        dateOptions={dateOptions}
         displayColumns={displayColumns}
         filterCount={Object.keys(filters).length}
         numSelected={selected.length}
@@ -705,11 +711,11 @@ const Table: React.SFC<TableProps> = props => {
                   );
                 })
             ) : (
-                <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
-                  <TableCell colSpan={2} />
-                  <TableCell>No records</TableCell>
-                </TableRow>
-              )}
+              <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
+                <TableCell colSpan={2} />
+                <TableCell>No records</TableCell>
+              </TableRow>
+            )}
             {displayData.length > 0 && emptyRows > 0 && (
               <TableRow style={{ height: 49 * emptyRows }}>
                 <TableCell colSpan={displayColumns.length} />

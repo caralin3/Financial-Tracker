@@ -7,13 +7,14 @@ import { SelectInput } from './Form';
 export interface FiltersProps {
   count: number;
   data: Transaction[];
+  dateOptions: Option[];
   filters: Column[];
   onResetFilters: () => void;
   onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
 }
 
 export const Filters: React.SFC<FiltersProps> = props => {
-  const { count, data, filters } = props;
+  const { count, data, dateOptions, filters } = props;
   const [item, setItem] = React.useState<string>('all');
   const [item2, setItem2] = React.useState<string>('all');
   const [item3, setItem3] = React.useState<string>('all');
@@ -39,14 +40,6 @@ export const Filters: React.SFC<FiltersProps> = props => {
   const createOps = (col: Column) => {
     const options: Option[] = [{ label: 'All', value: 'all' }];
     if (col.label === 'Date') {
-      // FIXME: Fix date filters to show months and years that are present
-      const dateOptions: Option[] = [
-        { label: 'This Week', value: 'This Week' },
-        { label: 'Last Week', value: 'Last Week' },
-        { label: 'This Month', value: 'This Month' },
-        { label: 'Last Month', value: 'Last Month' },
-        { label: 'This Year', value: 'This Year' }
-      ];
       options.push.apply(options, dateOptions);
     } else if (col.label === 'Tags') {
       data.forEach(d => {
