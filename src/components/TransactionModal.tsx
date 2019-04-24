@@ -246,7 +246,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
     }
   };
 
-  // FIXME: Data lists
   const expenseItems = removeDups(
     transactions.filter(trans => trans.type === 'expense').map(trans => trans.item && trans.item)
   );
@@ -543,7 +542,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       open={props.open}
       handleClose={handleClose}
     >
-      {/* FIXME: Double check alert messages */}
       <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="Transaction has been added!" />
       <Alert
         onClose={() => setError(false)}

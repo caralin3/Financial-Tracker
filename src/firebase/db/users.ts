@@ -35,4 +35,18 @@ export const getCurrentUser = (id: string, setCurrentUser: (user: User | null) =
     });
 };
 
-// TODO: EDIT CURRENT USER
+// TODO: UPDATE CURRENT USER
+export const updateUserInfo = (user: User, setCurrentUser: (user: User) => void) =>
+  usersCollection
+    .doc(user.id)
+    .update(user)
+    .then(() => {
+      // Edit user in store
+      setCurrentUser(user);
+      console.log('User updated with ID: ', user.id);
+      return true;
+    })
+    .catch(error => {
+      console.error('Error updating user: ', error);
+      return false;
+    });
