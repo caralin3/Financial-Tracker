@@ -6,7 +6,6 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { FBBudget } from '../firebase/types';
-import { budgets } from '../mock';
 import { budgetsState } from '../store';
 import { ApplicationState, Budget, budgetFreq, Category, User } from '../types';
 import { formatMoney, getOptions } from '../util';
@@ -42,7 +41,7 @@ interface BudgetModalMergedProps
   BudgetModalProps { }
 
 const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
-  const { addBudget, categories, currentUser, editBudget } = props;
+  const { addBudget, budgets, categories, currentUser, editBudget } = props;
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -53,15 +52,25 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   const [frequency, setFrequency] = React.useState<budgetFreq>(undefined);
   const [monthlySavings, setMonthlySavings] = React.useState<number>(0);
 
+  const getFreq = (freq: budgetFreq) => {
+    let num = 1;
+    if (freq === 'quarterly') {
+      num = 3;
+    } else if (freq === 'semi-annually') {
+      num = 6;
+    } else if (freq === 'yearly') {
+      num = 12;
+    }
+    return num;
+  }
+
   React.useEffect(() => {
     const {
       match: { params }
     } = props;
-    // TODO: Load budget from id
     if (params.id) {
       setLoading(true);
-      const [budget] = budgets.filter(buds => buds.id === params.id);
-      console.log(params.id, budget);
+      const [budget] = budgets.filter(bud => bud.id === params.id);
       if (budget) {
         if (budget.category) {
           setCategoryId(budget.category.id);
@@ -70,6 +79,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
           setFrequency(budget.frequency);
         }
         setAmount(budget.amount);
+        setMonthlySavings(budget.amount / getFreq(budget.frequency));
       }
       setLoading(false);
     } else {
@@ -199,16 +209,9 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                 value={amount}
                 onChange={e => {
                   const total = parseFloat(e.target.value) || 0;
-                  let freq = 1;
-                  if (frequency === 'quarterly') {
-                    freq = 3;
-                  } else if (frequency === 'semi-annually') {
-                    freq = 6;
-                  } else if (frequency === 'yearly') {
-                    freq = 12;
-                  }
+                  const freq = getFreq(frequency);
                   setAmount(total);
-                  setMonthlySavings(Math.ceil(total / freq));
+                  setMonthlySavings(total / freq);
                   setSubmit(false);
                 }}
                 type="number"
@@ -248,7 +251,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                     labelPlacement="end"
                     onChange={(e: any) => {
                       setFrequency(e.target.value);
-                      setMonthlySavings(Math.ceil(amount / 3));
+                      setMonthlySavings(amount / 3);
                     }}
                   />
                 </Grid>
@@ -260,7 +263,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                     labelPlacement="end"
                     onChange={(e: any) => {
                       setFrequency(e.target.value);
-                      setMonthlySavings(Math.ceil(amount / 6));
+                      setMonthlySavings(amount / 6);
                     }}
                   />
                 </Grid>
@@ -272,7 +275,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
                     labelPlacement="end"
                     onChange={(e: any) => {
                       setFrequency(e.target.value);
-                      setMonthlySavings(Math.ceil(amount / 12));
+                      setMonthlySavings(amount / 12);
                     }}
                   />
                 </Grid>
