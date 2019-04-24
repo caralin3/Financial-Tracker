@@ -73,11 +73,9 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
     const {
       match: { params }
     } = props;
-    // TODO: Load goal from id
     if (params.id) {
       setLoading(true);
       const [goal] = goals.filter(go => go.id === params.id);
-      console.log(params.id, goal);
       if (goal) {
         if (goal.criteria) {
           setCriteria(goal.criteria);
@@ -87,6 +85,9 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
         }
         if (goal.frequency) {
           setFrequency(goal.frequency);
+        }
+        if (goal.item) {
+          setItem(goal.item.id);
         }
         setAmount(goal.amount);
       }
@@ -101,6 +102,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   const resetFields = () => {
     setCriteria('');
     setComparator('');
+    setItem('');
     setFrequency(undefined);
     if (amount) {
       setAmount(0);
@@ -141,9 +143,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
         const [category] = categories.filter(cat => cat.id === item);
         return category;
       case 'item':
-        const [transaction] = transactions.filter(tran =>
-          tran.item ? tran.item : tran.from ? tran.from.name : '' === item
-        );
+        const [transaction] = transactions.filter(tran => (tran.item ? tran.item : '' === item));
         return transaction;
       case 'subcategory':
         const [subcategory] = subcategories.filter(sub => sub.id === item);
@@ -160,7 +160,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
       case 'category':
         return getOptions(categories);
       case 'item':
-        // FIXME: Options for items
         return getTransOptions(transactions);
       case 'subcategory':
         return getOptions(subcategories);
@@ -188,7 +187,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
           userId: currentUser.id
         };
 
-        // TODO: Don't edit if no change
         if (params.id) {
           const edited = await requests.goals.updateGoal({ id: params.id, ...newGoal }, editGoal);
           if (edited) {

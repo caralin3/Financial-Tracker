@@ -60,8 +60,13 @@ export const getOptions = (data: Account[] | Category[] | Subcategory[]) => {
 export const getTransOptions = (data: Transaction[]) => {
   const options: Option[] = [];
   data.forEach(d => {
-    const label = d.item ? d.item : d.from ? d.from.name : '';
-    options.push(createOption(label, d.id));
+    const label = d.item ? d.item : '';
+    if (label.trim().length > 0) {
+      const labels = options.map(op => op.label);
+      if (labels.indexOf(label) === -1) {
+        options.push(createOption(label, d.id));
+      }
+    }
   });
   return options;
 };

@@ -33,7 +33,7 @@ export const getAllGoals = (userId: string) =>
     return sort(goals, 'desc', 'item.name');
   });
 
-// TODO: UPDATE GOAL
+// UPDATE GOAL
 export const updateGoal = (goal: Goal, editGoal: (goal: Goal) => void) =>
   goalsCollection
     .doc(goal.id)

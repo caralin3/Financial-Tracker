@@ -120,7 +120,6 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
         userId: currentUser.id
       };
 
-      // TODO: Don't edit if no change
       if (isValidName() && !isDuplicate()) {
         if (params.id) {
           const edited = await requests.categories.updateCategory({ id: params.id, ...newCategory }, editCategory);
