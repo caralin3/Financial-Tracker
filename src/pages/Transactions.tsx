@@ -37,6 +37,7 @@ interface StateMappedProps {
   accounts: Account[];
   categories: Category[];
   currentUser: User | null;
+  drawerExpanded: boolean;
   subcategories: Subcategory[];
   transactions: Transaction[];
 }
@@ -48,7 +49,7 @@ interface TransactionsMergedProps
     TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
-  const { accounts, addTransaction, categories, currentUser, removeTransaction, subcategories, transactions } = props;
+  const { accounts, addTransaction, categories, currentUser, drawerExpanded, removeTransaction, subcategories, transactions } = props;
   const [loading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [successMsg, setSuccessMsg] = React.useState<string>('');
@@ -121,7 +122,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
   };
 
   return (
-    <Layout className="transactions" title="Transactions" buttons={addButton(false)}>
+    <Layout className={drawerExpanded ? 'transactions' : 'transactions--shrink'} title="Transactions" buttons={addButton(false)}>
       <div className="show-small transactions_mobileButton">{addButton(true)}</div>
       <AlertDialog
         cancelText="Cancel"
@@ -217,6 +218,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,
   categories: state.categoriesState.categories,
   currentUser: state.sessionState.currentUser,
+  drawerExpanded: state.sessionState.drawerExpanded,
   subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionsState.transactions
 });
@@ -225,8 +227,5 @@ export const TransactionsPage = compose(
   withAuthorization(authCondition),
   // withStyles(styles as any, { withTheme: true }),
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(DisconnectedTransactionsPage);

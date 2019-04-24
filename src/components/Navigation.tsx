@@ -22,30 +22,43 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SettingsIcon from '@material-ui/icons/Settings';
 import classNames from 'classnames';
 import * as React from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
+import { Dispatch } from 'redux';
 import { theme } from '../appearance';
 import { auth } from '../firebase';
 import { routes } from '../routes';
+import { sessionState } from '../store';
+import { ApplicationState } from '../types';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './';
 
-interface NavigationProps extends RouteComponentProps {
+interface NavigationProps {
   classes: any;
   theme: any;
 }
 
-interface NavigationMergedProps extends NavigationProps {}
+interface DispatchMappedProps {
+  setDrawerExpanded: (open: boolean) => void;
+}
+
+interface StateMappedProps {
+  drawerExpanded: boolean;
+}
+
+interface NavigationMergedProps extends
+  RouteComponentProps,
+  StateMappedProps,
+  DispatchMappedProps,
+  NavigationProps {}
 
 interface NavigationState {
-  expanded: boolean;
   open: boolean;
   selected: string;
 }
 
 class DisconnectedNavigation extends React.Component<NavigationMergedProps, NavigationState> {
   public readonly state: NavigationState = {
-    expanded: true,
     open: false,
     selected: ''
   };
@@ -56,8 +69,8 @@ class DisconnectedNavigation extends React.Component<NavigationMergedProps, Navi
   }
 
   public render() {
-    const { classes } = this.props;
-    const { expanded, open, selected } = this.state;
+    const { classes, drawerExpanded, setDrawerExpanded } = this.props;
+    const { open, selected } = this.state;
 
     const links = [
       { label: 'Dashboard', route: routes.dashboard, icon: <HomeIcon /> },
@@ -81,7 +94,7 @@ class DisconnectedNavigation extends React.Component<NavigationMergedProps, Navi
       <div className={classNames('navList', classes.navBar)}>
         <div
           className={classNames('navList_icon fa-stack fa-2x', {
-            ['navList_closed']: !expanded || (!expanded && !open)
+            ['navList_closed']: !drawerExpanded || (!drawerExpanded && !open)
           })}
         >
           <i className="navList_circle fas fa-circle fa-stack-2x" />
@@ -145,21 +158,21 @@ class DisconnectedNavigation extends React.Component<NavigationMergedProps, Navi
         <Drawer
           variant="permanent"
           className={classNames(classes.drawer, 'show-medium', {
-            [classes.drawerOpen]: expanded,
-            [classes.drawerClose]: !expanded
+            [classes.drawerExpanded]: drawerExpanded,
+            [classes.drawerClose]: !drawerExpanded
           })}
           classes={{
             paper: classNames(classes.navBar, 'show-medium', {
-              [classes.drawerOpen]: expanded,
-              [classes.drawerClose]: !expanded
+              [classes.drawerExpanded]: drawerExpanded,
+              [classes.drawerClose]: !drawerExpanded
             })
           }}
-          open={expanded}
+          open={drawerExpanded}
         >
           {navList}
           <div className={classes.toolbar}>
-            <IconButton aria-label="expander" onClick={() => this.setState({ expanded: !expanded })}>
-              {expanded ? <DoubleLeftChevronIcon /> : <DoubleRightChevronIcon />}
+            <IconButton aria-label="expander" onClick={() => setDrawerExpanded(!drawerExpanded)}>
+              {drawerExpanded ? <DoubleLeftChevronIcon /> : <DoubleRightChevronIcon />}
             </IconButton>
           </div>
         </Drawer>
@@ -248,7 +261,7 @@ const styles = {
       width: theme.spacing.unit * 7.5 + 1
     }
   },
-  drawerOpen: {
+  drawerExpanded: {
     transition: theme.transitions.create('width', {
       duration: theme.transitions.duration.enteringScreen,
       easing: theme.transitions.easing.sharp
@@ -280,7 +293,16 @@ const styles = {
   }
 };
 
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  setDrawerExpanded: (open: boolean) => dispatch(sessionState.setDrawerExpanded(open)),
+});
+
+const mapStateToProps = (state: ApplicationState) => ({
+  drawerExpanded: state.sessionState.drawerExpanded,
+});
+
 export const Navigation = compose(
   withRouter,
-  withStyles(styles as any, { withTheme: true })
+  withStyles(styles as any, { withTheme: true }),
+  connect(mapStateToProps, mapDispatchToProps)
 )(DisconnectedNavigation);

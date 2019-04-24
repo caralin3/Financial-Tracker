@@ -12,14 +12,28 @@ export const setCurrentUser = (currentUser: User | null): SetCurrentUserAction =
   type: SET_CURRENT_USER
 });
 
-type SessionActions = SetCurrentUserAction;
+export interface SetDrawerExpandedAction {
+  drawerExpanded: boolean;
+  type: 'SET_DRAWER_EXPANDED';
+}
+
+export const SET_DRAWER_EXPANDED = 'SET_DRAWER_EXPANDED';
+
+export const setDrawerExpanded = (drawerExpanded: boolean): SetDrawerExpandedAction => ({
+  drawerExpanded,
+  type: SET_DRAWER_EXPANDED
+});
+
+type SessionActions = SetCurrentUserAction | SetDrawerExpandedAction;
 
 export interface SessionState {
   currentUser: User | null;
+  drawerExpanded: boolean;
 }
 
 const initialState: SessionState = {
-  currentUser: null
+  currentUser: null,
+  drawerExpanded: true,
 };
 
 // Session reducer manages the authUser object
@@ -30,6 +44,12 @@ export const reducer = (state: SessionState = initialState, action: SessionActio
       return {
         ...state,
         currentUser: action.currentUser
+      };
+    }
+    case SET_DRAWER_EXPANDED: {
+      return {
+        ...state,
+        drawerExpanded: action.drawerExpanded
       };
     }
     default:
