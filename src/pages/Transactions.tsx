@@ -42,9 +42,9 @@ interface StateMappedProps {
 
 interface TransactionsMergedProps
   extends RouteComponentProps,
-  StateMappedProps,
-  DispatchMappedProps,
-  TransactionsPageProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
   const { accounts, addTransaction, categories, currentUser, removeTransaction, subcategories, transactions } = props;
@@ -104,7 +104,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
     const monthNames = moment.months();
     // TODO: Sort months
     console.log(monthNames);
-    // const sortedMonths = 
+    // const sortedMonths =
     years.forEach(y => options.push(createOption(y, y)));
     months.forEach(m => options.push(createOption(m, m)));
     return options;
@@ -145,51 +145,51 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
       {loading ? (
         <Loading />
       ) : (
-          <div>
-            <DataTable
-              accounts={accounts}
-              addTransaction={addTransaction}
-              categories={categories}
-              columns={expenseColumns}
-              data={expenses}
-              dateOptions={dateOptions(expenses)}
-              defaultSort={{ dir: 'desc', orderBy: 'date' }}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              subcategories={subcategories}
-              title="Expenses"
-              userId={currentUser ? currentUser.id : ''}
-            />
-            <DataTable
-              accounts={accounts}
-              addTransaction={addTransaction}
-              categories={categories}
-              columns={incomeColumns}
-              data={income}
-              dateOptions={dateOptions(income)}
-              defaultSort={{ dir: 'desc', orderBy: 'date' }}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              subcategories={subcategories}
-              title="Income"
-              userId={currentUser ? currentUser.id : ''}
-            />
-            <DataTable
-              accounts={accounts}
-              addTransaction={addTransaction}
-              categories={categories}
-              columns={transferColumns}
-              data={transfers}
-              dateOptions={dateOptions(transfers)}
-              defaultSort={{ dir: 'desc', orderBy: 'date' }}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              subcategories={subcategories}
-              title="Transfers"
-              userId={currentUser ? currentUser.id : ''}
-            />
-          </div>
-        )}
+        <div>
+          <DataTable
+            accounts={accounts}
+            addTransaction={addTransaction}
+            categories={categories}
+            columns={expenseColumns}
+            data={expenses}
+            dateOptions={dateOptions(expenses)}
+            defaultSort={{ dir: 'desc', orderBy: 'date' }}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            subcategories={subcategories}
+            title="Expenses"
+            userId={currentUser ? currentUser.id : ''}
+          />
+          <DataTable
+            accounts={accounts}
+            addTransaction={addTransaction}
+            categories={categories}
+            columns={incomeColumns}
+            data={income}
+            dateOptions={dateOptions(income)}
+            defaultSort={{ dir: 'desc', orderBy: 'date' }}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            subcategories={subcategories}
+            title="Income"
+            userId={currentUser ? currentUser.id : ''}
+          />
+          <DataTable
+            accounts={accounts}
+            addTransaction={addTransaction}
+            categories={categories}
+            columns={transferColumns}
+            data={transfers}
+            dateOptions={dateOptions(transfers)}
+            defaultSort={{ dir: 'desc', orderBy: 'date' }}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            subcategories={subcategories}
+            title="Transfers"
+            userId={currentUser ? currentUser.id : ''}
+          />
+        </div>
+      )}
     </Layout>
   );
 };
