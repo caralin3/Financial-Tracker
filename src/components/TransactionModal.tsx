@@ -247,8 +247,12 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   };
 
   // FIXME: Data lists
-  const expenseItems = removeDups(transactions.filter(trans => trans.type === 'expense').map(trans => trans.item && trans.item));
-  const incomeItems = removeDups(transactions.filter(trans => trans.type === 'income').map(trans => trans.item && trans.item));
+  const expenseItems = removeDups(
+    transactions.filter(trans => trans.type === 'expense').map(trans => trans.item && trans.item)
+  );
+  const incomeItems = removeDups(
+    transactions.filter(trans => trans.type === 'income').map(trans => trans.item && trans.item)
+  );
   const noteList = removeDups(transactions.map(trans => trans.note && trans.note).filter(n => n !== '' && n !== 'N/A'));
   const tagList = () => {
     const allTags: string[] = [];
@@ -258,7 +262,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
       }
     });
     return removeDups(allTags);
-  }
+  };
 
   const loadingProgress = (
     <Typography className="transModal_fields transModal_fields--loading" component="div" dir={theme.direction}>

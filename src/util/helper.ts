@@ -13,6 +13,8 @@ import {
   transactionType
 } from '../types';
 
+export const disableScroll = () => (document.body.style.overflowY = 'hidden');
+
 export const removeDups = (arr: any[]) => arr.filter((item, index, self) => self.indexOf(item) === index);
 
 export const removeDupObjs = (arr: any[]) =>
