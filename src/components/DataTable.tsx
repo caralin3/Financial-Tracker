@@ -325,10 +325,10 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography variant="h6" id="tableTitle">
-            {tableTitle}
-          </Typography>
-        )}
+            <Typography variant="h6" id="tableTitle">
+              {tableTitle}
+            </Typography>
+          )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
@@ -348,53 +348,53 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             </Tooltip>
           </div>
         ) : (
-          <div className={classes.actionButtons}>
-            <input
-              ref={fileInput}
-              accept=".csv"
-              className={classes.input}
-              onChange={readCSVFile}
-              id="import-file"
-              type="file"
-            />
-            <label htmlFor="import-file">
-              <Tooltip title="Import">
-                <IconButton aria-label="Import" component="span">
-                  <CloudDownloadIcon />
+            <div className={classes.actionButtons}>
+              <input
+                ref={fileInput}
+                accept=".csv"
+                className={classes.input}
+                onChange={readCSVFile}
+                id="import-file"
+                type="file"
+              />
+              <label htmlFor="import-file">
+                <Tooltip title="Import">
+                  <IconButton aria-label="Import" component="span">
+                    <CloudDownloadIcon />
+                  </IconButton>
+                </Tooltip>
+              </label>
+              <Tooltip title="Export">
+                <IconButton aria-label="Export" onClick={exportTransactions}>
+                  <BackupIcon />
                 </IconButton>
               </Tooltip>
-            </label>
-            <Tooltip title="Export">
-              <IconButton aria-label="Export" onClick={exportTransactions}>
-                <BackupIcon />
-              </IconButton>
-            </Tooltip>
-            <Popup
-              open={openColumns}
-              onClick={() => handleClick(!openColumns, false)}
-              content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
-              tooltip="View Colmns"
-              trigger={<ViewColumnIcon />}
-            />
-            <Popup
-              class="table_filters"
-              open={openFilters}
-              onClick={() => handleClick(false, !openFilters)}
-              content={
-                <Filters
-                  data={data}
-                  dateOptions={dateOptions}
-                  filters={columns}
-                  count={filterCount}
-                  onResetFilters={handleReset}
-                  onSelectFilter={onSelectFilter}
-                />
-              }
-              tooltip="Filters"
-              trigger={<FilterListIcon />}
-            />
-          </div>
-        )}
+              <Popup
+                open={openColumns}
+                onClick={() => handleClick(!openColumns, false)}
+                content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
+                tooltip="View Colmns"
+                trigger={<ViewColumnIcon />}
+              />
+              <Popup
+                class="table_filters"
+                open={openFilters}
+                onClick={() => handleClick(false, !openFilters)}
+                content={
+                  <Filters
+                    data={data}
+                    dateOptions={dateOptions}
+                    filters={columns}
+                    count={filterCount}
+                    onResetFilters={handleReset}
+                    onSelectFilter={onSelectFilter}
+                  />
+                }
+                tooltip="Filters"
+                trigger={<FilterListIcon />}
+              />
+            </div>
+          )}
       </div>
     </MuiToolbar>
   );
@@ -411,13 +411,13 @@ const toolbarStyles = (theme: Theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-          color: theme.palette.secondary.main
-        }
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+        color: theme.palette.secondary.main
+      }
       : {
-          backgroundColor: theme.palette.secondary.dark,
-          color: theme.palette.text.primary
-        },
+        backgroundColor: theme.palette.secondary.dark,
+        color: theme.palette.text.primary
+      },
   input: {
     display: 'none'
   },
@@ -511,8 +511,6 @@ const Table: React.SFC<TableProps> = props => {
   React.useEffect(() => {
     setDisplayData(data);
   }, [data]);
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, displayData.length - page * rowsPerPage);
 
   const desc = (a: any, b: any, orderedBy: string) => {
     if (b[orderedBy] < a[orderedBy]) {
@@ -631,9 +629,8 @@ const Table: React.SFC<TableProps> = props => {
 
   const editType = title.endsWith('s') ? title.toLowerCase().slice(0, title.length - 1) : title.toLowerCase();
 
-  // FIXME: Data table styles
   return (
-    <Paper className={classNames([classes.root, 'table'])} elevation={8}>
+    <Paper className={classes.root} elevation={8}>
       <TableToolbar
         accounts={accounts}
         addTransaction={addTransaction}
@@ -711,16 +708,11 @@ const Table: React.SFC<TableProps> = props => {
                   );
                 })
             ) : (
-              <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
-                <TableCell colSpan={2} />
-                <TableCell>No records</TableCell>
-              </TableRow>
-            )}
-            {displayData.length > 0 && emptyRows > 0 && (
-              <TableRow style={{ height: 49 * emptyRows }}>
-                <TableCell colSpan={displayColumns.length} />
-              </TableRow>
-            )}
+                <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
+                  <TableCell colSpan={2} />
+                  <TableCell>No records</TableCell>
+                </TableRow>
+              )}
           </TableBody>
         </MuiTable>
       </div>
@@ -746,13 +738,6 @@ const Table: React.SFC<TableProps> = props => {
 };
 
 const styles = (theme: Theme) => ({
-  pagRoot: {
-    actions: {
-      [theme.breakpoints.down('sm')]: {
-        marginLeft: 15
-      }
-    }
-  },
   root: {
     marginBottom: theme.spacing.unit * 5
   },

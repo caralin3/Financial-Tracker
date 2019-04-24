@@ -1,11 +1,6 @@
 @import '../appearance/styles/variables.scss';
 
 .table {
-
-  @media #{$medium} {
-    margin: 0 2rem;
-  }
-
   &_cell {
     padding-left: 1.5rem !important;
   }

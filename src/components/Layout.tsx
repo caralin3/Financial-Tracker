@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Navigation } from './Navigation';
 
 export interface LayoutProps {
-  className?: string;
   buttons?: JSX.Element;
   title: string;
 }
@@ -11,7 +10,7 @@ export interface LayoutProps {
 export const Layout: React.SFC<LayoutProps> = props => (
   <div className="layout">
     <Navigation />
-    <div className={props.title !== 'Transactions' ? 'layout_container' : props.className}>
+    <div className="layout_container">
       <div className="layout_header">
         <div className="layout_headerContent">
           <Typography className="layout_title" variant="h3">
