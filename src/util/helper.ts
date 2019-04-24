@@ -130,7 +130,11 @@ export const getTransactionByRange = (range: string, transactions: Transaction[]
     case 'This Year':
       return transactions.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'year'));
     default:
-      return [];
+      let type = 'YYYY';
+      if (isNaN(parseInt(range, 10))) {
+        type = 'MMMM';
+      }
+      return transactions.filter(trans => moment(new Date(trans.date)).format(type) === range) || [];
   }
 };
 

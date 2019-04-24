@@ -11,8 +11,17 @@ import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
 import { transactionsState } from '../store';
-import { Account, ApplicationState, Category, Subcategory, Transaction, User } from '../types';
-import { expenseColumns, formatTableTransaction, getObjectByType, incomeColumns, transferColumns } from '../util';
+import { Account, ApplicationState, Category, Option, Subcategory, Transaction, User } from '../types';
+import {
+  createOption,
+  expenseColumns,
+  formatTableTransaction,
+  getObjectByType,
+  incomeColumns,
+  removeDups,
+  sortValues,
+  transferColumns
+} from '../util';
 
 export interface TransactionsPageProps {
   classes: any;
@@ -33,9 +42,9 @@ interface StateMappedProps {
 
 interface TransactionsMergedProps
   extends RouteComponentProps,
-    StateMappedProps,
-    DispatchMappedProps,
-    TransactionsPageProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  TransactionsPageProps { }
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
   const { accounts, addTransaction, categories, currentUser, removeTransaction, subcategories, transactions } = props;
@@ -88,6 +97,18 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
   const expenses = formatTableTransaction(getObjectByType(transactions, 'expense'));
   const income = formatTableTransaction(getObjectByType(transactions, 'income'));
   const transfers = formatTableTransaction(getObjectByType(transactions, 'transfer'));
+  const dateOptions = (trans: any[]) => {
+    const options: Option[] = [{ label: 'This Week', value: 'This Week' }, { label: 'Last Week', value: 'Last Week' }];
+    const years = sortValues(removeDups(trans.map(t => moment(new Date(t.date)).format('YYYY'))), 'desc');
+    const months = removeDups(trans.map(t => moment(new Date(t.date)).format('MMMM')));
+    const monthNames = moment.months();
+    // TODO: Sort months
+    console.log(monthNames);
+    // const sortedMonths = 
+    years.forEach(y => options.push(createOption(y, y)));
+    months.forEach(m => options.push(createOption(m, m)));
+    return options;
+  };
 
   return (
     <Layout className="transactions" title="Transactions" buttons={addButton(false)}>
@@ -124,48 +145,51 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props =
       {loading ? (
         <Loading />
       ) : (
-        <div>
-          <DataTable
-            accounts={accounts}
-            addTransaction={addTransaction}
-            categories={categories}
-            columns={expenseColumns}
-            data={expenses}
-            defaultSort={{ dir: 'desc', orderBy: 'date' }}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            subcategories={subcategories}
-            title="Expenses"
-            userId={currentUser ? currentUser.id : ''}
-          />
-          <DataTable
-            accounts={accounts}
-            addTransaction={addTransaction}
-            categories={categories}
-            columns={incomeColumns}
-            data={income}
-            defaultSort={{ dir: 'desc', orderBy: 'date' }}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            subcategories={subcategories}
-            title="Income"
-            userId={currentUser ? currentUser.id : ''}
-          />
-          <DataTable
-            accounts={accounts}
-            addTransaction={addTransaction}
-            categories={categories}
-            columns={transferColumns}
-            data={transfers}
-            defaultSort={{ dir: 'desc', orderBy: 'date' }}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            subcategories={subcategories}
-            title="Transfers"
-            userId={currentUser ? currentUser.id : ''}
-          />
-        </div>
-      )}
+          <div>
+            <DataTable
+              accounts={accounts}
+              addTransaction={addTransaction}
+              categories={categories}
+              columns={expenseColumns}
+              data={expenses}
+              dateOptions={dateOptions(expenses)}
+              defaultSort={{ dir: 'desc', orderBy: 'date' }}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              subcategories={subcategories}
+              title="Expenses"
+              userId={currentUser ? currentUser.id : ''}
+            />
+            <DataTable
+              accounts={accounts}
+              addTransaction={addTransaction}
+              categories={categories}
+              columns={incomeColumns}
+              data={income}
+              dateOptions={dateOptions(income)}
+              defaultSort={{ dir: 'desc', orderBy: 'date' }}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              subcategories={subcategories}
+              title="Income"
+              userId={currentUser ? currentUser.id : ''}
+            />
+            <DataTable
+              accounts={accounts}
+              addTransaction={addTransaction}
+              categories={categories}
+              columns={transferColumns}
+              data={transfers}
+              dateOptions={dateOptions(transfers)}
+              defaultSort={{ dir: 'desc', orderBy: 'date' }}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              subcategories={subcategories}
+              title="Transfers"
+              userId={currentUser ? currentUser.id : ''}
+            />
+          </div>
+        )}
     </Layout>
   );
 };

@@ -26,7 +26,7 @@ import * as moment from 'moment';
 import * as React from 'react';
 import { requests } from '../firebase/db';
 import { FBTransaction } from '../firebase/types';
-import { Account, Category, Column, Subcategory, Transaction } from '../types';
+import { Account, Category, Column, Option, Subcategory, Transaction } from '../types';
 import { formatDateTime, getTransactionByRange } from '../util';
 import { Alert, Columns, Filters, Popup } from './';
 
@@ -83,6 +83,7 @@ interface TableToolbarProps {
   classes: any;
   columns: Column[];
   data: any[];
+  dateOptions: Option[];
   displayColumns: any[];
   filterCount: number;
   numSelected: number;
@@ -104,6 +105,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
     classes,
     columns,
     data,
+    dateOptions,
     displayColumns,
     filterCount,
     onDelete,
@@ -381,6 +383,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
               content={
                 <Filters
                   data={data}
+                  dateOptions={dateOptions}
                   filters={columns}
                   count={filterCount}
                   onResetFilters={handleReset}
@@ -471,6 +474,7 @@ interface TableProps {
   classes: any;
   columns: Column[];
   data: any[];
+  dateOptions: Option[];
   defaultSort?: { dir: sortDir; orderBy: string };
   onDelete: (selected: string[]) => void;
   onEdit: (id: string, type: string) => void;
@@ -486,6 +490,7 @@ const Table: React.SFC<TableProps> = props => {
     categories,
     classes,
     columns,
+    dateOptions,
     data,
     defaultSort,
     onDelete,
@@ -635,6 +640,7 @@ const Table: React.SFC<TableProps> = props => {
         categories={categories}
         columns={columns}
         data={data}
+        dateOptions={dateOptions}
         displayColumns={displayColumns}
         filterCount={Object.keys(filters).length}
         numSelected={selected.length}
