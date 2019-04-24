@@ -48,7 +48,9 @@ interface TransactionModalMergedProps
     TransactionModalProps {}
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = props => {
+  // TODO: Refactor props
   const { accounts, addTransaction, categories, currentUser, editTransaction, subcategories, transactions } = props;
+  // TODO Refactor to create a single transaction object state
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);

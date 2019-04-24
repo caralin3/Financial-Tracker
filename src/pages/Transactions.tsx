@@ -49,6 +49,7 @@ interface TransactionsMergedProps
     TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = props => {
+  // TODO: Refactor props
   const { accounts, addTransaction, categories, currentUser, drawerExpanded, removeTransaction, subcategories, transactions } = props;
   const [loading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
