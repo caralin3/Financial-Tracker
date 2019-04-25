@@ -1,0 +1,12 @@
+@import '../appearance/styles/variables.scss';
+
+.loading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &_text {
+    padding: 1rem 0;
+  }
+}

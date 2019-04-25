@@ -1,59 +1,66 @@
-import { Dispatch } from 'redux';
-import { accountStateStore, ActionTypes } from '../../store';
 import { Account } from '../../types';
-import { FirebaseAccount } from '../types';
+import { sort } from '../../util';
+import { FBAccount } from '../types';
 import { accountsCollection } from './';
 
-// LOAD ACCOUNTS
-export const load = (userId: string, dispatch: Dispatch<ActionTypes>) => {
-  accountsCollection.where('userId', '==', userId)
-  .orderBy('name').get().then((querySnapshot: any) => {
-    const accountList: Account[] = [];
-    querySnapshot.forEach((doc: any) => {
-      const account: Account = doc.data();
-      account.id = doc.id;
-      accountList.push(account);
+// CREATE ACCOUNT
+export const createAccount = (account: FBAccount, addAccount: (acc: Account) => void) =>
+  accountsCollection
+    .add(account)
+    .then(doc => {
+      // Set account in store
+      addAccount({ id: doc.id, ...account });
+      console.log('Account written with ID: ', doc.id);
+      return true;
+    })
+    .catch(error => {
+      console.error('Error adding account: ', error);
+      return false;
     });
-    dispatch(accountStateStore.loadAccounts(accountList));
-  }).catch((err: any) => {
-    console.log(err.message);
-  });
-}
 
-// ADD ACCOUNT
-export const add = (account: FirebaseAccount, dispatch: Dispatch<ActionTypes>) => {
-  accountsCollection.add(account).then(() => {
-    let newAccount: Account;
-    accountsCollection.where('name', '==', account.name)
-    .where('userId', '==', account.userId).get()
-      .then((querySnapshot: any) => {
-        newAccount = querySnapshot.docs[0].data();
-        newAccount.id = querySnapshot.docs[0].id;
-        // Dispatch to state
-        dispatch(accountStateStore.addAccount(newAccount));
-      }).catch((err: any) => {
-        console.log(err.message);
-      });
-  }).catch((err: any) => {
-    console.log(err.message);
+// READ ACCOUNTS
+export const getAllAccounts = (userId: string) =>
+  accountsCollection.get().then(querySnapshot => {
+    const accounts: Account[] = [];
+    querySnapshot.forEach(doc => {
+      if (doc.data().userId === userId) {
+        accounts.push({
+          id: doc.id,
+          ...doc.data()
+        } as Account);
+      }
+    });
+    return sort(accounts, 'desc', 'name');
   });
-}
 
-// EDIT ACCOUNT
-export const edit = (account: Account, dispatch: Dispatch<ActionTypes>) => {
-  accountsCollection.doc(account.id).update(account).then(() => {
-    dispatch(accountStateStore.editAccount(account));
-  }).catch((err: any) => {
-    console.log(err.message);
-  });
-}
+// UPDATE ACCOUNT
+export const updateAccount = (account: Account, editAccount: (acc: Account) => void) =>
+  accountsCollection
+    .doc(account.id)
+    .update(account)
+    .then(() => {
+      // Edit account in store
+      editAccount(account);
+      console.log('Account updated with ID: ', account.id);
+      return true;
+    })
+    .catch(error => {
+      console.error('Error updating account: ', error);
+      return false;
+    });
 
 // DELETE ACCOUNT
-export const remove = (id: string, dispatch: Dispatch<ActionTypes>) => {
-  accountsCollection.doc(id).delete().then(() => {
-    dispatch(accountStateStore.deleteAccount(id));
-    console.log(`Document ${id} successfully deleted!`);
-  }).catch((err: any) => {
-    console.log("Error removing document: ", err.message);
-  });
-}
+export const deleteAccount = (id: string, removeAccount: (id: string) => void) =>
+  accountsCollection
+    .doc(id)
+    .delete()
+    .then(() => {
+      // Delete account in store
+      removeAccount(id);
+      console.log('Account deleted with ID: ', id);
+      return true;
+    })
+    .catch(error => {
+      console.error('Error deleting account: ', id, error);
+      return false;
+    });

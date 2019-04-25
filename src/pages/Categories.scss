@@ -1,0 +1,62 @@
+@import '../appearance/styles/variables.scss';
+
+.category {
+  background: $white !important;
+
+  @media #{$medium} {
+    background: $primary !important;
+  }
+
+  &_title {
+    @include primary;
+    color: $black !important;
+    font-weight: bold !important;
+
+    @media #{$medium} {
+      color: $white !important;
+    }
+  }
+
+  &_expand {
+    color: $black !important;
+
+    @media #{$medium} {
+      color: $white !important;
+    }
+  }
+
+  &_sub {
+    background: $white !important;
+  }
+
+  &_list {
+    width: 100%;
+  }
+
+  &_add {
+    margin-bottom: 2rem;
+  }
+
+  &_actions {
+    align-items: center;
+    border-bottom: 1px solid $highlight;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  &_subs {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+
+.subcategory {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  &_button {
+    padding: 0.2rem !important;
+  }
+}

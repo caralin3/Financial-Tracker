@@ -1,0 +1,88 @@
+// colors
+$primary: #0c98ac;
+$highlight: #efeeee;
+$overlay: #979797;
+$success: #63c312;
+$error: #d0021b;
+$black: #000;
+$white: #FFF;
+
+// fonts
+@mixin heading {
+  font-family: 'FrancoisOne', sans-serif !important;
+  font-size: 32px !important;
+  font-weight: bold !important;
+
+  @media #{$medium} {
+    font-size: 50px !important;
+  }
+}
+
+@mixin heading2 {
+  font-family: 'FrancoisOne', sans-serif !important;
+  font-size: 28px !important;
+
+  @media #{$medium} {
+    font-size: 32px !important;
+  }
+}
+
+@mixin title {
+  font-family: 'ArchivoNarrow', sans-serif !important;
+  font-size: 24px !important;
+
+  @media #{$medium} {
+    font-size: 28px !important;
+  }
+}
+
+@mixin title2 {
+  font-family: 'ArchivoNarrow', sans-serif !important;
+  font-size: 20px !important;
+
+  @media #{$medium} {
+    font-size: 24px !important;
+  }
+}
+
+@mixin primary {
+  font-family: 'ArchivoNarrow', sans-serif !important;
+  font-size: 16px !important;
+
+  @media #{$medium} {
+    font-size: 18px !important;
+  }
+}
+
+@mixin secondary {
+  font-family: 'ArchivoNarrow', sans-serif !important;
+  font-size: 16px !important;
+
+  @media #{$medium} {
+    font-size: 16px !important;
+  }
+}
+
+@mixin copy {
+  font-family: 'ArchivoNarrow', sans-serif !important;
+  font-size: 14px !important;
+
+  @media #{$medium} {
+    font-size: 14px !important;
+  }
+}
+
+@mixin number {
+  font-family: 'Oswald', sans-serif !important;
+}
+
+// breakpoints
+$x-small: "screen and (min-width: 320px)";
+$small: "screen and (min-width: 375px)";
+$medium: "screen and (min-width: 768px)";
+$large: "screen and (min-width: 992px)";
+$x-large: "screen and (min-width: 1045px)";
+$xx-large: "screen and (min-width: 1184px)";
+
+// detect
+$ie: "all and (-ms-high-contrast: none), (-ms-high-contrast: active)";

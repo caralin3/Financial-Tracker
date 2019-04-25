@@ -1,0 +1,85 @@
+@import './variables.scss';
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: sans-serif;
+}
+
+a {
+  color: currentColor;
+  text-decoration: none;
+
+  &:hover,
+  &:active,
+  &:focus {
+    cursor: pointer;
+  }
+}
+
+button {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+input,
+datalist,
+textarea {
+  background-color: $white;
+}
+
+.show-small {
+  @media #{$medium} {
+    display: none;
+  }
+}
+
+.show-medium {
+  display: none;
+
+  @media #{$medium} {
+    display: block;
+  }
+}
+
+.show-medium-inline-block {
+  display: none;
+
+  @media #{$medium} {
+    display: inline-block;
+  }
+}
+
+.show-large {
+  display: none;
+
+  @media #{$large} {
+    display: block;
+  }
+}
+
+.show-large-inline-block {
+  display: none;
+
+  @media #{$large} {
+    display: inline-block;
+  }
+}
+
+.show-x-large {
+  display: none;
+
+  @media #{$x-large} {
+    display: block;
+  }
+}
+
+.show-x-large-inline-block {
+  display: none;
+
+  @media #{$x-large} {
+    display: inline-block;
+  }
+}

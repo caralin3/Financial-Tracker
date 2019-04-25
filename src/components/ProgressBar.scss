@@ -1,0 +1,72 @@
+@import '../appearance/styles/variables.scss';
+
+.progressBar {
+  width: 100%;
+  &:hover,
+  &:focus {
+    .progressBar_sublabel {
+      display: block !important;
+    }
+  }
+
+  span {
+		display: block;
+	}
+
+  &_container {
+    border-radius: 6rem;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  &_row {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &_paddedRow {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 2.5rem;
+  }
+
+  &_label {
+    @include primary;
+    align-items: center !important;
+    display: flex !important;
+  }
+
+  &_sublabel {
+    @include copy;
+    display: none !important;
+    color: $black;
+    padding-left: 0.5rem;
+  }
+
+  &_end {
+    @include number;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    padding-left: 0.5rem;
+
+    @media #{$medium} {
+      font-size: 18px !important;
+    }
+  }
+
+  &_bar {
+    background: $highlight;
+  }
+
+  &_progress {
+    background: $success;
+    padding: 0.5rem;
+  }
+
+  &_over {
+    background: $error;
+    padding: 0.5rem;
+  }
+}

@@ -1,61 +1,66 @@
-import { Dispatch } from 'redux';
-import { ActionTypes, transactionStateStore } from '../../store';
 import { Transaction } from '../../types';
+import { sort } from '../../util';
+import { FBTransaction } from '../types';
 import { transactionsCollection } from './';
 
-// LOAD TRANSACTIONS
-export const load = (userId: string, dispatch: Dispatch<ActionTypes>) => {
-  transactionsCollection.where('userId', '==', userId)
-    .orderBy('date', 'desc').get().then((querySnapshot: any) => {
-    const transactionList: Transaction[] = [];
-    querySnapshot.forEach((doc: any) => {
-      const transaction: Transaction = doc.data();
-      transaction.id = doc.id;
-      transactionList.push(transaction);
+// CREATE TRANSACTION
+export const createTransaction = (transaction: FBTransaction, addTransaction: (trans: Transaction) => void) =>
+  transactionsCollection
+    .add(transaction)
+    .then(doc => {
+      // Set transaction in store
+      addTransaction({ id: doc.id, ...transaction });
+      console.log('Transaction written with ID: ', doc.id);
+      return true;
+    })
+    .catch(error => {
+      console.error('Error adding transaction: ', error);
+      return false;
     });
-    dispatch(transactionStateStore.loadTransactions(transactionList));
-  }).catch((err: any) => {
-    console.log(err.message);
-  });
-}
 
-// ADD TRANSACTION
-export const add = (transaction: Transaction, dispatch: Dispatch<ActionTypes>) => {
-  transactionsCollection.add(transaction).then(() => {
-    let newTransaction: Transaction;
-    transactionsCollection.where('amount', '==', transaction.amount)
-      .where('date', '==', transaction.date)
-      .where('from', '==', transaction.from)
-      .where('to', '==', transaction.to)
-      .where('userId', '==', transaction.userId).get()
-      .then((querySnapshot: any) => {
-        newTransaction = querySnapshot.docs[0].data();
-        newTransaction.id = querySnapshot.docs[0].id;
-        // Dispatch to state
-        dispatch(transactionStateStore.addTransaction(newTransaction));
-      }).catch((err: any) => {
-        console.log(err.message);
-      });
-  }).catch((err: any) => {
-    console.log(err.message);
+// READ TRANSACTIONS
+export const getAllTransactions = (userId: string) =>
+  transactionsCollection.get().then(querySnapshot => {
+    const transactions: Transaction[] = [];
+    querySnapshot.forEach(doc => {
+      if (doc.data().userId === userId) {
+        transactions.push({
+          id: doc.id,
+          ...doc.data()
+        } as Transaction);
+      }
+    });
+    return sort(transactions, 'asc', 'date');
   });
-}
 
-// EDIT TRANSACTION
-export const edit = (transaction: Transaction, dispatch: Dispatch<ActionTypes>) => {
-  transactionsCollection.doc(transaction.id).update(transaction).then(() => {
-    dispatch(transactionStateStore.editTransaction(transaction));
-  }).catch((err: any) => {
-    console.log(err.message);
-  });
-}
+// UPDATE TRANSACTION
+export const updateTransaction = (transaction: Transaction, editTransaction: (trans: Transaction) => void) =>
+  transactionsCollection
+    .doc(transaction.id)
+    .update(transaction)
+    .then(() => {
+      // Edit transaction in store
+      editTransaction(transaction);
+      console.log('Transaction updated with ID: ', transaction.id);
+      return true;
+    })
+    .catch(error => {
+      console.error('Error updating transaction: ', error);
+      return false;
+    });
 
 // DELETE TRANSACTION
-export const remove = (id: string, dispatch: Dispatch<ActionTypes>) => {
-  transactionsCollection.doc(id).delete().then(() => {
-    dispatch(transactionStateStore.deleteTransaction(id));
-    console.log(`Document ${id} successfully deleted!`);
-  }).catch((err: any) => {
-    console.log("Error removing document: ", err.message);
-  });
-}
+export const deleteTransaction = (id: string, removeTransaction: (id: string) => void) =>
+  transactionsCollection
+    .doc(id)
+    .delete()
+    .then(() => {
+      // Delete transaction in store
+      removeTransaction(id);
+      console.log('Transaction deleted with ID: ', id);
+      return true;
+    })
+    .catch(error => {
+      console.error('Error deleting transaction: ', id, error);
+      return false;
+    });

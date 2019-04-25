@@ -1,0 +1,28 @@
+@import '../appearance/styles/variables.scss';
+
+.table {
+  &_cell {
+    padding-left: 1.5rem !important;
+  }
+
+  &_filters {
+    @media #{$small} {
+      margin-right: 1.5rem;
+    }
+  }
+
+  &_wrapper {
+    overflow-x: auto;
+  }
+
+  &_toolbar {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  &_row {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

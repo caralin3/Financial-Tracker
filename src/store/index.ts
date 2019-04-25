@@ -1,41 +1,19 @@
-import { applyMiddleware, createStore } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { persistReducer, persistStore } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import { accountStateStore } from './accounts';
-import { ActionTypes }from './actions';
-import { categoryStateStore } from './categories';
-import { jobStateStore } from './jobs';
-import { AppState, rootReducer } from './reducers';
-import { sessionStateStore } from './session';
-import { subcategoryStateStore } from './subcategories';
-import { transactionStateStore } from './transactions';
-
-const persistConfig = {
-  key: 'root',
-  storage,
-}
-
-const persistedReducer = persistReducer(persistConfig, rootReducer)
-
-const store = createStore(
-  persistedReducer,
-  composeWithDevTools(
-    applyMiddleware()
-  )
-);
-
-const persistor = persistStore(store);
+import * as accountsState from './accounts';
+import * as budgetsState from './budgets';
+import * as categoriesState from './categories';
+import createStore from './createStore';
+import * as goalsState from './goals';
+import * as sessionState from './session';
+import * as subcategoriesState from './subcategories';
+import * as transactionsState from './transactions';
 
 export {
-  accountStateStore,
-  ActionTypes,
-  AppState,
-  categoryStateStore,
-  jobStateStore,
-  persistor,
-  sessionStateStore,
-  subcategoryStateStore,
-  transactionStateStore,
-  store,
-}
+  accountsState,
+  budgetsState,
+  categoriesState,
+  createStore,
+  goalsState,
+  sessionState,
+  subcategoriesState,
+  transactionsState
+};

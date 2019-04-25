@@ -2,50 +2,47 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { db, firebase } from '../firebase';
-import { ActionTypes, sessionStateStore } from '../store';
+import { sessionState } from '../store';
+import { User } from '../types';
 
 interface WithAuthProps {}
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<ActionTypes>
+  setCurrentUser: (user: User | null) => void;
 }
 
 interface StateMappedProps {}
 
-interface WithAuthMergedProps extends
-  StateMappedProps,
-  DispatchMappedProps,
-  WithAuthProps {}
+interface WithAuthMergedProps extends StateMappedProps, DispatchMappedProps, WithAuthProps {}
 
 interface WithAuthState {}
 
 export const withAuthentication = (Component: any) => {
   class WithAuthentication extends React.Component<WithAuthMergedProps, WithAuthState> {
-    public readonly state: WithAuthState = {}
-  
+    public readonly state: WithAuthState = {};
+
     public componentDidMount() {
-      const { dispatch } = this.props;
+      const { setCurrentUser } = this.props;
       firebase.auth.onAuthStateChanged((user: any) => {
         if (user) {
-          db.requests.users.getCurrentUser(user.uid, dispatch);
+          db.requests.users.getCurrentUser(user.uid, setCurrentUser);
         } else {
-          dispatch(sessionStateStore.setCurrentUser(null))
+          setCurrentUser(null);
         }
       });
     }
 
     public render() {
-      return (
-        <Component />
-      );
+      return <Component />;
     }
   }
 
-  const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>): DispatchMappedProps => ({ dispatch });
+  const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+    setCurrentUser: (user: User) => dispatch(sessionState.setCurrentUser(user))
+  });
 
-  return connect<
-    StateMappedProps,
-    DispatchMappedProps,
-    WithAuthProps
-  >(null, mapDispatchToProps)(WithAuthentication);
-}
+  return connect(
+    null,
+    mapDispatchToProps
+  )(WithAuthentication);
+};
