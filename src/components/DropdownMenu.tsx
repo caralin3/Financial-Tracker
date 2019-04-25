@@ -5,24 +5,30 @@ import * as React from 'react';
 
 interface DropdownMenuProps {
   className?: string;
-  menuListClass?: string;
-  selected: string;
   menuItems: Array<{ label: string; value: string | number }>;
+  menuListClass?: string;
   onClose: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  selected: string;
 }
 
-export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
+export const DropdownMenu: React.SFC<DropdownMenuProps> = ({
+  className,
+  menuItems,
+  menuListClass,
+  onClose,
+  selected
+}) => {
   const [open, setOpen] = React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<any>(null);
   const mobile = useMediaQuery('(max-width:768px)');
 
   const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
-    props.onClose(e);
+    onClose(e);
     setOpen(false);
   };
 
   return (
-    <div className={props.className}>
+    <div className={className}>
       <ClickAwayListener onClickAway={() => setOpen(false)}>
         <div style={{ width: '100%' }}>
           <Button
@@ -34,11 +40,11 @@ export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
             variant="contained"
             fullWidth={mobile ? true : false}
           >
-            {props.selected}
+            {selected}
           </Button>
           <Popper
             id="menu-list-grow"
-            className={props.menuListClass}
+            className={menuListClass}
             open={open}
             anchorEl={anchorEl}
             transition={true}
@@ -55,7 +61,7 @@ export const DropdownMenu: React.SFC<DropdownMenuProps> = props => {
               >
                 <Paper>
                   <MenuList>
-                    {props.menuItems.map(item => (
+                    {menuItems.map(item => (
                       <MenuItem key={item.value} data-value={item.value} onClick={handleClose}>
                         <Typography>{item.label}</Typography>
                       </MenuItem>

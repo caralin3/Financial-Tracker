@@ -40,11 +40,17 @@ interface TableHeadProps {
   rowCount: number;
 }
 
-export const TableHead: React.SFC<TableHeadProps> = props => {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, columns } = props;
-
+export const TableHead: React.SFC<TableHeadProps> = ({
+  columns,
+  numSelected,
+  onRequestSort,
+  onSelectAllClick,
+  order,
+  orderBy,
+  rowCount
+}) => {
   const createSortHandler = (property: string) => (event: any) => {
-    props.onRequestSort(event, property);
+    onRequestSort(event, property);
   };
 
   return (
@@ -97,27 +103,26 @@ interface TableToolbarProps {
   userId: string;
 }
 
-export const Toolbar: React.SFC<TableToolbarProps> = props => {
-  const {
-    accounts,
-    addTransaction,
-    categories,
-    classes,
-    columns,
-    data,
-    dateOptions,
-    displayColumns,
-    filterCount,
-    onDelete,
-    onEdit,
-    numSelected,
-    onResetFilters,
-    onSelectColumns,
-    onSelectFilter,
-    subcategories,
-    tableTitle,
-    userId
-  } = props;
+export const Toolbar: React.SFC<TableToolbarProps> = ({
+  accounts,
+  addTransaction,
+  categories,
+  classes,
+  columns,
+  data,
+  dateOptions,
+  displayColumns,
+  filterCount,
+  onDelete,
+  onEdit,
+  numSelected,
+  onResetFilters,
+  onSelectColumns,
+  onSelectFilter,
+  subcategories,
+  tableTitle,
+  userId
+}) => {
   const fileInput = React.useRef(null);
   const [openColumns, setOpenColumns] = React.useState<boolean>(false);
   const [openFilters, setOpenFilters] = React.useState<boolean>(false);
@@ -325,10 +330,10 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             {numSelected} selected
           </Typography>
         ) : (
-            <Typography variant="h6" id="tableTitle">
-              {tableTitle}
-            </Typography>
-          )}
+          <Typography variant="h6" id="tableTitle">
+            {tableTitle}
+          </Typography>
+        )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
@@ -348,53 +353,53 @@ export const Toolbar: React.SFC<TableToolbarProps> = props => {
             </Tooltip>
           </div>
         ) : (
-            <div className={classes.actionButtons}>
-              <input
-                ref={fileInput}
-                accept=".csv"
-                className={classes.input}
-                onChange={readCSVFile}
-                id="import-file"
-                type="file"
-              />
-              <label htmlFor="import-file">
-                <Tooltip title="Import">
-                  <IconButton aria-label="Import" component="span">
-                    <CloudDownloadIcon />
-                  </IconButton>
-                </Tooltip>
-              </label>
-              <Tooltip title="Export">
-                <IconButton aria-label="Export" onClick={exportTransactions}>
-                  <BackupIcon />
+          <div className={classes.actionButtons}>
+            <input
+              ref={fileInput}
+              accept=".csv"
+              className={classes.input}
+              onChange={readCSVFile}
+              id="import-file"
+              type="file"
+            />
+            <label htmlFor="import-file">
+              <Tooltip title="Import">
+                <IconButton aria-label="Import" component="span">
+                  <CloudDownloadIcon />
                 </IconButton>
               </Tooltip>
-              <Popup
-                open={openColumns}
-                onClick={() => handleClick(!openColumns, false)}
-                content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
-                tooltip="View Colmns"
-                trigger={<ViewColumnIcon />}
-              />
-              <Popup
-                class="table_filters"
-                open={openFilters}
-                onClick={() => handleClick(false, !openFilters)}
-                content={
-                  <Filters
-                    data={data}
-                    dateOptions={dateOptions}
-                    filters={columns}
-                    count={filterCount}
-                    onResetFilters={handleReset}
-                    onSelectFilter={onSelectFilter}
-                  />
-                }
-                tooltip="Filters"
-                trigger={<FilterListIcon />}
-              />
-            </div>
-          )}
+            </label>
+            <Tooltip title="Export">
+              <IconButton aria-label="Export" onClick={exportTransactions}>
+                <BackupIcon />
+              </IconButton>
+            </Tooltip>
+            <Popup
+              open={openColumns}
+              onClick={() => handleClick(!openColumns, false)}
+              content={<Columns columns={columns} selectedColumns={displayColumns} onSelectColumns={onSelectColumns} />}
+              tooltip="View Colmns"
+              trigger={<ViewColumnIcon />}
+            />
+            <Popup
+              class="table_filters"
+              open={openFilters}
+              onClick={() => handleClick(false, !openFilters)}
+              content={
+                <Filters
+                  data={data}
+                  dateOptions={dateOptions}
+                  filters={columns}
+                  count={filterCount}
+                  onResetFilters={handleReset}
+                  onSelectFilter={onSelectFilter}
+                />
+              }
+              tooltip="Filters"
+              trigger={<FilterListIcon />}
+            />
+          </div>
+        )}
       </div>
     </MuiToolbar>
   );
@@ -411,13 +416,13 @@ const toolbarStyles = (theme: Theme) => ({
   highlight:
     theme.palette.type === 'light'
       ? {
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        color: theme.palette.secondary.main
-      }
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+          color: theme.palette.secondary.main
+        }
       : {
-        backgroundColor: theme.palette.secondary.dark,
-        color: theme.palette.text.primary
-      },
+          backgroundColor: theme.palette.secondary.dark,
+          color: theme.palette.text.primary
+        },
   input: {
     display: 'none'
   },
@@ -440,9 +445,7 @@ interface TableFilterListProps {
   onDeleteFilter: (key: string) => void;
 }
 
-const FilterList: React.SFC<TableFilterListProps> = props => {
-  const { classes, filters, onDeleteFilter } = props;
-
+const FilterList: React.SFC<TableFilterListProps> = ({ classes, filters, onDeleteFilter }) => {
   return (
     <div className={classes.root}>
       {Object.keys(filters).map((key: string) => (
@@ -483,22 +486,21 @@ interface TableProps {
   userId: string;
 }
 
-const Table: React.SFC<TableProps> = props => {
-  const {
-    accounts,
-    addTransaction,
-    categories,
-    classes,
-    columns,
-    dateOptions,
-    data,
-    defaultSort,
-    onDelete,
-    onEdit,
-    subcategories,
-    title,
-    userId
-  } = props;
+const Table: React.SFC<TableProps> = ({
+  accounts,
+  addTransaction,
+  categories,
+  classes,
+  columns,
+  dateOptions,
+  data,
+  defaultSort,
+  onDelete,
+  onEdit,
+  subcategories,
+  title,
+  userId
+}) => {
   const [displayData, setDisplayData] = React.useState<any[]>([]);
   const [displayColumns, setDisplayColumns] = React.useState<Column[]>(columns);
   const [order, setOrder] = React.useState<sortDir | undefined>(defaultSort ? defaultSort.dir : undefined);
@@ -708,11 +710,11 @@ const Table: React.SFC<TableProps> = props => {
                   );
                 })
             ) : (
-                <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
-                  <TableCell colSpan={2} />
-                  <TableCell>No records</TableCell>
-                </TableRow>
-              )}
+              <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
+                <TableCell colSpan={2} />
+                <TableCell>No records</TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </MuiTable>
       </div>

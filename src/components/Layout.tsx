@@ -7,20 +7,20 @@ export interface LayoutProps {
   title: string;
 }
 
-export const Layout: React.SFC<LayoutProps> = props => (
+export const Layout: React.SFC<LayoutProps> = ({ buttons, children, title }) => (
   <div className="layout">
     <Navigation />
     <div className="layout_container">
       <div className="layout_header">
         <div className="layout_headerContent">
           <Typography className="layout_title" variant="h3">
-            {props.title}
+            {title}
           </Typography>
-          <div>{props.buttons}</div>
+          <div>{buttons}</div>
         </div>
         <hr className="layout_divider" />
       </div>
-      <div>{props.children}</div>
+      <div>{children}</div>
     </div>
   </div>
 );

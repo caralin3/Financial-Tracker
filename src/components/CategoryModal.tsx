@@ -43,17 +43,25 @@ interface CategoryModalMergedProps
     DispatchMappedProps,
     CategoryModalProps {}
 
-const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => {
-  const {
-    addCategory,
-    categories,
-    currentUser,
-    editBudget,
-    editCategory,
-    editSubcategory,
-    editTransaction,
-    subcategories
-  } = props;
+const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = ({
+  addCategory,
+  budgets,
+  buttonText,
+  categories,
+  currentUser,
+  editBudget,
+  editCategory,
+  editSubcategory,
+  editTransaction,
+  history,
+  match: { params },
+  onClose,
+  onSuccess,
+  open,
+  subcategories,
+  title,
+  transactions
+}) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
@@ -61,9 +69,6 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
   const [name, setName] = React.useState<string>('');
 
   React.useEffect(() => {
-    const {
-      match: { params }
-    } = props;
     if (params.id) {
       setLoading(true);
       const [category] = categories.filter(cat => cat.id === params.id);
@@ -76,18 +81,13 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
         resetFields();
       }
     }
-  }, [props.match.params.id]);
+  }, [params.id]);
 
   const resetFields = () => {
     setName('');
   };
 
   const handleClose = () => {
-    const {
-      history,
-      match: { params },
-      onClose
-    } = props;
     if (params.id) {
       history.goBack();
     }
@@ -105,12 +105,6 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const {
-      budgets,
-      match: { params },
-      onSuccess,
-      transactions
-    } = props;
     e.preventDefault();
     setSubmit(true);
     setSubmitting(true);
@@ -185,11 +179,11 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = props => 
   return (
     <ModalForm
       disabled={false}
-      formTitle={props.title}
-      formButton={props.buttonText}
+      formTitle={title}
+      formButton={buttonText}
       formSubmit={handleSubmit}
       loading={submitting}
-      open={props.open}
+      open={open}
       handleClose={handleClose}
     >
       {loading ? (

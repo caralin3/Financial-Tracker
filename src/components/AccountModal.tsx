@@ -40,8 +40,21 @@ interface AccountModalMergedProps
     DispatchMappedProps,
     AccountModalProps {}
 
-const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
-  const { accounts, addAccount, currentUser, editAccount, editTransaction } = props;
+const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = ({
+  accounts,
+  addAccount,
+  buttonText,
+  currentUser,
+  editAccount,
+  editTransaction,
+  history,
+  match: { params },
+  onClose,
+  onSuccess,
+  open,
+  title,
+  transactions
+}) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -52,9 +65,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   const [type, setType] = React.useState<accountType | ''>('');
 
   React.useEffect(() => {
-    const {
-      match: { params }
-    } = props;
     if (params.id) {
       setLoading(true);
       const [account] = accounts.filter(acc => acc.id === params.id);
@@ -69,7 +79,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
         resetFields();
       }
     }
-  }, [props.match.params.id]);
+  }, [params.id]);
 
   const resetFields = () => {
     setName('');
@@ -80,11 +90,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   };
 
   const handleClose = () => {
-    const {
-      history,
-      match: { params },
-      onClose
-    } = props;
     if (params.id) {
       history.goBack();
     }
@@ -104,11 +109,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   const isValidType = () => type.trim().length > 0;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const {
-      match: { params },
-      onSuccess,
-      transactions
-    } = props;
     e.preventDefault();
     setSubmit(true);
     setSubmitting(true);
@@ -175,11 +175,11 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = props => {
   return (
     <ModalForm
       disabled={false}
-      formTitle={props.title}
-      formButton={props.buttonText}
+      formTitle={title}
+      formButton={buttonText}
       formSubmit={handleSubmit}
       loading={submitting}
-      open={props.open}
+      open={open}
       handleClose={handleClose}
     >
       {loading ? (

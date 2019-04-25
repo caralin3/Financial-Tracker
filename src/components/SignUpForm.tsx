@@ -34,7 +34,18 @@ interface DispatchMappedProps {
 
 interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps {}
 
-const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
+const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
+  addCategory,
+  addSubcategory,
+  history,
+  setAccounts,
+  setBudgets,
+  setCategories,
+  setCurrentUser,
+  setGoals,
+  setSubcategories,
+  setTransactions
+}) => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>('');
   const [error, setError] = React.useState<string | null>(null);
@@ -61,7 +72,6 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
   };
 
   const initializeStore = async () => {
-    const { setAccounts, setBudgets, setCategories, setGoals, setSubcategories, setTransactions } = props;
     setAccounts([]);
     setBudgets([]);
     setCategories([]);
@@ -72,7 +82,6 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = props => {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    const { addCategory, addSubcategory, history, setCurrentUser } = props;
     setSubmitting(true);
     event.preventDefault();
     auth

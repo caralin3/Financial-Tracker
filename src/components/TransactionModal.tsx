@@ -47,9 +47,23 @@ interface TransactionModalMergedProps
     DispatchMappedProps,
     TransactionModalProps {}
 
-const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = props => {
-  // TODO: Refactor props
-  const { accounts, addTransaction, categories, currentUser, editTransaction, subcategories, transactions } = props;
+const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
+  accounts,
+  addTransaction,
+  buttonText,
+  categories,
+  currentUser,
+  editTransaction,
+  history,
+  location,
+  match: { params },
+  onClose,
+  onSuccess,
+  open,
+  subcategories,
+  title,
+  transactions
+}) => {
   // TODO Refactor to create a single transaction object state
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -69,10 +83,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   const [tags, setTags] = React.useState<string>('');
 
   React.useEffect(() => {
-    const {
-      match: { params },
-      location
-    } = props;
     const query: any = querystring.parse(location.search.slice(1));
     if (query.type) {
       setLoading(true);
@@ -124,7 +134,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
         resetFields();
       }
     }
-  }, [props.match.params.id]);
+  }, [params.id]);
 
   const resetFields = () => {
     setCategoryId('');
@@ -175,11 +185,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   };
 
   const handleClose = () => {
-    const {
-      history,
-      match: { params },
-      onClose
-    } = props;
     if (params.id) {
       history.goBack();
     }
@@ -190,10 +195,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const {
-      match: { params },
-      onSuccess
-    } = props;
     e.preventDefault();
     setSubmit(true);
     setSubmitting(true);
@@ -537,11 +538,11 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = pro
   return (
     <ModalForm
       disabled={false}
-      formTitle={props.title}
-      formButton={props.buttonText}
+      formTitle={title}
+      formButton={buttonText}
       formSubmit={handleSubmit}
       loading={submitting}
-      open={props.open}
+      open={open}
       handleClose={handleClose}
     >
       <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="Transaction has been added!" />

@@ -46,8 +46,13 @@ interface CategoriesMergedProps
     DispatchMappedProps,
     CategoriesPageProps {}
 
-const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
-  const { categories, removeCategory, removeSubcategory, subcategories } = props;
+const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = ({
+  categories,
+  history,
+  removeCategory,
+  removeSubcategory,
+  subcategories
+}) => {
   const [loading] = React.useState<boolean>(false);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
   const [openSubAdd, setOpenSubAdd] = React.useState<boolean>(false);
@@ -98,7 +103,6 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   };
 
   const handleAdd = (e: React.MouseEvent<HTMLElement>, id?: string) => {
-    const { history } = props;
     if (id) {
       history.push(`${routes.categories}/add/${id}`);
       setSuccessMsg('Subcategory has been added');
@@ -112,7 +116,6 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = props => {
   };
 
   const handleEdit = (id: string, type: string) => {
-    const { history } = props;
     history.push(`${routes.categories}/edit/${id}`);
     if (type === 'category') {
       const [editCat] = categories.filter(cat => cat.id === id);

@@ -14,16 +14,14 @@ export interface ExpandableCardProps {
   title: string;
 }
 
-export const ExpandableCard: React.SFC<ExpandableCardProps> = props => (
-  <Card className={props.className} raised={true}>
+export const ExpandableCard: React.SFC<ExpandableCardProps> = ({ children, className, expanded, onToggle, title }) => (
+  <Card className={className} raised={true}>
     <CardHeader
-      action={
-        <IconButton onClick={props.onToggle}>{props.expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}</IconButton>
-      }
-      title={props.title}
+      action={<IconButton onClick={onToggle}>{expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}</IconButton>}
+      title={title}
     />
-    <Collapse in={props.expanded} timeout="auto" unmountOnExit={true}>
-      <CardContent>{props.children}</CardContent>
+    <Collapse in={expanded} timeout="auto" unmountOnExit={true}>
+      <CardContent>{children}</CardContent>
     </Collapse>
   </Card>
 );

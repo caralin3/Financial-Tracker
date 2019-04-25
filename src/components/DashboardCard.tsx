@@ -14,22 +14,29 @@ export interface AlertDialogProps {
   title: string;
 }
 
-const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = props => (
-  <Card className={props.className} raised={true}>
+const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = ({
+  children,
+  className,
+  classes,
+  onClick,
+  subheader,
+  title
+}) => (
+  <Card className={className} raised={true}>
     <CardHeader
       classes={{
-        subheader: props.classes.subheader,
-        title: props.classes.title
+        subheader: classes.subheader,
+        title: classes.title
       }}
       action={
-        <IconButton onClick={props.onClick}>
+        <IconButton onClick={onClick}>
           <Add color="primary" />
         </IconButton>
       }
-      title={props.title}
-      subheader={props.subheader}
+      title={title}
+      subheader={subheader}
     />
-    <CardContent>{props.children}</CardContent>
+    <CardContent>{children}</CardContent>
   </Card>
 );
 

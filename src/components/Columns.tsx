@@ -3,22 +3,22 @@ import * as React from 'react';
 
 export interface ColumnsProps {
   columns: any[];
-  selectedColumns: any[];
   onSelectColumns: (columns: any[]) => void;
+  selectedColumns: any[];
 }
 
-export const Columns: React.SFC<ColumnsProps> = props => {
+export const Columns: React.SFC<ColumnsProps> = ({ columns, onSelectColumns, selectedColumns }) => {
   const [selected, setSelected] = React.useState<any[]>([]);
 
   React.useEffect(() => {
-    const colIds = props.selectedColumns.map(col => col.id);
+    const colIds = selectedColumns.map(col => col.id);
     setSelected(colIds);
-  }, props.columns);
+  }, columns);
 
   const handleSelectAllClick = () => {
-    const newSelected = props.columns.map((c: any) => c.id);
+    const newSelected = columns.map((c: any) => c.id);
     setSelected(newSelected);
-    props.onSelectColumns(newSelected);
+    onSelectColumns(newSelected);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLElement>, id: string) => {
@@ -36,7 +36,7 @@ export const Columns: React.SFC<ColumnsProps> = props => {
     }
     if (newSelected.length !== 0) {
       setSelected(newSelected);
-      props.onSelectColumns(newSelected);
+      onSelectColumns(newSelected);
     }
   };
 
@@ -47,12 +47,12 @@ export const Columns: React.SFC<ColumnsProps> = props => {
       <MenuList>
         <MenuItem onClick={handleSelectAllClick}>
           <Checkbox
-            indeterminate={selected.length > 0 && selected.length < props.columns.length}
-            checked={selected.length === props.columns.length}
+            indeterminate={selected.length > 0 && selected.length < columns.length}
+            checked={selected.length === columns.length}
           />
           <Typography>All</Typography>
         </MenuItem>
-        {props.columns.map(col => (
+        {columns.map(col => (
           <MenuItem key={col.id} data-value={col.id} onClick={e => handleClick(e, col.id)}>
             <Checkbox checked={isSelected(col.id)} />
             <Typography>{col.label}</Typography>

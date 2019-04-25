@@ -41,8 +41,23 @@ interface SubcategoryModalMergedProps
     DispatchMappedProps,
     SubcategoryModalProps {}
 
-const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = props => {
-  const { addSubcategory, categories, currentUser, editSubcategory, editTransaction, subcategories } = props;
+const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = ({
+  addSubcategory,
+  buttonText,
+  categories,
+  currentUser,
+  editSubcategory,
+  editTransaction,
+  history,
+  location,
+  match: { params },
+  open,
+  onClose,
+  onSuccess,
+  subcategories,
+  title,
+  transactions
+}) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
@@ -51,10 +66,6 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
   const [categoryId, setCategoryId] = React.useState<string>('');
 
   React.useEffect(() => {
-    const {
-      match: { params },
-      location
-    } = props;
     if (location.pathname.includes('add')) {
       if (params.id) {
         setCategoryId(params.id);
@@ -74,7 +85,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
         }
       }
     }
-  }, [props.match.params.id]);
+  }, [params.id]);
 
   const resetFields = () => {
     setName('');
@@ -82,11 +93,6 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
   };
 
   const handleClose = () => {
-    const {
-      history,
-      match: { params },
-      onClose
-    } = props;
     if (params.id) {
       history.goBack();
     }
@@ -106,12 +112,6 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
   const isValidCategoryId = () => categoryId.trim().length > 0;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const {
-      match: { params },
-      location,
-      onSuccess,
-      transactions
-    } = props;
     e.preventDefault();
     setSubmit(true);
     setSubmitting(true);
@@ -170,11 +170,11 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = pro
   return (
     <ModalForm
       disabled={false}
-      formTitle={props.title}
-      formButton={props.buttonText}
+      formTitle={title}
+      formButton={buttonText}
       formSubmit={handleSubmit}
       loading={submitting}
-      open={props.open}
+      open={open}
       handleClose={handleClose}
     >
       {loading ? (

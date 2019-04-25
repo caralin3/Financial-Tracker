@@ -42,11 +42,20 @@ interface SelectInputProps {
   handleChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   helperText?: string;
   label: string;
-  selected: any;
   options: Option[];
+  selected: any;
 }
 
-export const SelectInput: React.SFC<SelectInputProps> = props => {
+export const SelectInput: React.SFC<SelectInputProps> = ({
+  autoFocus,
+  className,
+  error,
+  handleChange,
+  helperText,
+  label,
+  options,
+  selected
+}) => {
   let inputLabelRef: any = null;
   const [labelWidth, setLabelWidth] = React.useState(0);
 
@@ -58,25 +67,25 @@ export const SelectInput: React.SFC<SelectInputProps> = props => {
   });
 
   return (
-    <FormControl className={props.className} fullWidth={true} margin="normal" variant="outlined" error={props.error}>
-      <InputLabel ref={ref => (inputLabelRef = ref)} htmlFor={`outlined-${props.label}-select`}>
-        {props.label}
+    <FormControl className={className} fullWidth={true} margin="normal" variant="outlined" error={error}>
+      <InputLabel ref={ref => (inputLabelRef = ref)} htmlFor={`outlined-${label}-select`}>
+        {label}
       </InputLabel>
       <Select
-        autoFocus={props.autoFocus}
-        value={props.selected}
-        onChange={props.handleChange}
-        error={props.error}
-        input={<OutlinedInput labelWidth={labelWidth} name={props.label} id={`outlined-${props.label}-select`} />}
+        autoFocus={autoFocus}
+        value={selected}
+        onChange={handleChange}
+        error={error}
+        input={<OutlinedInput labelWidth={labelWidth} name={label} id={`outlined-${label}-select`} />}
       >
-        {props.options.map(op => (
+        {options.map(op => (
           <MenuItem key={op.value} value={op.value}>
             {op.label}
           </MenuItem>
         ))}
       </Select>
       <Typography className="form_select-helper" color="error" variant="caption">
-        {props.helperText}
+        {helperText}
       </Typography>
     </FormControl>
   );
@@ -95,9 +104,18 @@ interface AutoTextFieldProps {
   value: string;
 }
 
-export const AutoTextField: React.SFC<AutoTextFieldProps> = props => {
-  const { className, dataList, id, label, onChange, value } = props;
-
+export const AutoTextField: React.SFC<AutoTextFieldProps> = ({
+  autoFocus,
+  className,
+  dataList,
+  error,
+  helperText,
+  id,
+  label,
+  onChange,
+  onKeyDown,
+  value
+}) => {
   const getSuggestions = (val: string) => {
     const inputValue = val.trim().toLowerCase();
     const inputLength = inputValue.length;
@@ -120,17 +138,17 @@ export const AutoTextField: React.SFC<AutoTextFieldProps> = props => {
     <div>
       <TextField
         id={id}
-        autoFocus={props.autoFocus}
+        autoFocus={autoFocus}
         label={label}
         fullWidth={true}
         className={className}
         value={value}
         onChange={onChange}
         margin="normal"
-        helperText={props.helperText}
-        error={props.error}
+        helperText={helperText}
+        error={error}
         variant="outlined"
-        onKeyDown={props.onKeyDown}
+        onKeyDown={onKeyDown}
         inputProps={{
           list: 'items'
         }}

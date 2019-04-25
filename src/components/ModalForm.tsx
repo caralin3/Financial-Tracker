@@ -15,18 +15,27 @@ interface ModalFormProps {
   open: boolean;
 }
 
-export const UnwrappedModalForm: React.SFC<ModalFormProps> = props => {
-  const { classes } = props;
+export const UnwrappedModalForm: React.SFC<ModalFormProps> = ({
+  children,
+  classes,
+  disabled,
+  formButton,
+  formTitle,
+  formSubmit,
+  loading,
+  handleClose,
+  open
+}) => {
   const xs = useMediaQuery('(max-width:680px)');
   const sm = useMediaQuery('(max-width:1070px)');
 
   return (
     <Dialog
-      aria-labelledby={`form-modal-${props.formTitle}`}
+      aria-labelledby={`form-modal-${formTitle}`}
       aria-describedby="form-modal-description"
-      open={props.open}
+      open={open}
       className="modalForm"
-      onClose={props.handleClose}
+      onClose={handleClose}
       scroll="body"
       fullWidth={true}
       fullScreen={xs}
@@ -38,14 +47,14 @@ export const UnwrappedModalForm: React.SFC<ModalFormProps> = props => {
             title: classes.title
           }}
           action={
-            <IconButton onClick={props.handleClose}>
+            <IconButton onClick={handleClose}>
               <Close color="primary" />
             </IconButton>
           }
-          title={props.formTitle}
+          title={formTitle}
         />
-        <Form buttonText={props.formButton} disabled={props.disabled} loading={props.loading} submit={props.formSubmit}>
-          {props.children}
+        <Form buttonText={formButton} disabled={disabled} loading={loading} submit={formSubmit}>
+          {children}
         </Form>
       </DialogContent>
     </Dialog>

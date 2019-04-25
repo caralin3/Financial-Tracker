@@ -58,8 +58,14 @@ interface StateMappedProps {
 
 interface DashboardMergedProps extends RouteComponentProps<any>, StateMappedProps, DashboardPageProps {}
 
-const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
-  const { accounts, budgets, currentUser, goals, transactions } = props;
+const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
+  accounts,
+  budgets,
+  currentUser,
+  history,
+  goals,
+  transactions
+}) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [successMsg, setSuccessMsg] = React.useState<string>('');
@@ -185,7 +191,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     };
 
     const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
-      const { history } = props;
       history.push(`${routes.dashboard}/edit/${id}`);
       setSuccessMsg(`Budget has been updated`);
       setEditingBudget(true);
@@ -297,7 +302,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = props => {
     };
 
     const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
-      const { history } = props;
       history.push(`${routes.dashboard}/edit/${id}`);
       setSuccessMsg(`Goal has been updated`);
       setEditingGoal(true);

@@ -48,8 +48,7 @@ interface StateMappedProps {
 
 interface AccountsMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, AccountsPageProps {}
 
-const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
-  const { accounts, removeAccount } = props;
+const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, history, removeAccount }) => {
   const matchMd = useMediaQuery('(min-width:960px)');
   const [loading] = React.useState<boolean>(false);
   const [openAdd, setOpenAdd] = React.useState<boolean>(false);
@@ -82,7 +81,6 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = props => {
   };
 
   const handleEdit = (id: string, type: string) => {
-    const { history } = props;
     const [acct] = accounts.filter(acc => acc.id === id);
     history.push(`${routes.accounts}/edit/${id}`);
     setSuccessMsg(`${acct.name} has been updated`);

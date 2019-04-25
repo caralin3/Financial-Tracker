@@ -13,8 +13,14 @@ export interface FiltersProps {
   onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
 }
 
-export const Filters: React.SFC<FiltersProps> = props => {
-  const { count, data, dateOptions, filters } = props;
+export const Filters: React.SFC<FiltersProps> = ({
+  count,
+  data,
+  dateOptions,
+  filters,
+  onResetFilters,
+  onSelectFilter
+}) => {
   const [item, setItem] = React.useState<string>('all');
   const [item2, setItem2] = React.useState<string>('all');
   const [item3, setItem3] = React.useState<string>('all');
@@ -106,7 +112,7 @@ export const Filters: React.SFC<FiltersProps> = props => {
         setItem8(e.target.value);
         break;
     }
-    props.onSelectFilter(e, col);
+    onSelectFilter(e, col);
   };
 
   const handleReset = () => {
@@ -118,7 +124,7 @@ export const Filters: React.SFC<FiltersProps> = props => {
     setItem6('all');
     setItem7('all');
     setItem8('all');
-    props.onResetFilters();
+    onResetFilters();
   };
 
   return (

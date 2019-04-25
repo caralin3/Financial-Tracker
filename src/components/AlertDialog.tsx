@@ -8,9 +8,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import * as React from 'react';
 
 export interface AlertDialogProps {
+  cancelText: string;
   classes: any;
   confirmText: string;
-  cancelText: string;
   description?: string;
   onClose: () => void;
   onConfirm: () => void;
@@ -18,26 +18,35 @@ export interface AlertDialogProps {
   title: string;
 }
 
-const DisconnectedAlertDialog: React.SFC<AlertDialogProps> = props => (
+const DisconnectedAlertDialog: React.SFC<AlertDialogProps> = ({
+  cancelText,
+  classes,
+  confirmText,
+  description,
+  onClose,
+  onConfirm,
+  open,
+  title
+}) => (
   <Dialog
-    open={props.open}
-    onClose={props.onClose}
+    open={open}
+    onClose={onClose}
     classes={{
-      paper: props.classes.container
+      paper: classes.container
     }}
     aria-labelledby="alert-dialog-slide-title"
     aria-describedby="alert-dialog-slide-description"
   >
-    <DialogTitle id={`alert-dialog-${props.title}`}>{props.title}</DialogTitle>
+    <DialogTitle id={`alert-dialog-${title}`}>{title}</DialogTitle>
     <DialogContent>
-      <DialogContentText id={`alert-dialog-${props.description}`}>{props.description}</DialogContentText>
+      <DialogContentText id={`alert-dialog-${description}`}>{description}</DialogContentText>
     </DialogContent>
     <DialogActions>
-      <Button onClick={props.onClose} color="primary" variant="contained">
-        {props.cancelText}
+      <Button onClick={onClose} color="primary" variant="contained">
+        {cancelText}
       </Button>
-      <Button onClick={props.onConfirm} color="primary" variant="contained">
-        {props.confirmText}
+      <Button onClick={onConfirm} color="primary" variant="contained">
+        {confirmText}
       </Button>
     </DialogActions>
   </Dialog>

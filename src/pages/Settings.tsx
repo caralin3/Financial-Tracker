@@ -42,14 +42,20 @@ const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser,
 
   // const handleResetPassword = () => {}
 
-  return <Layout title="Settings">{loading ? <Loading /> : <div>Coming Soon, {currentUser && currentUser.firstName}!</div>}</Layout>;
+  return (
+    <Layout title="Settings">
+      {loading ? <Loading /> : <div>Coming Soon, {currentUser && currentUser.firstName}!</div>}
+    </Layout>
+  );
 };
 
 const styles = (theme: Theme) => ({});
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ setCurrentUser: (user: User) => dispatch(sessionState.setCurrentUser(user)) });
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  setCurrentUser: (user: User) => dispatch(sessionState.setCurrentUser(user))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser

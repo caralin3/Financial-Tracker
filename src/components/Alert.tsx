@@ -21,8 +21,22 @@ interface AlertProps {
   variant: 'error' | 'info' | 'success' | 'warning';
 }
 
-const DisconnectedAlert: React.SFC<AlertProps> = props => {
-  const { classes, className, message, onClose, open, variant, ...other } = props;
+const DisconnectedAlert: React.SFC<AlertProps> = ({
+  classes,
+  className,
+  message,
+  onClose,
+  open,
+  variant,
+  ...alertProps
+}) => {
+  const variantIcon = {
+    error: ErrorIcon,
+    info: InfoIcon,
+    success: CheckCircleIcon,
+    warning: WarningIcon
+  };
+
   const Icon = variantIcon[variant];
 
   const AlertContent = (
@@ -40,7 +54,7 @@ const DisconnectedAlert: React.SFC<AlertProps> = props => {
           <CloseIcon className={classes.icon} />
         </IconButton>
       ]}
-      {...other}
+      {...alertProps}
     />
   );
 
@@ -57,13 +71,6 @@ const DisconnectedAlert: React.SFC<AlertProps> = props => {
       {AlertContent}
     </Snackbar>
   );
-};
-
-const variantIcon = {
-  error: ErrorIcon,
-  info: InfoIcon,
-  success: CheckCircleIcon,
-  warning: WarningIcon
 };
 
 const styles = (theme: Theme) => ({

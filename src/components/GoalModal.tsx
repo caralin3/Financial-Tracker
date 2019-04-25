@@ -54,8 +54,23 @@ interface GoalModalMergedProps
     DispatchMappedProps,
     GoalModalProps {}
 
-const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
-  const { accounts, addGoal, categories, currentUser, editGoal, goals, subcategories, transactions } = props;
+const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
+  accounts,
+  addGoal,
+  buttonText,
+  categories,
+  currentUser,
+  editGoal,
+  history,
+  goals,
+  match: { params },
+  onClose,
+  onSuccess,
+  open,
+  subcategories,
+  title,
+  transactions
+}) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -70,9 +85,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   const [frequency, setFrequency] = React.useState<goalFreq>(undefined);
 
   React.useEffect(() => {
-    const {
-      match: { params }
-    } = props;
     if (params.id) {
       setLoading(true);
       const [goal] = goals.filter(go => go.id === params.id);
@@ -97,7 +109,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
         resetFields();
       }
     }
-  }, [props.match.params.id]);
+  }, [params.id]);
 
   const resetFields = () => {
     setCriteria('');
@@ -110,11 +122,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   };
 
   const handleClose = () => {
-    const {
-      history,
-      match: { params },
-      onClose
-    } = props;
     if (params.id) {
       history.goBack();
     }
@@ -169,10 +176,6 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const {
-      match: { params },
-      onSuccess
-    } = props;
     e.preventDefault();
     setSubmit(true);
     setSubmitting(true);
@@ -217,11 +220,11 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = props => {
   return (
     <ModalForm
       disabled={false}
-      formTitle={props.title}
-      formButton={props.buttonText}
+      formTitle={title}
+      formButton={buttonText}
       formSubmit={handleSubmit}
       loading={submitting}
-      open={props.open}
+      open={open}
       handleClose={handleClose}
     >
       {loading ? (

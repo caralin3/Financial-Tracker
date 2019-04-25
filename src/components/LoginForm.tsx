@@ -32,7 +32,15 @@ interface DispatchMappedProps {
 
 interface LoginFormMergedProps extends RouteComponentProps, DispatchMappedProps, LoginFormProps {}
 
-const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = props => {
+const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
+  history,
+  setAccounts,
+  setBudgets,
+  setCategories,
+  setGoals,
+  setSubcategories,
+  setTransactions
+}) => {
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>('');
   const [error, setError] = React.useState<string | null>(null);
@@ -43,7 +51,6 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = props => {
   }, []);
 
   const initializeStore = async (userId: string) => {
-    const { history, setAccounts, setBudgets, setCategories, setGoals, setSubcategories, setTransactions } = props;
     const [accs, buds, cats, gols, subs, trans] = await Promise.all([
       requests.accounts.getAllAccounts(userId),
       requests.budgets.getAllBudgets(userId),

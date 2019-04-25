@@ -15,33 +15,33 @@ interface PopupProps {
   trigger: JSX.Element;
 }
 
-export const Popup: React.SFC<PopupProps> = props => {
+export const Popup: React.SFC<PopupProps> = ({ class: className, content, open, onClick, tooltip, trigger }) => {
   const [anchorEl, setAnchorEl] = React.useState<any>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const { currentTarget } = event;
     setAnchorEl(currentTarget);
-    props.onClick();
+    onClick();
   };
 
   return (
     <div>
-      <Tooltip title={props.tooltip}>
-        <IconButton aria-owns={props.open ? 'popup' : undefined} aria-haspopup="true" onClick={handleClick}>
-          {props.trigger}
+      <Tooltip title={tooltip}>
+        <IconButton aria-owns={open ? 'popup' : undefined} aria-haspopup="true" onClick={handleClick}>
+          {trigger}
         </IconButton>
       </Tooltip>
       <Popper
-        className={classnames(['popup', props.class])}
+        className={classnames(['popup', className])}
         id="popup"
-        open={props.open}
+        open={open}
         anchorEl={anchorEl}
         transition={true}
         placement="bottom-end"
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            <Paper className="popup_content">{props.content}</Paper>
+            <Paper className="popup_content">{content}</Paper>
           </Fade>
         )}
       </Popper>

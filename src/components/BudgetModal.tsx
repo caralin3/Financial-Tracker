@@ -40,8 +40,20 @@ interface BudgetModalMergedProps
     DispatchMappedProps,
     BudgetModalProps {}
 
-const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
-  const { addBudget, budgets, categories, currentUser, editBudget } = props;
+const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = ({
+  addBudget,
+  budgets,
+  buttonText,
+  categories,
+  currentUser,
+  editBudget,
+  history,
+  match: { params },
+  onClose,
+  onSuccess,
+  open,
+  title
+}) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
@@ -65,9 +77,6 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   };
 
   React.useEffect(() => {
-    const {
-      match: { params }
-    } = props;
     if (params.id) {
       setLoading(true);
       const [budget] = budgets.filter(bud => bud.id === params.id);
@@ -87,7 +96,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
         resetFields();
       }
     }
-  }, [props.match.params.id]);
+  }, [params.id]);
 
   const resetFields = () => {
     setCategoryId('');
@@ -98,11 +107,6 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   };
 
   const handleClose = () => {
-    const {
-      history,
-      match: { params },
-      onClose
-    } = props;
     if (params.id) {
       history.goBack();
     }
@@ -119,10 +123,6 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   const isValid = () => isValidCategoryId() && isValidFrequency();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const {
-      match: { params },
-      onSuccess
-    } = props;
     e.preventDefault();
     setSubmit(true);
     setSubmitting(true);
@@ -166,11 +166,11 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = props => {
   return (
     <ModalForm
       disabled={false}
-      formTitle={props.title}
-      formButton={props.buttonText}
+      formTitle={title}
+      formButton={buttonText}
       formSubmit={handleSubmit}
       loading={submitting}
-      open={props.open}
+      open={open}
       handleClose={handleClose}
     >
       {loading ? (
