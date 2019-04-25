@@ -109,6 +109,7 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
       })
       .catch((err: any) => {
         setError(err.message);
+        setSubmitting(false);
       });
   };
 

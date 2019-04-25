@@ -17,11 +17,13 @@ import { Loading } from './Loading';
 import { LoadingModal } from './LoadingModal';
 import { LoginForm } from './LoginForm';
 import { ModalForm } from './ModalForm';
+import { PasswordModal } from './PasswordModal';
 import { Popup } from './Popup';
 import { ProgressBar } from './ProgressBar';
 import { SignUpForm } from './SignUpForm';
 import { SubcategoryModal } from './SubcategoryModal';
 import { TransactionModal } from './TransactionModal';
+import { UserModal } from './UserModal';
 
 export {
   Alert,
@@ -45,10 +47,12 @@ export {
   LoadingModal,
   LoginForm,
   ModalForm,
+  PasswordModal,
   Popup,
   ProgressBar,
   SelectInput,
   SignUpForm,
   SubcategoryModal,
-  TransactionModal
+  TransactionModal,
+  UserModal
 };

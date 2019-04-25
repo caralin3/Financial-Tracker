@@ -19,7 +19,7 @@ import {
 import { Account, Budget, Category, Goal, Subcategory, Transaction } from '../types';
 import { Form } from './';
 
-interface LoginFormProps {}
+interface LoginFormProps { }
 
 interface DispatchMappedProps {
   setAccounts: (accounts: Account[]) => void;
@@ -30,7 +30,7 @@ interface DispatchMappedProps {
   setTransactions: (transactions: Transaction[]) => void;
 }
 
-interface LoginFormMergedProps extends RouteComponentProps, DispatchMappedProps, LoginFormProps {}
+interface LoginFormMergedProps extends RouteComponentProps, DispatchMappedProps, LoginFormProps { }
 
 const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
   history,
@@ -41,6 +41,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
   setSubcategories,
   setTransactions
 }) => {
+  const [submit, setSubmit] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>('');
   const [error, setError] = React.useState<string | null>(null);
@@ -70,8 +71,9 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    setSubmitting(true);
     event.preventDefault();
+    setSubmitting(true);
+    setSubmit(true);
     auth
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
@@ -85,6 +87,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
       })
       .catch((err: any) => {
         setError(err.message);
+        setSubmitting(false);
       });
   };
 
@@ -101,18 +104,28 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
           autoFocus={true}
           id="login_email"
           label="Email"
-          onChange={e => setEmail(e.target.value.trim())}
+          onChange={e => {
+            setEmail(e.target.value.trim());
+            setSubmitting(false);
+            setSubmit(false);
+            setError('');
+          }}
           margin="normal"
           helperText={!isValidEmail() && !!email ? 'Invalid format' : 'Hint: jdoe@example.com'}
-          error={!!error || (!isValidEmail() && !!email)}
+          error={submit && (!!error || (!isValidEmail() && !!email))}
         />
         <TextField
           id="login_password"
           label="Password"
           type="password"
-          onChange={e => setPassword(e.target.value.trim())}
+          onChange={e => {
+            setPassword(e.target.value.trim());
+            setSubmitting(false);
+            setSubmit(false);
+            setError('');
+          }}
           margin="normal"
-          error={!!error}
+          error={submit && !!error}
         />
       </Form>
     </div>

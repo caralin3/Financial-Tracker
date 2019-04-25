@@ -10,6 +10,7 @@ interface LandingPageProps {}
 const DisconnectedLandingPage: React.SFC<LandingPageProps> = props => {
   const [login, setLogin] = React.useState<boolean>(true);
 
+  // TODO: Add forgot password
   return (
     <div className="landing">
       <Typography className="landing_title" variant="h1">

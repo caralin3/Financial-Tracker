@@ -1,0 +1,57 @@
+@import '../appearance/styles/variables.scss';
+
+.settings {
+  &_profile {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @media #{$medium} {
+      align-items: center;
+      flex-flow: row wrap;
+    }
+
+    @media #{$large} {
+      align-items: center;
+      flex-direction: row;
+    }
+  }
+
+  &_text {
+    @include primary;
+    padding: 1rem 0;
+
+    @media screen and (max-width: 767px) {
+      &:last-of-type {
+        padding-bottom: 2rem;
+      }
+    }
+    
+    @media #{$medium} {
+      padding: 1rem 0;
+    }
+
+    @media #{$large} {
+      padding: 0;
+    }
+  }
+  
+  &_value {
+    padding-left: 0.5rem;
+  }
+
+  &_button {
+    align-items: flex-start;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &_buttonText {
+    padding-right: 0.5rem;
+  }
+
+  &_buttonIcon {
+    font-size: 18px !important;
+  }
+}

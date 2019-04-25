@@ -17,9 +17,12 @@ export const doPasswordReset = (email: string) => auth.sendPasswordResetEmail(em
 // Password Change
 export const doPasswordUpdate = async (password: string) => {
   if (auth.currentUser) {
+    // TODO: Reauthenticate user
     await auth.currentUser.updatePassword(password);
     console.log('Password changed successfully');
+    return true;
   } else {
-    throw Error('No auth.currentUser!');
+    console.log('No authenticated user');
+    return false;
   }
 };
