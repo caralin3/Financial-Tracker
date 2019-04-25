@@ -1,4 +1,5 @@
 import { Theme, withStyles } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -27,7 +28,16 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = props => {
   const [loading] = React.useState<boolean>(false);
   // TODO: Add editable budgets and goals
   // TODO: Create reports
-  return <Layout title="Reports">{loading ? <Loading /> : <div>Coming Soon!</div>}</Layout>;
+
+  return (
+    <Layout title="Reports">
+      {loading ? <Loading /> : (
+        <Grid container={true} spacing={24}>
+          <div>Coming Soon!</div>
+        </Grid>
+      )}
+    </Layout>
+  );
 };
 
 const styles = (theme: Theme) => ({});
