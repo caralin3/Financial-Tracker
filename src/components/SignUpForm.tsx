@@ -1,4 +1,4 @@
-import { TextField } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -54,19 +54,20 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
   const [password, setPassword] = React.useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = React.useState<string>('');
 
+  const isEmpty = (value: string) => value.trim().length === 0;
+
   const isValidEmail = (value: string = email): boolean => {
     const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(value);
+    return !isEmpty(value) && re.test(value);
   };
 
   const isValid = () => {
     return (
-      !!firstName &&
-      !!lastName &&
-      !!email &&
+      !isEmpty(firstName) &&
+      !isEmpty(lastName) &&
       isValidEmail() &&
-      !!password &&
-      !!passwordConfirm &&
+      !isEmpty(password) &&
+      !isEmpty(passwordConfirm) &&
       password === passwordConfirm
     );
   };
@@ -136,8 +137,8 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
           className="signupForm_email"
           id="signupForm_email"
           label="Email"
-          helperText={!isValidEmail() && !!email ? 'Invalid format' : 'Hint: jdoe@example.com'}
-          error={!!error || (!isValidEmail() && !!email)}
+          helperText={!isValidEmail() ? 'Invalid format' : 'Hint: jdoe@example.com'}
+          error={!!error || !isValidEmail()}
           margin="normal"
           onChange={e => setEmail(e.target.value.trim())}
         />

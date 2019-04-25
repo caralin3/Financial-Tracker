@@ -71,7 +71,8 @@ const DisconnectedPasswordModal: React.SFC<PasswordModalMergedProps> = ({
           .doReauthentication(currentPassword)
           .then((result: any) => {
             console.log(result);
-            auth.doPasswordUpdate(password)
+            auth
+              .doPasswordUpdate(password)
               .then(() => {
                 handleClose();
                 if (onSuccess) {

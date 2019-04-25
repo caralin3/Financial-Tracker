@@ -10,6 +10,7 @@ import { DataTable } from './DataTable';
 import { DropdownMenu } from './DropdownMenu';
 import { ExpandableCard } from './ExpandableCard';
 import { Filters } from './Filters';
+import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { AutoTextField, Form, SelectInput } from './Form';
 import { GoalModal } from './GoalModal';
 import { Layout } from './Layout';
@@ -40,6 +41,7 @@ export {
   DropdownMenu,
   ExpandableCard,
   Filters,
+  ForgotPasswordForm,
   Form,
   GoalModal,
   Layout,
