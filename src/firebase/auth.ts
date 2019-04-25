@@ -18,22 +18,17 @@ export const doPasswordReset = (email: string) => auth.sendPasswordResetEmail(em
 // Password Change
 export const doReauthentication = (currentPassword: string) => {
   if (auth.currentUser) {
-    const credential = firebase.auth.EmailAuthProvider.credential(
-      auth.currentUser.email || '',
-      currentPassword
-    );
+    const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email || '', currentPassword);
     return auth.currentUser.reauthenticateAndRetrieveDataWithCredential(credential);
   }
   console.log('No authenticated user');
   return new Promise((res, rej) => rej('No authenticated user.'));
-}
+};
 
 export const doPasswordUpdate = async (password: string) => {
   if (auth.currentUser) {
-    await auth.currentUser.updatePassword(password);
-    console.log('Password changed successfully');
-    return true;
+    return auth.currentUser.updatePassword(password);
   }
   console.log('No authenticated user');
-  return false;
+  return new Promise((res, rej) => rej('No authenticated user.'));
 };
