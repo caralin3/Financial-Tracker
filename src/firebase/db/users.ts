@@ -35,7 +35,7 @@ export const getCurrentUser = (id: string, setCurrentUser: (user: User | null) =
     });
 };
 
-// TODO: UPDATE CURRENT USER
+// UPDATE CURRENT USER
 export const updateUserInfo = (user: User, setCurrentUser: (user: User) => void) =>
   usersCollection
     .doc(user.id)

@@ -1,4 +1,8 @@
-import { Grid, Tab, Tabs, TextField, Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import classnames from 'classnames';
 import * as moment from 'moment';
 import * as querystring from 'querystring';
@@ -64,7 +68,6 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
   title,
   transactions
 }) => {
-  // TODO Refactor to create a single transaction object state
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);

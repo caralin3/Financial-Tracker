@@ -1,4 +1,8 @@
-import { Checkbox, MenuItem, MenuList, Paper, Typography } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 
 export interface ColumnsProps {
