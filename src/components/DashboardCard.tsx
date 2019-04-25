@@ -1,20 +1,23 @@
 import { Theme, withStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
+// import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
-import Add from '@material-ui/icons/Add';
+import AddIcon from '@material-ui/icons/Add';
 import * as React from 'react';
 
 export interface AlertDialogProps {
+  action?: JSX.Element;
   className?: string;
   classes: any;
-  onClick: () => void;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   subheader?: string;
   title: string;
 }
 
 const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = ({
+  action,
   children,
   className,
   classes,
@@ -29,18 +32,30 @@ const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = ({
         title: classes.title
       }}
       action={
-        <IconButton onClick={onClick}>
-          <Add color="primary" />
-        </IconButton>
+        action ? (
+          action
+        ) : (
+          <IconButton onClick={onClick}>
+            <AddIcon color="primary" />
+          </IconButton>
+        )
       }
       title={title}
       subheader={subheader}
     />
-    <CardContent>{children}</CardContent>
+    <CardContent>
+      {children}
+      {/* {actions && <CardActions className={classes.actions}>{actions.map(action => action)}</CardActions>} */}
+    </CardContent>
   </Card>
 );
 
 const styles = (theme: Theme) => ({
+  actions: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'flex-end'
+  },
   subheader: {
     color: theme.palette.primary.dark,
     fontSize: 16

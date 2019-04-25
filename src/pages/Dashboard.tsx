@@ -1,4 +1,3 @@
-// import { Theme, withStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -18,27 +17,22 @@ import { compose } from 'recompose';
 import { withAuthorization } from '../auth/withAuthorization';
 import {
   AccountModal,
-  Alert,
-  BudgetModal,
+  // Alert,
+  BudgetCard,
   DashboardCard,
   DropdownMenu,
-  GoalModal,
+  GoalCard,
   Layout,
   Loading,
-  ProgressBar,
   TransactionModal
 } from '../components';
-import { routes } from '../routes';
-import { Account, ApplicationState, Budget, budgetFreq, Category, Goal, Transaction, User } from '../types';
+import { Account, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
 import {
   accountTypeOptions,
-  calcPercent,
   formatMoney,
   getArrayTotal,
-  getExpensesByAmount,
-  getExpensesByCriteria,
-  getExpensesByDates,
   getObjectByType,
+  getSubheader,
   getTransactionByRange
 } from '../util';
 
@@ -61,23 +55,16 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
   accounts,
   budgets,
   currentUser,
-  history,
   goals,
   transactions
 }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [success, setSuccess] = React.useState<boolean>(false);
-  const [successMsg, setSuccessMsg] = React.useState<string>('');
+  // const [success, setSuccess] = React.useState<boolean>(false);
+  // const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(false);
-  const [loadingBudgets, setLoadingBudgets] = React.useState<boolean>(false);
-  const [loadingGoals, setLoadingGoals] = React.useState<boolean>(false);
   const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(false);
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
-  const [addingBudget, setAddingBudget] = React.useState<boolean>(false);
-  const [addingGoal, setAddingGoal] = React.useState<boolean>(false);
   const [addingTrans, setAddingTrans] = React.useState<boolean>(false);
-  const [editingBudget, setEditingBudget] = React.useState<boolean>(false);
-  const [editingGoal, setEditingGoal] = React.useState<boolean>(false);
   const [expanded, setExpanded] = React.useState<number>(1);
   const [selected, setSelected] = React.useState<number>(2);
   const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
@@ -90,47 +77,10 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
     { label: 'This Year', value: 4 }
   ];
 
-  const getSubheader = (range: string) => {
-    switch (range) {
-      case 'This Week':
-        const begin = moment(new Date())
-          .startOf('week')
-          .format('MM/DD/YY');
-        const end = moment(new Date())
-          .endOf('week')
-          .format('MM/DD/YY');
-        return `${begin} - ${end}`;
-      case 'Last Week':
-        const beginLast = moment(new Date())
-          .subtract(1, 'week')
-          .startOf('week')
-          .format('MM/DD/YY');
-        const endLast = moment(new Date())
-          .subtract(1, 'week')
-          .endOf('week')
-          .format('MM/DD/YY');
-        return `${beginLast} - ${endLast}`;
-      case 'This Month':
-        return moment(new Date()).format('MMMM YYYY');
-      case 'Last Month':
-        const lastMonth = moment(new Date())
-          .clone()
-          .subtract(1, 'month')
-          .format();
-        return moment(lastMonth).format('MMMM YYYY');
-      case 'This Year':
-        return moment(new Date()).format('YYYY');
-      default:
-        return '';
-    }
-  };
-
   React.useEffect(() => {
     // TODO: Handle loading
     setLoading(false);
     setLoadingAccounts(false);
-    setLoadingBudgets(false);
-    setLoadingGoals(false);
     setLoadingTransactions(false);
   }, [currentUser]);
 
@@ -181,48 +131,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       )}
     </List>
   );
-
-  const budgetItems = () => {
-    const calcSpent = (freq: budgetFreq, categoryId: string) => {
-      const expenses = getObjectByType(currentTrans, 'expense').filter(trans => trans.category.id === categoryId);
-      const filteredExpenses = getExpensesByDates(freq, expenses);
-      return getArrayTotal(filteredExpenses);
-    };
-
-    const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
-      history.push(`${routes.dashboard}/edit/${id}`);
-      setSuccessMsg(`Budget has been updated`);
-      setEditingBudget(true);
-    };
-
-    return (
-      <List className="dashboard_card">
-        {loadingBudgets ? (
-          <Loading />
-        ) : budgets.length === 0 ? (
-          <ListItem>No budgets</ListItem>
-        ) : (
-          budgets.map(budget => {
-            const spent = calcSpent(budget.frequency, budget.category.id);
-            const total = budget.amount;
-            const percent = calcPercent(spent, total);
-            return (
-              <ListItem key={budget.id} button={true} onClick={e => handleClick(e, budget.id)}>
-                <ProgressBar
-                  percent={percent}
-                  endLabel={`${percent.toFixed(0)}%`}
-                  leftLabel={budget.category.name}
-                  rightLabel={`${formatMoney(spent, true)} of ${formatMoney(total, true)}`}
-                  subLabel={budget.frequency}
-                  textColor="primary"
-                />
-              </ListItem>
-            );
-          })
-        )}
-      </List>
-    );
-  };
 
   const handleExpansion = (index: number) => () => {
     if (expanded === index + 1) {
@@ -289,51 +197,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
     </List>
   );
 
-  const goalItems = () => {
-    const calcSpent = (goal: Goal) => {
-      const item = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
-      const expenses = getObjectByType(currentTrans, 'expense');
-      const dateFilteredExps = getExpensesByDates(goal.frequency, expenses, goal.startDate, goal.endDate);
-      const criteriaFilteredExps = getExpensesByCriteria(goal.criteria, item, dateFilteredExps);
-      const amountFilteredExps = getExpensesByAmount(goal.amount, goal.comparator, criteriaFilteredExps);
-      return getArrayTotal(amountFilteredExps);
-    };
-
-    const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
-      history.push(`${routes.dashboard}/edit/${id}`);
-      setSuccessMsg(`Goal has been updated`);
-      setEditingGoal(true);
-    };
-
-    return (
-      <List className="dashboard_card">
-        {loadingGoals ? (
-          <Loading />
-        ) : goals.length === 0 ? (
-          <ListItem>No goals</ListItem>
-        ) : (
-          goals.map(goal => {
-            const label = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
-            const spent = calcSpent(goal);
-            const total = goal.amount;
-            const percent = calcPercent(spent, total);
-            return (
-              <ListItem key={goal.id} button={true} onClick={e => handleClick(e, goal.id)}>
-                <ProgressBar
-                  percent={percent}
-                  leftLabel={label}
-                  rightLabel={`${formatMoney(spent, true)} ${goal.comparator} ${formatMoney(total, true)}`}
-                  subLabel={goal.frequency}
-                  textColor="primary"
-                />
-              </ListItem>
-            );
-          })
-        )}
-      </List>
-    );
-  };
-
   const dashboardSections = [
     {
       action: () => setAddingTrans(true),
@@ -344,16 +207,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       action: () => setAddingAccount(true),
       content: accountItems,
       title: 'Accounts'
-    },
-    {
-      action: () => setAddingBudget(true),
-      content: budgetItems(),
-      title: 'Budgets'
-    },
-    {
-      action: () => setAddingGoal(true),
-      content: goalItems(),
-      title: 'Goals'
     }
   ];
 
@@ -367,29 +220,13 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       title={`${username} Dashboard`}
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
-      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
+      {/* <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} /> */}
       <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)} />
-      <BudgetModal title="Add Budget" buttonText="Add" open={addingBudget} onClose={() => setAddingBudget(false)} />
-      <GoalModal title="Add Goal" buttonText="Add" open={addingGoal} onClose={() => setAddingGoal(false)} />
       <TransactionModal
         title="Add Transaction"
         buttonText="Add"
         open={addingTrans}
         onClose={() => setAddingTrans(false)}
-      />
-      <BudgetModal
-        title="Edit Budget"
-        buttonText="Edit"
-        open={editingBudget}
-        onClose={() => setEditingBudget(false)}
-        onSuccess={() => setSuccess(true)}
-      />
-      <GoalModal
-        title="Edit Goal"
-        buttonText="Edit"
-        open={editingGoal}
-        onClose={() => setEditingGoal(false)}
-        onSuccess={() => setSuccess(true)}
       />
       <div className="show-small">
         <DropdownMenu
@@ -448,13 +285,17 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
               </DashboardCard>
             </Grid>
           ))}
+          <Grid item={true} md={6} sm={12} xs={12}>
+            <BudgetCard budgets={budgets} currentTrans={currentTrans} subheader={subheader} />
+          </Grid>
+          <Grid item={true} md={6} sm={12} xs={12}>
+            <GoalCard currentTrans={currentTrans} goals={goals} subheader={subheader} />
+          </Grid>
         </Grid>
       )}
     </Layout>
   );
 };
-
-// const styles = (theme: Theme) => ({});
 
 const authCondition = (authUser: any) => !!authUser;
 
@@ -469,7 +310,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export const DashboardPage = compose(
   withAuthorization(authCondition),
-  // withStyles(styles as any, { withTheme: true }),
   withRouter,
   connect(
     mapStateToProps,

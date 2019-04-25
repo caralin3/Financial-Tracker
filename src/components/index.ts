@@ -1,6 +1,7 @@
 import { AccountModal } from './AccountModal';
 import { Alert } from './Alert';
 import { AlertDialog } from './AlertDialog';
+import { BudgetCard } from './BudgetCard';
 import { BudgetModal } from './BudgetModal';
 import { CategoryModal } from './CategoryModal';
 import { Columns } from './Columns';
@@ -12,6 +13,7 @@ import { ExpandableCard } from './ExpandableCard';
 import { Filters } from './Filters';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { AutoTextField, Form, SelectInput } from './Form';
+import { GoalCard } from './GoalCard';
 import { GoalModal } from './GoalModal';
 import { Layout } from './Layout';
 import { Loading } from './Loading';
@@ -31,6 +33,7 @@ export {
   AlertDialog,
   AccountModal,
   AutoTextField,
+  BudgetCard,
   BudgetModal,
   CategoryModal,
   Columns,
@@ -43,6 +46,7 @@ export {
   Filters,
   ForgotPasswordForm,
   Form,
+  GoalCard,
   GoalModal,
   Layout,
   Loading,

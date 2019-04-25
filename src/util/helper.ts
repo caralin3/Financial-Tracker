@@ -49,6 +49,41 @@ export const goalComparatorOptions = [
   createOption('Greater than or equal to', '>=')
 ];
 
+export const getSubheader = (range: string) => {
+  switch (range) {
+    case 'This Week':
+      const begin = moment(new Date())
+        .startOf('week')
+        .format('MM/DD/YY');
+      const end = moment(new Date())
+        .endOf('week')
+        .format('MM/DD/YY');
+      return `${begin} - ${end}`;
+    case 'Last Week':
+      const beginLast = moment(new Date())
+        .subtract(1, 'week')
+        .startOf('week')
+        .format('MM/DD/YY');
+      const endLast = moment(new Date())
+        .subtract(1, 'week')
+        .endOf('week')
+        .format('MM/DD/YY');
+      return `${beginLast} - ${endLast}`;
+    case 'This Month':
+      return moment(new Date()).format('MMMM YYYY');
+    case 'Last Month':
+      const lastMonth = moment(new Date())
+        .clone()
+        .subtract(1, 'month')
+        .format();
+      return moment(lastMonth).format('MMMM YYYY');
+    case 'This Year':
+      return moment(new Date()).format('YYYY');
+    default:
+      return '';
+  }
+};
+
 export const getOptions = (data: Account[] | Category[] | Subcategory[]) => {
   const options: Option[] = [];
   data.forEach(d => {
