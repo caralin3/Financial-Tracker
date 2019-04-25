@@ -23,7 +23,6 @@ import { requests } from '../firebase/db';
 import { routes } from '../routes';
 import { categoriesState, subcategoriesState } from '../store';
 import { ApplicationState, Category, Subcategory, User } from '../types';
-import { disableScroll } from '../util';
 
 export interface CategoriesPageProps {
   classes: any;
@@ -107,11 +106,9 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = ({
       history.push(`${routes.categories}/add/${id}`);
       setSuccessMsg('Subcategory has been added');
       setOpenSubAdd(true);
-      disableScroll();
     } else {
       setSuccessMsg(`Category has been added`);
       setOpenAdd(true);
-      disableScroll();
     }
   };
 
@@ -121,12 +118,10 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = ({
       const [editCat] = categories.filter(cat => cat.id === id);
       setSuccessMsg(`${editCat.name} has been updated`);
       setOpenEdit(true);
-      disableScroll();
     } else {
       const [editSub] = subcategories.filter(sub => sub.id === id);
       setSuccessMsg(`${editSub.name} has been updated`);
       setOpenSubEdit(true);
-      disableScroll();
     }
   };
 

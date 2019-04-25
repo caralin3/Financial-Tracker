@@ -33,7 +33,6 @@ import { Account, ApplicationState, Budget, budgetFreq, Category, Goal, Transact
 import {
   accountTypeOptions,
   calcPercent,
-  disableScroll,
   formatMoney,
   getArrayTotal,
   getExpensesByAmount,
@@ -194,7 +193,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       history.push(`${routes.dashboard}/edit/${id}`);
       setSuccessMsg(`Budget has been updated`);
       setEditingBudget(true);
-      disableScroll();
     };
 
     return (
@@ -305,7 +303,6 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       history.push(`${routes.dashboard}/edit/${id}`);
       setSuccessMsg(`Goal has been updated`);
       setEditingGoal(true);
-      disableScroll();
     };
 
     return (
@@ -339,34 +336,22 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
 
   const dashboardSections = [
     {
-      action: () => {
-        setAddingTrans(true);
-        disableScroll();
-      },
+      action: () => setAddingTrans(true),
       content: recentTransactions,
       title: 'Recent Transactions'
     },
     {
-      action: () => {
-        setAddingAccount(true);
-        disableScroll();
-      },
+      action: () => setAddingAccount(true),
       content: accountItems,
       title: 'Accounts'
     },
     {
-      action: () => {
-        setAddingBudget(true);
-        disableScroll();
-      },
+      action: () => setAddingBudget(true),
       content: budgetItems(),
       title: 'Budgets'
     },
     {
-      action: () => {
-        setAddingGoal(true);
-        disableScroll();
-      },
+      action: () => setAddingGoal(true),
       content: goalItems(),
       title: 'Goals'
     }

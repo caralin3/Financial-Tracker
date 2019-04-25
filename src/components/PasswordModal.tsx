@@ -23,7 +23,7 @@ interface PasswordModalProps extends RouteComponentProps<RouteParams> {
   title: string;
 }
 
-interface PasswordModalMergedProps extends RouteComponentProps<RouteParams>, StateMappedProps, PasswordModalProps { }
+interface PasswordModalMergedProps extends RouteComponentProps<RouteParams>, StateMappedProps, PasswordModalProps {}
 
 const DisconnectedPasswordModal: React.SFC<PasswordModalMergedProps> = ({
   buttonText,
@@ -92,50 +92,50 @@ const DisconnectedPasswordModal: React.SFC<PasswordModalMergedProps> = ({
           <Loading />
         </div>
       ) : (
-          <div className="passwordModal_form">
-            <Alert
-              onClose={() => setError(false)}
-              open={error}
-              variant="error"
-              message="Submission failed, please try again later."
-            />
-            <TextField
-              autoFocus={true}
-              id="changePassword_password"
-              label="Password"
-              onChange={e => {
-                setPassword(e.target.value.trim());
-                setSubmit(false);
-                setSubmitting(false);
-              }}
-              margin="normal"
-              helperText={submit && !isValidPassword(password) ? 'Required' : ''}
-              error={submit && !isValidPassword(password)}
-              type="password"
-              value={password}
-            />
-            <TextField
-              id="changePassword_confirmPassword"
-              label="Confirm Password"
-              onChange={e => {
-                setConfirmPassword(e.target.value.trim());
-                setSubmit(false);
-                setSubmitting(false);
-              }}
-              margin="normal"
-              helperText={
-                submit && !isValidPassword(confirmPassword)
-                  ? 'Required'
-                  : submit && !isPasswordEqual()
-                    ? 'Passwords do not match'
-                    : ''
-              }
-              error={submit && !isValid()}
-              type="password"
-              value={confirmPassword}
-            />
-          </div>
-        )}
+        <div className="passwordModal_form">
+          <Alert
+            onClose={() => setError(false)}
+            open={error}
+            variant="error"
+            message="Submission failed, please try again later."
+          />
+          <TextField
+            autoFocus={true}
+            id="changePassword_password"
+            label="Password"
+            onChange={e => {
+              setPassword(e.target.value.trim());
+              setSubmit(false);
+              setSubmitting(false);
+            }}
+            margin="normal"
+            helperText={submit && !isValidPassword(password) ? 'Required' : ''}
+            error={submit && !isValidPassword(password)}
+            type="password"
+            value={password}
+          />
+          <TextField
+            id="changePassword_confirmPassword"
+            label="Confirm Password"
+            onChange={e => {
+              setConfirmPassword(e.target.value.trim());
+              setSubmit(false);
+              setSubmitting(false);
+            }}
+            margin="normal"
+            helperText={
+              submit && !isValidPassword(confirmPassword)
+                ? 'Required'
+                : submit && !isPasswordEqual()
+                ? 'Passwords do not match'
+                : ''
+            }
+            error={submit && !isValid()}
+            type="password"
+            value={confirmPassword}
+          />
+        </div>
+      )}
     </ModalForm>
   );
 };

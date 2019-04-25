@@ -23,7 +23,7 @@ import { requests } from '../firebase/db';
 import { routes } from '../routes';
 import { accountsState } from '../store';
 import { Account, accountType, ApplicationState, User } from '../types';
-import { disableScroll, formatMoney, getArrayTotal, getObjectByType } from '../util';
+import { formatMoney, getArrayTotal, getObjectByType } from '../util';
 
 interface AccountType {
   balance: number;
@@ -85,7 +85,6 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
     history.push(`${routes.accounts}/edit/${id}`);
     setSuccessMsg(`${acct.name} has been updated`);
     setOpenEdit(true);
-    disableScroll();
   };
 
   const handleConfirm = () => {
@@ -118,17 +117,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
   ];
 
   const addButton = (fullWidth: boolean) => (
-    <Button
-      color="primary"
-      onClick={() => {
-        setOpenAdd(!openAdd);
-        if (!openAdd) {
-          disableScroll();
-        }
-      }}
-      variant="contained"
-      fullWidth={fullWidth}
-    >
+    <Button color="primary" onClick={() => setOpenAdd(!openAdd)} variant="contained" fullWidth={fullWidth}>
       Add Account
     </Button>
   );

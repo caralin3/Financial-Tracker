@@ -13,7 +13,6 @@ import { transactionsState } from '../store';
 import { Account, ApplicationState, Category, Option, Subcategory, Transaction, User } from '../types';
 import {
   createOption,
-  disableScroll,
   expenseColumns,
   formatTableTransaction,
   getObjectByType,
@@ -87,7 +86,6 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
     const [editTrans] = transactions.filter(trans => trans.id === id);
     setSuccessMsg(`Transaction from ${moment(new Date(editTrans.date)).format('MM/DD/YYYY')} has been updated`);
     setOpenEdit(true);
-    disableScroll();
   };
 
   const handleConfirm = () => {
@@ -97,17 +95,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
   };
 
   const addButton = (fullWidth: boolean) => (
-    <Button
-      color="primary"
-      onClick={() => {
-        setOpenAdd(!openAdd);
-        if (!openAdd) {
-          disableScroll();
-        }
-      }}
-      variant="contained"
-      fullWidth={fullWidth}
-    >
+    <Button color="primary" onClick={() => setOpenAdd(!openAdd)} variant="contained" fullWidth={fullWidth}>
       Add Transaction
     </Button>
   );

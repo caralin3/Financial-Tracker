@@ -31,9 +31,9 @@ interface UserModalProps extends RouteComponentProps<RouteParams> {
 
 interface UserModalMergedProps
   extends RouteComponentProps<RouteParams>,
-  StateMappedProps,
-  DispatchMappedProps,
-  UserModalProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    UserModalProps {}
 
 const DisconnectedUserModal: React.SFC<UserModalMergedProps> = ({
   buttonText,
@@ -119,56 +119,56 @@ const DisconnectedUserModal: React.SFC<UserModalMergedProps> = ({
           <Loading />
         </div>
       ) : (
-          <div className="userModal_form">
-            <Alert
-              onClose={() => setError(false)}
-              open={error}
-              variant="error"
-              message="Submission failed, please try again later."
-            />
-            <TextField
-              autoFocus={true}
-              id="editUser_firstName"
-              label="First Name"
-              onChange={e => {
-                setFirstName(e.target.value.trim());
-                setSubmit(false);
-                setSubmitting(false);
-              }}
-              margin="normal"
-              helperText={submit && !isValidName(firstName) ? 'Required' : ''}
-              error={submit && !isValidName(firstName)}
-              value={firstName}
-            />
-            <TextField
-              id="editUser_lastName"
-              label="Last Name"
-              onChange={e => {
-                setLastName(e.target.value.trim());
-                setSubmit(false);
-                setSubmitting(false);
-              }}
-              margin="normal"
-              helperText={submit && !isValidName(lastName) ? 'Required' : ''}
-              error={submit && !isValidName(lastName)}
-              value={lastName}
-            />
-            <TextField
-              className="userModal_email"
-              id="editUser_email"
-              label="Email"
-              helperText={submit && !isValidEmail() && !!email ? 'Invalid format' : ''}
-              error={submit && (!isValidEmail() && !!email)}
-              margin="normal"
-              onChange={e => {
-                setEmail(e.target.value.trim());
-                setSubmit(false);
-                setSubmitting(false);
-              }}
-              value={email}
-            />
-          </div>
-        )}
+        <div className="userModal_form">
+          <Alert
+            onClose={() => setError(false)}
+            open={error}
+            variant="error"
+            message="Submission failed, please try again later."
+          />
+          <TextField
+            autoFocus={true}
+            id="editUser_firstName"
+            label="First Name"
+            onChange={e => {
+              setFirstName(e.target.value.trim());
+              setSubmit(false);
+              setSubmitting(false);
+            }}
+            margin="normal"
+            helperText={submit && !isValidName(firstName) ? 'Required' : ''}
+            error={submit && !isValidName(firstName)}
+            value={firstName}
+          />
+          <TextField
+            id="editUser_lastName"
+            label="Last Name"
+            onChange={e => {
+              setLastName(e.target.value.trim());
+              setSubmit(false);
+              setSubmitting(false);
+            }}
+            margin="normal"
+            helperText={submit && !isValidName(lastName) ? 'Required' : ''}
+            error={submit && !isValidName(lastName)}
+            value={lastName}
+          />
+          <TextField
+            className="userModal_email"
+            id="editUser_email"
+            label="Email"
+            helperText={submit && !isValidEmail() && !!email ? 'Invalid format' : ''}
+            error={submit && (!isValidEmail() && !!email)}
+            margin="normal"
+            onChange={e => {
+              setEmail(e.target.value.trim());
+              setSubmit(false);
+              setSubmitting(false);
+            }}
+            value={email}
+          />
+        </div>
+      )}
     </ModalForm>
   );
 };

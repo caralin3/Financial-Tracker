@@ -23,7 +23,7 @@ interface StateMappedProps {
   currentUser: User | null;
 }
 
-interface SettingsMergedProps extends RouteComponentProps, StateMappedProps, SettingsPageProps { }
+interface SettingsMergedProps extends RouteComponentProps, StateMappedProps, SettingsPageProps {}
 
 const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser }) => {
   const [loading] = React.useState<boolean>(false);
@@ -58,38 +58,38 @@ const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser 
       {loading ? (
         <Loading />
       ) : (
-          <Card raised={true}>
-            <CardHeader
+        <Card raised={true}>
+          <CardHeader
+            color="primary"
+            title="Profile"
+            action={
+              <IconButton onClick={() => setEditUser(true)}>
+                <EditIcon color="primary" />
+              </IconButton>
+            }
+          />
+          <CardContent className="settings_profile">
+            <Typography className="settings_text">
+              Name:{' '}
+              <strong className="settings_value">
+                {currentUser && `${currentUser.firstName} ${currentUser.lastName}`}
+              </strong>
+            </Typography>
+            <Typography className="settings_text">
+              Email: <strong className="settings_value">{currentUser && currentUser.email}</strong>
+            </Typography>
+            <Button
+              className="settings_button"
               color="primary"
-              title="Profile"
-              action={
-                <IconButton onClick={() => setEditUser(true)}>
-                  <EditIcon color="primary" />
-                </IconButton>
-              }
-            />
-            <CardContent className="settings_profile">
-              <Typography className="settings_text">
-                Name:{' '}
-                <strong className="settings_value">
-                  {currentUser && `${currentUser.firstName} ${currentUser.lastName}`}
-                </strong>
-              </Typography>
-              <Typography className="settings_text">
-                Email: <strong className="settings_value">{currentUser && currentUser.email}</strong>
-              </Typography>
-              <Button
-                className="settings_button"
-                color="primary"
-                onClick={() => setChangePassword(true)}
-                variant="contained"
-              >
-                <span className="settings_buttonText">Change Password</span>
-                <LockIcon className="settings_buttonIcon" />
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+              onClick={() => setChangePassword(true)}
+              variant="contained"
+            >
+              <span className="settings_buttonText">Change Password</span>
+              <LockIcon className="settings_buttonIcon" />
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </Layout>
   );
 };
