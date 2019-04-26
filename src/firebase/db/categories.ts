@@ -1,59 +1,99 @@
-import { Dispatch } from 'redux';
-import { ActionTypes, categoryStateStore } from '../../store';
+import config from '../../config';
 import { Category } from '../../types';
-import { FirebaseCategory } from '../types';
+import { sort } from '../../util';
+import { FBCategory } from '../types';
 import { categoriesCollection } from './';
 
-// LOAD CATEGORIES
-export const load = (userId: string, dispatch: Dispatch<ActionTypes>) => {
-  categoriesCollection.where('userId', '==', userId)
-    .orderBy('name').get().then((querySnapshot: any) => {
-    const categoryList: Category[] = [];
-    querySnapshot.forEach((doc: any) => {
-      const category: Category = doc.data();
-      category.id = doc.id;
-      categoryList.push(category);
+const createCategoryObject = (name: string, userId: string) => {
+  return { name, userId };
+};
+
+export const createInitialCategories = (userId: string, addCategory: (cat: Category) => void) => {
+  const categories = [
+    createCategoryObject('Housing', userId),
+    createCategoryObject('Food', userId),
+    createCategoryObject('Auto & Transportation', userId),
+    createCategoryObject('Debt', userId),
+    createCategoryObject('Education', userId),
+    createCategoryObject('Entertainment', userId),
+    createCategoryObject('Gifts & Donations', userId),
+    createCategoryObject('Household Supplies', userId),
+    createCategoryObject('Insurance', userId),
+    createCategoryObject('Medical', userId),
+    createCategoryObject('Personal', userId),
+    createCategoryObject('Retirement', userId),
+    createCategoryObject('Savings', userId),
+    createCategoryObject('Shopping', userId),
+    createCategoryObject('Travel', userId),
+    createCategoryObject('Utilities', userId)
+  ];
+  categories.forEach(cat => createCategory(cat, addCategory));
+};
+
+// CREATE CATEGORY
+export const createCategory = (category: FBCategory, addCategory: (cat: Category) => void) =>
+  categoriesCollection
+    .add(category)
+    .then(doc => {
+      if (config.env === 'development') {
+        console.log('Category written with ID: ', doc.id);
+      }
+      // Set category in store
+      addCategory({ id: doc.id, ...category });
+      return true;
+    })
+    .catch(error => {
+      console.error('Error adding category: ', error);
+      return false;
     });
-    dispatch(categoryStateStore.loadCategories(categoryList));
-  }).catch((err: any) => {
-    console.log(err.message);
-  });
-}
 
-// ADD CATEGORY
-export const add = (category: FirebaseCategory, dispatch: Dispatch<ActionTypes>) => {
-  categoriesCollection.add(category).then(() => {
-    let newCategory: Category;
-    categoriesCollection.where('name', '==', category.name)
-    .where('userId', '==', category.userId).get()
-      .then((querySnapshot: any) => {
-        newCategory = querySnapshot.docs[0].data();
-        newCategory.id = querySnapshot.docs[0].id;
-        // Dispatch to state
-        dispatch(categoryStateStore.addCategory(newCategory));
-      }).catch((err: any) => {
-        console.log(err.message);
-      });
-  }).catch((err: any) => {
-    console.log(err.message);
+// READ ALL CATEGORIES
+export const getAllCategories = (userId: string) =>
+  categoriesCollection.get().then(querySnapshot => {
+    const categories: Category[] = [];
+    querySnapshot.forEach(doc => {
+      if (doc.data().userId === userId) {
+        categories.push({
+          id: doc.id,
+          ...doc.data()
+        } as Category);
+      }
+    });
+    return sort(categories, 'desc', 'name');
   });
-}
 
-// EDIT CATEGORY
-export const edit = (category: Category, dispatch: Dispatch<ActionTypes>) => {
-  categoriesCollection.doc(category.id).update(category).then(() => {
-    dispatch(categoryStateStore.editCategory(category));
-  }).catch((err: any) => {
-    console.log(err.message);
-  });
-}
+// UPDATE CATEGORY
+export const updateCategory = (category: Category, editCategory: (cat: Category) => void) =>
+  categoriesCollection
+    .doc(category.id)
+    .update(category)
+    .then(() => {
+      // Edit category in store
+      editCategory(category);
+      if (config.env === 'development') {
+        console.log('Category updated with ID: ', category.id);
+      }
+      return true;
+    })
+    .catch(error => {
+      console.error('Error updating category: ', error);
+      return false;
+    });
 
 // DELETE CATEGORY
-export const remove = (id: string, dispatch: Dispatch<ActionTypes>) => {
-  categoriesCollection.doc(id).delete().then(() => {
-    dispatch(categoryStateStore.deleteCategory(id));
-    console.log(`Document ${id} successfully deleted!`);
-  }).catch((err: any) => {
-    console.log("Error removing document: ", err.message);
-  });
-}
+export const deleteCategory = (id: string, removeCategory: (id: string) => void) =>
+  categoriesCollection
+    .doc(id)
+    .delete()
+    .then(() => {
+      // Delete category in store
+      removeCategory(id);
+      if (config.env === 'development') {
+        console.log('Category deleted with ID: ', id);
+      }
+      return true;
+    })
+    .catch(error => {
+      console.error('Error deleting category: ', id, error);
+      return false;
+    });

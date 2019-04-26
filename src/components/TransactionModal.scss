@@ -1,0 +1,43 @@
+@import '../appearance/styles/variables.scss';
+
+.transModal {
+  &_tabs {
+    width: 100%;
+  }
+
+  &_activeTab {
+    color: $primary !important;
+  }
+
+  &_fields {
+    align-items: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    overflow: hidden;
+    padding: 1rem 0 !important;
+
+    &--loading {
+      padding: 5rem 0 !important;
+    }
+  }
+
+  &_grid {
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden;
+    width: 50% !important;
+
+    @media screen and (min-width: 600px) {
+      width: 85% !important;      
+    }
+  }
+
+  &_error {
+    color: $error;
+    font-size: 16px;
+    padding: 0 1rem;
+    text-align: center;
+  }
+}

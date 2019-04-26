@@ -1,45 +1,71 @@
-import { AccountType, Category, Job, Subcategory, TransactionType } from '../types';
+import {
+  Account,
+  accountType,
+  budgetFreq,
+  Category,
+  goalComparator,
+  goalCriteria,
+  goalFreq,
+  Subcategory,
+  Transaction,
+  transactionType
+} from '../types';
 
+export interface FirebaseConfig {
+  apiKey: string | undefined;
+  authDomain: string | undefined;
+  databaseURL: string | undefined;
+  messagingSenderId: string | undefined;
+  projectId: string | undefined;
+  storageBucket: string | undefined;
+}
 
-export interface FirebaseAccount {
-  balance: number;
+export interface FBAccount {
+  amount: number;
   name: string;
-  type: AccountType;
+  type: accountType;
   userId: string;
 }
 
-export interface FirebaseJob {
+export interface FBCategory {
   name: string;
-  userId: string;
-  ytd: number;
-}
-
-export interface FirebaseCategory {
-  actual?: number;
-  budget?: number;
-  budgetPercent?: number;
-  name: string;
-  subcategories: string[];
-  userId: string;
-  variance?: number;
-}
-
-export interface FirebaseSubcategory {
-  name: string;
-  parent: string;
   userId: string;
 }
 
-export interface FirebaseTransaction {
+export interface FBSubcategory {
+  category: Category;
+  name: string;
+  userId: string;
+}
+
+export interface FBTransaction {
+  amount: number;
   category?: Category;
-  date: Date;
-  from: Account;
+  date: string;
+  from?: Account | undefined;
   item?: string;
-  job?: Job;
   note?: string;
   subcategory?: Subcategory;
   tags?: string[];
-  to?: Account;
-  type: TransactionType;
+  to?: Account | undefined;
+  type: transactionType;
+  userId: string;
+}
+
+export interface FBBudget {
+  amount: number;
+  category: Category;
+  frequency: budgetFreq;
+  userId: string;
+}
+
+export interface FBGoal {
+  amount: number;
+  criteria: goalCriteria;
+  endDate?: string;
+  frequency: goalFreq;
+  item: Account | Category | Subcategory | Transaction;
+  comparator: goalComparator;
+  startDate?: string;
   userId: string;
 }

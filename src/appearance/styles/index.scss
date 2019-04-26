@@ -1,0 +1,33 @@
+@import url('https://use.fontawesome.com/releases/v5.2.0/css/all.css');
+@import url('https://fonts.googleapis.com/css?family=Archivo+Narrow|Francois+One|Oswald');
+
+@import './core.scss';
+@import './variables.scss';
+
+@import '../../components/AccountModal.scss';
+@import '../../components/BudgetModal.scss';
+@import '../../components/CategoryModal.scss';
+@import '../../components/DataTable.scss';
+@import '../../components/Filters.scss';
+@import '../../components/ForgotPasswordForm.scss';
+@import '../../components/Form.scss';
+@import '../../components/GoalModal.scss';
+@import '../../components/Layout.scss';
+@import '../../components/Loading.scss';
+@import '../../components/LoginForm.scss';
+@import '../../components/PasswordModal.scss';
+@import '../../components/Popup.scss';
+@import '../../components/ProgressBar.scss';
+@import '../../components/Navigation.scss';
+@import '../../components/SignUpForm.scss';
+@import '../../components/SubcategoryModal.scss';
+@import '../../components/TransactionModal.scss';
+@import '../../components/UserModal.scss';
+
+@import '../../pages/Accounts.scss';
+@import '../../pages/Categories.scss';
+@import '../../pages/Dashboard.scss';
+@import '../../pages/Landing.scss';
+@import '../../pages/Reports.scss';
+@import '../../pages/Settings.scss';
+@import '../../pages/Transactions.scss';

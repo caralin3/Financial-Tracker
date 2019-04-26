@@ -1,78 +1,55 @@
+import { ConnectedRouter } from 'connected-react-router';
+import * as History from 'history';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Route } from 'react-router';
-import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
-// import { LoadingWrapper } from '../components';
+import { Route, Switch } from 'react-router';
 import {
   AccountsPage,
-  ActivityPage,
-  BudgetPage,
-  ChartsPage,
+  CategoriesPage,
   DashboardPage,
-  ForgotPasswordPage,
-  GoalsPage,
   LandingPage,
-  SettingsPage
+  ReportsPage,
+  SettingsPage,
+  TransactionsPage
 } from '../pages';
-import { User } from '../types';
-import * as routes from './pages';
+import { RouteMap } from '../types';
 
-interface RouterProps {}
+export const routes = {
+  accounts: '/accounts',
+  categories: '/categories',
+  dashboard: '/dashboard',
+  landing: '/',
+  reports: '/reports',
+  settings: '/settings',
+  transactions: '/transactions'
+};
 
-interface StateMappedProps {
-  currentUser: User;
-  showSidebar: boolean;
-}
+export const routeMap: RouteMap = {
+  [routes.accounts]: AccountsPage,
+  [routes.categories]: CategoriesPage,
+  [routes.dashboard]: DashboardPage,
+  [routes.landing]: LandingPage,
+  [routes.reports]: ReportsPage,
+  [routes.settings]: SettingsPage,
+  [routes.transactions]: TransactionsPage
+};
 
-interface RouterMergedProps extends
-  RouteComponentProps<any>,
-  StateMappedProps,
-  RouterProps {}
-
-const DisconnectedRouter: React.SFC<RouterMergedProps> = (props) => (
-  <div className={props.showSidebar ? 'router' : ''}>
-    {props.currentUser ? <RouterAuth {...props} /> : <RouterNonAuth />}
-  </div>
+export const Router = ({ history }: { history: History.History }) => (
+  <ConnectedRouter history={history}>
+    <Switch>
+      <Route exact={true} path={routes.landing} component={routeMap[routes.landing]} />
+      <Route path={`${routes.accounts}/edit/:id`} component={routeMap[routes.accounts]} />
+      <Route path={`${routes.accounts}/:id`} component={routeMap[routes.accounts]} />
+      <Route path={routes.accounts} component={routeMap[routes.accounts]} />
+      <Route path={`${routes.categories}/add/:id`} component={routeMap[routes.categories]} />
+      <Route path={`${routes.categories}/edit/:id`} component={routeMap[routes.categories]} />
+      <Route path={routes.categories} component={routeMap[routes.categories]} />
+      <Route path={`${routes.dashboard}/edit/:id`} component={routeMap[routes.dashboard]} />
+      <Route path={routes.dashboard} component={routeMap[routes.dashboard]} />
+      <Route path={routes.reports} component={routeMap[routes.reports]} />
+      <Route path={routes.settings} component={routeMap[routes.settings]} />
+      <Route path={`${routes.transactions}/edit/:id`} component={routeMap[routes.transactions]} />
+      <Route path={`${routes.transactions}/:id`} component={routeMap[routes.transactions]} />
+      <Route path={routes.transactions} component={routeMap[routes.transactions]} />
+    </Switch>
+  </ConnectedRouter>
 );
-
-const RouterAuth: React.SFC<RouterMergedProps> = (props) => (
-  <>
-    <Route exact={true} path={routes.DASHBOARD} component={DashboardPage} />
-    <Route exact={true} path={routes.ACCOUNTS} component={AccountsPage} />
-    <Route exact={true} path={routes.ACTIVITY} component={ActivityPage} />
-    <Route exact={true} path={routes.BUDGET} component={BudgetPage} />
-    <Route exact={true} path={routes.CHARTS} component={ChartsPage} />
-    <Route exact={true} path={routes.GOALS} component={GoalsPage} />
-    <Route exact={true} path={routes.SETTINGS} component={SettingsPage} />
-  </>
-)
-
-const RouterNonAuth = () => (
-  <>
-    <Route exact={true} path={routes.LANDING} component={LandingPage} />
-    {/* <Route exact={true} path={routes.LANDING} component={LoadingWrapper(LandingPage)} /> */}
-    <Route exact={true} path={routes.SIGN_UP} component={LandingPage} />
-    <Route exact={true} path={routes.LOGIN} component={LandingPage} />
-    <Route exact={true} path={routes.FORGOT_PASSWORD} component={ForgotPasswordPage} />
-    <Redirects />
-  </>
-)
-
-const Redirects = () => (
-  <>
-    {location.pathname === routes.ACCOUNTS && <Redirect to={routes.LANDING} />}
-    {location.pathname === routes.ACTIVITY && <Redirect to={routes.LANDING} />}
-    {location.pathname === routes.BUDGET && <Redirect to={routes.LANDING} />}
-    {location.pathname === routes.CHARTS && <Redirect to={routes.LANDING} />}
-    {location.pathname === routes.GOALS && <Redirect to={routes.LANDING} />}
-    {location.pathname === routes.SETTINGS && <Redirect to={routes.LANDING} />}
-  </>
-)
-
-const mapStateToProps = (state: any) => ({
-  currentUser: state.sessionState.currentUser,
-  showSidebar: state.sessionState.showSidebar,
-});
-
-export const Router = withRouter(connect<StateMappedProps, null, RouterProps>
-(mapStateToProps)(DisconnectedRouter));

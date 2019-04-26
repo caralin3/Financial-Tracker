@@ -1,21 +1,9 @@
 import { AccountsPage } from './Accounts';
-import { ActivityPage } from './Activity';
-import { BudgetPage } from './Budget';
-import { ChartsPage } from './Charts';
+import { CategoriesPage } from './Categories';
 import { DashboardPage } from './Dashboard';
-import { ForgotPasswordPage } from './ForgotPassword';
-import { GoalsPage } from './Goals';
 import { LandingPage } from './Landing';
+import { ReportsPage } from './Reports';
 import { SettingsPage } from './Settings';
+import { TransactionsPage } from './Transactions';
 
-export {
-  AccountsPage,
-  ActivityPage,
-  BudgetPage,
-  ChartsPage,
-  DashboardPage,
-  ForgotPasswordPage,
-  GoalsPage,
-  LandingPage,
-  SettingsPage,
-}
+export { AccountsPage, CategoriesPage, DashboardPage, LandingPage, ReportsPage, SettingsPage, TransactionsPage };

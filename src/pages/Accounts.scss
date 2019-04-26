@@ -1,0 +1,109 @@
+@import '../appearance/styles/variables.scss';
+
+.accounts {
+  margin-right: 2rem;
+
+  @media screen and (min-width: 400px) {
+    margin-right: 0;
+  }
+
+  @media #{$medium} {
+    margin-right: 0;
+  }
+
+  &_mobile {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem 0.2rem;
+  }
+
+  &_mobileButton {
+    margin-bottom: 1rem;
+    margin: 0 2rem 1rem 0;
+
+    @media screen and (min-width: 400px) {
+      margin: 0 0 1rem;
+    }
+
+    @media #{$medium} {
+      margin: 0;
+    }
+  }
+
+  &_dots {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  &_dot {
+    font-size: 12px !important;
+    margin: 0 0.5rem;
+  }
+
+  &_card {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 0;
+    padding: 1rem 0;
+    width: 100% !important;
+
+    @media #{$medium} {
+      margin-bottom: 2rem;
+    }
+  }
+
+  &_label {
+    @include title2;
+    font-weight: bold !important;
+  }
+
+  &_balance {
+    @include number;
+    padding: 0 0.5rem;
+  }
+}
+
+.account {
+  width: 100%;
+
+  &_item {
+    border-bottom: 1px solid $highlight;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &_text {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    &:last-child {
+      padding-top: 0.5rem;
+    }
+  }
+
+  &_label {
+    @include primary;
+    padding: 0 0.5rem;
+  }
+
+  &_button {
+    padding: 0.2rem !important;
+  }
+
+  &_view {
+    @include secondary;
+    padding: 0 0.5rem;
+  }
+
+  &_balance {
+    @include number;
+    padding: 0 0.5rem;
+  }
+}

@@ -1,0 +1,31 @@
+@import '../appearance/styles/variables.scss';
+
+.form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-x: hidden;
+
+  &_button {
+    padding: 1rem 0;
+
+    &-disabled {
+      &:hover {
+        cursor: not-allowed;
+      }
+    }
+    &--loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -12px;
+      margin-left: -12px;
+    }
+  }
+
+
+  &_select-helper {
+    margin: 3px 0 0 10px !important;
+  }
+}

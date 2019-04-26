@@ -1,0 +1,38 @@
+@import '../appearance/styles/variables.scss';
+
+.landing {
+  align-items: center;
+  background: $primary;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding-bottom: 2rem !important;
+
+  &_title {
+    @include heading;
+    color: $white !important;
+    padding: 2rem 1rem !important;
+
+    @media #{$medium} {
+      padding: 3rem !important;
+    }
+  }
+
+  &_form {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 0;
+    width: 85%;
+  }
+
+  &_label {
+    @include title;
+  }
+
+  &_text {
+    @include primary;
+  }
+}

@@ -1,0 +1,4 @@
+[build]
+base = "Financial-Tracker/"
+publish = "Financial-Tracker/build/"
+command = "yarn build"

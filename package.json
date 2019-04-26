@@ -1,51 +1,62 @@
 {
   "name": "financial-tracker",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "dependencies": {
-    "@types/react-redux": "5.0.19",
-    "@types/recompose": "^0.26.4",
-    "@types/redux": "^3.6.0",
-    "firebase": "^5.3.0",
-    "react": "^16.4.2",
-    "react-csv": "^1.0.18",
-    "react-dom": "^16.4.2",
-    "react-redux": "^5.0.7",
+    "blob": "^0.0.5",
+    "connected-react-router": "^6.2.2",
+    "firebase": "^5.8.2",
+    "moment": "^2.24.0",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0",
+    "react-redux": "^6.0.0",
+    "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "2.16.0",
-    "react-vis": "^1.11.4",
-    "recompose": "^0.28.2",
-    "redux": "^4.0.0",
-    "redux-persist": "^5.10.0"
+    "react-scripts-ts": "^4.0.8",
+    "recompose": "^0.30.0",
+    "redux": "^4.0.1",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build && yarn run build:css",
-    "build:css": "lessc src/less/index.less public/styles.css",
+    "build": "react-scripts-ts build",
+    "pretty": "prettier --write src/**/*.ts src/**/*.tsx",
+    "lint": "yarn run tslint --project ./",
+    "a11y:axe": "axe http://localhost:3000 --tags wcag2a,wcag2aa,best-practice --browser chrome",
+    "a11y:pa11y": "pa11y http://localhost:3000 --standard WCAG2AA",
+    "a11y": "concurrently --names \"a11y:axe,a11y:pa11y\" --prefix-colors \"blue,green\" \"yarn run a11y:axe\" \"yarn run a11y:pa11y\"",
     "test": "jest",
-    "watch:css": "chokidar \"**/*.less\" -c \"npm run build:css\"",
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.1",
-    "@types/node": "^10.5.5",
-    "@types/react": "^16.4.7",
-    "@types/react-dom": "^16.0.6",
-    "@types/react-router": "^4.0.30",
-    "@types/react-router-dom": "^4.3.0",
-    "jest": "^23.4.0",
-    "less": "^3.7.1",
-    "less-loader": "^4.1.0",
-    "react-test-renderer": "^16.4.1",
-    "redux-devtools-extension": "^2.13.5",
-    "ts-jest": "^23.0.1",
-    "ts-loader": "^4.4.2",
-    "typescript": "^3.0.1"
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
+    "@types/classnames": "^2.2.7",
+    "@types/firebase": "^3.2.1",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^10.12.21",
+    "@types/react": "^16.7.18",
+    "@types/react-dom": "^16.8.0",
+    "@types/react-redux": "^7.0.1",
+    "@types/react-router": "^4.4.3",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/react-swipeable-views": "^0.13.0",
+    "@types/recompose": "^0.30.5",
+    "@types/redux": "^3.6.0",
+    "@types/redux-persist": "^4.3.1",
+    "axe-cli": "^3.0.0",
+    "concurrently": "^4.1.0",
+    "dotenv": "^6.2.0",
+    "jest": "^23.6.0",
+    "node-sass": "^4.11.0",
+    "pa11y": "^5.1.0",
+    "prettier": "^1.16.4",
+    "react-swipeable-views": "^0.13.1",
+    "tslint": "^5.13.0",
+    "tslint-react-a11y": "^1.0.0",
+    "typescript": "^3.3.1"
   },
   "jest": {
     "transform": {
@@ -60,5 +71,11 @@
       "json",
       "node"
     ]
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

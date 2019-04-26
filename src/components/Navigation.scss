@@ -1,0 +1,28 @@
+@import '../appearance/styles/variables.scss';
+
+.navList {
+  height: 100%;
+  padding-top: 1rem;
+  text-align: center;
+
+  &_heading {
+    @include title;
+    font-weight: bold !important;
+  }
+
+  &_icon {
+    padding-bottom: 1rem;
+  }
+
+  &_circle {
+    color: $white;
+  }
+  
+  &_symbol {
+    color: $primary;
+  }
+
+  &_closed {
+    font-size: 20px;
+  }
+}
