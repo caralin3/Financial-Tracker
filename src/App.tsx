@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 import { theme } from './appearance';
 import { withAuthentication } from './auth/withAuthentication';
-import { LoadingModal } from './components';
+import { Alert, LoadingModal } from './components';
 import { requests } from './firebase/db';
 import { createHistory, Router } from './routes';
 import {
@@ -18,7 +18,7 @@ import {
 } from './store';
 import { Account, ApplicationState, Budget, Category, Goal, Subcategory, Transaction, User } from './types';
 
-interface AppProps {}
+interface AppProps { }
 
 interface DispatchMappedProps {
   setAccounts: (accounts: Account[]) => void;
@@ -40,15 +40,17 @@ interface StateMappedProps {
 }
 
 interface AppState {
+  error: boolean;
   loading: boolean;
 }
 
-interface AppMergedProps extends DispatchMappedProps, StateMappedProps, AppProps {}
+interface AppMergedProps extends DispatchMappedProps, StateMappedProps, AppProps { }
 
 class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
   public history: History.History = createHistory();
 
   public readonly state: AppState = {
+    error: false,
     loading: false
   };
 
@@ -60,10 +62,16 @@ class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
   }
 
   public render() {
-    const { loading } = this.state;
+    const { error, loading } = this.state;
 
     return (
       <MuiThemeProvider theme={theme}>
+        <Alert
+          onClose={() => this.setState({ error: false })}
+          open={error}
+          variant="error"
+          message="Could not update data."
+        />
         <LoadingModal open={loading} />
         <Router history={this.history} />
       </MuiThemeProvider>
@@ -81,20 +89,25 @@ class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
       setTransactions
     } = this.props;
     if (currentUser) {
-      const [accs, buds, cats, gols, subs, trans] = await Promise.all([
-        requests.accounts.getAllAccounts(currentUser.id),
-        requests.budgets.getAllBudgets(currentUser.id),
-        requests.categories.getAllCategories(currentUser.id),
-        requests.goals.getAllGoals(currentUser.id),
-        requests.subcategories.getAllSubcategories(currentUser.id),
-        requests.transactions.getAllTransactions(currentUser.id)
-      ]);
-      setAccounts(accs);
-      setBudgets(buds);
-      setCategories(cats);
-      setGoals(gols);
-      setSubcategories(subs);
-      setTransactions(trans);
+      try {
+        const [accs, buds, cats, gols, subs, trans] = await Promise.all([
+          requests.accounts.getAllAccounts(currentUser.id),
+          requests.budgets.getAllBudgets(currentUser.id),
+          requests.categories.getAllCategories(currentUser.id),
+          requests.goals.getAllGoals(currentUser.id),
+          requests.subcategories.getAllSubcategories(currentUser.id),
+          requests.transactions.getAllTransactions(currentUser.id)
+        ]);
+        setAccounts(accs);
+        setBudgets(buds);
+        setCategories(cats);
+        setGoals(gols);
+        setSubcategories(subs);
+        setTransactions(trans);
+      } catch (err) {
+        console.error(err);
+        this.setState({ error: true });
+      }
       this.setState({ loading: false });
     }
   };
