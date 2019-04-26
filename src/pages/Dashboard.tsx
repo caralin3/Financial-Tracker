@@ -18,7 +18,7 @@ import { compose } from 'recompose';
 import { withAuthorization } from '../auth/withAuthorization';
 import {
   AccountModal,
-  // Alert,
+  Alert,
   BudgetCard,
   DashboardCard,
   DropdownMenu,
@@ -61,8 +61,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
   transactions
 }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
-  // const [success, setSuccess] = React.useState<boolean>(false);
-  // const [successMsg, setSuccessMsg] = React.useState<string>('');
+  const [success, setSuccess] = React.useState<boolean>(false);
   const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(false);
   const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(false);
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
@@ -222,8 +221,8 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       title={`${username} Dashboard`}
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
-      {/* <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} /> */}
-      <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)} />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="Account added" />
+      <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)}  onSuccess={() => setSuccess(true)} />
       <TransactionModal
         title="Add Transaction"
         buttonText="Add"
