@@ -9,7 +9,7 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from '../components';
 import { requests } from '../firebase/db';
 import { routes } from '../routes';
-import { transactionsState } from '../store';
+import { accountsState, transactionsState } from '../store';
 import { Account, ApplicationState, Category, Option, Subcategory, Transaction, User } from '../types';
 import {
   createOption,
@@ -28,6 +28,7 @@ export interface TransactionsPageProps {
 
 interface DispatchMappedProps {
   addTransaction: (trans: Transaction) => void;
+  editAccount: (acc: Account) => void;
   removeTransaction: (id: string) => void;
 }
 
@@ -41,15 +42,16 @@ interface StateMappedProps {
 
 interface TransactionsMergedProps
   extends RouteComponentProps,
-    StateMappedProps,
-    DispatchMappedProps,
-    TransactionsPageProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  TransactionsPageProps { }
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
   accounts,
   addTransaction,
   categories,
   currentUser,
+  editAccount,
   history,
   removeTransaction,
   subcategories,
@@ -149,51 +151,54 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
       {loading ? (
         <Loading />
       ) : (
-        <div>
-          <DataTable
-            accounts={accounts}
-            addTransaction={addTransaction}
-            categories={categories}
-            columns={expenseColumns}
-            data={expenses}
-            dateOptions={dateOptions(expenses)}
-            defaultSort={{ dir: 'desc', orderBy: 'date' }}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            subcategories={subcategories}
-            title="Expenses"
-            userId={currentUser ? currentUser.id : ''}
-          />
-          <DataTable
-            accounts={accounts}
-            addTransaction={addTransaction}
-            categories={categories}
-            columns={incomeColumns}
-            data={income}
-            dateOptions={dateOptions(income)}
-            defaultSort={{ dir: 'desc', orderBy: 'date' }}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            subcategories={subcategories}
-            title="Income"
-            userId={currentUser ? currentUser.id : ''}
-          />
-          <DataTable
-            accounts={accounts}
-            addTransaction={addTransaction}
-            categories={categories}
-            columns={transferColumns}
-            data={transfers}
-            dateOptions={dateOptions(transfers)}
-            defaultSort={{ dir: 'desc', orderBy: 'date' }}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            subcategories={subcategories}
-            title="Transfers"
-            userId={currentUser ? currentUser.id : ''}
-          />
-        </div>
-      )}
+          <div>
+            <DataTable
+              accounts={accounts}
+              addTransaction={addTransaction}
+              categories={categories}
+              columns={expenseColumns}
+              data={expenses}
+              dateOptions={dateOptions(expenses)}
+              defaultSort={{ dir: 'desc', orderBy: 'date' }}
+              editAccount={editAccount}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              subcategories={subcategories}
+              title="Expenses"
+              userId={currentUser ? currentUser.id : ''}
+            />
+            <DataTable
+              accounts={accounts}
+              addTransaction={addTransaction}
+              categories={categories}
+              columns={incomeColumns}
+              data={income}
+              dateOptions={dateOptions(income)}
+              defaultSort={{ dir: 'desc', orderBy: 'date' }}
+              editAccount={editAccount}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              subcategories={subcategories}
+              title="Income"
+              userId={currentUser ? currentUser.id : ''}
+            />
+            <DataTable
+              accounts={accounts}
+              addTransaction={addTransaction}
+              categories={categories}
+              columns={transferColumns}
+              data={transfers}
+              dateOptions={dateOptions(transfers)}
+              defaultSort={{ dir: 'desc', orderBy: 'date' }}
+              editAccount={editAccount}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              subcategories={subcategories}
+              title="Transfers"
+              userId={currentUser ? currentUser.id : ''}
+            />
+          </div>
+        )}
     </Layout>
   );
 };
@@ -202,6 +207,7 @@ const authCondition = (authUser: any) => !!authUser;
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   addTransaction: (trans: Transaction) => dispatch(transactionsState.addTransaction(trans)),
+  editAccount: (acc: Account) => dispatch(accountsState.editAccount(acc)),
   removeTransaction: (id: string) => dispatch(transactionsState.deleteTransaction(id))
 });
 

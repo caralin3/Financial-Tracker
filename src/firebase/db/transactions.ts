@@ -1,3 +1,4 @@
+import config from '../../config';
 import { Transaction } from '../../types';
 import { sort } from '../../util';
 import { FBTransaction } from '../types';
@@ -10,7 +11,9 @@ export const createTransaction = (transaction: FBTransaction, addTransaction: (t
     .then(doc => {
       // Set transaction in store
       addTransaction({ id: doc.id, ...transaction });
-      console.log('Transaction written with ID: ', doc.id);
+      if (config.env === 'development') {
+        console.log('Transaction written with ID: ', doc.id);
+      }
       return true;
     })
     .catch(error => {
@@ -41,7 +44,9 @@ export const updateTransaction = (transaction: Transaction, editTransaction: (tr
     .then(() => {
       // Edit transaction in store
       editTransaction(transaction);
-      console.log('Transaction updated with ID: ', transaction.id);
+      if (config.env === 'development') {
+        console.log('Transaction updated with ID: ', transaction.id);
+      }
       return true;
     })
     .catch(error => {
@@ -57,7 +62,9 @@ export const deleteTransaction = (id: string, removeTransaction: (id: string) =>
     .then(() => {
       // Delete transaction in store
       removeTransaction(id);
-      console.log('Transaction deleted with ID: ', id);
+      if (config.env === 'development') {
+        console.log('Transaction deleted with ID: ', id);
+      }
       return true;
     })
     .catch(error => {

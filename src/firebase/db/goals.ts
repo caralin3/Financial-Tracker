@@ -1,3 +1,4 @@
+import config from '../../config';
 import { Goal } from '../../types';
 import { sort } from '../../util';
 import { FBGoal } from '../types';
@@ -10,7 +11,9 @@ export const createGoal = (goal: FBGoal, addGoal: (goal: Goal) => void) =>
     .then(doc => {
       // Set goal in store
       addGoal({ id: doc.id, ...goal });
-      console.log('Goal written with ID: ', doc.id);
+      if (config.env === 'development') {
+        console.log('Goal written with ID: ', doc.id);
+      }
       return true;
     })
     .catch(error => {
@@ -41,7 +44,9 @@ export const updateGoal = (goal: Goal, editGoal: (goal: Goal) => void) =>
     .then(() => {
       // Edit goal in store
       editGoal(goal);
-      console.log('Goal updated with ID: ', goal.id);
+      if (config.env === 'development') {
+        console.log('Goal updated with ID: ', goal.id);
+      }
       return true;
     })
     .catch(error => {
@@ -57,7 +62,9 @@ export const deleteGoal = (id: string, removeGoal: (id: string) => void) =>
     .then(() => {
       // Delete goal in store
       removeGoal(id);
-      console.log('Goal deleted with ID: ', id);
+      if (config.env === 'development') {
+        console.log('Goal deleted with ID: ', id);
+      }
       return true;
     })
     .catch(error => {

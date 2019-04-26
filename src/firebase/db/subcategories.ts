@@ -1,3 +1,4 @@
+import config from '../../config';
 import { Category, Subcategory } from '../../types';
 import { sort } from '../../util';
 import { FBSubcategory } from '../types';
@@ -112,7 +113,9 @@ export const createSubcategory = (subcategory: FBSubcategory, addSubcategory: (s
   subcategoriesCollection
     .add(subcategory)
     .then(doc => {
-      console.log('Subcategory written with ID: ', doc.id);
+      if (config.env === 'development') {
+        console.log('Subcategory written with ID: ', doc.id);
+      }
       // Set subcategory in store
       addSubcategory({ id: doc.id, ...subcategory });
       return true;
@@ -145,7 +148,9 @@ export const updateSubcategory = (subcategory: Subcategory, editSubcategory: (su
     .then(() => {
       // Edit subcategory in store
       editSubcategory(subcategory);
-      console.log('Subcategory updated with ID: ', subcategory.id);
+      if (config.env === 'development') {
+        console.log('Subcategory updated with ID: ', subcategory.id);
+      }
       return true;
     })
     .catch(error => {
@@ -161,7 +166,9 @@ export const deleteSubcategory = (id: string, removeSubcategory: (id: string) =>
     .then(() => {
       // Delete subcategory in store
       removeSubcategory(id);
-      console.log('Subcategory deleted with ID: ', id);
+      if (config.env === 'development') {
+        console.log('Subcategory deleted with ID: ', id);
+      }
       return true;
     })
     .catch(error => {

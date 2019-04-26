@@ -1,3 +1,4 @@
+import config from '../../config';
 import { Account } from '../../types';
 import { sort } from '../../util';
 import { FBAccount } from '../types';
@@ -10,7 +11,9 @@ export const createAccount = (account: FBAccount, addAccount: (acc: Account) => 
     .then(doc => {
       // Set account in store
       addAccount({ id: doc.id, ...account });
-      console.log('Account written with ID: ', doc.id);
+      if (config.env === 'development') {
+        console.log('Account written with ID: ', doc.id);
+      }
       return true;
     })
     .catch(error => {
@@ -41,7 +44,9 @@ export const updateAccount = (account: Account, editAccount: (acc: Account) => v
     .then(() => {
       // Edit account in store
       editAccount(account);
-      console.log('Account updated with ID: ', account.id);
+      if (config.env === 'development') {
+        console.log('Account updated with ID: ', account.id);
+      }
       return true;
     })
     .catch(error => {
@@ -57,7 +62,9 @@ export const deleteAccount = (id: string, removeAccount: (id: string) => void) =
     .then(() => {
       // Delete account in store
       removeAccount(id);
-      console.log('Account deleted with ID: ', id);
+      if (config.env === 'development') {
+        console.log('Account deleted with ID: ', id);
+      }
       return true;
     })
     .catch(error => {

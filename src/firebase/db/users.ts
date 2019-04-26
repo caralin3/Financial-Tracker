@@ -1,3 +1,4 @@
+import config from '../../config';
 import { User } from '../../types';
 import { usersCollection } from './';
 
@@ -43,7 +44,9 @@ export const updateUserInfo = (user: User, setCurrentUser: (user: User) => void)
     .then(() => {
       // Edit user in store
       setCurrentUser(user);
-      console.log('User updated with ID: ', user.id);
+      if (config.env === 'development') {
+        console.log('User updated with ID: ', user.id);
+      }
       return true;
     })
     .catch(error => {

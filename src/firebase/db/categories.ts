@@ -1,3 +1,4 @@
+import config from '../../config';
 import { Category } from '../../types';
 import { sort } from '../../util';
 import { FBCategory } from '../types';
@@ -34,7 +35,9 @@ export const createCategory = (category: FBCategory, addCategory: (cat: Category
   categoriesCollection
     .add(category)
     .then(doc => {
-      console.log('Category written with ID: ', doc.id);
+      if (config.env === 'development') {
+        console.log('Category written with ID: ', doc.id);
+      }
       // Set category in store
       addCategory({ id: doc.id, ...category });
       return true;
@@ -67,7 +70,9 @@ export const updateCategory = (category: Category, editCategory: (cat: Category)
     .then(() => {
       // Edit category in store
       editCategory(category);
-      console.log('Category updated with ID: ', category.id);
+      if (config.env === 'development') {
+        console.log('Category updated with ID: ', category.id);
+      }
       return true;
     })
     .catch(error => {
@@ -83,7 +88,9 @@ export const deleteCategory = (id: string, removeCategory: (id: string) => void)
     .then(() => {
       // Delete category in store
       removeCategory(id);
-      console.log('Category deleted with ID: ', id);
+      if (config.env === 'development') {
+        console.log('Category deleted with ID: ', id);
+      }
       return true;
     })
     .catch(error => {

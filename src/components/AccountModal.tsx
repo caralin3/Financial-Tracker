@@ -104,7 +104,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = ({
 
   const isDuplicate = () => {
     const dups = accounts.filter(acc => acc.name === name.trim()) || [];
-    return dups.length > 0;
+    return !params.id && dups.length > 0;
   };
 
   const isValidType = () => type.trim().length > 0;
