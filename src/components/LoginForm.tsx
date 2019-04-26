@@ -113,7 +113,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
             setError('');
           }}
           margin="normal"
-          helperText={submit && !isValidEmail() ? 'Invalid format' : 'Hint: jdoe@example.com'}
+          helperText={submit && !isValidEmail() && 'Invalid format'}
           error={submit && (!!error || !isValidEmail())}
         />
         <TextField

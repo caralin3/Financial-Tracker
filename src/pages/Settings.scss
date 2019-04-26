@@ -1,6 +1,18 @@
 @import '../appearance/styles/variables.scss';
 
 .settings {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  &_card {
+    width: 100%;
+  }
+
+  &_delete {
+    padding: 3rem 0;
+  }
+
   &_profile {
     align-items: flex-start;
     display: flex;

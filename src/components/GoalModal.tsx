@@ -346,41 +346,41 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
                 </Grid>
               </Grid>
               <Grid container={true} spacing={16} alignItems="center" justify="center">
-              {frequency === 'custom' && (
-                <Grid item={true} xs={12} sm={6}>
-                  <TextField
-                    id="start-date"
-                    label="Start Date"
-                    fullWidth={true}
-                    value={startDate}
-                    onChange={e => setStartDate(e.target.value)}
-                    type="date"
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </Grid>
-              )}
-              {frequency === 'custom' && (
-                <Grid item={true} xs={12} sm={6}>
-                  <TextField
-                    id="end-date"
-                    label="End Date"
-                    fullWidth={true}
-                    value={endDate}
-                    onChange={e => setEndDate(e.target.value)}
-                    type="date"
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </Grid>
-              )}
-            </Grid>
+                {frequency === 'custom' && (
+                  <Grid item={true} xs={12} sm={6}>
+                    <TextField
+                      id="start-date"
+                      label="Start Date"
+                      fullWidth={true}
+                      value={startDate}
+                      onChange={e => setStartDate(e.target.value)}
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      margin="normal"
+                      variant="outlined"
+                    />
+                  </Grid>
+                )}
+                {frequency === 'custom' && (
+                  <Grid item={true} xs={12} sm={6}>
+                    <TextField
+                      id="end-date"
+                      label="End Date"
+                      fullWidth={true}
+                      value={endDate}
+                      onChange={e => setEndDate(e.target.value)}
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      margin="normal"
+                      variant="outlined"
+                    />
+                  </Grid>
+                )}
+              </Grid>
             </Grid>
           )}
         </Grid>

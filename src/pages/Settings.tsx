@@ -12,7 +12,8 @@ import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { withAuthorization } from '../auth/withAuthorization';
-import { Alert, Layout, Loading, PasswordModal, UserModal } from '../components';
+import { Alert, AlertDialog, Layout, Loading, PasswordModal, UserModal } from '../components';
+import { auth } from '../firebase';
 import { ApplicationState, User } from '../types';
 
 export interface SettingsPageProps {
@@ -29,12 +30,27 @@ const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser 
   const [loading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [successMsg, setSuccessMsg] = React.useState<string>('');
+  const [error, setError] = React.useState<string>('');
   const [editUser, setEditUser] = React.useState<boolean>(false);
   const [changePassword, setChangePassword] = React.useState<boolean>(false);
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+
+  const handleConfirm = () => {
+    auth
+      .doDeleteAccount()
+      .then(() => {
+        setOpenDialog(false);
+      })
+      .catch((err: any) => {
+        setError(err.message);
+      });
+    setOpenDialog(false);
+  };
 
   return (
     <Layout title="Settings">
       <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
+      <Alert onClose={() => setError('')} open={error.trim().length > 0} variant="error" message={error} />
       <UserModal
         buttonText="Update"
         onClose={() => setEditUser(false)}
@@ -58,37 +74,53 @@ const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser 
       {loading ? (
         <Loading />
       ) : (
-        <Card raised={true}>
-          <CardHeader
-            color="primary"
-            title="Profile"
-            action={
-              <IconButton onClick={() => setEditUser(true)}>
-                <EditIcon color="primary" />
-              </IconButton>
-            }
+        <div className="settings">
+          <AlertDialog
+            cancelText="Cancel"
+            confirmText="Confirm"
+            onClose={() => setOpenDialog(false)}
+            onConfirm={handleConfirm}
+            open={openDialog}
+            title="Are you sure you want to delete your account?"
+            description="This action is permanent and cannot be undone."
           />
-          <CardContent className="settings_profile">
-            <Typography className="settings_text">
-              Name:{' '}
-              <strong className="settings_value">
-                {currentUser && `${currentUser.firstName} ${currentUser.lastName}`}
-              </strong>
-            </Typography>
-            <Typography className="settings_text">
-              Email: <strong className="settings_value">{currentUser && currentUser.email}</strong>
-            </Typography>
-            <Button
-              className="settings_button"
+          <Card className="settings_card" raised={true}>
+            <CardHeader
               color="primary"
-              onClick={() => setChangePassword(true)}
-              variant="contained"
-            >
-              <span className="settings_buttonText">Change Password</span>
-              <LockIcon className="settings_buttonIcon" />
+              title="Profile"
+              action={
+                <IconButton onClick={() => setEditUser(true)}>
+                  <EditIcon color="primary" />
+                </IconButton>
+              }
+            />
+            <CardContent className="settings_profile">
+              <Typography className="settings_text">
+                Name:{' '}
+                <strong className="settings_value">
+                  {currentUser && `${currentUser.firstName} ${currentUser.lastName}`}
+                </strong>
+              </Typography>
+              <Typography className="settings_text">
+                Email: <strong className="settings_value">{currentUser && currentUser.email}</strong>
+              </Typography>
+              <Button
+                className="settings_button"
+                color="primary"
+                onClick={() => setChangePassword(true)}
+                variant="contained"
+              >
+                <span className="settings_buttonText">Change Password</span>
+                <LockIcon className="settings_buttonIcon" />
+              </Button>
+            </CardContent>
+          </Card>
+          <div className="settings_delete">
+            <Button color="secondary" onClick={() => setOpenDialog(true)} variant="contained">
+              Delete Account
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
     </Layout>
   );

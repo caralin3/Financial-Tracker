@@ -348,7 +348,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <AutoTextField
-            className="transModal_input"          
+            className="transModal_input"
             id="expense-item"
             label="Item"
             onChange={e => setItem(e.target.value)}

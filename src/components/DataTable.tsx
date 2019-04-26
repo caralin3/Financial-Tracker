@@ -766,14 +766,14 @@ const Table: React.SFC<TableProps> = ({
         backIconButtonProps={{
           'aria-label': 'Previous Page',
           classes: {
-            root: classes.arrow,
-          },
+            root: classes.arrow
+          }
         }}
         nextIconButtonProps={{
           'aria-label': 'Next Page',
           classes: {
-            root: classes.arrow,
-          },
+            root: classes.arrow
+          }
         }}
         onChangePage={(e: React.MouseEvent<HTMLButtonElement>, num: number) => setPage(num)}
         onChangeRowsPerPage={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -788,8 +788,8 @@ const styles = (theme: Theme) => ({
   arrow: {
     padding: 0,
     [theme.breakpoints.up('sm')]: {
-      padding: 12,
-    },
+      padding: 12
+    }
   },
   root: {
     marginBottom: theme.spacing.unit * 5

@@ -222,7 +222,13 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
       <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="Account added" />
-      <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)}  onSuccess={() => setSuccess(true)} />
+      <AccountModal
+        title="Add Account"
+        buttonText="Add"
+        open={addingAccount}
+        onClose={() => setAddingAccount(false)}
+        onSuccess={() => setSuccess(true)}
+      />
       <TransactionModal
         title="Add Transaction"
         buttonText="Add"
