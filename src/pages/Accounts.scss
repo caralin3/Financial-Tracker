@@ -42,6 +42,12 @@
     }
   }
 
+  &_expandableCard {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
   &_label {
     @include title2;
     font-weight: bold !important;
