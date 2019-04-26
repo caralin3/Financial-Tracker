@@ -60,7 +60,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
   const [deleteId, setDeleteId] = React.useState<string>('');
   const [card, setCard] = React.useState<number>(0);
   const [cashExpanded, setCashExpanded] = React.useState<boolean>(false);
-  const [bankExpanded, setBankExpanded] = React.useState<boolean>(true);
+  const [bankExpanded, setBankExpanded] = React.useState<boolean>(false);
   const [creditExpanded, setCreditExpanded] = React.useState<boolean>(false);
 
   const [deleteAcc] = accounts.filter(acc => acc.id === deleteId);
@@ -94,13 +94,6 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
 
   const accountTypes: AccountType[] = [
     {
-      balance: getArrayTotal(getObjectByType(accounts, 'cash')),
-      expanded: cashExpanded,
-      id: 'cash',
-      label: 'Cash',
-      toggle: () => setCashExpanded(!cashExpanded)
-    },
-    {
       balance: getArrayTotal(getObjectByType(accounts, 'bank')),
       expanded: bankExpanded,
       id: 'bank',
@@ -113,7 +106,14 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
       id: 'credit',
       label: 'Credit',
       toggle: () => setCreditExpanded(!creditExpanded)
-    }
+    },
+    {
+      balance: getArrayTotal(getObjectByType(accounts, 'cash')),
+      expanded: cashExpanded,
+      id: 'cash',
+      label: 'Cash',
+      toggle: () => setCashExpanded(!cashExpanded)
+    },
   ];
 
   const addButton = (fullWidth: boolean) => (

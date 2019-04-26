@@ -1,16 +1,6 @@
 @import '../appearance/styles/variables.scss';
 
 .accounts {
-  margin-right: 2rem;
-
-  @media screen and (min-width: 400px) {
-    margin-right: 0;
-  }
-
-  @media #{$medium} {
-    margin-right: 0;
-  }
-
   &_mobile {
     align-items: center;
     display: flex;
@@ -21,11 +11,6 @@
 
   &_mobileButton {
     margin-bottom: 1rem;
-    margin: 0 2rem 1rem 0;
-
-    @media screen and (min-width: 400px) {
-      margin: 0 0 1rem;
-    }
 
     @media #{$medium} {
       margin: 0;
