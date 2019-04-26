@@ -426,6 +426,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = ({
                   dateOptions={dateOptions}
                   filters={columns}
                   count={filterCount}
+                  onClose={() => setOpenFilters(false)}
                   onResetFilters={handleReset}
                   onSelectFilter={onSelectFilter}
                 />
