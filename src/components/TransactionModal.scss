@@ -9,6 +9,10 @@
     color: $primary !important;
   }
 
+  &_input {
+    min-width: 240px;
+  }
+
   &_fields {
     align-items: center !important;
     display: flex !important;

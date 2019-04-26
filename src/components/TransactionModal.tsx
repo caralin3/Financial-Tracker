@@ -153,6 +153,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
     if (amount) {
       setAmount(0);
     }
+    setEditing('');
   };
 
   const isValidAmount = () => amount > 0;
@@ -335,6 +336,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
       <Grid className="transModal_grid" container={true} spacing={24}>
         <Grid item={true} xs={12} sm={6}>
           <SelectInput
+            className="transModal_input"
             label="From"
             autoFocus={true}
             helperText={submit && !isValidFrom() ? 'Required' : undefined}
@@ -346,7 +348,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <AutoTextField
-            className="transModal_field--item"
+            className="transModal_input"          
             id="expense-item"
             label="Item"
             onChange={e => setItem(e.target.value)}
