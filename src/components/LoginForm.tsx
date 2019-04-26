@@ -19,7 +19,7 @@ import {
 import { Account, Budget, Category, Goal, Subcategory, Transaction } from '../types';
 import { Form } from './';
 
-interface LoginFormProps {}
+interface LoginFormProps { }
 
 interface DispatchMappedProps {
   setAccounts: (accounts: Account[]) => void;
@@ -30,7 +30,7 @@ interface DispatchMappedProps {
   setTransactions: (transactions: Transaction[]) => void;
 }
 
-interface LoginFormMergedProps extends RouteComponentProps, DispatchMappedProps, LoginFormProps {}
+interface LoginFormMergedProps extends RouteComponentProps, DispatchMappedProps, LoginFormProps { }
 
 const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
   history,
@@ -113,7 +113,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
             setError('');
           }}
           margin="normal"
-          helperText={!isValidEmail() ? 'Invalid format' : 'Hint: jdoe@example.com'}
+          helperText={submit && !isValidEmail() ? 'Invalid format' : 'Hint: jdoe@example.com'}
           error={submit && (!!error || !isValidEmail())}
         />
         <TextField
