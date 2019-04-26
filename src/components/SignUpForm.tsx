@@ -18,7 +18,7 @@ import {
 import { Account, Budget, Category, Goal, Subcategory, Transaction, User } from '../types';
 import { Form } from './';
 
-interface SignUpFormProps extends RouteComponentProps {}
+interface SignUpFormProps extends RouteComponentProps { }
 
 interface DispatchMappedProps {
   addCategory: (cat: Category) => void;
@@ -32,7 +32,7 @@ interface DispatchMappedProps {
   setTransactions: (transactions: Transaction[]) => void;
 }
 
-interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps {}
+interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps { }
 
 const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
   addCategory,
@@ -46,6 +46,7 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
   setSubcategories,
   setTransactions
 }) => {
+  const [submit, setSubmit] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [email, setEmail] = React.useState<string>('');
   const [error, setError] = React.useState<string | null>(null);
@@ -83,8 +84,9 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    setSubmitting(true);
     event.preventDefault();
+    setSubmit(true);
+    setSubmitting(true);
     auth
       .doCreateUserWithEmailAndPassword(email, password)
       .then(async (user: any) => {
@@ -122,14 +124,24 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
           autoFocus={true}
           id="signupForm_firstName"
           label="First Name"
-          onChange={e => setFirstname(e.target.value.trim())}
+          onChange={e => {
+            setFirstname(e.target.value.trim());
+            setSubmitting(false);
+            setSubmit(false);
+            setError('');
+          }}
           margin="normal"
           error={!!error}
         />
         <TextField
           id="signupForm_lastName"
           label="Last Name"
-          onChange={e => setLastname(e.target.value.trim())}
+          onChange={e => {
+            setLastname(e.target.value.trim());
+            setSubmitting(false);
+            setSubmit(false);
+            setError('');
+          }}
           margin="normal"
           error={!!error}
         />
@@ -137,17 +149,27 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
           className="signupForm_email"
           id="signupForm_email"
           label="Email"
-          helperText={!isValidEmail() ? 'Invalid format' : 'Hint: jdoe@example.com'}
-          error={!!error || !isValidEmail()}
+          helperText={submit && !isValidEmail() ? 'Invalid format' : 'Hint: jdoe@example.com'}
+          error={submit && (!!error || !isValidEmail())}
           margin="normal"
-          onChange={e => setEmail(e.target.value.trim())}
+          onChange={e => {
+            setEmail(e.target.value.trim());
+            setSubmitting(false);
+            setSubmit(false);
+            setError('');
+          }}
         />
         <TextField
           id="signupForm_password"
           label="Password"
           type="password"
           className="form_inputField"
-          onChange={e => setPassword(e.target.value.trim())}
+          onChange={e => {
+            setPassword(e.target.value.trim());
+            setSubmitting(false);
+            setSubmit(false);
+            setError('');
+          }}
           margin="normal"
           error={!!error}
           variant="standard"
@@ -157,7 +179,12 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
           label="Confirm Password"
           type="password"
           className="form_inputField"
-          onChange={e => setPasswordConfirm(e.target.value.trim())}
+          onChange={e => {
+            setPasswordConfirm(e.target.value.trim());
+            setSubmitting(false);
+            setSubmit(false);
+            setError('');
+          }}
           margin="normal"
           error={!!error}
           variant="standard"
