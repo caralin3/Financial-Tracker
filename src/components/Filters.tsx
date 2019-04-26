@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { Column, Option, Transaction } from '../types';
-import { removeDupObjs } from '../util';
+import { removeDupObjs, sort } from '../util';
 import { SelectInput } from './Form';
 
 export interface FiltersProps {
@@ -61,7 +61,7 @@ export const Filters: React.SFC<FiltersProps> = ({
         options.push({ label: d[col.id], value: d[col.id] });
       });
     }
-    return removeDupObjs(options);
+    return removeDupObjs(sort(options, 'desc', 'label'));
   };
 
   const getSelected = (index: number) => {

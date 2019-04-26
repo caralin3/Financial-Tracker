@@ -102,7 +102,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = ({
 
   const isDuplicate = () => {
     const dups = categories.filter(cat => cat.name === name.trim()) || [];
-    return dups.length > 0;
+    return !params.id && dups.length > 0;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

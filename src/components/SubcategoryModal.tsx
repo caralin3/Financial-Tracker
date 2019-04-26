@@ -107,7 +107,7 @@ const DisconnectedSubcategoryModal: React.SFC<SubcategoryModalMergedProps> = ({
 
   const isDuplicate = () => {
     const dups = subcategories.filter(sub => sub.name === name.trim() && sub.category.id === categoryId) || [];
-    return dups.length > 0;
+    return !params.id && dups.length > 0;
   };
 
   const isValidCategoryId = () => categoryId.trim().length > 0;

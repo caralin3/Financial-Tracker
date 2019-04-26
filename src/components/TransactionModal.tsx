@@ -15,7 +15,7 @@ import { Dispatch } from 'redux';
 import { theme } from '../appearance';
 import { requests } from '../firebase/db';
 import { FBTransaction } from '../firebase/types';
-import { transactionsState } from '../store';
+import { accountsState, transactionsState } from '../store';
 import { Account, ApplicationState, Category, Subcategory, Transaction, transactionType, User } from '../types';
 import { formatDateTime, getOptions, removeDups } from '../util';
 import { Alert, AutoTextField, Loading, ModalForm, SelectInput } from './';
@@ -26,6 +26,7 @@ interface RouteParams {
 
 interface DispatchMappedProps {
   addTransaction: (trans: Transaction) => void;
+  editAccount: (acc: Account) => void;
   editTransaction: (trans: Transaction) => void;
 }
 
@@ -47,9 +48,9 @@ interface TransactionModalProps {
 
 interface TransactionModalMergedProps
   extends RouteComponentProps<RouteParams>,
-    StateMappedProps,
-    DispatchMappedProps,
-    TransactionModalProps {}
+  StateMappedProps,
+  DispatchMappedProps,
+  TransactionModalProps { }
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
   accounts,
@@ -57,6 +58,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
   buttonText,
   categories,
   currentUser,
+  editAccount,
   editTransaction,
   history,
   location,
@@ -224,10 +226,36 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
         };
 
         if (params.id) {
+          const [oldTrans] = transactions.filter(trans => trans.id === params.id);
+          const prevAmount = oldTrans.amount;
           const edited = await requests.transactions.updateTransaction(
             { id: params.id, ...newTransaction },
             editTransaction
           );
+          if (newTransaction.type === 'expense') {
+            const updatedAcc: Account = {
+              ...fromAcc,
+              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
+            }
+            await requests.accounts.updateAccount(updatedAcc, editAccount);
+          } else if (newTransaction.type === 'income') {
+            const updatedAcc: Account = {
+              ...toAcc,
+              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
+            }
+            await requests.accounts.updateAccount(updatedAcc, editAccount);
+          } else {
+            const updatedFromAcc: Account = {
+              ...fromAcc,
+              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
+            }
+            const updatedToAcc: Account = {
+              ...toAcc,
+              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
+            }
+            await requests.accounts.updateAccount(updatedFromAcc, editAccount);
+            await requests.accounts.updateAccount(updatedToAcc, editAccount);
+          }
           if (edited) {
             handleClose();
             if (onSuccess) {
@@ -238,6 +266,30 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
           }
         } else {
           const added = await requests.transactions.createTransaction(newTransaction, addTransaction);
+          if (newTransaction.type === 'expense') {
+            const updatedAcc: Account = {
+              ...fromAcc,
+              amount: fromAcc.amount - newTransaction.amount,
+            }
+            await requests.accounts.updateAccount(updatedAcc, editAccount);
+          } else if (newTransaction.type === 'income') {
+            const updatedAcc: Account = {
+              ...toAcc,
+              amount: toAcc.amount + newTransaction.amount,
+            }
+            await requests.accounts.updateAccount(updatedAcc, editAccount);
+          } else {
+            const updatedFromAcc: Account = {
+              ...fromAcc,
+              amount: fromAcc.amount - newTransaction.amount,
+            }
+            const updatedToAcc: Account = {
+              ...toAcc,
+              amount: toAcc.amount + newTransaction.amount,
+            }
+            await requests.accounts.updateAccount(updatedFromAcc, editAccount);
+            await requests.accounts.updateAccount(updatedToAcc, editAccount);
+          }
           if (added) {
             setSuccess(true);
             setSubmit(false);
@@ -594,6 +646,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   addTransaction: (trans: Transaction) => dispatch(transactionsState.addTransaction(trans)),
+  editAccount: (acc: Account) => dispatch(accountsState.editAccount(acc)),
   editTransaction: (trans: Transaction) => dispatch(transactionsState.editTransaction(trans))
 });
 
