@@ -28,7 +28,7 @@ import config from '../config';
 import { requests } from '../firebase/db';
 import { FBTransaction } from '../firebase/types';
 import { Account, Category, Column, Option, Subcategory, Transaction } from '../types';
-import { formatDateTime, getTransactionByRange } from '../util';
+import { formatDateTime, formatMoney, getArrayTotal, getTransactionByRange } from '../util';
 import { Alert, Columns, Filters, Popup } from './';
 
 interface TableHeadProps {
@@ -68,7 +68,7 @@ export const TableHead: React.SFC<TableHeadProps> = ({
           <TableCell
             key={col.id}
             align={index !== 0 && col.numeric ? 'right' : 'left'}
-            padding={index === 0 ? 'none' : 'default'}
+            padding={index === 0 ? 'none' : col.numeric ? 'dense' : 'default'}
             sortDirection={orderBy === col.id ? order : false}
           >
             <Tooltip title="Sort" placement={col.numeric ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
@@ -669,6 +669,8 @@ const Table: React.SFC<TableProps> = ({
 
   const editType = title.endsWith('s') ? title.toLowerCase().slice(0, title.length - 1) : title.toLowerCase();
 
+  const total = getArrayTotal(displayData);
+
   return (
     <Paper className={classes.root} elevation={8}>
       <TableToolbar
@@ -708,46 +710,62 @@ const Table: React.SFC<TableProps> = ({
           />
           <TableBody>
             {displayData.length > 0 ? (
-              stableSort(displayData, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(n => {
-                  const sel: boolean = isSelected(n.id);
-                  return (
-                    <TableRow
-                      className="table_row"
-                      hover={true}
-                      onClick={event => handleClick(event, n.id)}
-                      role="checkbox"
-                      aria-checked={sel}
-                      tabIndex={-1}
-                      key={n.id}
-                      selected={sel}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox checked={sel} />
-                      </TableCell>
-                      {displayColumns.map((col, index) => {
-                        if (index === 0) {
+              <>
+                {stableSort(displayData, getSorting(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(n => {
+                    const sel: boolean = isSelected(n.id);
+                    return (
+                      <TableRow
+                        className="table_row"
+                        hover={true}
+                        onClick={event => handleClick(event, n.id)}
+                        role="checkbox"
+                        aria-checked={sel}
+                        tabIndex={-1}
+                        key={n.id}
+                        selected={sel}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox checked={sel} />
+                        </TableCell>
+                        {displayColumns.map((col, index) => {
+                          if (index === 0) {
+                            return (
+                              <TableCell
+                                key={col.id}
+                                classes={{ root: classes.firstCell }}
+                                component="th"
+                                scope="row"
+                                padding="none"
+                              >
+                                {n[col.id]}
+                              </TableCell>
+                            );
+                          }
                           return (
-                            <TableCell key={col.id} component="th" scope="row" padding="none">
+                            <TableCell
+                              key={col.id}
+                              classes={{ root: classes.cell }}
+                              align={col.numeric ? 'right' : 'left'}
+                              padding={col.numeric ? 'dense' : 'none'}
+                            >
                               {n[col.id]}
                             </TableCell>
                           );
-                        }
-                        return (
-                          <TableCell
-                            key={col.id}
-                            className="table_cell"
-                            align={col.numeric ? 'right' : 'left'}
-                            padding="none"
-                          >
-                            {n[col.id]}
-                          </TableCell>
-                        );
-                      })}
-                    </TableRow>
-                  );
-                })
+                        })}
+                      </TableRow>
+                    );
+                  })}
+                <TableRow>
+                  <TableCell colSpan={title === 'Expenses' ? 5 : 3} />
+                  <TableCell classes={{ root: classes.total }}>Total</TableCell>
+                  <TableCell classes={{ root: classes.total }} align="right" padding="dense">
+                    {formatMoney(total)}
+                  </TableCell>
+                  <TableCell classes={{ root: classes.total }} colSpan={3} />
+                </TableRow>
+              </>
             ) : (
               <TableRow className="table_row" role="checkbox" aria-checked={false} tabIndex={-1} selected={false}>
                 <TableCell colSpan={2} />
@@ -791,12 +809,26 @@ const styles = (theme: Theme) => ({
       padding: 12
     }
   },
+  cell: {
+    borderBottom: 'none',
+    paddingLeft: '1.5rem'
+  },
+  firstCell: {
+    borderBottom: 'none',
+    paddingRight: '1rem'
+  },
   root: {
     marginBottom: theme.spacing.unit * 5
   },
   table: {
     minWidth: 1020
+  },
+  total: {
+    borderBottom: 'none',
+    // borderBottom: `1px solid ${theme.palette.primary.main}`,
+    borderTop: `1.5px solid ${theme.palette.primary.main}`,
+    fontWeight: 'bold'
   }
 });
 
-export const DataTable = withStyles(styles)(Table);
+export const DataTable = withStyles(styles as any)(Table);
