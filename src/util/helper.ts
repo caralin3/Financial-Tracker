@@ -118,27 +118,27 @@ export const expenseColumns = [
   createColumns('category', 'Category', false),
   createColumns('subcategory', 'Subcategory', false),
   createColumns('date', 'Date', false),
-  createColumns('amount', 'Amount', false),
-  createColumns('note', 'Note', false),
-  createColumns('tags', 'Tags', false)
+  createColumns('amount', 'Amount', true),
+  createColumns('note', 'Note', true),
+  createColumns('tags', 'Tags', true)
 ];
 
 export const incomeColumns = [
   createColumns('item', 'From', false),
   createColumns('to', 'To', false),
   createColumns('date', 'Date', false),
-  createColumns('amount', 'Amount', false),
-  createColumns('note', 'Note', false),
-  createColumns('tags', 'Tags', false)
+  createColumns('amount', 'Amount', true),
+  createColumns('note', 'Note', true),
+  createColumns('tags', 'Tags', true)
 ];
 
 export const transferColumns = [
   createColumns('from', 'From', false),
   createColumns('to', 'To', false),
   createColumns('date', 'Date', false),
-  createColumns('amount', 'Amount', false),
-  createColumns('note', 'Note', false),
-  createColumns('tags', 'Tags', false)
+  createColumns('amount', 'Amount', true),
+  createColumns('note', 'Note', true),
+  createColumns('tags', 'Tags', true)
 ];
 
 export const getObjectByType = (arr: any[], type: accountType | transactionType) =>

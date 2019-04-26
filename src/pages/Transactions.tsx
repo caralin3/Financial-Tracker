@@ -42,9 +42,9 @@ interface StateMappedProps {
 
 interface TransactionsMergedProps
   extends RouteComponentProps,
-  StateMappedProps,
-  DispatchMappedProps,
-  TransactionsPageProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    TransactionsPageProps {}
 
 const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
   accounts,
@@ -151,54 +151,54 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
       {loading ? (
         <Loading />
       ) : (
-          <div>
-            <DataTable
-              accounts={accounts}
-              addTransaction={addTransaction}
-              categories={categories}
-              columns={expenseColumns}
-              data={expenses}
-              dateOptions={dateOptions(expenses)}
-              defaultSort={{ dir: 'desc', orderBy: 'date' }}
-              editAccount={editAccount}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              subcategories={subcategories}
-              title="Expenses"
-              userId={currentUser ? currentUser.id : ''}
-            />
-            <DataTable
-              accounts={accounts}
-              addTransaction={addTransaction}
-              categories={categories}
-              columns={incomeColumns}
-              data={income}
-              dateOptions={dateOptions(income)}
-              defaultSort={{ dir: 'desc', orderBy: 'date' }}
-              editAccount={editAccount}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              subcategories={subcategories}
-              title="Income"
-              userId={currentUser ? currentUser.id : ''}
-            />
-            <DataTable
-              accounts={accounts}
-              addTransaction={addTransaction}
-              categories={categories}
-              columns={transferColumns}
-              data={transfers}
-              dateOptions={dateOptions(transfers)}
-              defaultSort={{ dir: 'desc', orderBy: 'date' }}
-              editAccount={editAccount}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-              subcategories={subcategories}
-              title="Transfers"
-              userId={currentUser ? currentUser.id : ''}
-            />
-          </div>
-        )}
+        <div>
+          <DataTable
+            accounts={accounts}
+            addTransaction={addTransaction}
+            categories={categories}
+            columns={expenseColumns}
+            data={expenses}
+            dateOptions={dateOptions(expenses)}
+            defaultSort={{ dir: 'desc', orderBy: 'date' }}
+            editAccount={editAccount}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            subcategories={subcategories}
+            title="Expenses"
+            userId={currentUser ? currentUser.id : ''}
+          />
+          <DataTable
+            accounts={accounts}
+            addTransaction={addTransaction}
+            categories={categories}
+            columns={incomeColumns}
+            data={income}
+            dateOptions={dateOptions(income)}
+            defaultSort={{ dir: 'desc', orderBy: 'date' }}
+            editAccount={editAccount}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            subcategories={subcategories}
+            title="Income"
+            userId={currentUser ? currentUser.id : ''}
+          />
+          <DataTable
+            accounts={accounts}
+            addTransaction={addTransaction}
+            categories={categories}
+            columns={transferColumns}
+            data={transfers}
+            dateOptions={dateOptions(transfers)}
+            defaultSort={{ dir: 'desc', orderBy: 'date' }}
+            editAccount={editAccount}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+            subcategories={subcategories}
+            title="Transfers"
+            userId={currentUser ? currentUser.id : ''}
+          />
+        </div>
+      )}
     </Layout>
   );
 };

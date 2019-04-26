@@ -15,7 +15,7 @@ export interface ExpandableCardProps {
 }
 
 export const ExpandableCard: React.SFC<ExpandableCardProps> = ({ children, className, expanded, onToggle, title }) => (
-  <Card className={className} raised={true}>
+  <Card className={className} raised={true} onClick={onToggle}>
     <CardHeader
       action={<IconButton onClick={onToggle}>{expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}</IconButton>}
       title={title}

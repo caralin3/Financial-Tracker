@@ -28,6 +28,7 @@ const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = ({
   <Card className={className} raised={true}>
     <CardHeader
       classes={{
+        root: classes.header,
         subheader: classes.subheader,
         title: classes.title
       }}
@@ -43,7 +44,7 @@ const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = ({
       title={title}
       subheader={subheader}
     />
-    <CardContent>
+    <CardContent className={classes.content}>
       {children}
       {/* {actions && <CardActions className={classes.actions}>{actions.map(action => action)}</CardActions>} */}
     </CardContent>
@@ -55,6 +56,12 @@ const styles = (theme: Theme) => ({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end'
+  },
+  content: {
+    paddingTop: 0
+  },
+  header: {
+    paddingBottom: 0
   },
   subheader: {
     color: theme.palette.primary.dark,

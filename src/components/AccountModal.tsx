@@ -57,7 +57,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = ({
   transactions
 }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
@@ -160,7 +159,10 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = ({
         } else {
           const added = await requests.accounts.createAccount(newAccount, addAccount);
           if (added) {
-            setSuccess(true);
+            handleClose();
+            if (onSuccess) {
+              onSuccess();
+            }
             setSubmit(false);
             setSubmitting(false);
           } else {
@@ -189,12 +191,6 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = ({
         </div>
       ) : (
         <Grid className="accountModal_grid" container={true} alignItems="center" justify="center" spacing={24}>
-          <Alert
-            onClose={() => setSuccess(false)}
-            open={success}
-            variant="success"
-            message={`${name} has been added to ${type}`}
-          />
           <Alert
             onClose={() => setError(false)}
             open={error}

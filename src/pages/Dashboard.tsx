@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -17,7 +18,7 @@ import { compose } from 'recompose';
 import { withAuthorization } from '../auth/withAuthorization';
 import {
   AccountModal,
-  // Alert,
+  Alert,
   BudgetCard,
   DashboardCard,
   DropdownMenu,
@@ -54,18 +55,18 @@ interface DashboardMergedProps extends RouteComponentProps<any>, StateMappedProp
 const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
   accounts,
   budgets,
+  classes,
   currentUser,
   goals,
   transactions
 }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
-  // const [success, setSuccess] = React.useState<boolean>(false);
-  // const [successMsg, setSuccessMsg] = React.useState<string>('');
+  const [success, setSuccess] = React.useState<boolean>(false);
   const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(false);
   const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(false);
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
   const [addingTrans, setAddingTrans] = React.useState<boolean>(false);
-  const [expanded, setExpanded] = React.useState<number>(1);
+  const [expanded, setExpanded] = React.useState<number>(0);
   const [selected, setSelected] = React.useState<number>(2);
   const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
   const [subheader, setSubheader] = React.useState<string>('');
@@ -154,7 +155,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
               expanded={expanded === index + 1}
               onChange={handleExpansion(index)}
             >
-              <ExpansionPanelSummary className="dashboard_fullRow">
+              <ExpansionPanelSummary classes={{ root: classes.panelSummary, content: classes.panelContent }}>
                 <div className="dashboard_row">
                   <ListItemText
                     primaryTypographyProps={{ className: 'dashboard_item-label dashboard_bold' }}
@@ -167,7 +168,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
                   primary={formatMoney(getArrayTotal(getObjectByType(accounts, accType.value)))}
                 />
               </ExpansionPanelSummary>
-              <ExpansionPanelDetails className="dashboard_fullRow">
+              <ExpansionPanelDetails className="dashboard_fullRow dashboard_listContainer">
                 <List className="dashboard_list">
                   {getObjectByType(accounts, accType.value).length === 0 ? (
                     <ListItem>No {accType.value} accounts</ListItem>
@@ -220,8 +221,14 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       title={`${username} Dashboard`}
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
-      {/* <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} /> */}
-      <AccountModal title="Add Account" buttonText="Add" open={addingAccount} onClose={() => setAddingAccount(false)} />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="Account added" />
+      <AccountModal
+        title="Add Account"
+        buttonText="Add"
+        open={addingAccount}
+        onClose={() => setAddingAccount(false)}
+        onSuccess={() => setSuccess(true)}
+      />
       <TransactionModal
         title="Add Transaction"
         buttonText="Add"
@@ -297,6 +304,18 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
   );
 };
 
+const styles = () => ({
+  panelContent: {
+    '& > :last-child': {
+      paddingRight: '0 !important'
+    },
+    color: 'blue !important'
+  },
+  panelSummary: {
+    padding: 0
+  }
+});
+
 const authCondition = (authUser: any) => !!authUser;
 
 const mapStateToProps = (state: ApplicationState) => ({
@@ -310,6 +329,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 export const DashboardPage = compose(
   withAuthorization(authCondition),
+  withStyles(styles),
   withRouter,
   connect(
     mapStateToProps,

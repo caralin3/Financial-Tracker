@@ -45,7 +45,7 @@ interface StateMappedProps {
   drawerExpanded: boolean;
 }
 
-interface NavigationMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, NavigationProps { }
+interface NavigationMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, NavigationProps {}
 
 interface NavigationState {
   open: boolean;
