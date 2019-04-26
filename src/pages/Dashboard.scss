@@ -48,16 +48,29 @@
     align-items: center;
     display: flex;
     justify-content: space-between;
+    padding: 0 !important;
     width: 100%;
   }
 
   &_list {
+    background-color: $highlight;
+    padding: 1rem 16px 1rem 16px !important;
     width: 100%;
   }
 
   &_listItem {
-    margin: 1rem 0 !important;
+    margin: 0 0 1rem !important;
     padding: 0 !important;
+  }
+
+  &_listContainer {
+    margin-bottom: 1rem;
+  }
+
+  &_panelSummary {
+    &:last-child {
+      padding-right: 0 !important;
+    }
   }
 
   &_item {
@@ -71,13 +84,14 @@
     }
 
     &-panel {
-      align-items: flex-start;
+      padding: 0 16px !important;
+      align-items: stretch;
       border: none !important;
       border-bottom: 1px solid $highlight !important;
       box-shadow: none !important;
       display: flex;
-      justify-content: space-between;
       flex-direction: column;
+      justify-content: space-between;
       overflow-x: hidden;
       width: inherit;
     }

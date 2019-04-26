@@ -18,7 +18,7 @@ import {
 import { Account, Budget, Category, Goal, Subcategory, Transaction, User } from '../types';
 import { Form } from './';
 
-interface SignUpFormProps extends RouteComponentProps { }
+interface SignUpFormProps extends RouteComponentProps {}
 
 interface DispatchMappedProps {
   addCategory: (cat: Category) => void;
@@ -32,7 +32,7 @@ interface DispatchMappedProps {
   setTransactions: (transactions: Transaction[]) => void;
 }
 
-interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps { }
+interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps {}
 
 const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
   addCategory,

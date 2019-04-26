@@ -113,7 +113,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
       id: 'cash',
       label: 'Cash',
       toggle: () => setCashExpanded(!cashExpanded)
-    },
+    }
   ];
 
   const addButton = (fullWidth: boolean) => (
@@ -199,7 +199,12 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
             {accountTypes.map(type => {
               return (
                 <Grid item={true} xs={12} key={type.id}>
-                  <ExpandableCard className="accounts_expandableCard" title={type.label} expanded={type.expanded} onToggle={type.toggle}>
+                  <ExpandableCard
+                    className="accounts_expandableCard"
+                    title={type.label}
+                    expanded={type.expanded}
+                    onToggle={type.toggle}
+                  >
                     <List>
                       {getObjectByType(accounts, type.id).length === 0 ? (
                         <ListItem>No {type.id} accounts</ListItem>

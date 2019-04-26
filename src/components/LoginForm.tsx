@@ -19,7 +19,7 @@ import {
 import { Account, Budget, Category, Goal, Subcategory, Transaction } from '../types';
 import { Form } from './';
 
-interface LoginFormProps { }
+interface LoginFormProps {}
 
 interface DispatchMappedProps {
   setAccounts: (accounts: Account[]) => void;
@@ -30,7 +30,7 @@ interface DispatchMappedProps {
   setTransactions: (transactions: Transaction[]) => void;
 }
 
-interface LoginFormMergedProps extends RouteComponentProps, DispatchMappedProps, LoginFormProps { }
+interface LoginFormMergedProps extends RouteComponentProps, DispatchMappedProps, LoginFormProps {}
 
 const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
   history,

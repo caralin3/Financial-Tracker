@@ -48,9 +48,9 @@ interface TransactionModalProps {
 
 interface TransactionModalMergedProps
   extends RouteComponentProps<RouteParams>,
-  StateMappedProps,
-  DispatchMappedProps,
-  TransactionModalProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    TransactionModalProps {}
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
   accounts,
@@ -235,24 +235,24 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
           if (newTransaction.type === 'expense') {
             const updatedAcc: Account = {
               ...fromAcc,
-              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
-            }
+              amount: fromAcc.amount + prevAmount - newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedAcc, editAccount);
           } else if (newTransaction.type === 'income') {
             const updatedAcc: Account = {
               ...toAcc,
-              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
-            }
+              amount: toAcc.amount - prevAmount + newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedAcc, editAccount);
           } else {
             const updatedFromAcc: Account = {
               ...fromAcc,
-              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
-            }
+              amount: fromAcc.amount + prevAmount - newTransaction.amount
+            };
             const updatedToAcc: Account = {
               ...toAcc,
-              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
-            }
+              amount: toAcc.amount - prevAmount + newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedFromAcc, editAccount);
             await requests.accounts.updateAccount(updatedToAcc, editAccount);
           }
@@ -269,24 +269,24 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
           if (newTransaction.type === 'expense') {
             const updatedAcc: Account = {
               ...fromAcc,
-              amount: fromAcc.amount - newTransaction.amount,
-            }
+              amount: fromAcc.amount - newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedAcc, editAccount);
           } else if (newTransaction.type === 'income') {
             const updatedAcc: Account = {
               ...toAcc,
-              amount: toAcc.amount + newTransaction.amount,
-            }
+              amount: toAcc.amount + newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedAcc, editAccount);
           } else {
             const updatedFromAcc: Account = {
               ...fromAcc,
-              amount: fromAcc.amount - newTransaction.amount,
-            }
+              amount: fromAcc.amount - newTransaction.amount
+            };
             const updatedToAcc: Account = {
               ...toAcc,
-              amount: toAcc.amount + newTransaction.amount,
-            }
+              amount: toAcc.amount + newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedFromAcc, editAccount);
             await requests.accounts.updateAccount(updatedToAcc, editAccount);
           }
