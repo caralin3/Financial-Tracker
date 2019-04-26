@@ -1,11 +1,23 @@
 @import '../appearance/styles/variables.scss';
 
 .filters {
+  max-height: 25rem;
+  overflow-y: auto;
   padding: 1rem;
+  
+  @media #{$medium} {
+    max-height: none;
+  }
 
   &_header {
     align-items: center;
     display: flex;
+    justify-content: space-between;
+
+    &-left {
+      align-items: center;
+      display: flex;
+    }
   }
 
   &_button {

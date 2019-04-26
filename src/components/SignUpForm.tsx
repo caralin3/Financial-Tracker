@@ -18,7 +18,7 @@ import {
 import { Account, Budget, Category, Goal, Subcategory, Transaction, User } from '../types';
 import { Form } from './';
 
-interface SignUpFormProps extends RouteComponentProps { }
+interface SignUpFormProps extends RouteComponentProps {}
 
 interface DispatchMappedProps {
   addCategory: (cat: Category) => void;
@@ -32,7 +32,7 @@ interface DispatchMappedProps {
   setTransactions: (transactions: Transaction[]) => void;
 }
 
-interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps { }
+interface SignUpMergedProps extends DispatchMappedProps, SignUpFormProps {}
 
 const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
   addCategory,
@@ -131,7 +131,8 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
             setError('');
           }}
           margin="normal"
-          error={!!error}
+          error={submit && isEmpty(firstName)}
+          helperText={submit && isEmpty(firstName) && 'Required'}
         />
         <TextField
           id="signupForm_lastName"
@@ -143,13 +144,14 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
             setError('');
           }}
           margin="normal"
-          error={!!error}
+          error={submit && isEmpty(lastName)}
+          helperText={submit && !isEmpty(lastName) && 'Required'}
         />
         <TextField
           className="signupForm_email"
           id="signupForm_email"
           label="Email"
-          helperText={submit && !isValidEmail() ? 'Invalid format' : 'Hint: jdoe@example.com'}
+          helperText={submit && !isValidEmail() && 'Invalid format'}
           error={submit && (!!error || !isValidEmail())}
           margin="normal"
           onChange={e => {
@@ -171,7 +173,8 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
             setError('');
           }}
           margin="normal"
-          error={!!error}
+          error={submit && (!!error || isEmpty(password))}
+          helperText={submit && isEmpty(password) && 'Required'}
           variant="standard"
         />
         <TextField
@@ -186,7 +189,8 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
             setError('');
           }}
           margin="normal"
-          error={!!error}
+          error={submit && (!!error || isEmpty(passwordConfirm))}
+          helperText={submit && isEmpty(password) && 'Required'}
           variant="standard"
         />
       </Form>

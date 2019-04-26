@@ -17,7 +17,7 @@ export const doSignOut = () => auth.signOut();
 export const doPasswordReset = (email: string) => auth.sendPasswordResetEmail(email);
 
 // Password Change
-export const doReauthentication = (currentPassword: string) => {
+export const doReauthentication = async (currentPassword: string) => {
   if (auth.currentUser) {
     const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email || '', currentPassword);
     return auth.currentUser.reauthenticateAndRetrieveDataWithCredential(credential);
@@ -25,7 +25,9 @@ export const doReauthentication = (currentPassword: string) => {
   if (config.env === 'development') {
     console.log('No authenticated user');
   }
-  return new Promise((res, rej) => rej('No authenticated user.'));
+  return new Promise(() => {
+    throw Error('Error: User is not authenticated, please try again later');
+  });
 };
 
 export const doPasswordUpdate = async (password: string) => {
@@ -35,5 +37,16 @@ export const doPasswordUpdate = async (password: string) => {
   if (config.env === 'development') {
     console.log('No authenticated user');
   }
-  return new Promise((res, rej) => rej('No authenticated user.'));
+  return new Promise(() => {
+    throw Error('Error: User is not authenticated, please try again later');
+  });
+};
+
+export const doDeleteAccount = async () => {
+  if (auth.currentUser) {
+    return auth.currentUser.delete();
+  }
+  return new Promise(() => {
+    throw Error('Error: User is not authenticated, please try again later');
+  });
 };

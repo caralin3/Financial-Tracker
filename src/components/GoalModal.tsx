@@ -304,7 +304,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
                   options={itemOptions()}
                 />
               </Grid>
-              <Grid item={true} xs={12} sm={12} md={submit && !isValidFrequency() ? 3 : 2}>
+              <Grid item={true} xs={12} lg={submit && !isValidFrequency() ? 3 : 2}>
                 <Typography color="primary" variant="body1" style={{ alignItems: 'flex-end', display: 'flex' }}>
                   Frequency
                   {submit && !isValidFrequency() && (
@@ -314,9 +314,9 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
                   )}
                 </Typography>
               </Grid>
-              <Grid item={true} xs={12} sm={12} md={submit && !isValidFrequency() ? 9 : 10}>
-                <Grid container={true} spacing={0} alignItems="center" justify="center">
-                  <Grid item={true} xs={4}>
+              <Grid item={true} xs={12} lg={submit && !isValidFrequency() ? 9 : 10}>
+                <Grid className="goalModal_freq" container={true} spacing={0} alignItems="center" justify="center">
+                  <Grid item={true} xs={12} sm={4}>
                     <FormControlLabel
                       value="monthly"
                       control={<Radio color="primary" checked={frequency === 'monthly'} />}
@@ -325,7 +325,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
                       onChange={(e: any) => setFrequency(e.target.value)}
                     />
                   </Grid>
-                  <Grid item={true} xs={4}>
+                  <Grid item={true} xs={12} sm={4}>
                     <FormControlLabel
                       value="yearly"
                       control={<Radio color="primary" checked={frequency === 'yearly'} />}
@@ -334,51 +334,53 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
                       onChange={(e: any) => setFrequency(e.target.value)}
                     />
                   </Grid>
-                  <Grid item={true} xs={4}>
+                  <Grid item={true} xs={12} sm={4}>
                     <FormControlLabel
                       value="custom"
                       control={<Radio color="primary" checked={frequency === 'custom'} />}
-                      label="Custom range"
+                      label="Custom"
                       labelPlacement="end"
                       onChange={(e: any) => setFrequency(e.target.value)}
                     />
                   </Grid>
                 </Grid>
               </Grid>
-              {frequency === 'custom' && (
-                <Grid item={true} xs={12} sm={6}>
-                  <TextField
-                    id="start-date"
-                    label="Start Date"
-                    fullWidth={true}
-                    value={startDate}
-                    onChange={e => setStartDate(e.target.value)}
-                    type="date"
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </Grid>
-              )}
-              {frequency === 'custom' && (
-                <Grid item={true} xs={12} sm={6}>
-                  <TextField
-                    id="end-date"
-                    label="End Date"
-                    fullWidth={true}
-                    value={endDate}
-                    onChange={e => setEndDate(e.target.value)}
-                    type="date"
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </Grid>
-              )}
+              <Grid container={true} spacing={16} alignItems="center" justify="center">
+                {frequency === 'custom' && (
+                  <Grid item={true} xs={12} sm={6}>
+                    <TextField
+                      id="start-date"
+                      label="Start Date"
+                      fullWidth={true}
+                      value={startDate}
+                      onChange={e => setStartDate(e.target.value)}
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      margin="normal"
+                      variant="outlined"
+                    />
+                  </Grid>
+                )}
+                {frequency === 'custom' && (
+                  <Grid item={true} xs={12} sm={6}>
+                    <TextField
+                      id="end-date"
+                      label="End Date"
+                      fullWidth={true}
+                      value={endDate}
+                      onChange={e => setEndDate(e.target.value)}
+                      type="date"
+                      InputLabelProps={{
+                        shrink: true
+                      }}
+                      margin="normal"
+                      variant="outlined"
+                    />
+                  </Grid>
+                )}
+              </Grid>
             </Grid>
           )}
         </Grid>

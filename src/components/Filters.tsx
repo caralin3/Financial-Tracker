@@ -1,6 +1,8 @@
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
 import * as React from 'react';
 import { Column, Option, Transaction } from '../types';
 import { removeDupObjs, sort } from '../util';
@@ -11,6 +13,7 @@ export interface FiltersProps {
   data: Transaction[];
   dateOptions: Option[];
   filters: Column[];
+  onClose: () => void;
   onResetFilters: () => void;
   onSelectFilter: (e: React.ChangeEvent<HTMLSelectElement>, col: string) => void;
 }
@@ -20,6 +23,7 @@ export const Filters: React.SFC<FiltersProps> = ({
   data,
   dateOptions,
   filters,
+  onClose,
   onResetFilters,
   onSelectFilter
 }) => {
@@ -132,10 +136,15 @@ export const Filters: React.SFC<FiltersProps> = ({
   return (
     <div className="filters">
       <div className="filters_header">
-        <Typography className="filters_title">Filters</Typography>
-        <Button onClick={handleReset} color="primary">
-          Reset
-        </Button>
+        <div className="filters_header-left">
+          <Typography className="filters_title">Filters</Typography>
+          <Button onClick={handleReset} color="primary">
+            Reset
+          </Button>
+        </div>
+        <IconButton aria-label="Close" color="primary" onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
       </div>
       <Grid className="filters_grid" container={true} spacing={24}>
         {filters.map((col, index) => (

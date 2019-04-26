@@ -48,9 +48,9 @@ interface TransactionModalProps {
 
 interface TransactionModalMergedProps
   extends RouteComponentProps<RouteParams>,
-  StateMappedProps,
-  DispatchMappedProps,
-  TransactionModalProps { }
+    StateMappedProps,
+    DispatchMappedProps,
+    TransactionModalProps {}
 
 const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
   accounts,
@@ -153,6 +153,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
     if (amount) {
       setAmount(0);
     }
+    setEditing('');
   };
 
   const isValidAmount = () => amount > 0;
@@ -235,24 +236,24 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
           if (newTransaction.type === 'expense') {
             const updatedAcc: Account = {
               ...fromAcc,
-              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
-            }
+              amount: fromAcc.amount + prevAmount - newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedAcc, editAccount);
           } else if (newTransaction.type === 'income') {
             const updatedAcc: Account = {
               ...toAcc,
-              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
-            }
+              amount: toAcc.amount - prevAmount + newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedAcc, editAccount);
           } else {
             const updatedFromAcc: Account = {
               ...fromAcc,
-              amount: (fromAcc.amount + prevAmount) - newTransaction.amount,
-            }
+              amount: fromAcc.amount + prevAmount - newTransaction.amount
+            };
             const updatedToAcc: Account = {
               ...toAcc,
-              amount: (toAcc.amount - prevAmount) + newTransaction.amount,
-            }
+              amount: toAcc.amount - prevAmount + newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedFromAcc, editAccount);
             await requests.accounts.updateAccount(updatedToAcc, editAccount);
           }
@@ -269,24 +270,24 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
           if (newTransaction.type === 'expense') {
             const updatedAcc: Account = {
               ...fromAcc,
-              amount: fromAcc.amount - newTransaction.amount,
-            }
+              amount: fromAcc.amount - newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedAcc, editAccount);
           } else if (newTransaction.type === 'income') {
             const updatedAcc: Account = {
               ...toAcc,
-              amount: toAcc.amount + newTransaction.amount,
-            }
+              amount: toAcc.amount + newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedAcc, editAccount);
           } else {
             const updatedFromAcc: Account = {
               ...fromAcc,
-              amount: fromAcc.amount - newTransaction.amount,
-            }
+              amount: fromAcc.amount - newTransaction.amount
+            };
             const updatedToAcc: Account = {
               ...toAcc,
-              amount: toAcc.amount + newTransaction.amount,
-            }
+              amount: toAcc.amount + newTransaction.amount
+            };
             await requests.accounts.updateAccount(updatedFromAcc, editAccount);
             await requests.accounts.updateAccount(updatedToAcc, editAccount);
           }
@@ -335,6 +336,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
       <Grid className="transModal_grid" container={true} spacing={24}>
         <Grid item={true} xs={12} sm={6}>
           <SelectInput
+            className="transModal_input"
             label="From"
             autoFocus={true}
             helperText={submit && !isValidFrom() ? 'Required' : undefined}
@@ -346,7 +348,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
         </Grid>
         <Grid item={true} xs={12} sm={6}>
           <AutoTextField
-            className="transModal_field--item"
+            className="transModal_input"
             id="expense-item"
             label="Item"
             onChange={e => setItem(e.target.value)}
