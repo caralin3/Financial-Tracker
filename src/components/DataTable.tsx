@@ -24,6 +24,7 @@ import Blob from 'blob';
 import classNames from 'classnames';
 import * as moment from 'moment';
 import * as React from 'react';
+import config from '../config';
 import { requests } from '../firebase/db';
 import { FBTransaction } from '../firebase/types';
 import { Account, Category, Column, Option, Subcategory, Transaction } from '../types';
@@ -243,7 +244,9 @@ export const Toolbar: React.SFC<TableToolbarProps> = ({
       reader.readAsText((fileInput.current as any).files[0]);
       reader.onload = (e: any) => handleImport(e);
       reader.onerror = () => {
-        console.log('Could not import file');
+        if (config.env === 'development') {
+          console.log('Could not import file');
+        }
       };
     }
   };

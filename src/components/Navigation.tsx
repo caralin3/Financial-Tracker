@@ -25,6 +25,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { theme } from '../appearance';
+import config from '../config';
 import { auth } from '../firebase';
 import { routes } from '../routes';
 import { sessionState } from '../store';
@@ -44,7 +45,7 @@ interface StateMappedProps {
   drawerExpanded: boolean;
 }
 
-interface NavigationMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, NavigationProps {}
+interface NavigationMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, NavigationProps { }
 
 interface NavigationState {
   open: boolean;
@@ -219,7 +220,9 @@ class DisconnectedNavigation extends React.Component<NavigationMergedProps, Navi
     auth
       .doSignOut()
       .then(() => {
-        console.log('Logged out');
+        if (config.env === 'development') {
+          console.log('Logged out');
+        }
         this.props.history.push(routes.landing);
       })
       .catch((error: any) => {

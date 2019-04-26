@@ -1,4 +1,5 @@
 import * as firebase from 'firebase/app';
+import config from '../config';
 import { auth } from './fb';
 
 // Sign Up endpoint
@@ -21,7 +22,9 @@ export const doReauthentication = (currentPassword: string) => {
     const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email || '', currentPassword);
     return auth.currentUser.reauthenticateAndRetrieveDataWithCredential(credential);
   }
-  console.log('No authenticated user');
+  if (config.env === 'development') {
+    console.log('No authenticated user');
+  }
   return new Promise((res, rej) => rej('No authenticated user.'));
 };
 
@@ -29,6 +32,8 @@ export const doPasswordUpdate = async (password: string) => {
   if (auth.currentUser) {
     return auth.currentUser.updatePassword(password);
   }
-  console.log('No authenticated user');
+  if (config.env === 'development') {
+    console.log('No authenticated user');
+  }
   return new Promise((res, rej) => rej('No authenticated user.'));
 };

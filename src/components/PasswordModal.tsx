@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
+import config from '../config';
 import { auth } from '../firebase';
 import { ApplicationState, User } from '../types';
 import { Alert, Loading, ModalForm } from './';
@@ -23,7 +24,7 @@ interface PasswordModalProps extends RouteComponentProps<RouteParams> {
   title: string;
 }
 
-interface PasswordModalMergedProps extends RouteComponentProps<RouteParams>, StateMappedProps, PasswordModalProps {}
+interface PasswordModalMergedProps extends RouteComponentProps<RouteParams>, StateMappedProps, PasswordModalProps { }
 
 const DisconnectedPasswordModal: React.SFC<PasswordModalMergedProps> = ({
   buttonText,
@@ -70,7 +71,9 @@ const DisconnectedPasswordModal: React.SFC<PasswordModalMergedProps> = ({
         auth
           .doReauthentication(currentPassword)
           .then((result: any) => {
-            console.log(result);
+            if (config.env === 'development') {
+              console.log(result);
+            }
             auth
               .doPasswordUpdate(password)
               .then(() => {
@@ -78,13 +81,17 @@ const DisconnectedPasswordModal: React.SFC<PasswordModalMergedProps> = ({
                 if (onSuccess) {
                   onSuccess();
                 }
-                console.log('Password changed.');
+                if (config.env === 'development') {
+                  console.log('Password changed.');
+                }
               })
               .catch((err: any) => {
                 setErrorMsg(err.message);
                 setError(true);
                 setSubmitting(false);
-                console.log('Error', err.message);
+                if (config.env === 'development') {
+                  console.log('Error', err.message);
+                }
               });
           })
           .catch((err: any) => {
@@ -92,7 +99,9 @@ const DisconnectedPasswordModal: React.SFC<PasswordModalMergedProps> = ({
             setError(true);
             setInputError(true);
             setSubmitting(false);
-            console.log('Error', err.message);
+            if (config.env === 'development') {
+              console.log('Error', err.message);
+            }
           });
       } else {
         setSubmitting(false);
@@ -115,69 +124,69 @@ const DisconnectedPasswordModal: React.SFC<PasswordModalMergedProps> = ({
           <Loading />
         </div>
       ) : (
-        <div className="passwordModal_form">
-          <Alert onClose={() => setError(false)} open={error} variant="error" message={errorMsg} />
-          <TextField
-            autoFocus={true}
-            id="changePassword_currentPassword"
-            label="Current Password"
-            onChange={e => {
-              setCurrentPassword(e.target.value.trim());
-              setInputError(false);
-              setSubmit(false);
-              setSubmitting(false);
-            }}
-            margin="normal"
-            helperText={
-              submit && !isValidPassword(currentPassword)
-                ? 'Required'
-                : submit && inputError && isValidPassword(currentPassword)
-                ? 'Incorrect Password'
-                : ''
-            }
-            error={
-              (submit && !isValidPassword(currentPassword)) ||
-              (submit && inputError && isValidPassword(currentPassword))
-            }
-            type="password"
-            value={currentPassword}
-          />
-          <TextField
-            id="changePassword_password"
-            label="New Password"
-            onChange={e => {
-              setPassword(e.target.value.trim());
-              setSubmit(false);
-              setSubmitting(false);
-            }}
-            margin="normal"
-            helperText={submit && !isValidPassword(password) ? 'Required' : ''}
-            error={submit && !isValidPassword(password)}
-            type="password"
-            value={password}
-          />
-          <TextField
-            id="changePassword_confirmPassword"
-            label="Confirm Password"
-            onChange={e => {
-              setConfirmPassword(e.target.value.trim());
-              setSubmit(false);
-              setSubmitting(false);
-            }}
-            margin="normal"
-            helperText={
-              submit && !isValidPassword(confirmPassword)
-                ? 'Required'
-                : submit && !isPasswordEqual()
-                ? 'Passwords do not match'
-                : ''
-            }
-            error={submit && !isValid()}
-            type="password"
-            value={confirmPassword}
-          />
-        </div>
-      )}
+          <div className="passwordModal_form">
+            <Alert onClose={() => setError(false)} open={error} variant="error" message={errorMsg} />
+            <TextField
+              autoFocus={true}
+              id="changePassword_currentPassword"
+              label="Current Password"
+              onChange={e => {
+                setCurrentPassword(e.target.value.trim());
+                setInputError(false);
+                setSubmit(false);
+                setSubmitting(false);
+              }}
+              margin="normal"
+              helperText={
+                submit && !isValidPassword(currentPassword)
+                  ? 'Required'
+                  : submit && inputError && isValidPassword(currentPassword)
+                    ? 'Incorrect Password'
+                    : ''
+              }
+              error={
+                (submit && !isValidPassword(currentPassword)) ||
+                (submit && inputError && isValidPassword(currentPassword))
+              }
+              type="password"
+              value={currentPassword}
+            />
+            <TextField
+              id="changePassword_password"
+              label="New Password"
+              onChange={e => {
+                setPassword(e.target.value.trim());
+                setSubmit(false);
+                setSubmitting(false);
+              }}
+              margin="normal"
+              helperText={submit && !isValidPassword(password) ? 'Required' : ''}
+              error={submit && !isValidPassword(password)}
+              type="password"
+              value={password}
+            />
+            <TextField
+              id="changePassword_confirmPassword"
+              label="Confirm Password"
+              onChange={e => {
+                setConfirmPassword(e.target.value.trim());
+                setSubmit(false);
+                setSubmitting(false);
+              }}
+              margin="normal"
+              helperText={
+                submit && !isValidPassword(confirmPassword)
+                  ? 'Required'
+                  : submit && !isPasswordEqual()
+                    ? 'Passwords do not match'
+                    : ''
+              }
+              error={submit && !isValid()}
+              type="password"
+              value={confirmPassword}
+            />
+          </div>
+        )}
     </ModalForm>
   );
 };

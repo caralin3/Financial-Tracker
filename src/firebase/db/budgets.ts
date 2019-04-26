@@ -1,3 +1,4 @@
+import config from '../../config';
 import { Budget } from '../../types';
 import { sort } from '../../util';
 import { FBBudget } from '../types';
@@ -10,7 +11,9 @@ export const createBudget = (budget: FBBudget, addBudget: (bud: Budget) => void)
     .then(doc => {
       // Set budget in store
       addBudget({ id: doc.id, ...budget });
-      console.log('Budget written with ID: ', doc.id);
+      if (config.env === 'development') {
+        console.log('Budget written with ID: ', doc.id);
+      }
       return true;
     })
     .catch(error => {
@@ -41,7 +44,9 @@ export const updateBudget = (budget: Budget, editBudget: (bud: Budget) => void) 
     .then(() => {
       // Edit budget in store
       editBudget(budget);
-      console.log('Budget updated with ID: ', budget.id);
+      if (config.env === 'development') {
+        console.log('Budget updated with ID: ', budget.id);
+      }
       return true;
     })
     .catch(error => {
@@ -57,7 +62,9 @@ export const deleteBudget = (id: string, removeBudget: (id: string) => void) =>
     .then(() => {
       // Delete budget in store
       removeBudget(id);
-      console.log('Budget deleted with ID: ', id);
+      if (config.env === 'development') {
+        console.log('Budget deleted with ID: ', id);
+      }
       return true;
     })
     .catch(error => {
