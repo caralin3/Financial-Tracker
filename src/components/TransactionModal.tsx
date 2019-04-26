@@ -294,6 +294,9 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
             setSuccess(true);
             setSubmit(false);
             setSubmitting(false);
+            if (amount) {
+              setAmount(0);
+            }
           } else {
             setError(true);
           }
