@@ -1,5 +1,7 @@
 import Grid from '@material-ui/core/Grid';
+import { ChartOptions } from 'chart.js';
 import * as React from 'react';
+import { Pie } from 'react-chartjs-2';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
@@ -7,8 +9,8 @@ import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { BudgetCard, DashboardCard, DropdownMenu, GoalCard, Layout, Loading } from '../components';
 // import { routes } from '../routes';
-import { Account, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
-import { getSubheader, getTransactionByRange } from '../util';
+import { Account, accountType, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
+import { formatMoney, getArrayTotal, getExpensesByAccount, getSubheader, getTransactionByRange, removeDups } from '../util';
 
 export interface ReportsPageProps {
   classes: any;
@@ -38,6 +40,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
 }) => {
   const [loading] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, goal: 2 });
+  const [viewAcc, setViewAcc] = React.useState<accountType | ''>('');
   const menuItems = [
     { label: 'This Week', value: 0 },
     { label: 'Last Week', value: 1 },
@@ -53,6 +56,61 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     });
   };
 
+  const bankTotal = getArrayTotal(getExpensesByAccount(transactions, 'bank'));
+  const cashTotal = getArrayTotal(getExpensesByAccount(transactions, 'cash'));
+  const creditTotal = getArrayTotal(getExpensesByAccount(transactions, 'credit'));
+
+  const detailData = () => {
+    const labels = removeDups(getExpensesByAccount(transactions, viewAcc as accountType).map(exp => exp.from.name));
+    const data: number[] = [];
+    labels.forEach(label => {
+      const sum = getArrayTotal(getExpensesByAccount(transactions, viewAcc as accountType).filter(trans => trans.from.name === label));
+      data.push(sum);
+    });
+    return { data, labels };
+  };
+
+  const accountDataSet = viewAcc ? [
+    {
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+      data: detailData().data,
+      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+    }
+  ] : [
+    {
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+      data: [bankTotal, cashTotal, creditTotal],
+      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+    }
+  ]
+
+  const accountPieData = {
+    datasets: accountDataSet,
+    labels: viewAcc ? detailData().labels || [] : ['Bank Accounts', 'Cash', 'Credit']
+  };
+
+  const accountOptions: ChartOptions = {
+    legend: {
+      // display: false,
+      position: 'right',
+    },
+    onClick: (e, items: any) => {
+      if (!viewAcc) {
+        const section = accountPieData.labels[items[0]._index];
+        if (section === 'Bank Accounts') {
+          setViewAcc('bank');
+        } else {
+          setViewAcc(section.toLowerCase() as accountType);
+        }
+      }
+    },
+    tooltips: {
+      callbacks: {
+        label: (item: any, data: any) => `${formatMoney(data.datasets[item.datasetIndex].data[item.index])}`,
+        title: (items: any, data: any) => data.labels[items[0].index],
+      }
+    }
+  }
   // TODO: Create reports
   return (
     <Layout title="Reports">
@@ -104,10 +162,12 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                   onClose={e => handleMenu(e, 'account')}
                 />
               }
-              title="Accounts"
+              title="Account Expenses"
               subheader={getSubheader(menuItems[selected.account].label)}
             >
-              <span>Pie Chart</span>
+              <div>
+                <Pie data={accountPieData} options={accountOptions} />
+              </div>
             </DashboardCard>
           </Grid>
         </Grid>
