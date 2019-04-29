@@ -76,7 +76,6 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
                   endLabel={`${percent.toFixed(0)}%`}
                   leftLabel={budget.category.name}
                   rightLabel={`${formatMoney(spent, true)} of ${formatMoney(total, true)}`}
-                  subLabel={budget.frequency}
                   textColor="primary"
                 />
               </ListItem>

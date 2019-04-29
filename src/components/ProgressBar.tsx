@@ -22,7 +22,7 @@ export const ProgressBar: React.SFC<ProgressBarProps> = ({
     <div className={endLabel ? 'progressBar_paddedRow' : 'progressBar_row'}>
       {leftLabel && (
         <Typography className="progressBar_label" color={textColor}>
-          {leftLabel} {subLabel && <span className="progressBar_sublabel">({subLabel})</span>}
+          <span className="progressBar_label-text">{leftLabel}</span> {subLabel && <span className="progressBar_sublabel">({subLabel})</span>}
         </Typography>
       )}
       {rightLabel && (
