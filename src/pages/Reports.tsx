@@ -1,3 +1,4 @@
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { ChartOptions } from 'chart.js';
 import * as React from 'react';
@@ -10,7 +11,16 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { BudgetCard, DashboardCard, DropdownMenu, GoalCard, Layout, Loading } from '../components';
 // import { routes } from '../routes';
 import { Account, accountType, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
-import { formatMoney, getArrayTotal, getExpensesByAccount, getSubheader, getTransactionByRange, removeDups } from '../util';
+import {
+  formatMoney,
+  getArrayTotal,
+  getExpensesByAccount,
+  getObjectByType,
+  getSubheader,
+  getTransactionByRange,
+  removeDups,
+  sortValues
+} from '../util';
 
 export interface ReportsPageProps {
   classes: any;
@@ -39,8 +49,11 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   transactions
 }) => {
   const [loading] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, goal: 2 });
+  const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, goal: 2 });
   const [viewAcc, setViewAcc] = React.useState<accountType | ''>('');
+  const [viewCat, setViewCat] = React.useState<string>('');
+  const [currentAccTrans, setCurrentAccTrans] = React.useState<Transaction[]>([]);
+  const [currentCatTrans, setCurrentCatTrans] = React.useState<Transaction[]>([]);
   const menuItems = [
     { label: 'This Week', value: 0 },
     { label: 'Last Week', value: 1 },
@@ -49,6 +62,15 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     { label: 'This Year', value: 4 }
   ];
 
+  React.useEffect(() => {
+    setCurrentAccTrans(
+      getTransactionByRange(menuItems[selected.account].label, getObjectByType(transactions, 'expense'))
+    );
+    setCurrentCatTrans(
+      getTransactionByRange(menuItems[selected.category].label, getObjectByType(transactions, 'expense'))
+    );
+  }, [selected, transactions, accounts, budgets, goals]);
+
   const handleMenu = (e: any, key: string) => {
     setSelected({
       ...selected,
@@ -56,46 +78,50 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     });
   };
 
-  const bankTotal = getArrayTotal(getExpensesByAccount(transactions, 'bank'));
-  const cashTotal = getArrayTotal(getExpensesByAccount(transactions, 'cash'));
-  const creditTotal = getArrayTotal(getExpensesByAccount(transactions, 'credit'));
-
-  const detailData = () => {
-    const labels = removeDups(getExpensesByAccount(transactions, viewAcc as accountType).map(exp => exp.from.name));
+  const detailData = (labels: string[], dataArr: any[], criteria: string) => {
     const data: number[] = [];
     labels.forEach(label => {
-      const sum = getArrayTotal(getExpensesByAccount(transactions, viewAcc as accountType).filter(trans => trans.from.name === label));
+      const sum = getArrayTotal(dataArr.filter(trans => trans[criteria].name === label));
       data.push(sum);
     });
-    return { data, labels };
+    return data;
   };
 
-  const accountDataSet = viewAcc ? [
-    {
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-      data: detailData().data,
-      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-    }
-  ] : [
-    {
-      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-      data: [bankTotal, cashTotal, creditTotal],
-      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
-    }
-  ]
+  const bankTotal = getArrayTotal(getExpensesByAccount(currentAccTrans, 'bank'));
+  const cashTotal = getArrayTotal(getExpensesByAccount(currentAccTrans, 'cash'));
+  const creditTotal = getArrayTotal(getExpensesByAccount(currentAccTrans, 'credit'));
+  const accountLabels = removeDups(
+    getExpensesByAccount(currentAccTrans, viewAcc as accountType).map(exp => exp.from.name)
+  );
+  const accountExpenses = getExpensesByAccount(currentAccTrans, viewAcc as accountType);
+
+  const accountDataSet = viewAcc
+    ? [
+        {
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+          data: detailData(accountLabels, accountExpenses, 'from'),
+          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+        }
+      ]
+    : [
+        {
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+          data: [bankTotal, cashTotal, creditTotal],
+          hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+        }
+      ];
 
   const accountPieData = {
     datasets: accountDataSet,
-    labels: viewAcc ? detailData().labels || [] : ['Bank Accounts', 'Cash', 'Credit']
+    labels: viewAcc ? accountLabels || [] : ['Bank Accounts', 'Cash', 'Credit']
   };
 
   const accountOptions: ChartOptions = {
     legend: {
-      // display: false,
-      position: 'right',
+      position: 'right'
     },
     onClick: (e, items: any) => {
-      if (!viewAcc) {
+      if (!viewAcc && items.length) {
         const section = accountPieData.labels[items[0]._index];
         if (section === 'Bank Accounts') {
           setViewAcc('bank');
@@ -104,14 +130,167 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
         }
       }
     },
+    title: {
+      display: true,
+      position: 'top',
+      text: viewAcc
+        ? viewAcc === 'bank'
+          ? 'Bank Account Expenses'
+          : viewAcc === 'credit'
+          ? 'Credit Expenses'
+          : 'Cash Expenses'
+        : 'Expenses By Type'
+    },
     tooltips: {
       callbacks: {
         label: (item: any, data: any) => `${formatMoney(data.datasets[item.datasetIndex].data[item.index])}`,
-        title: (items: any, data: any) => data.labels[items[0].index],
+        title: (items: any, data: any) => data.labels[items[0].index]
       }
     }
-  }
-  // TODO: Create reports
+  };
+
+  const categoryLabels: string[] = sortValues(
+    removeDups(currentCatTrans.map(exp => (exp.category ? exp.category.name : ''))),
+    'desc'
+  );
+  const subcategoryLabels = sortValues(
+    removeDups(
+      currentCatTrans
+        .filter(exp => (exp.category ? exp.category.name === viewCat : ''))
+        .map(exp => (exp.subcategory ? exp.subcategory.name : ''))
+    ),
+    'desc'
+  );
+
+  // TODO: Set colors
+  const categoryDataSet = viewCat
+    ? [
+        {
+          backgroundColor: [
+            '#e6194b',
+            '#3cb44b',
+            '#ffe119',
+            '#4363d8',
+            '#f58231',
+            '#911eb4',
+            '#46f0f0',
+            '#f032e6',
+            '#bcf60c',
+            '#fabebe',
+            '#008080',
+            '#e6beff',
+            '#9a6324',
+            '#fffac8',
+            '#800000',
+            '#aaffc3',
+            '#808000',
+            '#ffd8b1',
+            '#000075',
+            '#808080'
+          ],
+          data: detailData(subcategoryLabels, currentCatTrans, 'subcategory'),
+          hoverBackgroundColor: [
+            '#e6194b',
+            '#3cb44b',
+            '#ffe119',
+            '#4363d8',
+            '#f58231',
+            '#911eb4',
+            '#46f0f0',
+            '#f032e6',
+            '#bcf60c',
+            '#fabebe',
+            '#008080',
+            '#e6beff',
+            '#9a6324',
+            '#fffac8',
+            '#800000',
+            '#aaffc3',
+            '#808000',
+            '#ffd8b1',
+            '#000075',
+            '#808080'
+          ]
+        }
+      ]
+    : [
+        {
+          backgroundColor: [
+            '#e6194b',
+            '#3cb44b',
+            '#ffe119',
+            '#4363d8',
+            '#f58231',
+            '#911eb4',
+            '#46f0f0',
+            '#f032e6',
+            '#bcf60c',
+            '#fabebe',
+            '#008080',
+            '#e6beff',
+            '#9a6324',
+            '#fffac8',
+            '#800000',
+            '#aaffc3',
+            '#808000',
+            '#ffd8b1',
+            '#000075',
+            '#808080'
+          ],
+          data: detailData(categoryLabels, currentCatTrans, 'category'),
+          hoverBackgroundColor: [
+            '#e6194b',
+            '#3cb44b',
+            '#ffe119',
+            '#4363d8',
+            '#f58231',
+            '#911eb4',
+            '#46f0f0',
+            '#f032e6',
+            '#bcf60c',
+            '#fabebe',
+            '#008080',
+            '#e6beff',
+            '#9a6324',
+            '#fffac8',
+            '#800000',
+            '#aaffc3',
+            '#808000',
+            '#ffd8b1',
+            '#000075',
+            '#808080'
+          ]
+        }
+      ];
+
+  const categoryPieData = {
+    datasets: categoryDataSet,
+    labels: viewCat ? subcategoryLabels : categoryLabels
+  };
+
+  const categoryOptions: ChartOptions = {
+    legend: {
+      position: 'right'
+    },
+    onClick: (e, items: any) => {
+      if (!viewCat && items.length) {
+        const section = categoryPieData.labels[items[0]._index];
+        setViewCat(section);
+      }
+    },
+    title: {
+      display: true,
+      position: 'top',
+      text: viewCat ? `${viewCat} Expenses` : 'Expenses By Category'
+    },
+    tooltips: {
+      callbacks: {
+        label: (item: any, data: any) => `${formatMoney(data.datasets[item.datasetIndex].data[item.index])}`,
+        title: (items: any, data: any) => data.labels[items[0].index]
+      }
+    }
+  };
+
   return (
     <Layout title="Reports">
       {loading ? (
@@ -152,7 +331,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
             <DashboardCard
-              className="gridItem"
+              className="reports_accounts"
               action={
                 <DropdownMenu
                   className="reports_dropdown"
@@ -162,12 +341,46 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                   onClose={e => handleMenu(e, 'account')}
                 />
               }
-              title="Account Expenses"
+              actions={
+                viewAcc
+                  ? [
+                      <Button key="reset-accounts" onClick={() => setViewAcc('')}>
+                        Reset
+                      </Button>
+                    ]
+                  : []
+              }
+              title="Account"
               subheader={getSubheader(menuItems[selected.account].label)}
             >
-              <div>
-                <Pie data={accountPieData} options={accountOptions} />
-              </div>
+              <Pie data={accountPieData} options={accountOptions} />
+            </DashboardCard>
+          </Grid>
+          <Grid item={true} md={6} sm={12} xs={12}>
+            <DashboardCard
+              className="reports_categories"
+              action={
+                <DropdownMenu
+                  className="reports_dropdown"
+                  key="categories-range"
+                  selected={menuItems[selected.category].label}
+                  menuItems={menuItems}
+                  onClose={e => handleMenu(e, 'category')}
+                />
+              }
+              actions={
+                viewCat
+                  ? [
+                      <Button key="reset-categories" onClick={() => setViewCat('')}>
+                        Reset
+                      </Button>
+                    ]
+                  : []
+              }
+              title="Categories"
+              subheader={getSubheader(menuItems[selected.category].label)}
+            >
+              <Pie data={categoryPieData} options={categoryOptions} />
             </DashboardCard>
           </Grid>
         </Grid>
