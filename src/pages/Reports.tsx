@@ -242,14 +242,14 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     }
   };
 
-  const timeFormat = matchMd ? 'MMMM' : 'MM/DD/YYYY HH:mm';
+  const timeFormat = matchMd || menuItems[selected.expenses].value === 4 ? 'MMM YYYY' : 'MM/DD/YYYY HH:mm';
   const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
   const expenses = sort(removeDupObjs(getObjectByType(currentTrans, 'expense').map(trans => {
-    const sum = getArrayTotal(currentTrans.filter(t =>  moment(new Date(t.date)).isSame(new Date(trans.date), matchMd ? 'month' : 'day')));
+    const sum = getArrayTotal(getObjectByType(currentTrans, 'expense').filter(t =>  moment(new Date(t.date)).isSame(new Date(trans.date), matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day')));
     return { x: moment(new Date(trans.date)).format(timeFormat), y: sum }
   })), 'asc', 'x');
   const income = sort(removeDupObjs(getObjectByType(currentTrans, 'income').map(trans => {
-    const sum = getArrayTotal(currentTrans.filter(t =>  moment(new Date(t.date)).isSame(new Date(trans.date), matchMd ? 'month' : 'day')));
+    const sum = getArrayTotal(getObjectByType(currentTrans, 'income').filter(t =>  moment(new Date(t.date)).isSame(new Date(trans.date), matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day')));
     return { x: moment(new Date(trans.date)).format(timeFormat), y: sum }
   })), 'asc', 'x');
 
@@ -287,7 +287,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
         time: {
           parser: timeFormat,
           // round: 'day'
-          tooltipFormat: 'll HH:mm'
+          tooltipFormat: 'll'
         },
         type: 'time',
       }],

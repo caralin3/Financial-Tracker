@@ -605,9 +605,9 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
     <ModalForm
       disabled={false}
       formTitle={title}
-      formButton={`${buttonText} Another`}
+      formButton={!params.id ? `${buttonText} Another` : buttonText}
       formSecondButton={
-        buttonText !== 'edit'
+        !params.id
           ? {
               loading: submitting,
               submit: (e: any) => handleSubmit(e, true),
