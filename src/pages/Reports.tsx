@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import { ChartOptions } from 'chart.js';
+import * as moment from 'moment';
 import * as React from 'react';
 import { Line, Pie } from 'react-chartjs-2';
 import { connect } from 'react-redux';
@@ -19,7 +20,9 @@ import {
   getObjectByType,
   getSubheader,
   getTransactionByRange,
+  removeDupObjs,
   removeDups,
+  sort,
   sortValues
 } from '../util';
 
@@ -56,6 +59,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
   const [currentAccTrans, setCurrentAccTrans] = React.useState<Transaction[]>([]);
   const [currentCatTrans, setCurrentCatTrans] = React.useState<Transaction[]>([]);
+  const matchMd = useMediaQuery('(max-width:960px)');
   const matchSm = useMediaQuery('(max-width:600px)');
   const menuItems = [
     { label: 'This Week', value: 0 },
@@ -238,15 +242,23 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     }
   };
 
-  const expenses = getObjectByType(currentTrans, 'expense').map(exp => ({ x: new Date(exp.date), y: exp.amount }));
-  const income = getObjectByType(currentTrans, 'income').map(exp => ({ x: new Date(exp.date), y: exp.amount }));
+  const timeFormat = matchMd ? 'MMMM' : 'MM/DD/YYYY HH:mm';
+  const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
+  const expenses = sort(removeDupObjs(getObjectByType(currentTrans, 'expense').map(trans => {
+    const sum = getArrayTotal(currentTrans.filter(t =>  moment(new Date(t.date)).isSame(new Date(trans.date), matchMd ? 'month' : 'day')));
+    return { x: moment(new Date(trans.date)).format(timeFormat), y: sum }
+  })), 'asc', 'x');
+  const income = sort(removeDupObjs(getObjectByType(currentTrans, 'income').map(trans => {
+    const sum = getArrayTotal(currentTrans.filter(t =>  moment(new Date(t.date)).isSame(new Date(trans.date), matchMd ? 'month' : 'day')));
+    return { x: moment(new Date(trans.date)).format(timeFormat), y: sum }
+  })), 'asc', 'x');
 
   const expensesData = {
     datasets: [{
       backgroundColor: 'rgba(75,192,192,0.4)',
       borderColor: 'rgba(75,192,192,1)',
       data: expenses,
-      fill: false,
+      // fill: false,
       label: 'Expenses',
       pointHitRadius: 10,
       pointRadius: 1,
@@ -259,12 +271,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
       pointHitRadius: 10,
       pointRadius: 1,
     }],
-    labels: [
-      'January',
-      'February',
-      'March',
-      'April',
-    ],
+    labels: expensesLabels,
   };
 
   const expensesOptions = {
@@ -273,30 +280,29 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     },
     scales: {
       xAxes: [{
-        gridLines: {
-          lineWidth: 2
+        scaleLabel: {
+          display: true,
+          labelString: 'Date'
         },
         time: {
-          displayFormats: {
-            day: 'MMM DD',
-            hour: 'MMM DD',
-            millisecond: 'MMM DD',
-            minute: 'MMM DD',
-            month: 'MMM DD',
-            quarter: 'MMM DD',
-            second: 'MMM DD',
-            week: 'MMM DD',
-            year: 'MMM DD',
-          },
-          unit: "day" as any,
-          unitStepSize: 1000,
+          parser: timeFormat,
+          // round: 'day'
+          tooltipFormat: 'll HH:mm'
         },
-        title: "time",
         type: 'time',
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Amount Spent'
+        }
       }]
     },
     title: {
-      text: "This is a test"
+      display: true,
+      fontSize: matchSm ? 16 : 18,
+      position: 'top' as any,
+      text: 'Expenses vs. Income'
     },
 }
 
