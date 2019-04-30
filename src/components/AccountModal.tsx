@@ -122,6 +122,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = ({
 
       if (isValidName() && isValidType() && !isDuplicate()) {
         if (params.id) {
+          // TODO: Wrap in try catch
           const edited = await requests.accounts.updateAccount({ id: params.id, ...newAccount }, editAccount);
 
           // Update from in transactions

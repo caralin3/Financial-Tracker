@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import classNames from 'classnames';
 import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -62,6 +63,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
 }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(false);
   const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(false);
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
@@ -164,8 +166,15 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
                   {expanded === index + 1 ? <ExpandLessIcon color="primary" /> : <ExpandMoreIcon color="primary" />}
                 </div>
                 <ListItemText
-                  primaryTypographyProps={{ className: 'dashboard_item-amount dashboard_bold' }}
-                  primary={formatMoney(getArrayTotal(getObjectByType(accounts, accType.value)))}
+                  primaryTypographyProps={{
+                    className: classNames('dashboard_item-amount dashboard_bold', {
+                      ['dashboard_item-amount-neg']:
+                        accType.value === 'credit' || getArrayTotal(getObjectByType(accounts, accType.value)) < 0
+                    })
+                  }}
+                  primary={`${accType.value === 'credit' ? '-' : ''}${formatMoney(
+                    getArrayTotal(getObjectByType(accounts, accType.value))
+                  )}`}
                 />
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className="dashboard_fullRow dashboard_listContainer">
@@ -183,8 +192,12 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
                           />
                           <ListItemText
                             className="dashboard_item-amount"
-                            primaryTypographyProps={{ className: 'dashboard_item-amount dashboard_bold' }}
-                            primary={formatMoney(acc.amount)}
+                            primaryTypographyProps={{
+                              className: classNames('dashboard_item-amount dashboard_bold', {
+                                ['dashboard_item-amount-neg']: accType.value === 'credit' || acc.amount < 0
+                              })
+                            }}
+                            primary={`${accType.value === 'credit' ? '-' : ''}${formatMoney(acc.amount)}`}
                           />
                         </ListItem>
                       ))
@@ -221,19 +234,26 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       title={`${username} Dashboard`}
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
-      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="Account added" />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
       <AccountModal
         title="Add Account"
         buttonText="Add"
         open={addingAccount}
         onClose={() => setAddingAccount(false)}
-        onSuccess={() => setSuccess(true)}
+        onSuccess={() => {
+          setSuccessMsg('Account added');
+          setSuccess(true);
+        }}
       />
       <TransactionModal
         title="Add Transaction"
         buttonText="Add"
         open={addingTrans}
         onClose={() => setAddingTrans(false)}
+        onSuccess={() => {
+          setSuccessMsg('Transaction added');
+          setSuccess(true);
+        }}
       />
       <div className="show-small">
         <DropdownMenu

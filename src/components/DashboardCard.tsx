@@ -1,6 +1,6 @@
 import { Theme, withStyles } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
-// import CardActions from '@material-ui/core/CardActions';
+import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
@@ -9,6 +9,7 @@ import * as React from 'react';
 
 export interface AlertDialogProps {
   action?: JSX.Element;
+  actions?: JSX.Element[];
   className?: string;
   classes: any;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
@@ -18,6 +19,7 @@ export interface AlertDialogProps {
 
 const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = ({
   action,
+  actions,
   children,
   className,
   classes,
@@ -46,7 +48,7 @@ const DisconnectedDashboardCard: React.SFC<AlertDialogProps> = ({
     />
     <CardContent className={classes.content}>
       {children}
-      {/* {actions && <CardActions className={classes.actions}>{actions.map(action => action)}</CardActions>} */}
+      {actions && <CardActions className={classes.actions}>{actions.map(act => act)}</CardActions>}
     </CardContent>
   </Card>
 );

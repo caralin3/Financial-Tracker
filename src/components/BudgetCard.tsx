@@ -29,7 +29,6 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
 
   const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
     history.push(`${routes.dashboard}/edit/${id}`);
-    setSuccessMsg(`Budget has been updated`);
     setEditing(true);
   };
 
@@ -48,8 +47,8 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
         open={adding}
         onClose={() => setAdding(false)}
         onSuccess={() => {
-          setSuccess(true);
           setSuccessMsg('Budget added');
+          setSuccess(true);
         }}
       />
       <BudgetModal
@@ -57,7 +56,10 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
         buttonText="Edit"
         open={editing}
         onClose={() => setEditing(false)}
-        onSuccess={() => setSuccess(true)}
+        onSuccess={(act: string) => {
+          setSuccessMsg(`Budget ${act}`);
+          setSuccess(true);
+        }}
       />
       <List className="dashboard_card">
         {loading ? (
@@ -76,7 +78,6 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
                   endLabel={`${percent.toFixed(0)}%`}
                   leftLabel={budget.category.name}
                   rightLabel={`${formatMoney(spent, true)} of ${formatMoney(total, true)}`}
-                  subLabel={budget.frequency}
                   textColor="primary"
                 />
               </ListItem>

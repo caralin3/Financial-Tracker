@@ -56,6 +56,10 @@
   &_balance {
     @include number;
     padding: 0 0.5rem;
+
+    &-neg {
+      color: $error !important;
+    }
   }
 }
 
@@ -96,5 +100,9 @@
   &_balance {
     @include number;
     padding: 0 0.5rem;
+
+    &-neg {
+      color: $error !important;
+    }
   }
 }

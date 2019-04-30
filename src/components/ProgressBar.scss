@@ -34,15 +34,36 @@
 
   &_label {
     @include primary;
-    align-items: center !important;
+    align-items: flex-start !important;
     display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+
+    @media #{$small} {
+      align-items: center !important;
+      flex-direction: row !important;
+    }
+
+    @media #{$large} {
+      align-items: flex-start !important;
+      flex-direction: column !important;
+    }
+    
+    &-text {
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @media #{$small} {
+        max-width: none;
+      }
+    }
   }
 
   &_sublabel {
     @include copy;
     display: none !important;
     color: $black;
-    padding-left: 0.5rem;
   }
 
   &_end {

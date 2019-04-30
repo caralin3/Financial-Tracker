@@ -35,6 +35,7 @@ const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser 
   const [changePassword, setChangePassword] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
 
+  // TODO: Delete info in database
   const handleConfirm = () => {
     auth
       .doDeleteAccount()

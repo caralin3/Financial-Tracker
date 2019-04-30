@@ -173,6 +173,9 @@ export const getTransactionByRange = (range: string, transactions: Transaction[]
   }
 };
 
+export const getExpensesByAccount = (arr: Transaction[], type: accountType) =>
+  getObjectByType(arr, 'expense').filter(exp => exp.from.type === type) || [];
+
 export const getExpensesByDates = (
   frequency: budgetFreq | goalFreq,
   expenses: Transaction[],

@@ -64,13 +64,8 @@ export const TableHead: React.SFC<TableHeadProps> = ({
             onChange={onSelectAllClick}
           />
         </TableCell>
-        {columns.map((col, index) => (
-          <TableCell
-            key={col.id}
-            align={index !== 0 && col.numeric ? 'right' : 'left'}
-            padding={index === 0 ? 'none' : col.numeric ? 'dense' : 'default'}
-            sortDirection={orderBy === col.id ? order : false}
-          >
+        {columns.map(col => (
+          <TableCell key={col.id} sortDirection={orderBy === col.id ? order : false}>
             <Tooltip title="Sort" placement={col.numeric ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
               <TableSortLabel active={orderBy === col.id} direction={order} onClick={createSortHandler(col.id)}>
                 {col.label}
@@ -669,6 +664,57 @@ const Table: React.SFC<TableProps> = ({
 
   const editType = title.endsWith('s') ? title.toLowerCase().slice(0, title.length - 1) : title.toLowerCase();
 
+  const emptySpan = () => {
+    const [from] = displayColumns.filter(col => col.id === 'from');
+    const [item] = displayColumns.filter(col => col.id === 'item');
+    const [date] = displayColumns.filter(col => col.id === 'date');
+    const [cat] = displayColumns.filter(col => col.id === 'category');
+    const [sub] = displayColumns.filter(col => col.id === 'subcategory');
+    const [to] = displayColumns.filter(col => col.id === 'to');
+    if (title === 'Expenses') {
+      let expSpan = 5;
+      if (!item) {
+        expSpan -= 1;
+      }
+      if (!from) {
+        expSpan -= 1;
+      }
+      if (!cat) {
+        expSpan -= 1;
+      }
+      if (!sub) {
+        expSpan -= 1;
+      }
+      if (!date) {
+        expSpan -= 1;
+      }
+      return expSpan;
+    } else if (title === 'Income') {
+      let incSpan = 3;
+      if (!item) {
+        incSpan -= 1;
+      }
+      if (!to) {
+        incSpan -= 1;
+      }
+      if (!date) {
+        incSpan -= 1;
+      }
+      return incSpan;
+    }
+    let span = 3;
+    if (!from) {
+      span -= 1;
+    }
+    if (!to) {
+      span -= 1;
+    }
+    if (!date) {
+      span -= 1;
+    }
+    return span;
+  };
+
   const total = getArrayTotal(displayData);
 
   return (
@@ -729,41 +775,21 @@ const Table: React.SFC<TableProps> = ({
                         <TableCell padding="checkbox">
                           <Checkbox checked={sel} />
                         </TableCell>
-                        {displayColumns.map((col, index) => {
-                          if (index === 0) {
-                            return (
-                              <TableCell
-                                key={col.id}
-                                classes={{ root: classes.firstCell }}
-                                component="th"
-                                scope="row"
-                                padding="none"
-                              >
-                                {n[col.id]}
-                              </TableCell>
-                            );
-                          }
-                          return (
-                            <TableCell
-                              key={col.id}
-                              classes={{ root: classes.cell }}
-                              align={col.numeric ? 'right' : 'left'}
-                              padding={col.numeric ? 'dense' : 'none'}
-                            >
-                              {n[col.id]}
-                            </TableCell>
-                          );
-                        })}
+                        {displayColumns.map(col => (
+                          <TableCell key={col.id} classes={{ root: classes.cell }} padding="dense">
+                            {n[col.id]}
+                          </TableCell>
+                        ))}
                       </TableRow>
                     );
                   })}
                 <TableRow>
-                  <TableCell colSpan={title === 'Expenses' ? 5 : 3} />
+                  <TableCell classes={{ root: classes.total }} colSpan={emptySpan()} />
                   <TableCell classes={{ root: classes.total }}>Total</TableCell>
-                  <TableCell classes={{ root: classes.total }} align="right" padding="dense">
+                  <TableCell classes={{ root: classes.total }} padding="dense">
                     {formatMoney(total)}
                   </TableCell>
-                  <TableCell classes={{ root: classes.total }} colSpan={3} />
+                  <TableCell classes={{ root: classes.total }} colSpan={displayColumns.length - 2} />
                 </TableRow>
               </>
             ) : (
@@ -810,12 +836,10 @@ const styles = (theme: Theme) => ({
     }
   },
   cell: {
-    borderBottom: 'none',
-    paddingLeft: '1.5rem'
+    borderBottom: 'none'
   },
   firstCell: {
-    borderBottom: 'none',
-    paddingRight: '1rem'
+    borderBottom: 'none'
   },
   root: {
     marginBottom: theme.spacing.unit * 5
@@ -825,7 +849,6 @@ const styles = (theme: Theme) => ({
   },
   total: {
     borderBottom: 'none',
-    // borderBottom: `1px solid ${theme.palette.primary.main}`,
     borderTop: `1.5px solid ${theme.palette.primary.main}`,
     fontWeight: 'bold'
   }
