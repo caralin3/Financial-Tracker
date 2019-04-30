@@ -83,17 +83,17 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
     });
   };
 
+  const handleConfirm = () => {
+    deleteTransaction();
+    setOpenDialog(false);
+    setSuccess(true);
+  };
+
   const handleEdit = (id: string, type: string) => {
     history.push(`${routes.transactions}/edit/${id}?type=${type}`);
     const [editTrans] = transactions.filter(trans => trans.id === id);
     setSuccessMsg(`Transaction from ${moment(new Date(editTrans.date)).format('MM/DD/YYYY')} has been updated`);
     setOpenEdit(true);
-  };
-
-  const handleConfirm = () => {
-    deleteTransaction();
-    setOpenDialog(false);
-    setSuccess(true);
   };
 
   const addButton = (fullWidth: boolean) => (

@@ -200,7 +200,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
     setSubmitting(false);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, close?: boolean) => {
     e.preventDefault();
     setSubmit(true);
     setSubmitting(true);
@@ -297,6 +297,12 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
             setSubmitting(false);
             if (amount) {
               setAmount(0);
+            }
+            if (close) {
+              handleClose();
+              if (onSuccess) {
+                onSuccess();
+              }
             }
           } else {
             setError(true);
@@ -599,7 +605,16 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
     <ModalForm
       disabled={false}
       formTitle={title}
-      formButton={buttonText}
+      formButton={`${buttonText} Another`}
+      formSecondButton={
+        buttonText !== 'edit'
+          ? {
+              loading: submitting,
+              submit: (e: any) => handleSubmit(e, true),
+              text: 'Save and Close'
+            }
+          : undefined
+      }
       formSubmit={handleSubmit}
       loading={submitting}
       open={open}
