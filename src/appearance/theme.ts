@@ -4,7 +4,7 @@ const colors = {
   black: '#000',
   dark: '#07535F',
   disabled: '#CECECE',
-  error: '#d0021b',
+  error: '#F44336',
   highlight: '#efeeee',
   primary: '#0c98ac',
   secondary: '#085B68',

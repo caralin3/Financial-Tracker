@@ -65,10 +65,7 @@ export const TableHead: React.SFC<TableHeadProps> = ({
           />
         </TableCell>
         {columns.map(col => (
-          <TableCell
-            key={col.id}
-            sortDirection={orderBy === col.id ? order : false}
-          >
+          <TableCell key={col.id} sortDirection={orderBy === col.id ? order : false}>
             <Tooltip title="Sort" placement={col.numeric ? 'bottom-end' : 'bottom-start'} enterDelay={300}>
               <TableSortLabel active={orderBy === col.id} direction={order} onClick={createSortHandler(col.id)}>
                 {col.label}
@@ -446,7 +443,7 @@ const toolbarStyles = (theme: Theme) => ({
   },
   actions: {
     color: theme.palette.text.secondary
-},
+  },
   highlight:
     theme.palette.type === 'light'
       ? {
@@ -779,11 +776,7 @@ const Table: React.SFC<TableProps> = ({
                           <Checkbox checked={sel} />
                         </TableCell>
                         {displayColumns.map(col => (
-                          <TableCell
-                            key={col.id}
-                            classes={{ root: classes.cell }}
-                            padding="dense"
-                          >
+                          <TableCell key={col.id} classes={{ root: classes.cell }} padding="dense">
                             {n[col.id]}
                           </TableCell>
                         ))}
@@ -843,10 +836,10 @@ const styles = (theme: Theme) => ({
     }
   },
   cell: {
-    borderBottom: 'none',
+    borderBottom: 'none'
   },
   firstCell: {
-    borderBottom: 'none',
+    borderBottom: 'none'
   },
   root: {
     marginBottom: theme.spacing.unit * 5
