@@ -323,9 +323,9 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     labels: expensesLabels
   };
 
-  const expensesOptions = {
+  const expensesOptions: ChartOptions = {
     legend: {
-      display: false
+      position: 'right'
     },
     scales: {
       xAxes: [
