@@ -1,8 +1,9 @@
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import { ChartOptions } from 'chart.js';
 import * as React from 'react';
-import { Pie } from 'react-chartjs-2';
+import { Line, Pie } from 'react-chartjs-2';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
@@ -49,11 +50,13 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   transactions
 }) => {
   const [loading] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, goal: 2 });
+  const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, expenses: 2, goal: 2 });
   const [viewAcc, setViewAcc] = React.useState<accountType | ''>('');
   const [viewCat, setViewCat] = React.useState<string>('');
+  const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
   const [currentAccTrans, setCurrentAccTrans] = React.useState<Transaction[]>([]);
   const [currentCatTrans, setCurrentCatTrans] = React.useState<Transaction[]>([]);
+  const matchSm = useMediaQuery('(max-width:600px)');
   const menuItems = [
     { label: 'This Week', value: 0 },
     { label: 'Last Week', value: 1 },
@@ -62,7 +65,32 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     { label: 'This Year', value: 4 }
   ];
 
+  // TODO: Change colors
+  const colors = [
+    '#e6194b',
+    '#3cb44b',
+    '#ffe119',
+    '#4363d8',
+    '#f58231',
+    '#911eb4',
+    '#46f0f0',
+    '#f032e6',
+    '#bcf60c',
+    '#fabebe',
+    '#008080',
+    '#e6beff',
+    '#9a6324',
+    '#fffac8',
+    '#800000',
+    '#aaffc3',
+    '#808000',
+    '#ffd8b1',
+    '#000075',
+    '#808080'
+  ];
+
   React.useEffect(() => {
+    setCurrentTrans(getTransactionByRange(menuItems[selected.expenses].label, transactions));
     setCurrentAccTrans(
       getTransactionByRange(menuItems[selected.account].label, getObjectByType(transactions, 'expense'))
     );
@@ -118,6 +146,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
 
   const accountOptions: ChartOptions = {
     legend: {
+      display: matchSm ? false : true,
       position: 'right'
     },
     onClick: (e, items: any) => {
@@ -132,6 +161,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     },
     title: {
       display: true,
+      fontSize: matchSm ? 16 : 18,
       position: 'top',
       text: viewAcc
         ? viewAcc === 'bank'
@@ -162,104 +192,19 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     'desc'
   );
 
-  // TODO: Set colors
   const categoryDataSet = viewCat
     ? [
         {
-          backgroundColor: [
-            '#e6194b',
-            '#3cb44b',
-            '#ffe119',
-            '#4363d8',
-            '#f58231',
-            '#911eb4',
-            '#46f0f0',
-            '#f032e6',
-            '#bcf60c',
-            '#fabebe',
-            '#008080',
-            '#e6beff',
-            '#9a6324',
-            '#fffac8',
-            '#800000',
-            '#aaffc3',
-            '#808000',
-            '#ffd8b1',
-            '#000075',
-            '#808080'
-          ],
+          backgroundColor: colors,
           data: detailData(subcategoryLabels, currentCatTrans, 'subcategory'),
-          hoverBackgroundColor: [
-            '#e6194b',
-            '#3cb44b',
-            '#ffe119',
-            '#4363d8',
-            '#f58231',
-            '#911eb4',
-            '#46f0f0',
-            '#f032e6',
-            '#bcf60c',
-            '#fabebe',
-            '#008080',
-            '#e6beff',
-            '#9a6324',
-            '#fffac8',
-            '#800000',
-            '#aaffc3',
-            '#808000',
-            '#ffd8b1',
-            '#000075',
-            '#808080'
-          ]
+          hoverBackgroundColor: colors
         }
       ]
     : [
         {
-          backgroundColor: [
-            '#e6194b',
-            '#3cb44b',
-            '#ffe119',
-            '#4363d8',
-            '#f58231',
-            '#911eb4',
-            '#46f0f0',
-            '#f032e6',
-            '#bcf60c',
-            '#fabebe',
-            '#008080',
-            '#e6beff',
-            '#9a6324',
-            '#fffac8',
-            '#800000',
-            '#aaffc3',
-            '#808000',
-            '#ffd8b1',
-            '#000075',
-            '#808080'
-          ],
+          backgroundColor: colors,
           data: detailData(categoryLabels, currentCatTrans, 'category'),
-          hoverBackgroundColor: [
-            '#e6194b',
-            '#3cb44b',
-            '#ffe119',
-            '#4363d8',
-            '#f58231',
-            '#911eb4',
-            '#46f0f0',
-            '#f032e6',
-            '#bcf60c',
-            '#fabebe',
-            '#008080',
-            '#e6beff',
-            '#9a6324',
-            '#fffac8',
-            '#800000',
-            '#aaffc3',
-            '#808000',
-            '#ffd8b1',
-            '#000075',
-            '#808080'
-          ]
+          hoverBackgroundColor: colors
         }
       ];
 
@@ -270,7 +215,8 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
 
   const categoryOptions: ChartOptions = {
     legend: {
-      position: 'right'
+      display: matchSm ? false : true,
+      position: matchSm ? 'bottom' : 'right'
     },
     onClick: (e, items: any) => {
       if (!viewCat && items.length) {
@@ -280,6 +226,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     },
     title: {
       display: true,
+      fontSize: matchSm ? 16 : 18,
       position: 'top',
       text: viewCat ? `${viewCat} Expenses` : 'Expenses By Category'
     },
@@ -291,43 +238,100 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     }
   };
 
+  const expenses = getObjectByType(currentTrans, 'expense').map(exp => ({ x: new Date(exp.date), y: exp.amount }));
+  const income = getObjectByType(currentTrans, 'income').map(exp => ({ x: new Date(exp.date), y: exp.amount }));
+
+  const expensesData = {
+    datasets: [{
+      backgroundColor: 'rgba(75,192,192,0.4)',
+      borderColor: 'rgba(75,192,192,1)',
+      data: expenses,
+      fill: false,
+      label: 'Expenses',
+      pointHitRadius: 10,
+      pointRadius: 1,
+    }, {
+      backgroundColor: colors[1],
+      borderColor: colors[1],
+      data: income,
+      fill: false,
+      label: 'Income',
+      pointHitRadius: 10,
+      pointRadius: 1,
+    }],
+    labels: [
+      'January',
+      'February',
+      'March',
+      'April',
+    ],
+  };
+
+  const expensesOptions = {
+    legend: {
+     display: false
+    },
+    scales: {
+      xAxes: [{
+        gridLines: {
+          lineWidth: 2
+        },
+        time: {
+          displayFormats: {
+            day: 'MMM DD',
+            hour: 'MMM DD',
+            millisecond: 'MMM DD',
+            minute: 'MMM DD',
+            month: 'MMM DD',
+            quarter: 'MMM DD',
+            second: 'MMM DD',
+            week: 'MMM DD',
+            year: 'MMM DD',
+          },
+          unit: "day" as any,
+          unitStepSize: 1000,
+        },
+        title: "time",
+        type: 'time',
+      }]
+    },
+    title: {
+      text: "This is a test"
+    },
+}
+
   return (
     <Layout title="Reports">
       {loading ? (
         <Loading />
       ) : (
         <Grid container={true} spacing={24}>
-          <Grid item={true} md={6} sm={12} xs={12}>
-            <BudgetCard
+          <Grid item={true} xs={12}>
+            <DashboardCard
+              className="reports_expenses"
               action={
                 <DropdownMenu
                   className="reports_dropdown"
-                  key="budget-range"
-                  selected={menuItems[selected.budget].label}
+                  key="expenses-range"
+                  selected={menuItems[selected.expenses].label}
                   menuItems={menuItems}
-                  onClose={e => handleMenu(e, 'budget')}
+                  onClose={e => handleMenu(e, 'expenses')}
                 />
               }
-              budgets={budgets}
-              currentTrans={getTransactionByRange(menuItems[selected.budget].label, transactions)}
-              subheader={getSubheader(menuItems[selected.budget].label)}
-            />
-          </Grid>
-          <Grid item={true} md={6} sm={12} xs={12}>
-            <GoalCard
-              action={
-                <DropdownMenu
-                  className="reports_dropdown"
-                  key="goal-range"
-                  selected={menuItems[selected.goal].label}
-                  menuItems={menuItems}
-                  onClose={e => handleMenu(e, 'goal')}
-                />
+              actions={
+                viewAcc
+                  ? [
+                      <Button key="reset-expenses" onClick={() => setViewAcc('')}>
+                        Reset
+                      </Button>
+                    ]
+                  : []
               }
-              currentTrans={getTransactionByRange(menuItems[selected.goal].label, transactions)}
-              goals={goals}
-              subheader={getSubheader(menuItems[selected.goal].label)}
-            />
+              title="Expenses"
+              subheader={getSubheader(menuItems[selected.expenses].label)}
+            >
+              <Line data={expensesData} options={expensesOptions} />
+            </DashboardCard>
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
             <DashboardCard
@@ -382,6 +386,45 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
             >
               <Pie data={categoryPieData} options={categoryOptions} />
             </DashboardCard>
+          </Grid>
+          <Grid item={true} md={6} sm={12} xs={12}>
+            <BudgetCard
+              action={
+                <DropdownMenu
+                  className="reports_dropdown"
+                  key="budget-range"
+                  selected={menuItems[selected.budget].label}
+                  menuItems={menuItems}
+                  onClose={e => handleMenu(e, 'budget')}
+                />
+              }
+              budgets={budgets}
+              currentTrans={getTransactionByRange(menuItems[selected.budget].label, transactions)}
+              subheader={getSubheader(menuItems[selected.budget].label)}
+            />
+          </Grid>
+          <Grid item={true} md={6} sm={12} xs={12}>
+            <GoalCard
+              action={
+                <DropdownMenu
+                  className="reports_dropdown"
+                  key="goal-range"
+                  selected={menuItems[selected.goal].label}
+                  menuItems={menuItems}
+                  onClose={e => handleMenu(e, 'goal')}
+                />
+              }
+              currentTrans={getTransactionByRange(menuItems[selected.goal].label, transactions)}
+              goals={goals}
+              subheader={getSubheader(menuItems[selected.goal].label)}
+            />
+          </Grid>
+          <Grid item={true} md={6} sm={12} xs={12}>
+            <DashboardCard
+              className="reports_add"
+              onClick={() => null}
+              title="Add Chart"
+            />
           </Grid>
         </Grid>
       )}
