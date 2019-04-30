@@ -24,7 +24,7 @@ import {
   User
 } from '../types';
 import { getOptions, getTransOptions, goalComparatorOptions, goalCriteriaOptions } from '../util';
-import { Alert, Loading, ModalForm, SelectInput } from './';
+import { Alert, AlertDialog, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
   id: string;
@@ -33,6 +33,7 @@ interface RouteParams {
 interface DispatchMappedProps {
   addGoal: (goal: Goal) => void;
   editGoal: (goal: Goal) => void;
+  removeGoal: (id: string) => void;
 }
 
 interface StateMappedProps {
@@ -47,7 +48,7 @@ interface StateMappedProps {
 interface GoalModalProps {
   buttonText: string;
   onClose: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (action?: string) => void;
   open: boolean;
   title: string;
 }
@@ -71,6 +72,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
   onClose,
   onSuccess,
   open,
+  removeGoal,
   subcategories,
   title,
   transactions
@@ -78,6 +80,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [criteria, setCriteria] = React.useState<goalCriteria>('');
@@ -199,7 +202,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
           if (edited) {
             handleClose();
             if (onSuccess) {
-              onSuccess();
+              onSuccess('updated');
             }
           } else {
             setError(true);
@@ -221,16 +224,52 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
     }
   };
 
+  const deleteGoal = async () => {
+    if (params.id) {
+      const deleted = await requests.goals.deleteGoal(params.id, removeGoal);
+      if (!deleted) {
+        setError(true);
+      }
+    }
+  };
+
+  const handleConfirm = () => {
+    deleteGoal();
+    setOpenDialog(false);
+    handleClose();
+    if (onSuccess) {
+      onSuccess('deleted');
+    }
+  };
+
   return (
     <ModalForm
       disabled={false}
       formTitle={title}
       formButton={buttonText}
+      formSecondButton={
+        params.id
+          ? {
+              color: 'secondary',
+              loading: submitting,
+              submit: e => setOpenDialog(true),
+              text: 'Delete'
+            }
+          : undefined
+      }
       formSubmit={handleSubmit}
       loading={submitting}
       open={open}
       handleClose={handleClose}
     >
+      <AlertDialog
+        cancelText="Cancel"
+        confirmText="Confirm"
+        onClose={() => setOpenDialog(false)}
+        onConfirm={handleConfirm}
+        open={openDialog}
+        title="Are you sure you want to delete this goal?"
+      />
       {loading ? (
         <div className="goalModal_loading">
           <Loading />
@@ -391,7 +430,8 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   addGoal: (goal: Goal) => dispatch(goalsState.addGoal(goal)),
-  editGoal: (goal: Goal) => dispatch(goalsState.editGoal(goal))
+  editGoal: (goal: Goal) => dispatch(goalsState.editGoal(goal)),
+  removeGoal: (id: string) => dispatch(goalsState.deleteGoal(id))
 });
 
 const mapStateToProps = (state: ApplicationState) => ({

@@ -63,6 +63,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
 }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [loadingAccounts, setLoadingAccounts] = React.useState<boolean>(false);
   const [loadingTransactions, setLoadingTransactions] = React.useState<boolean>(false);
   const [addingAccount, setAddingAccount] = React.useState<boolean>(false);
@@ -233,19 +234,26 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
       title={`${username} Dashboard`}
       buttons={<DropdownMenu selected={menuItems[selected].label} menuItems={menuItems} onClose={handleMenu} />}
     >
-      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message="Account added" />
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
       <AccountModal
         title="Add Account"
         buttonText="Add"
         open={addingAccount}
         onClose={() => setAddingAccount(false)}
-        onSuccess={() => setSuccess(true)}
+        onSuccess={() => {
+          setSuccessMsg('Account added');
+          setSuccess(true);
+        }}
       />
       <TransactionModal
         title="Add Transaction"
         buttonText="Add"
         open={addingTrans}
         onClose={() => setAddingTrans(false)}
+        onSuccess={() => {
+          setSuccessMsg('Transaction added');
+          setSuccess(true);
+        }}
       />
       <div className="show-small">
         <DropdownMenu

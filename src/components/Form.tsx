@@ -14,23 +14,45 @@ import { Option } from '../types';
 
 export interface FormProps {
   buttonText: string;
+  secondButton?: { color?: any; disabled?: boolean; loading?: boolean; text: string; submit: (event: any) => void };
   disabled?: boolean;
   loading?: boolean;
   submit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export const Form: React.SFC<FormProps> = ({ buttonText, children, disabled, loading, submit }) => (
+export const Form: React.SFC<FormProps> = ({ buttonText, children, disabled, loading, secondButton, submit }) => (
   <form className="form" onSubmit={submit}>
     {children}
-    <div
-      className={classNames('form_button', {
-        ['form_button-disabled']: disabled || loading
-      })}
-    >
-      <Button id="expense_button" color="primary" type="submit" disabled={disabled || loading} variant="contained">
-        {buttonText}
-        {loading && <CircularProgress color="primary" size={24} className="form_button--loading" />}
-      </Button>
+    <div className="form_buttons">
+      {secondButton && (
+        <div
+          className={classNames('form_button', {
+            ['form_button-disabled']: secondButton.disabled || secondButton.loading
+          })}
+        >
+          <Button
+            id="second_submit_button"
+            onClick={secondButton.submit}
+            color={secondButton.color ? secondButton.color : 'primary'}
+            type="button"
+            disabled={secondButton.disabled || secondButton.loading}
+            variant="contained"
+          >
+            {secondButton.text}
+            {secondButton.loading && <CircularProgress color="primary" size={24} className="form_button--loading" />}
+          </Button>
+        </div>
+      )}
+      <div
+        className={classNames('form_button', {
+          ['form_button-disabled']: disabled || loading
+        })}
+      >
+        <Button id="submit_button" color="primary" type="submit" disabled={disabled || loading} variant="contained">
+          {buttonText}
+          {loading && <CircularProgress color="primary" size={24} className="form_button--loading" />}
+        </Button>
+      </div>
     </div>
   </form>
 );

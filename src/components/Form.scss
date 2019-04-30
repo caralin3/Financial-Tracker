@@ -7,6 +7,16 @@
   justify-content: center;
   overflow-x: hidden;
 
+  &_buttons {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    @media #{$medium} {
+      width: 50%;
+    }
+  }
+
   &_button {
     padding: 1rem 0;
 
@@ -15,6 +25,7 @@
         cursor: not-allowed;
       }
     }
+
     &--loading {
       position: absolute;
       top: 50%;
