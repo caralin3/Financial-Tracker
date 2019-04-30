@@ -110,6 +110,10 @@
       font-size: 18px !important;
       text-align: right;
 
+      &-neg {
+        color: $error !important;
+      }
+
       @media #{$medium} {
         font-size: 20px !important;
       }
