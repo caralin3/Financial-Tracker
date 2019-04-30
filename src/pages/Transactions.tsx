@@ -139,7 +139,10 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
         buttonText="Add"
         open={openAdd}
         onClose={() => setOpenAdd(false)}
-        onSuccess={() => setSuccess(true)}
+        onSuccess={() => {
+          setSuccessMsg(`Transaction added`);
+          setSuccess(true);
+        }}
       />
       <TransactionModal
         title="Edit Transaction"
