@@ -69,28 +69,50 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     { label: 'This Year', value: 4 }
   ];
 
-  // TODO: Change colors
-  const colors = [
-    '#e6194b',
-    '#3cb44b',
-    '#ffe119',
-    '#4363d8',
-    '#f58231',
-    '#911eb4',
-    '#46f0f0',
-    '#f032e6',
-    '#bcf60c',
-    '#fabebe',
-    '#008080',
-    '#e6beff',
-    '#9a6324',
-    '#fffac8',
-    '#800000',
-    '#aaffc3',
-    '#808000',
-    '#ffd8b1',
-    '#000075',
-    '#808080'
+  const solidColors = [
+    'rgb(230, 25, 75)',
+    'rgb(60, 180, 75)',
+    'rgb(255, 225, 25)',
+    'rgb(0, 130, 200)',
+    'rgb(245, 130, 48)',
+    'rgb(145, 30, 180)',
+    'rgb(70, 240, 240)',
+    'rgb(240, 50, 230)',
+    'rgb(210, 245, 60)',
+    'rgb(250, 190, 190)',
+    'rgb(0, 128, 128)',
+    'rgb(230, 190, 255)',
+    'rgb(170, 110, 40)',
+    'rgb(255, 250, 200)',
+    'rgb(128, 0, 0)',
+    'rgb(170, 255, 195)',
+    'rgb(128, 128, 0)',
+    'rgb(255, 215, 180)',
+    'rgb(0, 0, 128)',
+    'rgb(128, 128, 128)'
+  ];
+
+  const opaqueColors = [
+    'rgba(230, 25, 75, .4)',
+    'rgba(60, 180, 75, .4)',
+    'rgba(255, 225, 25, .4)',
+    'rgba(0, 130, 200, .4)',
+    'rgba(245, 130, 48, .4)',
+    'rgba(145, 30, 180, .4)',
+    'rgba(70, 240, 240, .4)',
+    'rgba(240, 50, 230, .4)',
+    'rgba(210, 245, 60, .4)',
+    'rgba(250, 190, 190, .4)',
+    'rgba(0, 128, 128, .4)',
+    'rgba(230, 190, 255, .4)',
+    'rgba(170, 110, 40, .4)',
+    'rgba(255, 250, 200, .4)',
+    'rgba(128, 0, 0, .4)',
+    'rgba(170, 255, 195, .4)',
+    'rgba(128, 128, 0, .4)',
+    'rgba(255, 215, 180, .4)',
+    'rgba(0, 0, 128, .4)',
+    'rgba(128, 128, 128, .4)'
   ];
 
   React.useEffect(() => {
@@ -199,16 +221,16 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   const categoryDataSet = viewCat
     ? [
         {
-          backgroundColor: colors,
+          backgroundColor: solidColors,
           data: detailData(subcategoryLabels, currentCatTrans, 'subcategory'),
-          hoverBackgroundColor: colors
+          hoverBackgroundColor: solidColors
         }
       ]
     : [
         {
-          backgroundColor: colors,
+          backgroundColor: solidColors,
           data: detailData(categoryLabels, currentCatTrans, 'category'),
-          hoverBackgroundColor: colors
+          hoverBackgroundColor: solidColors
         }
       ];
 
@@ -242,69 +264,100 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     }
   };
 
-  const timeFormat = matchMd ? 'MMMM' : 'MM/DD/YYYY HH:mm';
+  const timeFormat = matchMd || menuItems[selected.expenses].value === 4 ? 'MMM YYYY' : 'MM/DD/YYYY HH:mm';
   const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
-  const expenses = sort(removeDupObjs(getObjectByType(currentTrans, 'expense').map(trans => {
-    const sum = getArrayTotal(currentTrans.filter(t =>  moment(new Date(t.date)).isSame(new Date(trans.date), matchMd ? 'month' : 'day')));
-    return { x: moment(new Date(trans.date)).format(timeFormat), y: sum }
-  })), 'asc', 'x');
-  const income = sort(removeDupObjs(getObjectByType(currentTrans, 'income').map(trans => {
-    const sum = getArrayTotal(currentTrans.filter(t =>  moment(new Date(t.date)).isSame(new Date(trans.date), matchMd ? 'month' : 'day')));
-    return { x: moment(new Date(trans.date)).format(timeFormat), y: sum }
-  })), 'asc', 'x');
+  const expenses = sort(
+    removeDupObjs(
+      getObjectByType(currentTrans, 'expense').map(trans => {
+        const sum = getArrayTotal(
+          getObjectByType(currentTrans, 'expense').filter(t =>
+            moment(new Date(t.date)).isSame(
+              new Date(trans.date),
+              matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
+            )
+          )
+        );
+        return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
+      })
+    ),
+    'asc',
+    'x'
+  );
+  const income = sort(
+    removeDupObjs(
+      getObjectByType(currentTrans, 'income').map(trans => {
+        const sum = getArrayTotal(
+          getObjectByType(currentTrans, 'income').filter(t =>
+            moment(new Date(t.date)).isSame(
+              new Date(trans.date),
+              matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
+            )
+          )
+        );
+        return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
+      })
+    ),
+    'asc',
+    'x'
+  );
 
   const expensesData = {
-    datasets: [{
-      backgroundColor: 'rgba(75,192,192,0.4)',
-      borderColor: 'rgba(75,192,192,1)',
-      data: expenses,
-      // fill: false,
-      label: 'Expenses',
-      pointHitRadius: 10,
-      pointRadius: 1,
-    }, {
-      backgroundColor: colors[1],
-      borderColor: colors[1],
-      data: income,
-      fill: false,
-      label: 'Income',
-      pointHitRadius: 10,
-      pointRadius: 1,
-    }],
-    labels: expensesLabels,
+    datasets: [
+      {
+        backgroundColor: opaqueColors[0],
+        borderColor: solidColors[0],
+        data: expenses,
+        label: 'Expenses',
+        pointHitRadius: 10,
+        pointRadius: 1
+      },
+      {
+        backgroundColor: opaqueColors[3],
+        borderColor: solidColors[3],
+        data: income,
+        label: 'Income',
+        pointHitRadius: 10,
+        pointRadius: 1
+      }
+    ],
+    labels: expensesLabels
   };
 
   const expensesOptions = {
     legend: {
-     display: false
+      display: false
     },
     scales: {
-      xAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: 'Date'
-        },
-        time: {
-          parser: timeFormat,
-          // round: 'day'
-          tooltipFormat: 'll HH:mm'
-        },
-        type: 'time',
-      }],
-      yAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: 'Amount Spent'
+      xAxes: [
+        {
+          scaleLabel: {
+            display: true,
+            labelString: 'Date'
+          },
+          time: {
+            parser: timeFormat,
+            // round: 'day'
+            tooltipFormat: 'll'
+          },
+          type: 'time'
         }
-      }]
+      ],
+      yAxes: [
+        {
+          scaleLabel: {
+            display: true,
+            labelString: 'Amount Spent'
+          }
+        }
+      ]
     },
     title: {
       display: true,
       fontSize: matchSm ? 16 : 18,
       position: 'top' as any,
       text: 'Expenses vs. Income'
-    },
-}
+    }
+  };
 
   return (
     <Layout title="Reports">
@@ -426,11 +479,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
             />
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
-            <DashboardCard
-              className="reports_add"
-              onClick={() => null}
-              title="Add Chart"
-            />
+            <DashboardCard className="reports_add" onClick={() => null} title="Add Chart" />
           </Grid>
         </Grid>
       )}
