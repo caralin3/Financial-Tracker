@@ -175,6 +175,7 @@ export const Toolbar: React.SFC<TableToolbarProps> = ({
     return JSON.stringify(result);
   };
 
+  // FIXME: Handle comma in amount when importing
   const handleImport = (e: any) => {
     const csv = e.target ? e.target.result : '';
     const importedData = JSON.parse(convertCSVtoJSON(csv));
@@ -542,10 +543,15 @@ const Table: React.SFC<TableProps> = ({
   const [page, setPage] = React.useState<number>(0);
   const [selected, setSelected] = React.useState<string[]>([]);
   const [filters, setFilters] = React.useState<{ [key: string]: string | number }>({});
+  const [total, setTotal] = React.useState<number>(0);
 
   React.useEffect(() => {
     setDisplayData(data);
   }, [data]);
+
+  React.useEffect(() => {
+    setTotal(getArrayTotal(displayData));
+  }, [displayData]);
 
   const desc = (a: any, b: any, orderedBy: string) => {
     if (b[orderedBy] < a[orderedBy]) {
@@ -714,8 +720,6 @@ const Table: React.SFC<TableProps> = ({
     }
     return span;
   };
-
-  const total = getArrayTotal(displayData);
 
   return (
     <Paper className={classes.root} elevation={8}>

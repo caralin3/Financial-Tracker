@@ -1,5 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import { ChartOptions } from 'chart.js';
 import * as moment from 'moment';
@@ -11,9 +12,9 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { BudgetCard, DashboardCard, DropdownMenu, GoalCard, Layout, Loading } from '../components';
-// import { routes } from '../routes';
 import { Account, accountType, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
 import {
+  calcPercent,
   formatMoney,
   getArrayTotal,
   getExpensesByAccount,
@@ -22,7 +23,8 @@ import {
   getTransactionByRange,
   removeDupObjs,
   removeDups,
-  sort,
+  // sort,
+  sortChartByMonths,
   sortValues
 } from '../util';
 
@@ -53,20 +55,21 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   transactions
 }) => {
   const [loading] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, expenses: 2, goal: 2 });
+  const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, expenses: 4, goal: 2 });
   const [viewAcc, setViewAcc] = React.useState<accountType | ''>('');
   const [viewCat, setViewCat] = React.useState<string>('');
   const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
   const [currentAccTrans, setCurrentAccTrans] = React.useState<Transaction[]>([]);
   const [currentCatTrans, setCurrentCatTrans] = React.useState<Transaction[]>([]);
-  const matchMd = useMediaQuery('(max-width:960px)');
+  // const matchMd = useMediaQuery('(max-width:960px)');
   const matchSm = useMediaQuery('(max-width:600px)');
   const menuItems = [
     { label: 'This Week', value: 0 },
     { label: 'Last Week', value: 1 },
     { label: 'This Month', value: 2 },
     { label: 'Last Month', value: 3 },
-    { label: 'This Year', value: 4 }
+    { label: 'This Year', value: 4 },
+    { label: 'Last Year', value: 5 }
   ];
 
   const solidColors = [
@@ -264,49 +267,41 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     }
   };
 
-  const timeFormat = matchMd || menuItems[selected.expenses].value === 4 ? 'MMM YYYY' : 'MM/DD/YYYY HH:mm';
+  const timeFormat = 'MMMM';
   const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
-  const expenses = sort(
-    removeDupObjs(
-      getObjectByType(currentTrans, 'expense').map(trans => {
-        const sum = getArrayTotal(
-          getObjectByType(currentTrans, 'expense').filter(t =>
-            moment(new Date(t.date)).isSame(
-              new Date(trans.date),
-              matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
-            )
-          )
-        );
-        return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-      })
-    ),
-    'asc',
-    'x'
+  const expenses = removeDupObjs(
+    getObjectByType(currentTrans, 'expense').map(trans => {
+      const sum = getArrayTotal(
+        getObjectByType(currentTrans, 'expense').filter(t =>
+          moment(new Date(t.date)).isSame(new Date(trans.date), 'month')
+        )
+      );
+      return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
+    })
   );
-  const income = sort(
-    removeDupObjs(
-      getObjectByType(currentTrans, 'income').map(trans => {
-        const sum = getArrayTotal(
-          getObjectByType(currentTrans, 'income').filter(t =>
-            moment(new Date(t.date)).isSame(
-              new Date(trans.date),
-              matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
-            )
-          )
-        );
-        return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-      })
-    ),
-    'asc',
-    'x'
+  const sortedExpenses = sortChartByMonths(expenses);
+  const income = removeDupObjs(
+    getObjectByType(currentTrans, 'income').map(trans => {
+      const sum = getArrayTotal(
+        getObjectByType(currentTrans, 'income').filter(t =>
+          moment(new Date(t.date)).isSame(new Date(trans.date), 'month')
+        )
+      );
+      return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
+    })
   );
+  const sortedIncome = sortChartByMonths(income);
+
+  const expensesAvg = getArrayTotal(expenses.map(d => ({ amount: d.y }))) / expenses.length;
+  const incomeAvg = getArrayTotal(income.map(d => ({ amount: d.y }))) / income.length;
+  const avgPercent = calcPercent(expensesAvg, incomeAvg);
 
   const expensesData = {
     datasets: [
       {
         backgroundColor: opaqueColors[0],
         borderColor: solidColors[0],
-        data: expenses,
+        data: sortedExpenses,
         label: 'Expenses',
         pointHitRadius: 10,
         pointRadius: 1
@@ -314,7 +309,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
       {
         backgroundColor: opaqueColors[3],
         borderColor: solidColors[3],
-        data: income,
+        data: sortedIncome,
         label: 'Income',
         pointHitRadius: 10,
         pointRadius: 1
@@ -323,16 +318,26 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     labels: expensesLabels
   };
 
-  const expensesOptions = {
+  const expensesOptions: ChartOptions = {
     legend: {
-      display: false
+      display: matchSm ? false : true,
+      position: 'right'
     },
     scales: {
       xAxes: [
         {
           scaleLabel: {
-            display: true,
+            display: matchSm ? false : true,
             labelString: 'Date'
+          },
+          ticks: {
+            callback: label => {
+              const labelDate = new Date(label);
+              if (labelDate.toString() !== 'Invalid Date') {
+                return moment(labelDate).format('MMMM');
+              }
+              return label;
+            }
           },
           time: {
             parser: timeFormat,
@@ -345,8 +350,12 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
       yAxes: [
         {
           scaleLabel: {
-            display: true,
-            labelString: 'Amount Spent'
+            display: matchSm ? false : true,
+            labelString: 'Amount'
+          },
+          ticks: {
+            beginAtZero: true,
+            callback: label => formatMoney(label, true)
           }
         }
       ]
@@ -354,10 +363,115 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     title: {
       display: true,
       fontSize: matchSm ? 16 : 18,
-      position: 'top' as any,
+      position: 'top',
       text: 'Expenses vs. Income'
+    },
+    tooltips: {
+      callbacks: {
+        label: (tooltipItem: any, data: any) =>
+          `${data.datasets[tooltipItem.datasetIndex].label}: ${formatMoney(tooltipItem.yLabel)}`
+      }
     }
   };
+
+  // const timeFormat = matchMd || menuItems[selected.expenses].value === 4 ? 'MMMM' : 'MM/DD/YYYY HH:mm';
+  // const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
+  // const expenses = removeDupObjs(
+  //   getObjectByType(currentTrans, 'expense').map(trans => {
+  //     const sum = getArrayTotal(
+  //       getObjectByType(currentTrans, 'expense').filter(t =>
+  //         moment(new Date(t.date)).isSame(
+  //           new Date(trans.date),
+  //           matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
+  //         )
+  //       )
+  //     );
+  //     return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
+  //   })
+  // );
+  // const sortedExpenses = menuItems[selected.expenses].value === 4 ? sortChartByMonths(expenses) : sort(expenses, 'asc', 'x');
+  // const income = removeDupObjs(
+  //   getObjectByType(currentTrans, 'income').map(trans => {
+  //     const sum = getArrayTotal(
+  //       getObjectByType(currentTrans, 'income').filter(t =>
+  //         moment(new Date(t.date)).isSame(
+  //           new Date(trans.date),
+  //           matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
+  //         )
+  //       )
+  //     );
+  //     return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
+  //   })
+  // );
+  // const sortedIncome = menuItems[selected.expenses].value === 4 ? sortChartByMonths(income) : sort(income, 'asc', 'x');
+
+  // const expensesData = {
+  //   datasets: [
+  //     {
+  //       backgroundColor: opaqueColors[0],
+  //       borderColor: solidColors[0],
+  //       data: sortedExpenses,
+  //       label: 'Expenses',
+  //       pointHitRadius: 10,
+  //       pointRadius: 1
+  //     },
+  //     {
+  //       backgroundColor: opaqueColors[3],
+  //       borderColor: solidColors[3],
+  //       data: sortedIncome,
+  //       label: 'Income',
+  //       pointHitRadius: 10,
+  //       pointRadius: 1
+  //     }
+  //   ],
+  //   labels: expensesLabels
+  // };
+
+  // const expensesOptions: ChartOptions = {
+  //   legend: {
+  //     display: matchSm ? false : true,
+  //     position: 'right'
+  //   },
+  //   scales: {
+  //     xAxes: [
+  //       {
+  //         scaleLabel: {
+  //           display: matchSm ? false : true,
+  //           labelString: 'Date'
+  //         },
+  //         time: {
+  //           parser: timeFormat,
+  //           // round: 'day'
+  //           tooltipFormat: 'll'
+  //         },
+  //         type: 'time'
+  //       }
+  //     ],
+  //     yAxes: [
+  //       {
+  //         scaleLabel: {
+  //           display: matchSm ? false : true,
+  //           labelString: 'Amount'
+  //         },
+  //         ticks: {
+  //           beginAtZero: true,
+  //           callback: (label) => formatMoney(label, true)
+  //         },
+  //       }
+  //     ]
+  //   },
+  //   title: {
+  //     display: true,
+  //     fontSize: matchSm ? 16 : 18,
+  //     position: 'top',
+  //     text: 'Expenses vs. Income'
+  //   },
+  //   tooltips: {
+  //     callbacks: {
+  //       label: (tooltipItem: any, data: any) =>  `${data.datasets[tooltipItem.datasetIndex].label}: ${formatMoney(tooltipItem.yLabel)}`
+  //     }
+  //   }
+  // };
 
   return (
     <Layout title="Reports">
@@ -373,7 +487,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                   className="reports_dropdown"
                   key="expenses-range"
                   selected={menuItems[selected.expenses].label}
-                  menuItems={menuItems}
+                  menuItems={menuItems.slice(-2)}
                   onClose={e => handleMenu(e, 'expenses')}
                 />
               }
@@ -390,6 +504,20 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
               subheader={getSubheader(menuItems[selected.expenses].label)}
             >
               <Line data={expensesData} options={expensesOptions} />
+              <div className="reports_expenses-summary">
+                <Typography>
+                  Average Monthly Spending: <strong>{formatMoney(expensesAvg)}</strong>
+                </Typography>
+                <Typography>
+                  Average Monthly Income: <strong>{formatMoney(incomeAvg)}</strong>
+                </Typography>
+                <Typography>
+                  Average Percentage Spent:{' '}
+                  <strong className={avgPercent > 80 ? 'reports_expenses-percent--red' : 'reports_expenses-percent'}>
+                    {avgPercent.toFixed(2)}%
+                  </strong>
+                </Typography>
+              </div>
             </DashboardCard>
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>

@@ -4,4 +4,21 @@
   &_dropdown {
     padding: 10px,
   }
+
+  &_expenses-summary {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    @media #{$medium} {
+      flex-direction: row;
+    }
+  }
+
+  &_expenses-percent {
+    color: $success;
+    &--red {
+      color: $error;
+    }
+  }
 }

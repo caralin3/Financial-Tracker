@@ -53,5 +53,5 @@ export const formatTableTransaction = (transactions: Transaction[]) => {
   }));
 };
 
-export const formatNumberArray = (arr: any[]) =>
-  arr.map(val => (isNaN(val.amount) ? parseFloat(val.amount.replace(/\$/g, '')) : val.amount));
+export const formatNumberArray = (arr: any[]): number[] =>
+  arr.map(val => (isNaN(val.amount) ? parseFloat(val.amount.replace(/\$|,/g, '')) : val.amount));

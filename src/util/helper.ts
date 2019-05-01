@@ -79,6 +79,12 @@ export const getSubheader = (range: string) => {
       return moment(lastMonth).format('MMMM YYYY');
     case 'This Year':
       return moment(new Date()).format('YYYY');
+    case 'Last Year':
+      const lastYear = moment(new Date())
+        .clone()
+        .subtract(1, 'year')
+        .format();
+      return moment(lastYear).format('YYYY');
     default:
       return '';
   }
@@ -146,6 +152,8 @@ export const getObjectByType = (arr: any[], type: accountType | transactionType)
 
 export const getTransactionByRange = (range: string, transactions: Transaction[]) => {
   switch (range) {
+    case 'Today':
+      return transactions.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'day'));
     case 'This Week':
       return transactions.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'week'));
     case 'Last Week':
@@ -164,6 +172,12 @@ export const getTransactionByRange = (range: string, transactions: Transaction[]
       return transactions.filter(trans => moment(new Date(trans.date)).isSame(lastMonth, 'month'));
     case 'This Year':
       return transactions.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'year'));
+    case 'Last Year':
+      const lastYear = moment(new Date())
+        .clone()
+        .subtract(1, 'year')
+        .format();
+      return transactions.filter(trans => moment(new Date(trans.date)).isSame(lastYear, 'year'));
     default:
       let type = 'YYYY';
       if (isNaN(parseInt(range, 10))) {
