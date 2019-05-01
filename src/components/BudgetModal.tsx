@@ -13,7 +13,7 @@ import { FBBudget } from '../firebase/types';
 import { budgetsState } from '../store';
 import { ApplicationState, Budget, budgetFreq, Category, User } from '../types';
 import { formatMoney, getOptions } from '../util';
-import { Alert, Loading, ModalForm, SelectInput } from './';
+import { Alert, AlertDialog, Loading, ModalForm, SelectInput } from './';
 
 interface RouteParams {
   id: string;
@@ -22,6 +22,7 @@ interface RouteParams {
 interface DispatchMappedProps {
   addBudget: (bud: Budget) => void;
   editBudget: (bud: Budget) => void;
+  removeBudget: (id: string) => void;
 }
 
 interface StateMappedProps {
@@ -33,7 +34,7 @@ interface StateMappedProps {
 interface BudgetModalProps {
   buttonText: string;
   onClose: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (action?: string) => void;
   open: boolean;
   title: string;
 }
@@ -56,11 +57,13 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = ({
   onClose,
   onSuccess,
   open,
+  removeBudget,
   title
 }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [error, setError] = React.useState<boolean>(false);
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
   const [submit, setSubmit] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [categoryId, setCategoryId] = React.useState<string>('');
@@ -145,7 +148,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = ({
           if (edited) {
             handleClose();
             if (onSuccess) {
-              onSuccess();
+              onSuccess('updated');
             }
           } else {
             setError(true);
@@ -167,16 +170,52 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = ({
     }
   };
 
+  const deleteBudget = async () => {
+    if (params.id) {
+      const deleted = await requests.budgets.deleteBudget(params.id, removeBudget);
+      if (!deleted) {
+        setError(true);
+      }
+    }
+  };
+
+  const handleConfirm = () => {
+    deleteBudget();
+    setOpenDialog(false);
+    handleClose();
+    if (onSuccess) {
+      onSuccess('deleted');
+    }
+  };
+
   return (
     <ModalForm
       disabled={false}
       formTitle={title}
       formButton={buttonText}
+      formSecondButton={
+        params.id
+          ? {
+              color: 'secondary',
+              loading: submitting,
+              submit: e => setOpenDialog(true),
+              text: 'Delete'
+            }
+          : undefined
+      }
       formSubmit={handleSubmit}
       loading={submitting}
       open={open}
       handleClose={handleClose}
     >
+      <AlertDialog
+        cancelText="Cancel"
+        confirmText="Confirm"
+        onClose={() => setOpenDialog(false)}
+        onConfirm={handleConfirm}
+        open={openDialog}
+        title="Are you sure you want to delete this budget?"
+      />
       {loading ? (
         <div className="budgetModal_loading">
           <Loading />
@@ -302,7 +341,8 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = ({
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   addBudget: (bud: Budget) => dispatch(budgetsState.addBudget(bud)),
-  editBudget: (bud: Budget) => dispatch(budgetsState.editBudget(bud))
+  editBudget: (bud: Budget) => dispatch(budgetsState.editBudget(bud)),
+  removeBudget: (id: string) => dispatch(budgetsState.deleteBudget(id))
 });
 
 const mapStateToProps = (state: ApplicationState) => ({

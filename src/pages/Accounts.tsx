@@ -11,6 +11,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import LensIcon from '@material-ui/icons/Lens';
 import PanoramaFishEyeIcon from '@material-ui/icons/PanoramaFishEye';
+import classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -163,7 +164,13 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
                     <Typography className="accounts_label" color="primary">
                       {type.label}
                     </Typography>
-                    <Typography className="accounts_balance" variant="h5">
+                    <Typography
+                      className={classNames('accounts_balance', {
+                        ['accounts_balance-neg']: type.id === 'credit' || type.balance < 0
+                      })}
+                      variant="h5"
+                    >
+                      {type.id === 'credit' && '-'}
                       {formatMoney(type.balance)}
                     </Typography>
                   </Card>
@@ -178,7 +185,13 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
                         <Typography className="accounts_label" color="primary">
                           {type.label}
                         </Typography>
-                        <Typography className="accounts_balance" variant="h5">
+                        <Typography
+                          className={classNames('accounts_balance', {
+                            ['accounts_balance-neg']: type.id === 'credit' || type.balance < 0
+                          })}
+                          variant="h5"
+                        >
+                          {type.id === 'credit' && '-'}
                           {formatMoney(type.balance)}
                         </Typography>
                       </Card>
@@ -217,6 +230,7 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
                               link={''}
                               onEdit={() => handleEdit(acc.id, type.id)}
                               onDelete={() => handleDelete(acc.id)}
+                              type={type.id}
                             />
                           </ListItem>
                         ))
@@ -237,29 +251,34 @@ interface AccountItemProps {
   balance: number;
   label: string;
   link: string;
-  onEdit: () => void;
   onDelete: () => void;
+  onEdit: () => void;
+  type: string;
 }
 
-const AccountItem: React.SFC<AccountItemProps> = props => (
+const AccountItem: React.SFC<AccountItemProps> = ({ balance, label, link, onDelete, onEdit, type }) => (
   <div className="account">
     <div className="account_text">
       <Typography className="account_label" variant="h6">
-        {props.label}
+        {label}
       </Typography>
-      <Typography className="account_balance" variant="h6">
-        {formatMoney(props.balance)}
+      <Typography
+        className={classNames('account_balance', { ['account_balance-neg']: type === 'credit' || balance < 0 })}
+        variant="h6"
+      >
+        {type === 'credit' && '-'}
+        {formatMoney(balance)}
       </Typography>
     </div>
     <div className="account_text">
-      <Link className="account_view" href={props.link} variant="h6">
+      <Link className="account_view" href={link} variant="h6">
         View Activity
       </Link>
       <div>
-        <IconButton className="account_button" onClick={props.onEdit}>
+        <IconButton className="account_button" onClick={onEdit}>
           <EditIcon color="primary" />
         </IconButton>
-        <IconButton className="account_button" onClick={props.onDelete}>
+        <IconButton className="account_button" onClick={onDelete}>
           <DeleteIcon color="error" />
         </IconButton>
       </div>

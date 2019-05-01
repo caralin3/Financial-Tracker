@@ -40,7 +40,6 @@ const DisconnectedGoalCard: React.SFC<GoalCardProps> = ({ action, goals, current
 
   const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
     history.push(`${routes.dashboard}/edit/${id}`);
-    setSuccessMsg(`Goal has been updated`);
     setEditing(true);
   };
 
@@ -68,7 +67,10 @@ const DisconnectedGoalCard: React.SFC<GoalCardProps> = ({ action, goals, current
         buttonText="Edit"
         open={editing}
         onClose={() => setEditing(false)}
-        onSuccess={() => setSuccess(true)}
+        onSuccess={(act: string) => {
+          setSuccessMsg(`Goal ${act}`);
+          setSuccess(true);
+        }}
       />
       <List className="dashboard_card">
         {loading ? (

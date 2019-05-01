@@ -54,7 +54,7 @@ export const updateBudget = (budget: Budget, editBudget: (bud: Budget) => void) 
       return false;
     });
 
-// TODO: DELETE BUDGET
+// DELETE BUDGET
 export const deleteBudget = (id: string, removeBudget: (id: string) => void) =>
   budgetsCollection
     .doc(id)

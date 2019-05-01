@@ -54,7 +54,7 @@ export const updateGoal = (goal: Goal, editGoal: (goal: Goal) => void) =>
       return false;
     });
 
-// TODO: DELETE GOAL
+// DELETE GOAL
 export const deleteGoal = (id: string, removeGoal: (id: string) => void) =>
   goalsCollection
     .doc(id)

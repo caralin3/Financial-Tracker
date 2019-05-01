@@ -18,6 +18,7 @@ import {
   getObjectByType,
   incomeColumns,
   removeDups,
+  sortMonths,
   sortValues,
   transferColumns
 } from '../util';
@@ -83,17 +84,17 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
     });
   };
 
+  const handleConfirm = () => {
+    deleteTransaction();
+    setOpenDialog(false);
+    setSuccess(true);
+  };
+
   const handleEdit = (id: string, type: string) => {
     history.push(`${routes.transactions}/edit/${id}?type=${type}`);
     const [editTrans] = transactions.filter(trans => trans.id === id);
     setSuccessMsg(`Transaction from ${moment(new Date(editTrans.date)).format('MM/DD/YYYY')} has been updated`);
     setOpenEdit(true);
-  };
-
-  const handleConfirm = () => {
-    deleteTransaction();
-    setOpenDialog(false);
-    setSuccess(true);
   };
 
   const addButton = (fullWidth: boolean) => (
@@ -106,11 +107,14 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
   const income = formatTableTransaction(getObjectByType(transactions, 'income'));
   const transfers = formatTableTransaction(getObjectByType(transactions, 'transfer'));
   const dateOptions = (trans: any[]) => {
-    const options: Option[] = [{ label: 'This Week', value: 'This Week' }, { label: 'Last Week', value: 'Last Week' }];
+    const options: Option[] = [
+      { label: 'Today', value: 'Today' },
+      { label: 'This Week', value: 'This Week' },
+      { label: 'Last Week', value: 'Last Week' }
+    ];
     const years = sortValues(removeDups(trans.map(t => moment(new Date(t.date)).format('YYYY'))), 'desc');
     const months = removeDups(trans.map(t => moment(new Date(t.date)).format('MMMM')));
-    const monthNames = moment.months();
-    const sortedMonths = months.sort((month1, month2) => monthNames.indexOf(month1) - monthNames.indexOf(month2));
+    const sortedMonths = sortMonths(months);
     years.forEach(y => options.push(createOption(y, y)));
     sortedMonths.forEach(m => options.push(createOption(m, m)));
     return options;
@@ -139,7 +143,10 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
         buttonText="Add"
         open={openAdd}
         onClose={() => setOpenAdd(false)}
-        onSuccess={() => setSuccess(true)}
+        onSuccess={() => {
+          setSuccessMsg(`Transaction added`);
+          setSuccess(true);
+        }}
       />
       <TransactionModal
         title="Edit Transaction"
