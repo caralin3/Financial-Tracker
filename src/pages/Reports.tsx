@@ -1,5 +1,6 @@
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import { ChartOptions } from 'chart.js';
 import * as moment from 'moment';
@@ -13,6 +14,7 @@ import { withAuthorization } from '../auth/withAuthorization';
 import { BudgetCard, DashboardCard, DropdownMenu, GoalCard, Layout, Loading } from '../components';
 import { Account, accountType, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
 import {
+  calcPercent,
   formatMoney,
   getArrayTotal,
   getExpensesByAccount,
@@ -290,6 +292,9 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   );
   const sortedIncome = sortChartByMonths(income);
 
+  const expensesAvg = getArrayTotal(expenses.map(d => ({ amount: d.y }))) / expenses.length;
+  const incomeAvg = getArrayTotal(income.map(d => ({ amount: d.y }))) / income.length;
+
   const expensesData = {
     datasets: [
       {
@@ -498,6 +503,11 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
               subheader={getSubheader(menuItems[selected.expenses].label)}
             >
               <Line data={expensesData} options={expensesOptions} />
+              <div className="reports_expenses-summary">
+                <Typography>Average Monthly Spending: <strong>{formatMoney(expensesAvg)}</strong></Typography>
+                <Typography>Average Monthly Income: <strong>{formatMoney(incomeAvg)}</strong></Typography>
+                <Typography>Average Percentage Spent: <strong>{calcPercent(expensesAvg, incomeAvg).toFixed(2)}%</strong></Typography>
+              </div>
             </DashboardCard>
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
