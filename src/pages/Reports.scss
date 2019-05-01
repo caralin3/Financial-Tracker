@@ -14,4 +14,11 @@
       flex-direction: row;
     }
   }
+
+  &_expenses-percent {
+    color: $success;
+    &--red {
+      color: $error;
+    }
+  }
 }

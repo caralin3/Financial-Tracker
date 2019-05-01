@@ -294,6 +294,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
 
   const expensesAvg = getArrayTotal(expenses.map(d => ({ amount: d.y }))) / expenses.length;
   const incomeAvg = getArrayTotal(income.map(d => ({ amount: d.y }))) / income.length;
+  const avgPercent = calcPercent(expensesAvg, incomeAvg);
 
   const expensesData = {
     datasets: [
@@ -504,9 +505,18 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
             >
               <Line data={expensesData} options={expensesOptions} />
               <div className="reports_expenses-summary">
-                <Typography>Average Monthly Spending: <strong>{formatMoney(expensesAvg)}</strong></Typography>
-                <Typography>Average Monthly Income: <strong>{formatMoney(incomeAvg)}</strong></Typography>
-                <Typography>Average Percentage Spent: <strong>{calcPercent(expensesAvg, incomeAvg).toFixed(2)}%</strong></Typography>
+                <Typography>
+                  Average Monthly Spending: <strong>{formatMoney(expensesAvg)}</strong>
+                </Typography>
+                <Typography>
+                  Average Monthly Income: <strong>{formatMoney(incomeAvg)}</strong>
+                </Typography>
+                <Typography>
+                  Average Percentage Spent:{' '}
+                  <strong className={avgPercent > 80 ? 'reports_expenses-percent--red' : 'reports_expenses-percent'}>
+                    {avgPercent.toFixed(2)}%
+                  </strong>
+                </Typography>
               </div>
             </DashboardCard>
           </Grid>
