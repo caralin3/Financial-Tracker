@@ -16,6 +16,7 @@ import { Account, accountType, ApplicationState, Budget, Category, Goal, Transac
 import {
   calcPercent,
   formatMoney,
+  getArraySum,
   getArrayTotal,
   getExpensesByAccount,
   getObjectByType,
@@ -147,6 +148,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   const bankTotal = getArrayTotal(getExpensesByAccount(currentAccTrans, 'bank'));
   const cashTotal = getArrayTotal(getExpensesByAccount(currentAccTrans, 'cash'));
   const creditTotal = getArrayTotal(getExpensesByAccount(currentAccTrans, 'credit'));
+  const accountTypeLabels = ['Bank Accounts', 'Cash', 'Credit'];
   const accountLabels = removeDups(
     getExpensesByAccount(currentAccTrans, viewAcc as accountType).map(exp => exp.from.name)
   );
@@ -168,14 +170,20 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
         }
       ];
 
+  const indexOfLargestAcc = accountDataSet[0].data.indexOf(Math.max(...accountDataSet[0].data));
+  const accDenom = viewAcc ? accountDataSet[0].data.length ? accountDataSet[0].data.reduce(getArraySum) : 0 : getArrayTotal(currentAccTrans);
+  const largestAccPercent = accDenom > 0 ? calcPercent(accountDataSet[0].data[indexOfLargestAcc], accDenom) : 0;
+
   const accountPieData = {
     datasets: accountDataSet,
-    labels: viewAcc ? accountLabels || [] : ['Bank Accounts', 'Cash', 'Credit']
+    labels: viewAcc ? accountLabels || [] : accountTypeLabels
   };
 
   const accountOptions: ChartOptions = {
     legend: {
-      display: matchSm ? false : true,
+      labels: {
+        boxWidth: matchSm ? 10 : 40
+      },
       position: 'right'
     },
     onClick: (e, items: any) => {
@@ -237,6 +245,10 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
         }
       ];
 
+  const indexOfLargestCat = categoryDataSet[0].data.indexOf(Math.max(...categoryDataSet[0].data));
+  const categoryDenom = viewCat ? categoryDataSet[0].data.length ? categoryDataSet[0].data.reduce(getArraySum) : 0 : getArrayTotal(currentCatTrans);
+  const largestCatPercent = categoryDenom > 0 ? calcPercent(categoryDataSet[0].data[indexOfLargestCat], categoryDenom) : 0;
+
   const categoryPieData = {
     datasets: categoryDataSet,
     labels: viewCat ? subcategoryLabels : categoryLabels
@@ -244,15 +256,19 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
 
   const categoryOptions: ChartOptions = {
     legend: {
-      display: matchSm ? false : true,
+      labels: {
+        boxWidth: 10
+      },
       position: matchSm ? 'bottom' : 'right'
     },
+    maintainAspectRatio: matchSm ? false : true,
     onClick: (e, items: any) => {
       if (!viewCat && items.length) {
         const section = categoryPieData.labels[items[0]._index];
         setViewCat(section);
       }
     },
+    responsive: matchSm ? false : true,
     title: {
       display: true,
       fontSize: matchSm ? 16 : 18,
@@ -504,7 +520,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
               subheader={getSubheader(menuItems[selected.expenses].label)}
             >
               <Line data={expensesData} options={expensesOptions} />
-              <div className="reports_expenses-summary">
+              <div className="reports_summary">
                 <Typography>
                   Average Monthly Spending: <strong>{formatMoney(expensesAvg)}</strong>
                 </Typography>
@@ -514,7 +530,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                 <Typography>
                   Average Percentage Spent:{' '}
                   <strong className={avgPercent > 80 ? 'reports_expenses-percent--red' : 'reports_expenses-percent'}>
-                    {avgPercent.toFixed(2)}%
+                    {avgPercent.toFixed(1)}%
                   </strong>
                 </Typography>
               </div>
@@ -545,6 +561,11 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
               subheader={getSubheader(menuItems[selected.account].label)}
             >
               <Pie data={accountPieData} options={accountOptions} />
+                <div className="reports_summary">
+                  <Typography>
+                    Largest: <strong>{`${viewAcc ? accountLabels[indexOfLargestAcc] : accountTypeLabels[indexOfLargestAcc]}, ${largestAccPercent.toFixed(1)}%`}</strong>
+                  </Typography>
+                </div>
             </DashboardCard>
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
@@ -571,7 +592,14 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
               title="Categories"
               subheader={getSubheader(menuItems[selected.category].label)}
             >
-              <Pie data={categoryPieData} options={categoryOptions} />
+              <div className="reports_pie">
+                <Pie data={categoryPieData} height={ matchSm ? 250 : undefined } options={categoryOptions} />
+                <div className="reports_summary">
+                  <Typography>
+                    Largest: <strong>{`${viewCat ? subcategoryLabels[indexOfLargestCat] : categoryLabels[indexOfLargestCat]}, ${largestCatPercent.toFixed(1)}%`}</strong>
+                  </Typography>
+                </div>
+              </div>
             </DashboardCard>
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>

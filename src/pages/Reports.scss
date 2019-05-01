@@ -5,7 +5,16 @@
     padding: 10px,
   }
 
-  &_expenses-summary {
+  &_pie {
+    position: relative;
+    height: 250px;
+
+    @media #{$medium} {
+      height: auto;
+    }
+  }
+
+  &_summary {
     display: flex;
     flex-direction: column;
     justify-content: space-between;

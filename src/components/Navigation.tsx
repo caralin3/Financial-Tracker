@@ -29,7 +29,7 @@ import config from '../config';
 import { auth } from '../firebase';
 import { routes } from '../routes';
 import { sessionState } from '../store';
-import { ApplicationState } from '../types';
+import { ApplicationState, User } from '../types';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './';
 
 interface NavigationProps {
@@ -42,6 +42,7 @@ interface DispatchMappedProps {
 }
 
 interface StateMappedProps {
+  currentUser: User | null;
   drawerExpanded: boolean;
 }
 
@@ -64,7 +65,7 @@ class DisconnectedNavigation extends React.Component<NavigationMergedProps, Navi
   }
 
   public render() {
-    const { classes, drawerExpanded, setDrawerExpanded } = this.props;
+    const { classes, currentUser, drawerExpanded, setDrawerExpanded } = this.props;
     const { open, selected } = this.state;
 
     const links = [
@@ -82,7 +83,12 @@ class DisconnectedNavigation extends React.Component<NavigationMergedProps, Navi
 
     let title: string = selected.split('/')[1];
     if (title) {
-      title = `${title.slice(0, 1).toUpperCase()}${title.slice(1)}`;
+      const capitalized = `${title.slice(0, 1).toUpperCase()}${title.slice(1)}`;
+      if (title === 'dashboard' && currentUser) {
+        title = `${currentUser.firstName}'s ${capitalized}`;
+      } else {
+        title = capitalized;
+      }
     }
 
     const navList = (
@@ -295,6 +301,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
 });
 
 const mapStateToProps = (state: ApplicationState) => ({
+  currentUser: state.sessionState.currentUser,
   drawerExpanded: state.sessionState.drawerExpanded
 });
 
