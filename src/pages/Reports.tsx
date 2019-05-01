@@ -11,7 +11,6 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { BudgetCard, DashboardCard, DropdownMenu, GoalCard, Layout, Loading } from '../components';
-// import { routes } from '../routes';
 import { Account, accountType, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
 import {
   formatMoney,
@@ -23,6 +22,7 @@ import {
   removeDupObjs,
   removeDups,
   sort,
+  sortChartByMonths,
   sortValues
 } from '../util';
 
@@ -53,7 +53,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   transactions
 }) => {
   const [loading] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, expenses: 2, goal: 2 });
+  const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, expenses: 4, goal: 2 });
   const [viewAcc, setViewAcc] = React.useState<accountType | ''>('');
   const [viewCat, setViewCat] = React.useState<string>('');
   const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
@@ -66,7 +66,8 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     { label: 'Last Week', value: 1 },
     { label: 'This Month', value: 2 },
     { label: 'Last Month', value: 3 },
-    { label: 'This Year', value: 4 }
+    { label: 'This Year', value: 4 },
+    { label: 'Last Year', value: 5 },
   ];
 
   const solidColors = [
@@ -264,49 +265,43 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     }
   };
 
-  const timeFormat = matchMd || menuItems[selected.expenses].value === 4 ? 'MMM YYYY' : 'MM/DD/YYYY HH:mm';
+  const timeFormat = matchMd || menuItems[selected.expenses].value === 4 ? 'MMMM' : 'MM/DD/YYYY HH:mm';
   const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
-  const expenses = sort(
-    removeDupObjs(
-      getObjectByType(currentTrans, 'expense').map(trans => {
-        const sum = getArrayTotal(
-          getObjectByType(currentTrans, 'expense').filter(t =>
-            moment(new Date(t.date)).isSame(
-              new Date(trans.date),
-              matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
-            )
+  const expenses = removeDupObjs(
+    getObjectByType(currentTrans, 'expense').map(trans => {
+      const sum = getArrayTotal(
+        getObjectByType(currentTrans, 'expense').filter(t =>
+          moment(new Date(t.date)).isSame(
+            new Date(trans.date),
+            matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
           )
-        );
-        return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-      })
-    ),
-    'asc',
-    'x'
+        )
+      );
+      return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
+    })
   );
-  const income = sort(
-    removeDupObjs(
-      getObjectByType(currentTrans, 'income').map(trans => {
-        const sum = getArrayTotal(
-          getObjectByType(currentTrans, 'income').filter(t =>
-            moment(new Date(t.date)).isSame(
-              new Date(trans.date),
-              matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
-            )
+  const sortedExpenses = menuItems[selected.expenses].value === 4 ? sortChartByMonths(expenses) : sort(expenses, 'asc', 'x');
+  const income = removeDupObjs(
+    getObjectByType(currentTrans, 'income').map(trans => {
+      const sum = getArrayTotal(
+        getObjectByType(currentTrans, 'income').filter(t =>
+          moment(new Date(t.date)).isSame(
+            new Date(trans.date),
+            matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
           )
-        );
-        return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-      })
-    ),
-    'asc',
-    'x'
+        )
+      );
+      return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
+    })
   );
+  const sortedIncome = menuItems[selected.expenses].value === 4 ? sortChartByMonths(income) : sort(income, 'asc', 'x');
 
   const expensesData = {
     datasets: [
       {
         backgroundColor: opaqueColors[0],
         borderColor: solidColors[0],
-        data: expenses,
+        data: sortedExpenses,
         label: 'Expenses',
         pointHitRadius: 10,
         pointRadius: 1
@@ -314,7 +309,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
       {
         backgroundColor: opaqueColors[3],
         borderColor: solidColors[3],
-        data: income,
+        data: sortedIncome,
         label: 'Income',
         pointHitRadius: 10,
         pointRadius: 1
@@ -325,13 +320,14 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
 
   const expensesOptions: ChartOptions = {
     legend: {
+      display: matchSm ? false : true,
       position: 'right'
     },
     scales: {
       xAxes: [
         {
           scaleLabel: {
-            display: true,
+            display: matchSm ? false : true,
             labelString: 'Date'
           },
           time: {
@@ -345,17 +341,25 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
       yAxes: [
         {
           scaleLabel: {
-            display: true,
-            labelString: 'Amount Spent'
-          }
+            display: matchSm ? false : true,
+            labelString: 'Amount'
+          },
+          ticks: {
+            callback: (label) => formatMoney(label, true)
+          },
         }
       ]
     },
     title: {
       display: true,
       fontSize: matchSm ? 16 : 18,
-      position: 'top' as any,
+      position: 'top',
       text: 'Expenses vs. Income'
+    },
+    tooltips: {
+      callbacks: {
+        label: (tooltipItem: any, data: any) =>  `${data.datasets[tooltipItem.datasetIndex].label}: ${formatMoney(tooltipItem.yLabel)}`
+      }
     }
   };
 
@@ -373,7 +377,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                   className="reports_dropdown"
                   key="expenses-range"
                   selected={menuItems[selected.expenses].label}
-                  menuItems={menuItems}
+                  menuItems={menuItems.slice(-2)}
                   onClose={e => handleMenu(e, 'expenses')}
                 />
               }
