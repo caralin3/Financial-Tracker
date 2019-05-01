@@ -50,7 +50,7 @@ export const goalComparatorOptions = [
 ];
 
 export const getSubheader = (range: string) => {
-  switch (range) {
+  switch (range) {    
     case 'This Week':
       const begin = moment(new Date())
         .startOf('week')
@@ -146,6 +146,8 @@ export const getObjectByType = (arr: any[], type: accountType | transactionType)
 
 export const getTransactionByRange = (range: string, transactions: Transaction[]) => {
   switch (range) {
+    case 'Today':
+      return transactions.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'day'));
     case 'This Week':
       return transactions.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'week'));
     case 'Last Week':

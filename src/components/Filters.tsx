@@ -53,18 +53,20 @@ export const Filters: React.SFC<FiltersProps> = ({
     const options: Option[] = [{ label: 'All', value: 'all' }];
     if (col.label === 'Date') {
       options.push.apply(options, dateOptions);
-    } else if (col.label === 'Tags') {
+      return removeDupObjs(options);
+    }
+    if (col.label === 'Tags') {
       data.forEach(d => {
         const tags = d[col.id].split(',');
         tags.forEach((tag: string) => {
           options.push({ label: tag.trim(), value: tag.trim() });
         });
       });
-    } else {
-      data.forEach(d => {
-        options.push({ label: d[col.id], value: d[col.id] });
-      });
+      return removeDupObjs(sort(options, 'desc', 'label'));
     }
+    data.forEach(d => {
+      options.push({ label: d[col.id], value: d[col.id] });
+    });
     return removeDupObjs(sort(options, 'desc', 'label'));
   };
 
