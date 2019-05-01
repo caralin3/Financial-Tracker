@@ -50,7 +50,7 @@ export const goalComparatorOptions = [
 ];
 
 export const getSubheader = (range: string) => {
-  switch (range) {    
+  switch (range) {
     case 'This Week':
       const begin = moment(new Date())
         .startOf('week')

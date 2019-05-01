@@ -61,9 +61,9 @@ export const sortValues = (arr: any[], dir: 'asc' | 'desc') => {
 export const sortMonths = (months: string[]) => {
   const monthNames = moment.months();
   return months.sort((month1, month2) => monthNames.indexOf(month1) - monthNames.indexOf(month2));
-}
+};
 
 export const sortChartByMonths = (arr: any[]) => {
   const monthNames = moment.months();
   return arr.sort((obj1, obj2) => monthNames.indexOf(obj1.x) - monthNames.indexOf(obj2.x));
-}
+};

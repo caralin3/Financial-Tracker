@@ -107,7 +107,11 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
   const income = formatTableTransaction(getObjectByType(transactions, 'income'));
   const transfers = formatTableTransaction(getObjectByType(transactions, 'transfer'));
   const dateOptions = (trans: any[]) => {
-    const options: Option[] = [{label: 'Today', value: 'Today'}, {label: 'This Week', value: 'This Week' }, { label: 'Last Week', value: 'Last Week' }];
+    const options: Option[] = [
+      { label: 'Today', value: 'Today' },
+      { label: 'This Week', value: 'This Week' },
+      { label: 'Last Week', value: 'Last Week' }
+    ];
     const years = sortValues(removeDups(trans.map(t => moment(new Date(t.date)).format('YYYY'))), 'desc');
     const months = removeDups(trans.map(t => moment(new Date(t.date)).format('MMMM')));
     const sortedMonths = sortMonths(months);
