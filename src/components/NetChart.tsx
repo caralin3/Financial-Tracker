@@ -57,7 +57,7 @@ const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) 
     setCurrentTrans(getTransactionByRange(menuItems[selected].label, transactions));
   }, [selected, transactions]);
 
-  const handleMenu = (e: any, key: string) => {
+  const handleMenu = (e: any) => {
     setSelected(e.currentTarget.attributes.getNamedItem('data-value').value);
   };
 
@@ -195,8 +195,8 @@ const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) 
           className="reports_dropdown"
           key="expenses-range"
           selected={menuItems[selected].label}
-          menuItems={menuItems.slice(-2)}
-          onClose={e => handleMenu(e, 'expenses')}
+          menuItems={menuItems}
+          onClose={e => handleMenu(e)}
         />
       }
       actions={[

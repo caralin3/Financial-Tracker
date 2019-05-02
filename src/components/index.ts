@@ -29,6 +29,7 @@ import { SignUpForm } from './SignUpForm';
 import { SubcategoryModal } from './SubcategoryModal';
 import { TransactionModal } from './TransactionModal';
 import { UserModal } from './UserModal';
+import { YearlyTrendChart } from './YearlyTrendChart';
 
 export {
   Alert,
@@ -65,5 +66,6 @@ export {
   SubcategoryModal,
   TableFilterList,
   TransactionModal,
-  UserModal
+  UserModal,
+  YearlyTrendChart
 };

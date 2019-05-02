@@ -20,7 +20,8 @@ import {
   Layout,
   Loading,
   MonthlyTrendChart,
-  NetChart
+  NetChart,
+  YearlyTrendChart
 } from '../components';
 import { Account, accountType, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
 import {
@@ -262,6 +263,15 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
           </Grid>
           <Grid item={true} xs={12}>
             <MonthlyTrendChart
+              cardTitle="Monthly Nelnet Trend"
+              chartTitle="Nelnet"
+              item="Nelnet"
+              itemType="item"
+              transactions={transactions}
+            />
+          </Grid>
+          <Grid item={true} xs={12}>
+            <YearlyTrendChart
               cardTitle="Gas Trend"
               chartTitle="Gas"
               item="Gas"

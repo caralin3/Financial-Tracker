@@ -22,6 +22,8 @@ export const createOption = (label: string, value: string | number): Option => {
   return { label, value };
 };
 
+export const monthOptions = moment.months().map((month, index) => createOption(month, index));
+
 export const transTypeOptions = [
   createOption('Expenses', 'expense'),
   createOption('Income', 'income'),

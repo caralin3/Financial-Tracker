@@ -2,7 +2,11 @@
 
 .reports {
   &_dropdown {
-    padding: 10px,
+    padding: 10px;
+    &_menu {
+      max-height: 300px;
+      overflow-y: scroll;
+    }
   }
 
   &_pie {
