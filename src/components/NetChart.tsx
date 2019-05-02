@@ -30,7 +30,7 @@ import {
 } from '../util';
 import { DashboardCard, DropdownMenu, Popup, SelectInput, TableFilterList } from './';
 
-export interface NetChartPageProps {
+export interface NetChartProps {
   classes: any;
 }
 
@@ -42,7 +42,7 @@ interface StateMappedProps {
   transactions: Transaction[];
 }
 
-interface NetChartMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, NetChartPageProps {}
+interface NetChartMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, NetChartProps {}
 
 const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) => {
   // const [loading] = React.useState<boolean>(false);
@@ -63,6 +63,7 @@ const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) 
 
   const timeFormat = 'MMMM';
   const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
+  
   const expenses = removeDupObjs(
     getObjectByType(currentTrans, 'expense').map(trans => {
       const sum = getArrayTotal(
@@ -315,102 +316,3 @@ export const NetChart = compose(
     mapDispatchToProps
   )
 )(DisconnectedNetChart);
-
-// const timeFormat = matchMd || menuItems[selected.expenses].value === 4 ? 'MMMM' : 'MM/DD/YYYY HH:mm';
-// const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
-// const expenses = removeDupObjs(
-//   getObjectByType(currentTrans, 'expense').map(trans => {
-//     const sum = getArrayTotal(
-//       getObjectByType(currentTrans, 'expense').filter(t =>
-//         moment(new Date(t.date)).isSame(
-//           new Date(trans.date),
-//           matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
-//         )
-//       )
-//     );
-//     return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-//   })
-// );
-// const sortedExpenses = menuItems[selected.expenses].value === 4 ? sortChartByMonths(expenses) : sort(expenses, 'asc', 'x');
-// const income = removeDupObjs(
-//   getObjectByType(currentTrans, 'income').map(trans => {
-//     const sum = getArrayTotal(
-//       getObjectByType(currentTrans, 'income').filter(t =>
-//         moment(new Date(t.date)).isSame(
-//           new Date(trans.date),
-//           matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
-//         )
-//       )
-//     );
-//     return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-//   })
-// );
-// const sortedIncome = menuItems[selected.expenses].value === 4 ? sortChartByMonths(income) : sort(income, 'asc', 'x');
-
-// const expensesData = {
-//   datasets: [
-//     {
-//       backgroundColor: opaqueColors[0],
-//       borderColor: solidColors[0],
-//       data: sortedExpenses,
-//       label: 'Expenses',
-//       pointHitRadius: 10,
-//       pointRadius: 1
-//     },
-//     {
-//       backgroundColor: opaqueColors[3],
-//       borderColor: solidColors[3],
-//       data: sortedIncome,
-//       label: 'Income',
-//       pointHitRadius: 10,
-//       pointRadius: 1
-//     }
-//   ],
-//   labels: expensesLabels
-// };
-
-// const expensesOptions: ChartOptions = {
-//   legend: {
-//     display: matchSm ? false : true,
-//     position: 'right'
-//   },
-//   scales: {
-//     xAxes: [
-//       {
-//         scaleLabel: {
-//           display: matchSm ? false : true,
-//           labelString: 'Date'
-//         },
-//         time: {
-//           parser: timeFormat,
-//           // round: 'day'
-//           tooltipFormat: 'll'
-//         },
-//         type: 'time'
-//       }
-//     ],
-//     yAxes: [
-//       {
-//         scaleLabel: {
-//           display: matchSm ? false : true,
-//           labelString: 'Amount'
-//         },
-//         ticks: {
-//           beginAtZero: true,
-//           callback: (label) => formatMoney(label, true)
-//         },
-//       }
-//     ]
-//   },
-//   title: {
-//     display: true,
-//     fontSize: matchSm ? 16 : 18,
-//     position: 'top',
-//     text: 'Expenses vs. Income'
-//   },
-//   tooltips: {
-//     callbacks: {
-//       label: (tooltipItem: any, data: any) =>  `${data.datasets[tooltipItem.datasetIndex].label}: ${formatMoney(tooltipItem.yLabel)}`
-//     }
-//   }
-// };

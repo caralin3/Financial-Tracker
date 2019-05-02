@@ -12,7 +12,16 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { solidColors } from '../appearance';
 import { withAuthorization } from '../auth/withAuthorization';
-import { BudgetCard, DashboardCard, DropdownMenu, GoalCard, Layout, Loading, NetChart } from '../components';
+import {
+  BudgetCard,
+  DashboardCard,
+  DropdownMenu,
+  GoalCard,
+  Layout,
+  Loading,
+  NetChart,
+  TrendChart
+} from '../components';
 import { Account, accountType, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
 import {
   calcPercent,
@@ -250,6 +259,15 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
         <Grid container={true} spacing={24}>
           <Grid item={true} xs={12}>
             <NetChart />
+          </Grid>
+          <Grid item={true} xs={12}>
+            <TrendChart
+              cardTitle="Gas Trend"
+              chartTitle="Gas"
+              item="Gas"
+              itemType="subcategory"
+              transactions={transactions}
+            />
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
             <DashboardCard

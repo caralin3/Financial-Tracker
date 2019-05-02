@@ -27,6 +27,7 @@ import { ProgressBar } from './ProgressBar';
 import { SignUpForm } from './SignUpForm';
 import { SubcategoryModal } from './SubcategoryModal';
 import { TransactionModal } from './TransactionModal';
+import { TrendChart } from './TrendChart';
 import { UserModal } from './UserModal';
 
 export {
@@ -63,5 +64,6 @@ export {
   SubcategoryModal,
   TableFilterList,
   TransactionModal,
+  TrendChart,
   UserModal
 };
