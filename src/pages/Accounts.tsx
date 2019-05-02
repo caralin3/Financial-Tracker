@@ -187,11 +187,11 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
                         </Typography>
                         <Typography
                           className={classNames('accounts_balance', {
-                            ['accounts_balance-neg']: type.id === 'credit' || type.balance < 0
+                            ['accounts_balance-neg']: (type.id === 'credit' && type.balance > 0) || type.balance < 0
                           })}
                           variant="h5"
                         >
-                          {type.id === 'credit' && '-'}
+                          {type.id === 'credit' && type.balance > 0 && '-'}
                           {formatMoney(type.balance)}
                         </Typography>
                       </Card>
@@ -263,10 +263,12 @@ const AccountItem: React.SFC<AccountItemProps> = ({ balance, label, link, onDele
         {label}
       </Typography>
       <Typography
-        className={classNames('account_balance', { ['account_balance-neg']: type === 'credit' || balance < 0 })}
+        className={classNames('account_balance', {
+          ['account_balance-neg']: (type === 'credit' && balance > 0) || balance < 0
+        })}
         variant="h6"
       >
-        {type === 'credit' && '-'}
+        {type === 'credit' && balance > 0 && '-'}
         {formatMoney(balance)}
       </Typography>
     </div>

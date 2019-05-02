@@ -5,13 +5,13 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { Alert, BudgetModal, DashboardCard, Loading, ProgressBar } from '../components';
 import { routes } from '../routes';
 import { Budget, budgetFreq, Transaction } from '../types';
-import { calcPercent, formatMoney, getArrayTotal, getExpensesByDates, getObjectByType } from '../util';
+import { budgetFactor, calcPercent, formatMoney, getArrayTotal, getExpensesByDates, getObjectByType } from '../util';
 
 interface BudgetCardProps extends RouteComponentProps {
   action?: JSX.Element;
   budgets: Budget[];
   currentTrans: Transaction[];
-  subheader?: string;
+  subheader: string;
 }
 
 const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, currentTrans, history, subheader }) => {
@@ -23,7 +23,7 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
 
   const calcSpent = (freq: budgetFreq, categoryId: string) => {
     const expenses = getObjectByType(currentTrans, 'expense').filter(trans => trans.category.id === categoryId);
-    const filteredExpenses = getExpensesByDates(freq, expenses);
+    const filteredExpenses = getExpensesByDates(freq, expenses, subheader);
     return getArrayTotal(filteredExpenses);
   };
 
@@ -69,7 +69,9 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
         ) : (
           budgets.map(budget => {
             const spent = calcSpent(budget.frequency, budget.category.id);
-            const total = budget.amount;
+            const total = isNaN(parseInt(subheader, 10))
+              ? budget.amount
+              : budget.amount * budgetFactor(budget.frequency);
             const percent = calcPercent(spent, total);
             return (
               <ListItem key={budget.id} button={true} onClick={e => handleClick(e, budget.id)}>

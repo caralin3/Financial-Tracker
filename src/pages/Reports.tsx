@@ -3,15 +3,16 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import { ChartOptions } from 'chart.js';
-import * as moment from 'moment';
+// import * as moment from 'moment';
 import * as React from 'react';
-import { Line, Pie } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
+import { solidColors } from '../appearance';
 import { withAuthorization } from '../auth/withAuthorization';
-import { BudgetCard, DashboardCard, DropdownMenu, GoalCard, Layout, Loading } from '../components';
+import { BudgetCard, DashboardCard, DropdownMenu, GoalCard, Layout, Loading, NetChart } from '../components';
 import { Account, accountType, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
 import {
   calcPercent,
@@ -22,10 +23,7 @@ import {
   getObjectByType,
   getSubheader,
   getTransactionByRange,
-  removeDupObjs,
   removeDups,
-  // sort,
-  sortChartByMonths,
   sortValues
 } from '../util';
 
@@ -59,7 +57,6 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, expenses: 4, goal: 2 });
   const [viewAcc, setViewAcc] = React.useState<accountType | ''>('');
   const [viewCat, setViewCat] = React.useState<string>('');
-  const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
   const [currentAccTrans, setCurrentAccTrans] = React.useState<Transaction[]>([]);
   const [currentCatTrans, setCurrentCatTrans] = React.useState<Transaction[]>([]);
   // const matchMd = useMediaQuery('(max-width:960px)');
@@ -73,54 +70,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     { label: 'Last Year', value: 5 }
   ];
 
-  const solidColors = [
-    'rgb(230, 25, 75)',
-    'rgb(60, 180, 75)',
-    'rgb(255, 225, 25)',
-    'rgb(0, 130, 200)',
-    'rgb(245, 130, 48)',
-    'rgb(145, 30, 180)',
-    'rgb(70, 240, 240)',
-    'rgb(240, 50, 230)',
-    'rgb(210, 245, 60)',
-    'rgb(250, 190, 190)',
-    'rgb(0, 128, 128)',
-    'rgb(230, 190, 255)',
-    'rgb(170, 110, 40)',
-    'rgb(255, 250, 200)',
-    'rgb(128, 0, 0)',
-    'rgb(170, 255, 195)',
-    'rgb(128, 128, 0)',
-    'rgb(255, 215, 180)',
-    'rgb(0, 0, 128)',
-    'rgb(128, 128, 128)'
-  ];
-
-  const opaqueColors = [
-    'rgba(230, 25, 75, .4)',
-    'rgba(60, 180, 75, .4)',
-    'rgba(255, 225, 25, .4)',
-    'rgba(0, 130, 200, .4)',
-    'rgba(245, 130, 48, .4)',
-    'rgba(145, 30, 180, .4)',
-    'rgba(70, 240, 240, .4)',
-    'rgba(240, 50, 230, .4)',
-    'rgba(210, 245, 60, .4)',
-    'rgba(250, 190, 190, .4)',
-    'rgba(0, 128, 128, .4)',
-    'rgba(230, 190, 255, .4)',
-    'rgba(170, 110, 40, .4)',
-    'rgba(255, 250, 200, .4)',
-    'rgba(128, 0, 0, .4)',
-    'rgba(170, 255, 195, .4)',
-    'rgba(128, 128, 0, .4)',
-    'rgba(255, 215, 180, .4)',
-    'rgba(0, 0, 128, .4)',
-    'rgba(128, 128, 128, .4)'
-  ];
-
   React.useEffect(() => {
-    setCurrentTrans(getTransactionByRange(menuItems[selected.expenses].label, transactions));
     setCurrentAccTrans(
       getTransactionByRange(menuItems[selected.account].label, getObjectByType(transactions, 'expense'))
     );
@@ -171,7 +121,11 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
       ];
 
   const indexOfLargestAcc = accountDataSet[0].data.indexOf(Math.max(...accountDataSet[0].data));
-  const accDenom = viewAcc ? accountDataSet[0].data.length ? accountDataSet[0].data.reduce(getArraySum) : 0 : getArrayTotal(currentAccTrans);
+  const accDenom = viewAcc
+    ? accountDataSet[0].data.length
+      ? accountDataSet[0].data.reduce(getArraySum)
+      : 0
+    : getArrayTotal(currentAccTrans);
   const largestAccPercent = accDenom > 0 ? calcPercent(accountDataSet[0].data[indexOfLargestAcc], accDenom) : 0;
 
   const accountPieData = {
@@ -246,8 +200,13 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
       ];
 
   const indexOfLargestCat = categoryDataSet[0].data.indexOf(Math.max(...categoryDataSet[0].data));
-  const categoryDenom = viewCat ? categoryDataSet[0].data.length ? categoryDataSet[0].data.reduce(getArraySum) : 0 : getArrayTotal(currentCatTrans);
-  const largestCatPercent = categoryDenom > 0 ? calcPercent(categoryDataSet[0].data[indexOfLargestCat], categoryDenom) : 0;
+  const categoryDenom = viewCat
+    ? categoryDataSet[0].data.length
+      ? categoryDataSet[0].data.reduce(getArraySum)
+      : 0
+    : getArrayTotal(currentCatTrans);
+  const largestCatPercent =
+    categoryDenom > 0 ? calcPercent(categoryDataSet[0].data[indexOfLargestCat], categoryDenom) : 0;
 
   const categoryPieData = {
     datasets: categoryDataSet,
@@ -283,212 +242,6 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     }
   };
 
-  const timeFormat = 'MMMM';
-  const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
-  const expenses = removeDupObjs(
-    getObjectByType(currentTrans, 'expense').map(trans => {
-      const sum = getArrayTotal(
-        getObjectByType(currentTrans, 'expense').filter(t =>
-          moment(new Date(t.date)).isSame(new Date(trans.date), 'month')
-        )
-      );
-      return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-    })
-  );
-  const sortedExpenses = sortChartByMonths(expenses);
-  const income = removeDupObjs(
-    getObjectByType(currentTrans, 'income').map(trans => {
-      const sum = getArrayTotal(
-        getObjectByType(currentTrans, 'income').filter(t =>
-          moment(new Date(t.date)).isSame(new Date(trans.date), 'month')
-        )
-      );
-      return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-    })
-  );
-  const sortedIncome = sortChartByMonths(income);
-
-  const expensesAvg = getArrayTotal(expenses.map(d => ({ amount: d.y }))) / expenses.length;
-  const incomeAvg = getArrayTotal(income.map(d => ({ amount: d.y }))) / income.length;
-  const avgPercent = calcPercent(expensesAvg, incomeAvg);
-
-  const expensesData = {
-    datasets: [
-      {
-        backgroundColor: opaqueColors[0],
-        borderColor: solidColors[0],
-        data: sortedExpenses,
-        label: 'Expenses',
-        pointHitRadius: 10,
-        pointRadius: 1
-      },
-      {
-        backgroundColor: opaqueColors[3],
-        borderColor: solidColors[3],
-        data: sortedIncome,
-        label: 'Income',
-        pointHitRadius: 10,
-        pointRadius: 1
-      }
-    ],
-    labels: expensesLabels
-  };
-
-  const expensesOptions: ChartOptions = {
-    legend: {
-      display: matchSm ? false : true,
-      position: 'right'
-    },
-    scales: {
-      xAxes: [
-        {
-          scaleLabel: {
-            display: matchSm ? false : true,
-            labelString: 'Date'
-          },
-          ticks: {
-            callback: label => {
-              const labelDate = new Date(label);
-              if (labelDate.toString() !== 'Invalid Date') {
-                return moment(labelDate).format('MMMM');
-              }
-              return label;
-            }
-          },
-          time: {
-            parser: timeFormat,
-            // round: 'day'
-            tooltipFormat: 'll'
-          },
-          type: 'time'
-        }
-      ],
-      yAxes: [
-        {
-          scaleLabel: {
-            display: matchSm ? false : true,
-            labelString: 'Amount'
-          },
-          ticks: {
-            beginAtZero: true,
-            callback: label => formatMoney(label, true)
-          }
-        }
-      ]
-    },
-    title: {
-      display: true,
-      fontSize: matchSm ? 16 : 18,
-      position: 'top',
-      text: 'Expenses vs. Income'
-    },
-    tooltips: {
-      callbacks: {
-        label: (tooltipItem: any, data: any) =>
-          `${data.datasets[tooltipItem.datasetIndex].label}: ${formatMoney(tooltipItem.yLabel)}`
-      }
-    }
-  };
-
-  // const timeFormat = matchMd || menuItems[selected.expenses].value === 4 ? 'MMMM' : 'MM/DD/YYYY HH:mm';
-  // const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
-  // const expenses = removeDupObjs(
-  //   getObjectByType(currentTrans, 'expense').map(trans => {
-  //     const sum = getArrayTotal(
-  //       getObjectByType(currentTrans, 'expense').filter(t =>
-  //         moment(new Date(t.date)).isSame(
-  //           new Date(trans.date),
-  //           matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
-  //         )
-  //       )
-  //     );
-  //     return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-  //   })
-  // );
-  // const sortedExpenses = menuItems[selected.expenses].value === 4 ? sortChartByMonths(expenses) : sort(expenses, 'asc', 'x');
-  // const income = removeDupObjs(
-  //   getObjectByType(currentTrans, 'income').map(trans => {
-  //     const sum = getArrayTotal(
-  //       getObjectByType(currentTrans, 'income').filter(t =>
-  //         moment(new Date(t.date)).isSame(
-  //           new Date(trans.date),
-  //           matchMd || menuItems[selected.expenses].value === 4 ? 'month' : 'day'
-  //         )
-  //       )
-  //     );
-  //     return { x: moment(new Date(trans.date)).format(timeFormat), y: sum };
-  //   })
-  // );
-  // const sortedIncome = menuItems[selected.expenses].value === 4 ? sortChartByMonths(income) : sort(income, 'asc', 'x');
-
-  // const expensesData = {
-  //   datasets: [
-  //     {
-  //       backgroundColor: opaqueColors[0],
-  //       borderColor: solidColors[0],
-  //       data: sortedExpenses,
-  //       label: 'Expenses',
-  //       pointHitRadius: 10,
-  //       pointRadius: 1
-  //     },
-  //     {
-  //       backgroundColor: opaqueColors[3],
-  //       borderColor: solidColors[3],
-  //       data: sortedIncome,
-  //       label: 'Income',
-  //       pointHitRadius: 10,
-  //       pointRadius: 1
-  //     }
-  //   ],
-  //   labels: expensesLabels
-  // };
-
-  // const expensesOptions: ChartOptions = {
-  //   legend: {
-  //     display: matchSm ? false : true,
-  //     position: 'right'
-  //   },
-  //   scales: {
-  //     xAxes: [
-  //       {
-  //         scaleLabel: {
-  //           display: matchSm ? false : true,
-  //           labelString: 'Date'
-  //         },
-  //         time: {
-  //           parser: timeFormat,
-  //           // round: 'day'
-  //           tooltipFormat: 'll'
-  //         },
-  //         type: 'time'
-  //       }
-  //     ],
-  //     yAxes: [
-  //       {
-  //         scaleLabel: {
-  //           display: matchSm ? false : true,
-  //           labelString: 'Amount'
-  //         },
-  //         ticks: {
-  //           beginAtZero: true,
-  //           callback: (label) => formatMoney(label, true)
-  //         },
-  //       }
-  //     ]
-  //   },
-  //   title: {
-  //     display: true,
-  //     fontSize: matchSm ? 16 : 18,
-  //     position: 'top',
-  //     text: 'Expenses vs. Income'
-  //   },
-  //   tooltips: {
-  //     callbacks: {
-  //       label: (tooltipItem: any, data: any) =>  `${data.datasets[tooltipItem.datasetIndex].label}: ${formatMoney(tooltipItem.yLabel)}`
-  //     }
-  //   }
-  // };
-
   return (
     <Layout title="Reports">
       {loading ? (
@@ -496,45 +249,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
       ) : (
         <Grid container={true} spacing={24}>
           <Grid item={true} xs={12}>
-            <DashboardCard
-              className="reports_expenses"
-              action={
-                <DropdownMenu
-                  className="reports_dropdown"
-                  key="expenses-range"
-                  selected={menuItems[selected.expenses].label}
-                  menuItems={menuItems.slice(-2)}
-                  onClose={e => handleMenu(e, 'expenses')}
-                />
-              }
-              actions={
-                viewAcc
-                  ? [
-                      <Button key="reset-expenses" onClick={() => setViewAcc('')}>
-                        Reset
-                      </Button>
-                    ]
-                  : []
-              }
-              title="Expenses"
-              subheader={getSubheader(menuItems[selected.expenses].label)}
-            >
-              <Line data={expensesData} options={expensesOptions} />
-              <div className="reports_summary">
-                <Typography>
-                  Average Monthly Spending: <strong>{formatMoney(expensesAvg)}</strong>
-                </Typography>
-                <Typography>
-                  Average Monthly Income: <strong>{formatMoney(incomeAvg)}</strong>
-                </Typography>
-                <Typography>
-                  Average Percentage Spent:{' '}
-                  <strong className={avgPercent > 80 ? 'reports_expenses-percent--red' : 'reports_expenses-percent'}>
-                    {avgPercent.toFixed(1)}%
-                  </strong>
-                </Typography>
-              </div>
-            </DashboardCard>
+            <NetChart />
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
             <DashboardCard
@@ -561,11 +276,14 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
               subheader={getSubheader(menuItems[selected.account].label)}
             >
               <Pie data={accountPieData} options={accountOptions} />
-                <div className="reports_summary">
-                  <Typography>
-                    Largest: <strong>{`${viewAcc ? accountLabels[indexOfLargestAcc] : accountTypeLabels[indexOfLargestAcc]}, ${largestAccPercent.toFixed(1)}%`}</strong>
-                  </Typography>
-                </div>
+              <div className="reports_summary">
+                <Typography>
+                  Largest:{' '}
+                  <strong>{`${
+                    viewAcc ? accountLabels[indexOfLargestAcc] : accountTypeLabels[indexOfLargestAcc]
+                  }, ${largestAccPercent.toFixed(1)}%`}</strong>
+                </Typography>
+              </div>
             </DashboardCard>
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
@@ -593,10 +311,13 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
               subheader={getSubheader(menuItems[selected.category].label)}
             >
               <div className="reports_pie">
-                <Pie data={categoryPieData} height={ matchSm ? 250 : undefined } options={categoryOptions} />
+                <Pie data={categoryPieData} height={matchSm ? 250 : undefined} options={categoryOptions} />
                 <div className="reports_summary">
                   <Typography>
-                    Largest: <strong>{`${viewCat ? subcategoryLabels[indexOfLargestCat] : categoryLabels[indexOfLargestCat]}, ${largestCatPercent.toFixed(1)}%`}</strong>
+                    Largest:{' '}
+                    <strong>{`${
+                      viewCat ? subcategoryLabels[indexOfLargestCat] : categoryLabels[indexOfLargestCat]
+                    }, ${largestCatPercent.toFixed(1)}%`}</strong>
                   </Typography>
                 </div>
               </div>

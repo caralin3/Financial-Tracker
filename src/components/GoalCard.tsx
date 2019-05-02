@@ -19,7 +19,7 @@ interface GoalCardProps extends RouteComponentProps {
   action?: JSX.Element;
   currentTrans: Transaction[];
   goals: Goal[];
-  subheader?: string;
+  subheader: string;
 }
 
 const DisconnectedGoalCard: React.SFC<GoalCardProps> = ({ action, goals, currentTrans, history, subheader }) => {
@@ -32,7 +32,7 @@ const DisconnectedGoalCard: React.SFC<GoalCardProps> = ({ action, goals, current
   const calcSpent = (goal: Goal) => {
     const item = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
     const expenses = getObjectByType(currentTrans, 'expense');
-    const dateFilteredExps = getExpensesByDates(goal.frequency, expenses, goal.startDate, goal.endDate);
+    const dateFilteredExps = getExpensesByDates(goal.frequency, expenses, subheader, goal.startDate, goal.endDate);
     const criteriaFilteredExps = getExpensesByCriteria(goal.criteria, item, dateFilteredExps);
     const amountFilteredExps = getExpensesByAmount(goal.amount, goal.comparator, criteriaFilteredExps);
     return getArrayTotal(amountFilteredExps);

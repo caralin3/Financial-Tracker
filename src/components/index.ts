@@ -7,7 +7,7 @@ import { CategoryModal } from './CategoryModal';
 import { Columns } from './Columns';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
 import { DashboardCard } from './DashboardCard';
-import { DataTable } from './DataTable';
+import { DataTable, TableFilterList } from './DataTable';
 import { DropdownMenu } from './DropdownMenu';
 import { ExpandableCard } from './ExpandableCard';
 import { Filters } from './Filters';
@@ -20,6 +20,7 @@ import { Loading } from './Loading';
 import { LoadingModal } from './LoadingModal';
 import { LoginForm } from './LoginForm';
 import { ModalForm } from './ModalForm';
+import { NetChart } from './NetChart';
 import { PasswordModal } from './PasswordModal';
 import { Popup } from './Popup';
 import { ProgressBar } from './ProgressBar';
@@ -53,12 +54,14 @@ export {
   LoadingModal,
   LoginForm,
   ModalForm,
+  NetChart,
   PasswordModal,
   Popup,
   ProgressBar,
   SelectInput,
   SignUpForm,
   SubcategoryModal,
+  TableFilterList,
   TransactionModal,
   UserModal
 };
