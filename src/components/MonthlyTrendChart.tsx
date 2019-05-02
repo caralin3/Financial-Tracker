@@ -22,7 +22,7 @@ import {
 } from '../util';
 import { DashboardCard } from './';
 
-export interface TrendChartProps extends RouteComponentProps {
+export interface MonthlyTrendChartProps extends RouteComponentProps {
   cardTitle: string;
   chartTitle?: string;
   item: string;
@@ -31,7 +31,7 @@ export interface TrendChartProps extends RouteComponentProps {
   transactions: Transaction[];
 }
 
-const DisconnectedTrendChart: React.SFC<TrendChartProps> = ({
+const DisconnectedMonthlyTrendChart: React.SFC<MonthlyTrendChartProps> = ({
   cardTitle,
   chartTitle,
   item,
@@ -202,4 +202,4 @@ const DisconnectedTrendChart: React.SFC<TrendChartProps> = ({
   );
 };
 
-export const TrendChart = withRouter(DisconnectedTrendChart);
+export const MonthlyTrendChart = withRouter(DisconnectedMonthlyTrendChart);

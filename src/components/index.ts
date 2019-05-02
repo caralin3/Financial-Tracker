@@ -20,6 +20,7 @@ import { Loading } from './Loading';
 import { LoadingModal } from './LoadingModal';
 import { LoginForm } from './LoginForm';
 import { ModalForm } from './ModalForm';
+import { MonthlyTrendChart } from './MonthlyTrendChart';
 import { NetChart } from './NetChart';
 import { PasswordModal } from './PasswordModal';
 import { Popup } from './Popup';
@@ -27,7 +28,6 @@ import { ProgressBar } from './ProgressBar';
 import { SignUpForm } from './SignUpForm';
 import { SubcategoryModal } from './SubcategoryModal';
 import { TransactionModal } from './TransactionModal';
-import { TrendChart } from './TrendChart';
 import { UserModal } from './UserModal';
 
 export {
@@ -55,6 +55,7 @@ export {
   LoadingModal,
   LoginForm,
   ModalForm,
+  MonthlyTrendChart,
   NetChart,
   PasswordModal,
   Popup,
@@ -64,6 +65,5 @@ export {
   SubcategoryModal,
   TableFilterList,
   TransactionModal,
-  TrendChart,
   UserModal
 };

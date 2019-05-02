@@ -63,7 +63,7 @@ const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) 
 
   const timeFormat = 'MMMM';
   const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
-  
+
   const expenses = removeDupObjs(
     getObjectByType(currentTrans, 'expense').map(trans => {
       const sum = getArrayTotal(
