@@ -187,7 +187,7 @@ const DisconnectedMonthlyTrendChart: React.SFC<MonthlyTrendChartProps> = ({
         </IconButton>
       ]}
       title={cardTitle}
-      subheader={new Date().getFullYear().toString()}
+      subheader={`Monthly ${new Date().getFullYear().toString()}`}
     >
       <Line data={createData()} options={chartOptions} />
       <div className="reports_summary">

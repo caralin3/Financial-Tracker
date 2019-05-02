@@ -168,12 +168,14 @@ const DisconnectedYearlyTrendChart: React.SFC<YearlyTrendChartProps> = ({
   return (
     <DashboardCard
       className="reports_expenses"
+      action={<></>}
       actions={[
         <IconButton key="edit" onClick={onEdit}>
           <EditIcon />
         </IconButton>
       ]}
       title={cardTitle}
+      subheader="Yearly"
     >
       <Line data={createData()} options={chartOptions} />
       {getYears()

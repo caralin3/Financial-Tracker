@@ -261,24 +261,6 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
           <Grid item={true} xs={12}>
             <NetChart />
           </Grid>
-          <Grid item={true} xs={12}>
-            <MonthlyTrendChart
-              cardTitle="Monthly Nelnet Trend"
-              chartTitle="Nelnet"
-              item="Nelnet"
-              itemType="item"
-              transactions={transactions}
-            />
-          </Grid>
-          <Grid item={true} xs={12}>
-            <YearlyTrendChart
-              cardTitle="Gas Trend"
-              chartTitle="Gas"
-              item="Gas"
-              itemType="subcategory"
-              transactions={transactions}
-            />
-          </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
             <DashboardCard
               className="reports_accounts"
@@ -381,6 +363,24 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
               currentTrans={getTransactionByRange(menuItems[selected.goal].label, transactions)}
               goals={goals}
               subheader={getSubheader(menuItems[selected.goal].label)}
+            />
+          </Grid>
+          <Grid item={true} md={6} sm={12} xs={12}>
+            <MonthlyTrendChart
+              cardTitle="Student Loan Trend"
+              chartTitle="Nelnet"
+              item="Nelnet"
+              itemType="item"
+              transactions={transactions}
+            />
+          </Grid>
+          <Grid item={true} md={6} sm={12} xs={12}>
+            <YearlyTrendChart
+              cardTitle="Gas Trend"
+              chartTitle="Gas"
+              item="Gas"
+              itemType="subcategory"
+              transactions={transactions}
             />
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
