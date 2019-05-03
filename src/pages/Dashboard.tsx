@@ -44,9 +44,9 @@ export interface DashboardPageProps {
 
 interface StateMappedProps {
   accounts: Account[];
+  budgets: Budget[];
   categories: Category[];
   currentUser: User | null;
-  budgets: Budget[];
   goals: Goal[];
   transactions: Transaction[];
 }
@@ -172,9 +172,9 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
                         accType.value === 'credit' || getArrayTotal(getObjectByType(accounts, accType.value)) < 0
                     })
                   }}
-                  primary={`${accType.value === 'credit' ? '-' : ''}${formatMoney(
-                    getArrayTotal(getObjectByType(accounts, accType.value))
-                  )}`}
+                  primary={`${
+                    accType.value === 'credit' && getArrayTotal(getObjectByType(accounts, accType.value)) > 0 ? '-' : ''
+                  }${formatMoney(getArrayTotal(getObjectByType(accounts, accType.value)))}`}
                 />
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className="dashboard_fullRow dashboard_listContainer">
@@ -194,10 +194,13 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
                             className="dashboard_item-amount"
                             primaryTypographyProps={{
                               className: classNames('dashboard_item-amount dashboard_bold', {
-                                ['dashboard_item-amount-neg']: accType.value === 'credit' || acc.amount < 0
+                                ['dashboard_item-amount-neg']:
+                                  (accType.value === 'credit' && acc.amount > 0) || acc.amount < 0
                               })
                             }}
-                            primary={`${accType.value === 'credit' ? '-' : ''}${formatMoney(acc.amount)}`}
+                            primary={`${accType.value === 'credit' && acc.amount > 0 ? '-' : ''}${formatMoney(
+                              acc.amount
+                            )}`}
                           />
                         </ListItem>
                       ))

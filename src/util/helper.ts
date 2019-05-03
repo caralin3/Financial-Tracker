@@ -22,6 +22,8 @@ export const createOption = (label: string, value: string | number): Option => {
   return { label, value };
 };
 
+export const monthOptions = moment.months().map((month, index) => createOption(month, index));
+
 export const transTypeOptions = [
   createOption('Expenses', 'expense'),
   createOption('Income', 'income'),
@@ -47,6 +49,14 @@ export const goalComparatorOptions = [
   createOption('Equal to', '==='),
   createOption('Less than or equal to', '<='),
   createOption('Greater than or equal to', '>=')
+];
+
+export const chartItemOptions = [
+  createOption('Category', 'category'),
+  createOption('Item', 'item'),
+  createOption('Note', 'note'),
+  createOption('Subcategory', 'subcategory'),
+  createOption('Tags', 'tags')
 ];
 
 export const getSubheader = (range: string) => {
@@ -86,7 +96,7 @@ export const getSubheader = (range: string) => {
         .format();
       return moment(lastYear).format('YYYY');
     default:
-      return '';
+      return range;
   }
 };
 
@@ -94,6 +104,14 @@ export const getOptions = (data: Account[] | Category[] | Subcategory[]) => {
   const options: Option[] = [];
   data.forEach(d => {
     options.push(createOption(d.name, d.id));
+  });
+  return options;
+};
+
+export const createStringOptions = (value: string[]) => {
+  const options: Option[] = [];
+  value.forEach(val => {
+    options.push(createOption(val, val));
   });
   return options;
 };
@@ -193,6 +211,7 @@ export const getExpensesByAccount = (arr: Transaction[], type: accountType) =>
 export const getExpensesByDates = (
   frequency: budgetFreq | goalFreq,
   expenses: Transaction[],
+  currentDate: string,
   startDate?: string,
   endDate?: string
 ) => {
@@ -205,16 +224,84 @@ export const getExpensesByDates = (
       }
       return [];
     case 'monthly':
-      const monthly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'month'));
+      let monthly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(currentDate), 'month'));
+      if (currentDate.includes('-')) {
+        const dates = currentDate.split('-');
+        monthly = expenses.filter(trans =>
+          moment(new Date(trans.date)).isBetween(new Date(dates[0].trim()), new Date(dates[1].trim()), 'day')
+        );
+      }
       return monthly;
     case 'quarterly':
-      return expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'quarter'));
+      let quarterly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(currentDate), 'quarter'));
+      if (currentDate.includes('-')) {
+        const dates = currentDate.split('-');
+        quarterly = expenses.filter(trans =>
+          moment(new Date(trans.date)).isBetween(new Date(dates[0].trim()), new Date(dates[1].trim()), 'day')
+        );
+      }
+      return quarterly;
     case 'semi-annually':
-      return expenses.filter(trans => Math.abs(moment(new Date(trans.date)).diff(new Date(), 'months', true)) <= 6);
+      let semi = expenses.filter(
+        trans => Math.abs(moment(new Date(trans.date)).diff(new Date(currentDate), 'months', true)) <= 6
+      );
+      if (currentDate.includes('-')) {
+        const dates = currentDate.split('-');
+        semi = expenses.filter(trans =>
+          moment(new Date(trans.date)).isBetween(new Date(dates[0].trim()), new Date(dates[1].trim()), 'day')
+        );
+      }
+      return semi;
     case 'yearly':
-      return expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(), 'year'));
+      let yearly = expenses.filter(trans => moment(new Date(trans.date)).isSame(new Date(currentDate), 'year'));
+      if (currentDate.includes('-')) {
+        const dates = currentDate.split('-');
+        yearly = expenses.filter(trans =>
+          moment(new Date(trans.date)).isBetween(new Date(dates[0].trim()), new Date(dates[1].trim()), 'day')
+        );
+      }
+      return yearly;
     default:
       return [];
+  }
+};
+
+export const monthlyBudgetFactor = (freq: budgetFreq) => {
+  switch (freq) {
+    case 'monthly':
+      return 1;
+    case 'quarterly':
+      return 3;
+    case 'semi-annually':
+      return 6;
+    default:
+      return 12;
+  }
+};
+
+export const weeklyBudgetFactor = (freq: budgetFreq) => {
+  switch (freq) {
+    case 'monthly':
+      return 4;
+    case 'quarterly':
+      return 13;
+    case 'semi-annually':
+      return 26;
+    default:
+      return 52;
+  }
+};
+
+export const yearlyBudgetFactor = (freq: budgetFreq) => {
+  switch (freq) {
+    case 'monthly':
+      return 12;
+    case 'quarterly':
+      return 4;
+    case 'semi-annually':
+      return 2;
+    default:
+      return 1;
   }
 };
 
@@ -231,6 +318,14 @@ export const getExpensesByCriteria = (criteria: goalCriteria, item: string, expe
     default:
       return [];
   }
+};
+
+export const comparatorLabels = {
+  '<': 'less than',
+  '<=': 'at most',
+  '===': 'exactly',
+  '>': 'more than',
+  '>=': 'at least'
 };
 
 export const comparators = {

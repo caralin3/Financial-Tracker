@@ -3,6 +3,8 @@ import {
   accountType,
   budgetFreq,
   Category,
+  chartItemType,
+  chartType,
   goalComparator,
   goalCriteria,
   goalFreq,
@@ -67,5 +69,14 @@ export interface FBGoal {
   item: Account | Category | Subcategory | Transaction;
   comparator: goalComparator;
   startDate?: string;
+  userId: string;
+}
+
+export interface FBChart {
+  cardTitle: string;
+  chartTitle?: string;
+  chartType: chartType;
+  item: string;
+  itemType: chartItemType;
   userId: string;
 }

@@ -1,0 +1,22 @@
+@import '../appearance/styles/variables.scss';
+
+.chartModal {
+  &_loading {
+    padding: 5rem 0 !important;
+  }
+
+  &_grid {
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow: hidden;
+    width: 95% !important;
+  }
+
+  &_error {
+    color: $error;
+    font-size: 16px;
+    padding: 0 1rem;
+    text-align: center;
+  }
+}

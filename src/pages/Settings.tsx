@@ -14,20 +14,37 @@ import { compose } from 'recompose';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, Layout, Loading, PasswordModal, UserModal } from '../components';
 import { auth } from '../firebase';
-import { ApplicationState, User } from '../types';
+import { requests } from '../firebase/db';
+import { Account, ApplicationState, Budget, Category, Chart, Goal, Subcategory, Transaction, User } from '../types';
 
 export interface SettingsPageProps {
   classes: any;
 }
 
 interface StateMappedProps {
+  accounts: Account[];
+  budgets: Budget[];
+  categories: Category[];
+  charts: Chart[];
   currentUser: User | null;
+  goals: Goal[];
+  subcategories: Subcategory[];
+  transactions: Transaction[];
 }
 
 interface SettingsMergedProps extends RouteComponentProps, StateMappedProps, SettingsPageProps {}
 
-const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser }) => {
-  const [loading] = React.useState<boolean>(false);
+const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({
+  accounts,
+  budgets,
+  categories,
+  charts,
+  currentUser,
+  goals,
+  subcategories,
+  transactions
+}) => {
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<boolean>(false);
   const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [error, setError] = React.useState<string>('');
@@ -35,17 +52,63 @@ const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser 
   const [changePassword, setChangePassword] = React.useState<boolean>(false);
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
 
-  // TODO: Delete info in database
+  const deleteDbInfo = async () => {
+    try {
+      const callback = () => null;
+      await Promise.all([
+        accounts &&
+          accounts.forEach(obj => {
+            requests.accounts.deleteAccount(obj.id, callback);
+          }),
+        budgets &&
+          budgets.forEach(obj => {
+            requests.budgets.deleteBudget(obj.id, callback);
+          }),
+        categories &&
+          categories.forEach(obj => {
+            requests.categories.deleteCategory(obj.id, callback);
+          }),
+        charts &&
+          charts.forEach(obj => {
+            requests.charts.deleteChart(obj.id, callback);
+          }),
+        goals &&
+          goals.forEach(obj => {
+            requests.goals.deleteGoal(obj.id, callback);
+          }),
+        subcategories &&
+          subcategories.forEach(obj => {
+            requests.subcategories.deleteSubcategory(obj.id, callback);
+          }),
+        transactions &&
+          transactions.forEach(obj => {
+            requests.transactions.deleteTransaction(obj.id, callback);
+          }),
+        requests.users.deleteUser(currentUser ? currentUser.id : '')
+      ]);
+    } catch (err) {
+      console.error(err);
+      setError('Could not delete database info.');
+    }
+  };
+
   const handleConfirm = () => {
-    auth
-      .doDeleteAccount()
-      .then(() => {
-        setOpenDialog(false);
-      })
-      .catch((err: any) => {
-        setError(err.message);
-      });
+    setLoading(true);
+    deleteDbInfo().then(() => {
+      if (error !== 'Could not delete database info.') {
+        auth
+          .doDeleteAccount()
+          .then(() => {
+            setOpenDialog(false);
+            setLoading(false);
+          })
+          .catch((err: any) => {
+            setError(err.message);
+          });
+      }
+    });
     setOpenDialog(false);
+    setLoading(false);
   };
 
   return (
@@ -72,57 +135,54 @@ const DisconnectedSettingsPage: React.SFC<SettingsMergedProps> = ({ currentUser 
         open={changePassword}
         title="Change Password"
       />
-      {loading ? (
-        <Loading />
-      ) : (
-        <div className="settings">
-          <AlertDialog
-            cancelText="Cancel"
-            confirmText="Confirm"
-            onClose={() => setOpenDialog(false)}
-            onConfirm={handleConfirm}
-            open={openDialog}
-            title="Are you sure you want to delete your account?"
-            description="This action is permanent and cannot be undone."
+      <div className="settings">
+        <AlertDialog
+          cancelText="Cancel"
+          confirmText="Confirm"
+          onClose={() => setOpenDialog(false)}
+          onConfirm={handleConfirm}
+          open={openDialog}
+          title="Are you sure you want to delete your account?"
+          description="This action is permanent and cannot be undone."
+        />
+        <Card className="settings_card" raised={true}>
+          <CardHeader
+            color="primary"
+            title="Profile"
+            action={
+              <IconButton onClick={() => setEditUser(true)}>
+                <EditIcon color="primary" />
+              </IconButton>
+            }
           />
-          <Card className="settings_card" raised={true}>
-            <CardHeader
+          <CardContent className="settings_profile">
+            <Typography className="settings_text">
+              Name:{' '}
+              <strong className="settings_value">
+                {currentUser && `${currentUser.firstName} ${currentUser.lastName}`}
+              </strong>
+            </Typography>
+            <Typography className="settings_text">
+              Email: <strong className="settings_value">{currentUser && currentUser.email}</strong>
+            </Typography>
+            <Button
+              className="settings_button"
               color="primary"
-              title="Profile"
-              action={
-                <IconButton onClick={() => setEditUser(true)}>
-                  <EditIcon color="primary" />
-                </IconButton>
-              }
-            />
-            <CardContent className="settings_profile">
-              <Typography className="settings_text">
-                Name:{' '}
-                <strong className="settings_value">
-                  {currentUser && `${currentUser.firstName} ${currentUser.lastName}`}
-                </strong>
-              </Typography>
-              <Typography className="settings_text">
-                Email: <strong className="settings_value">{currentUser && currentUser.email}</strong>
-              </Typography>
-              <Button
-                className="settings_button"
-                color="primary"
-                onClick={() => setChangePassword(true)}
-                variant="contained"
-              >
-                <span className="settings_buttonText">Change Password</span>
-                <LockIcon className="settings_buttonIcon" />
-              </Button>
-            </CardContent>
-          </Card>
-          <div className="settings_delete">
-            <Button color="secondary" onClick={() => setOpenDialog(true)} variant="contained">
-              Delete Account
+              onClick={() => setChangePassword(true)}
+              variant="contained"
+            >
+              <span className="settings_buttonText">Change Password</span>
+              <LockIcon className="settings_buttonIcon" />
             </Button>
-          </div>
+          </CardContent>
+        </Card>
+        <div className="settings_delete">
+          <Button color="secondary" onClick={() => setOpenDialog(true)} variant="contained">
+            Delete Account
+          </Button>
         </div>
-      )}
+      </div>
+      {loading && <Loading />}
     </Layout>
   );
 };
@@ -132,7 +192,13 @@ const styles = (theme: Theme) => ({});
 const authCondition = (authUser: any) => !!authUser;
 
 const mapStateToProps = (state: ApplicationState) => ({
-  currentUser: state.sessionState.currentUser
+  accounts: state.accountsState.accounts,
+  budgets: state.budgetsState.budgets,
+  categories: state.categoriesState.categories,
+  charts: state.chartsState.charts,
+  currentUser: state.sessionState.currentUser,
+  goals: state.goalsState.goals,
+  transactions: state.transactionsState.transactions
 });
 
 export const SettingsPage = compose(

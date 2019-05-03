@@ -9,6 +9,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import BarChartIcon from '@material-ui/icons/BarChart';
@@ -104,18 +105,20 @@ class DisconnectedNavigation extends React.Component<NavigationMergedProps, Navi
         <List>
           {links.slice(0, 4).map(link => (
             <li key={link.label}>
-              <ListItem
-                className={classNames(classes.activeItem, classes.text, {
-                  [classes.selectedItem]: selected.startsWith(link.route)
-                })}
-                button={true}
-                onClick={() => this.navigateTo(link.route)}
-                onKeyDown={e => this.handleKey(e, link.route)}
-                selected={selected === link.route}
-              >
-                <ListItemIcon>{link.icon}</ListItemIcon>
-                <ListItemText primary={link.label} />
-              </ListItem>
+              <Tooltip title={!drawerExpanded ? link.label : ''}>
+                <ListItem
+                  className={classNames(classes.activeItem, classes.text, {
+                    [classes.selectedItem]: selected.startsWith(link.route)
+                  })}
+                  button={true}
+                  onClick={() => this.navigateTo(link.route)}
+                  onKeyDown={e => this.handleKey(e, link.route)}
+                  selected={selected === link.route}
+                >
+                  <ListItemIcon>{link.icon}</ListItemIcon>
+                  <ListItemText primary={link.label} />
+                </ListItem>
+              </Tooltip>
             </li>
           ))}
         </List>
@@ -123,32 +126,36 @@ class DisconnectedNavigation extends React.Component<NavigationMergedProps, Navi
         <List>
           {links.slice(4).map(link => (
             <li key={link.label}>
-              <ListItem
-                className={classNames(classes.activeItem, classes.text, {
-                  [classes.selectedItem]: selected === link.route
-                })}
-                button={true}
-                key={link.label}
-                onClick={() => this.navigateTo(link.route)}
-                onKeyDown={e => this.handleKey(e, link.route)}
-              >
-                <ListItemIcon>{link.icon}</ListItemIcon>
-                <ListItemText primary={link.label} />
-              </ListItem>
+              <Tooltip title={!drawerExpanded ? link.label : ''}>
+                <ListItem
+                  className={classNames(classes.activeItem, classes.text, {
+                    [classes.selectedItem]: selected === link.route
+                  })}
+                  button={true}
+                  key={link.label}
+                  onClick={() => this.navigateTo(link.route)}
+                  onKeyDown={e => this.handleKey(e, link.route)}
+                >
+                  <ListItemIcon>{link.icon}</ListItemIcon>
+                  <ListItemText primary={link.label} />
+                </ListItem>
+              </Tooltip>
             </li>
           ))}
           <li>
-            <ListItem
-              className={classNames(classes.activeItem, classes.text)}
-              button={true}
-              onClick={this.logout}
-              onKeyDown={this.handleKeyLogout}
-            >
-              <ListItemIcon>
-                <ExitToAppIcon />
-              </ListItemIcon>
-              <ListItemText primary="Logout" />
-            </ListItem>
+            <Tooltip title={!drawerExpanded ? 'Logout' : ''}>
+              <ListItem
+                className={classNames(classes.activeItem, classes.text)}
+                button={true}
+                onClick={this.logout}
+                onKeyDown={this.handleKeyLogout}
+              >
+                <ListItemIcon>
+                  <ExitToAppIcon />
+                </ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItem>
+            </Tooltip>
           </li>
         </List>
       </div>
@@ -172,9 +179,11 @@ class DisconnectedNavigation extends React.Component<NavigationMergedProps, Navi
         >
           {navList}
           <div className={classes.toolbar}>
-            <IconButton aria-label="expander" onClick={() => setDrawerExpanded(!drawerExpanded)}>
-              {drawerExpanded ? <DoubleLeftChevronIcon /> : <DoubleRightChevronIcon />}
-            </IconButton>
+            <Tooltip title={drawerExpanded ? 'Collapse' : 'Expand'}>
+              <IconButton aria-label="expander" onClick={() => setDrawerExpanded(!drawerExpanded)}>
+                {drawerExpanded ? <DoubleLeftChevronIcon /> : <DoubleRightChevronIcon />}
+              </IconButton>
+            </Tooltip>
           </div>
         </Drawer>
         <div className="show-small">
