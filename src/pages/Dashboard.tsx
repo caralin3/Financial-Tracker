@@ -44,9 +44,9 @@ export interface DashboardPageProps {
 
 interface StateMappedProps {
   accounts: Account[];
+  budgets: Budget[];
   categories: Category[];
   currentUser: User | null;
-  budgets: Budget[];
   goals: Goal[];
   transactions: Transaction[];
 }
