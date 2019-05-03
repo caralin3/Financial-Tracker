@@ -60,9 +60,9 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
   const [error, setError] = React.useState<boolean>(false);
   const [deleteId, setDeleteId] = React.useState<string>('');
   const [card, setCard] = React.useState<number>(0);
+  const [bankExpanded, setBankExpanded] = React.useState<boolean>(true);
   const [cashExpanded, setCashExpanded] = React.useState<boolean>(false);
-  const [bankExpanded, setBankExpanded] = React.useState<boolean>(false);
-  const [creditExpanded, setCreditExpanded] = React.useState<boolean>(false);
+  const [creditExpanded, setCreditExpanded] = React.useState<boolean>(true);
 
   const [deleteAcc] = accounts.filter(acc => acc.id === deleteId);
 
@@ -166,11 +166,11 @@ const DisconnectedAccountsPage: React.SFC<AccountsMergedProps> = ({ accounts, hi
                     </Typography>
                     <Typography
                       className={classNames('accounts_balance', {
-                        ['accounts_balance-neg']: type.id === 'credit' || type.balance < 0
+                        ['accounts_balance-neg']: (type.id === 'credit' && type.balance > 0) || type.balance < 0
                       })}
                       variant="h5"
                     >
-                      {type.id === 'credit' && '-'}
+                      {type.id === 'credit' && type.balance > 0 && '-'}
                       {formatMoney(type.balance)}
                     </Typography>
                   </Card>
