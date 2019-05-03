@@ -9,7 +9,7 @@ import * as React from 'react';
 import { Line } from 'react-chartjs-2';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { solidColors } from '../appearance';
-import { Transaction } from '../types';
+import { chartItemType, Transaction } from '../types';
 import {
   formatMoney,
   getArrayTotal,
@@ -26,8 +26,8 @@ export interface YearlyTrendChartProps extends RouteComponentProps {
   cardTitle: string;
   chartTitle?: string;
   item: string;
-  itemType: 'category' | 'item' | 'note' | 'subcategory' | 'tags';
-  onEdit?: () => void;
+  itemType: chartItemType;
+  onEdit: (e: any) => void;
   transactions: Transaction[];
 }
 

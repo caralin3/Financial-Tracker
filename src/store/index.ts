@@ -1,6 +1,7 @@
 import * as accountsState from './accounts';
 import * as budgetsState from './budgets';
 import * as categoriesState from './categories';
+import * as chartsState from './charts';
 import createStore from './createStore';
 import * as goalsState from './goals';
 import * as sessionState from './session';
@@ -11,6 +12,7 @@ export {
   accountsState,
   budgetsState,
   categoriesState,
+  chartsState,
   createStore,
   goalsState,
   sessionState,

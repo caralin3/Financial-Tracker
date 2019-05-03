@@ -72,3 +72,17 @@ export interface Goal {
   startDate?: string;
   userId: string;
 }
+
+export type chartItemType = 'category' | 'item' | 'note' | 'subcategory' | 'tags' | '';
+
+export type chartType = 'monthly' | 'yearly' | '';
+
+export interface Chart {
+  cardTitle: string;
+  chartTitle?: string;
+  chartType: chartType;
+  id: string;
+  item: string;
+  itemType: chartItemType;
+  userId: string;
+}

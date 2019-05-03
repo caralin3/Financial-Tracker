@@ -4,6 +4,7 @@ import { AlertDialog } from './AlertDialog';
 import { BudgetCard } from './BudgetCard';
 import { BudgetModal } from './BudgetModal';
 import { CategoryModal } from './CategoryModal';
+import { ChartModal } from './ChartModal';
 import { Columns } from './Columns';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
 import { DashboardCard } from './DashboardCard';
@@ -39,6 +40,7 @@ export {
   BudgetCard,
   BudgetModal,
   CategoryModal,
+  ChartModal,
   Columns,
   DashboardCard,
   DataTable,

@@ -51,6 +51,14 @@ export const goalComparatorOptions = [
   createOption('Greater than or equal to', '>=')
 ];
 
+export const chartItemOptions = [
+  createOption('Category', 'category'),
+  createOption('Item', 'item'),
+  createOption('Note', 'note'),
+  createOption('Subcategory', 'subcategory'),
+  createOption('Tags', 'tags')
+];
+
 export const getSubheader = (range: string) => {
   switch (range) {
     case 'This Week':
@@ -96,6 +104,14 @@ export const getOptions = (data: Account[] | Category[] | Subcategory[]) => {
   const options: Option[] = [];
   data.forEach(d => {
     options.push(createOption(d.name, d.id));
+  });
+  return options;
+};
+
+export const createStringOptions = (value: string[]) => {
+  const options: Option[] = [];
+  value.forEach(val => {
+    options.push(createOption(val, val));
   });
   return options;
 };

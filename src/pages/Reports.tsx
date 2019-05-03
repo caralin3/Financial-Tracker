@@ -13,7 +13,9 @@ import { Dispatch } from 'redux';
 import { solidColors } from '../appearance';
 import { withAuthorization } from '../auth/withAuthorization';
 import {
+  Alert,
   BudgetCard,
+  ChartModal,
   DashboardCard,
   DropdownMenu,
   GoalCard,
@@ -23,7 +25,19 @@ import {
   NetChart,
   YearlyTrendChart
 } from '../components';
-import { Account, accountType, ApplicationState, Budget, Category, Goal, Transaction, User } from '../types';
+import { routes } from '../routes';
+import {
+  Account,
+  accountType,
+  ApplicationState,
+  Budget,
+  Category,
+  Chart,
+  Goal,
+  Subcategory,
+  Transaction,
+  User
+} from '../types';
 import {
   calcPercent,
   formatMoney,
@@ -48,9 +62,11 @@ interface DispatchMappedProps {
 interface StateMappedProps {
   accounts: Account[];
   categories: Category[];
+  charts: Chart[];
   currentUser: User | null;
   budgets: Budget[];
   goals: Goal[];
+  subcategories: Subcategory[];
   transactions: Transaction[];
 }
 
@@ -59,11 +75,18 @@ interface ReportsMergedProps extends RouteComponentProps, StateMappedProps, Disp
 const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   accounts,
   budgets,
-  currentUser,
+  categories,
+  charts,
+  history,
   goals,
+  subcategories,
   transactions
 }) => {
   const [loading] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
+  const [successMsg, setSuccessMsg] = React.useState<string>('');
+  const [adding, setAdding] = React.useState<boolean>(false);
+  const [editing, setEditing] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, expenses: 4, goal: 2 });
   const [viewAcc, setViewAcc] = React.useState<accountType | ''>('');
   const [viewCat, setViewCat] = React.useState<string>('');
@@ -252,8 +275,64 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
     }
   };
 
+  const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
+    history.push(`${routes.reports}/edit/${id}`);
+    setEditing(true);
+  };
+
+  const categoryNames = categories.map(cat => cat.name);
+  const chartItems = sortValues(
+    removeDups(transactions.map(trans => trans.item)).filter(n => n.trim().length > 0),
+    'desc'
+  );
+  const chartNotes = sortValues(
+    removeDups(transactions.map(trans => trans.note && trans.note)).filter(n => n !== '' && n !== 'N/A'),
+    'desc'
+  );
+  const chartTags = () => {
+    const allTags: string[] = [];
+    transactions.map(trans => {
+      if (trans.tags) {
+        allTags.push.apply(allTags, trans.tags.filter(t => t !== '' && t !== 'N/A'));
+      }
+    });
+    return sortValues(removeDups(allTags), 'desc');
+  };
+  const subcategoryNames = subcategories.map(sub => sub.name);
+
   return (
     <Layout title="Reports">
+      <Alert onClose={() => setSuccess(false)} open={success} variant="success" message={successMsg} />
+      <ChartModal
+        title="Add Chart"
+        buttonText="Add"
+        open={adding}
+        onClose={() => setAdding(false)}
+        onSuccess={() => {
+          setSuccessMsg('Chart added');
+          setSuccess(true);
+        }}
+        categories={categoryNames}
+        items={chartItems}
+        notes={chartNotes}
+        subcategories={subcategoryNames}
+        tags={chartTags()}
+      />
+      <ChartModal
+        title="Edit Chart"
+        buttonText="Edit"
+        open={editing}
+        onClose={() => setEditing(false)}
+        onSuccess={(act: string) => {
+          setSuccessMsg(`Chart ${act}`);
+          setSuccess(true);
+        }}
+        categories={categoryNames}
+        items={chartItems}
+        notes={chartNotes}
+        subcategories={subcategoryNames}
+        tags={chartTags()}
+      />
       {loading ? (
         <Loading />
       ) : (
@@ -365,26 +444,31 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
               subheader={getSubheader(menuItems[selected.goal].label)}
             />
           </Grid>
+          {charts.map(chart => (
+            <Grid item={true} md={6} sm={12} xs={12} key={chart.id}>
+              {chart.chartType === 'monthly' ? (
+                <MonthlyTrendChart
+                  cardTitle={chart.cardTitle}
+                  chartTitle={chart.chartTitle}
+                  item={chart.item}
+                  itemType={chart.itemType}
+                  onEdit={e => handleEdit(e, chart.id)}
+                  transactions={transactions}
+                />
+              ) : (
+                <YearlyTrendChart
+                  cardTitle={chart.cardTitle}
+                  chartTitle={chart.chartTitle}
+                  item={chart.item}
+                  itemType={chart.itemType}
+                  onEdit={e => handleEdit(e, chart.id)}
+                  transactions={transactions}
+                />
+              )}
+            </Grid>
+          ))}
           <Grid item={true} md={6} sm={12} xs={12}>
-            <MonthlyTrendChart
-              cardTitle="Student Loan Trend"
-              chartTitle="Nelnet"
-              item="Nelnet"
-              itemType="item"
-              transactions={transactions}
-            />
-          </Grid>
-          <Grid item={true} md={6} sm={12} xs={12}>
-            <YearlyTrendChart
-              cardTitle="Gas Trend"
-              chartTitle="Gas"
-              item="Gas"
-              itemType="subcategory"
-              transactions={transactions}
-            />
-          </Grid>
-          <Grid item={true} md={6} sm={12} xs={12}>
-            <DashboardCard className="reports_add" onClick={() => null} title="Add Chart" />
+            <DashboardCard className="reports_add" onClick={() => setAdding(true)} title="Add Chart" />
           </Grid>
         </Grid>
       )}
@@ -400,8 +484,10 @@ const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,
   budgets: state.budgetsState.budgets,
   categories: state.categoriesState.categories,
+  charts: state.chartsState.charts,
   currentUser: state.sessionState.currentUser,
   goals: state.goalsState.goals,
+  subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionsState.transactions
 });
 
