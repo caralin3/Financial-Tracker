@@ -59,9 +59,11 @@ class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
 
   public componentDidMount() {
     if (this.props.currentUser) {
-      this.setState({ loading: true });
+      // this.setState({ loading: true });
     }
-    this.initializeStore();
+    if (this.state.loading) {
+      this.initializeStore();
+    }
   }
 
   public render() {

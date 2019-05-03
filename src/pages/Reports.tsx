@@ -168,7 +168,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   const accountOptions: ChartOptions = {
     legend: {
       labels: {
-        boxWidth: matchSm ? 10 : 40
+        boxWidth: 10
       },
       position: 'right'
     },
@@ -336,7 +336,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
         <Loading />
       ) : (
         <Grid container={true} spacing={24}>
-          <Grid item={true} xs={12}>
+          <Grid item={true} xs={12} xl={6}>
             <NetChart
               reportsState={reportsState}
               onMenuChange={e => handleMenu(e, 'net')}
