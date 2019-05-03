@@ -53,3 +53,18 @@ export const updateUserInfo = (user: User, setCurrentUser: (user: User) => void)
       console.error('Error updating user: ', error);
       return false;
     });
+
+export const deleteUser = (id: string) =>
+  usersCollection
+    .doc(id)
+    .delete()
+    .then(() => {
+      if (config.env === 'development') {
+        console.log('User deleted with ID: ', id);
+      }
+      return true;
+    })
+    .catch(error => {
+      console.error('Error deleting user: ', id, error);
+      return false;
+    });

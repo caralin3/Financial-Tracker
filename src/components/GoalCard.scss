@@ -1,0 +1,21 @@
+@import '../appearance/styles/variables.scss';
+
+.goalCard {
+  &_col {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &_row {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &_spend {
+    align-self: flex-start;
+    padding: 0.5rem 0;
+  }
+}

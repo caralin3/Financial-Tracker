@@ -4,10 +4,11 @@ import { AlertDialog } from './AlertDialog';
 import { BudgetCard } from './BudgetCard';
 import { BudgetModal } from './BudgetModal';
 import { CategoryModal } from './CategoryModal';
+import { ChartModal } from './ChartModal';
 import { Columns } from './Columns';
 import { DoubleLeftChevronIcon, DoubleRightChevronIcon } from './CustomIcons';
 import { DashboardCard } from './DashboardCard';
-import { DataTable } from './DataTable';
+import { DataTable, TableFilterList } from './DataTable';
 import { DropdownMenu } from './DropdownMenu';
 import { ExpandableCard } from './ExpandableCard';
 import { Filters } from './Filters';
@@ -20,6 +21,8 @@ import { Loading } from './Loading';
 import { LoadingModal } from './LoadingModal';
 import { LoginForm } from './LoginForm';
 import { ModalForm } from './ModalForm';
+import { MonthlyTrendChart } from './MonthlyTrendChart';
+import { NetChart } from './NetChart';
 import { PasswordModal } from './PasswordModal';
 import { Popup } from './Popup';
 import { ProgressBar } from './ProgressBar';
@@ -27,6 +30,7 @@ import { SignUpForm } from './SignUpForm';
 import { SubcategoryModal } from './SubcategoryModal';
 import { TransactionModal } from './TransactionModal';
 import { UserModal } from './UserModal';
+import { YearlyTrendChart } from './YearlyTrendChart';
 
 export {
   Alert,
@@ -36,6 +40,7 @@ export {
   BudgetCard,
   BudgetModal,
   CategoryModal,
+  ChartModal,
   Columns,
   DashboardCard,
   DataTable,
@@ -53,12 +58,16 @@ export {
   LoadingModal,
   LoginForm,
   ModalForm,
+  MonthlyTrendChart,
+  NetChart,
   PasswordModal,
   Popup,
   ProgressBar,
   SelectInput,
   SignUpForm,
   SubcategoryModal,
+  TableFilterList,
   TransactionModal,
-  UserModal
+  UserModal,
+  YearlyTrendChart
 };

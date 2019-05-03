@@ -12,11 +12,12 @@ import {
   accountsState,
   budgetsState,
   categoriesState,
+  chartsState,
   goalsState,
   subcategoriesState,
   transactionsState
 } from '../store';
-import { Account, Budget, Category, Goal, Subcategory, Transaction } from '../types';
+import { Account, Budget, Category, Chart, Goal, Subcategory, Transaction } from '../types';
 import { Form } from './';
 
 interface LoginFormProps {}
@@ -25,6 +26,7 @@ interface DispatchMappedProps {
   setAccounts: (accounts: Account[]) => void;
   setBudgets: (budgets: Budget[]) => void;
   setCategories: (categories: Category[]) => void;
+  setCharts: (charts: Chart[]) => void;
   setGoals: (goals: Goal[]) => void;
   setSubcategories: (subcategories: Subcategory[]) => void;
   setTransactions: (transactions: Transaction[]) => void;
@@ -37,6 +39,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
   setAccounts,
   setBudgets,
   setCategories,
+  setCharts,
   setGoals,
   setSubcategories,
   setTransactions
@@ -52,10 +55,11 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
   }, []);
 
   const initializeStore = async (userId: string) => {
-    const [accs, buds, cats, gols, subs, trans] = await Promise.all([
+    const [accs, buds, cats, charts, gols, subs, trans] = await Promise.all([
       requests.accounts.getAllAccounts(userId),
       requests.budgets.getAllBudgets(userId),
       requests.categories.getAllCategories(userId),
+      requests.charts.getAllCharts(userId),
       requests.goals.getAllGoals(userId),
       requests.subcategories.getAllSubcategories(userId),
       requests.transactions.getAllTransactions(userId)
@@ -63,6 +67,7 @@ const DisconnectedLoginForm: React.SFC<LoginFormMergedProps> = ({
     setAccounts(accs);
     setBudgets(buds);
     setCategories(cats);
+    setCharts(charts);
     setGoals(gols);
     setSubcategories(subs);
     setTransactions(trans);
@@ -138,6 +143,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   setAccounts: (accounts: Account[]) => dispatch(accountsState.setAccounts(accounts)),
   setBudgets: (budgets: Budget[]) => dispatch(budgetsState.setBudgets(budgets)),
   setCategories: (categories: Category[]) => dispatch(categoriesState.setCategories(categories)),
+  setCharts: (charts: Chart[]) => dispatch(chartsState.setCharts(charts)),
   setGoals: (goals: Goal[]) => dispatch(goalsState.setGoals(goals)),
   setSubcategories: (subcategories: Subcategory[]) => dispatch(subcategoriesState.setSubcategories(subcategories)),
   setTransactions: (transactions: Transaction[]) => dispatch(transactionsState.setTransactions(transactions))

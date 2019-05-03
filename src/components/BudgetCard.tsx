@@ -4,14 +4,21 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Alert, BudgetModal, DashboardCard, Loading, ProgressBar } from '../components';
 import { routes } from '../routes';
-import { Budget, budgetFreq, Transaction } from '../types';
-import { calcPercent, formatMoney, getArrayTotal, getExpensesByDates, getObjectByType } from '../util';
+import { Budget, Transaction } from '../types';
+import {
+  calcPercent,
+  formatMoney,
+  getArrayTotal,
+  getObjectByType,
+  monthlyBudgetFactor,
+  yearlyBudgetFactor
+} from '../util';
 
 interface BudgetCardProps extends RouteComponentProps {
   action?: JSX.Element;
   budgets: Budget[];
   currentTrans: Transaction[];
-  subheader?: string;
+  subheader: string;
 }
 
 const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, currentTrans, history, subheader }) => {
@@ -21,15 +28,21 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
   const [adding, setAdding] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<boolean>(false);
 
-  const calcSpent = (freq: budgetFreq, categoryId: string) => {
-    const expenses = getObjectByType(currentTrans, 'expense').filter(trans => trans.category.id === categoryId);
-    const filteredExpenses = getExpensesByDates(freq, expenses);
-    return getArrayTotal(filteredExpenses);
-  };
-
   const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
     history.push(`${routes.dashboard}/edit/${id}`);
     setEditing(true);
+  };
+
+  const calcSpent = (categoryId: string) => {
+    const expenses = getObjectByType(currentTrans, 'expense').filter(trans => trans.category.id === categoryId);
+    return getArrayTotal(expenses);
+  };
+
+  const calcTotal = (budget: Budget) => {
+    if (isNaN(parseInt(subheader, 10)) || subheader.includes('')) {
+      return budget.amount / monthlyBudgetFactor(budget.frequency);
+    }
+    return budget.amount * yearlyBudgetFactor(budget.frequency);
   };
 
   return (
@@ -68,8 +81,8 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
           <ListItem>No budgets</ListItem>
         ) : (
           budgets.map(budget => {
-            const spent = calcSpent(budget.frequency, budget.category.id);
-            const total = budget.amount;
+            const spent = calcSpent(budget.category.id);
+            const total = calcTotal(budget);
             const percent = calcPercent(spent, total);
             return (
               <ListItem key={budget.id} button={true} onClick={e => handleClick(e, budget.id)}>
