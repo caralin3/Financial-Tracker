@@ -266,14 +266,27 @@ export const getExpensesByDates = (
   }
 };
 
-export const budgetFactor = (freq: budgetFreq) => {
+export const monthlyBudgetFactor = (freq: budgetFreq) => {
   switch (freq) {
     case 'monthly':
-      return 12;
+      return 1;
     case 'quarterly':
       return 3;
     case 'semi-annually':
       return 6;
+    default:
+      return 12;
+  }
+};
+
+export const yearlyBudgetFactor = (freq: budgetFreq) => {
+  switch (freq) {
+    case 'monthly':
+      return 12;
+    case 'quarterly':
+      return 4;
+    case 'semi-annually':
+      return 2;
     default:
       return 1;
   }
