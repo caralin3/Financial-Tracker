@@ -21,3 +21,7 @@ export interface ApplicationState {
   subcategoriesState: subcategoriesState.SubcategoriesState;
   transactionsState: transactionsState.TransactionsState;
 }
+
+export interface ReportsState {
+  [key: string]: number;
+}

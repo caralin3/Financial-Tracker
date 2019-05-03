@@ -8,13 +8,8 @@ import { ChartOptions } from 'chart.js';
 import * as moment from 'moment';
 import * as React from 'react';
 import { Line } from 'react-chartjs-2';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
-import { Dispatch } from 'redux';
 import { opaqueColors, solidColors } from '../appearance';
-import { withAuthorization } from '../auth/withAuthorization';
-import { ApplicationState, Option, Transaction } from '../types';
+import { Option, ReportsState, Transaction } from '../types';
 import {
   calcPercent,
   createOption,
@@ -31,22 +26,13 @@ import {
 import { DashboardCard, DropdownMenu, Popup, SelectInput, TableFilterList } from './';
 
 export interface NetChartProps {
-  classes: any;
-}
-
-interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
-}
-
-interface StateMappedProps {
+  onMenuChange: (e: any) => void;
+  reportsState: ReportsState;
   transactions: Transaction[];
 }
 
-interface NetChartMergedProps extends RouteComponentProps, StateMappedProps, DispatchMappedProps, NetChartProps {}
-
-const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) => {
+export const NetChart: React.SFC<NetChartProps> = ({ onMenuChange, reportsState, transactions }) => {
   // const [loading] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<number>(0);
   const [item, setItem] = React.useState<string>('all');
   const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
   const [openFilters, setOpenFilters] = React.useState<boolean>(false);
@@ -54,12 +40,8 @@ const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) 
   const menuItems = [{ label: 'This Year', value: 0 }, { label: 'Last Year', value: 1 }];
 
   React.useEffect(() => {
-    setCurrentTrans(getTransactionByRange(menuItems[selected].label, transactions));
-  }, [selected, transactions]);
-
-  const handleMenu = (e: any) => {
-    setSelected(e.currentTarget.attributes.getNamedItem('data-value').value);
-  };
+    setCurrentTrans(getTransactionByRange(menuItems[reportsState.net].label, transactions));
+  }, [reportsState, transactions]);
 
   const timeFormat = 'MMMM';
   const expensesLabels: any[] = removeDups(currentTrans.map(trans => new Date(trans.date)));
@@ -193,10 +175,10 @@ const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) 
       action={
         <DropdownMenu
           className="reports_dropdown"
-          key="expenses-range"
-          selected={menuItems[selected].label}
+          key="net-range"
+          selected={menuItems[reportsState.net].label}
           menuItems={menuItems}
-          onClose={e => handleMenu(e)}
+          onClose={onMenuChange}
         />
       }
       actions={[
@@ -207,7 +189,6 @@ const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) 
         />,
         <IncomeFilter
           key="income-filter"
-          currentTrans={currentTrans}
           onClick={() => setOpenFilters(!openFilters)}
           onClose={() => setOpenFilters(false)}
           onReset={() => setItem('all')}
@@ -221,7 +202,7 @@ const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) 
         />
       ]}
       title="Net Trend"
-      subheader={getSubheader(menuItems[selected].label)}
+      subheader={getSubheader(menuItems[reportsState.net].label)}
     >
       <Line data={expensesData} options={expensesOptions} />
       <div className="reports_summary">
@@ -257,7 +238,6 @@ const DisconnectedNetChart: React.SFC<NetChartMergedProps> = ({ transactions }) 
 };
 
 interface IncomeFilterProps {
-  currentTrans: Transaction[];
   onClick: () => void;
   onClose: () => void;
   onReset: () => void;
@@ -268,7 +248,6 @@ interface IncomeFilterProps {
 }
 
 export const IncomeFilter: React.SFC<IncomeFilterProps> = ({
-  currentTrans,
   onClick,
   onClose,
   onReset,
@@ -301,18 +280,3 @@ export const IncomeFilter: React.SFC<IncomeFilterProps> = ({
     trigger={<FilterListIcon />}
   />
 );
-
-const authCondition = (authUser: any) => !!authUser;
-
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
-
-const mapStateToProps = (state: ApplicationState) => ({ transactions: state.transactionsState.transactions });
-
-export const NetChart = compose(
-  withAuthorization(authCondition),
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
-)(DisconnectedNetChart);

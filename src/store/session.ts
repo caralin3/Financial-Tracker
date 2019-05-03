@@ -1,4 +1,4 @@
-import { User } from '../types';
+import { ReportsState, User } from '../types';
 
 export interface SetCurrentUserAction {
   currentUser: User | null;
@@ -24,16 +24,39 @@ export const setDrawerExpanded = (drawerExpanded: boolean): SetDrawerExpandedAct
   type: SET_DRAWER_EXPANDED
 });
 
-type SessionActions = SetCurrentUserAction | SetDrawerExpandedAction;
+export interface SetReportsStateAction {
+  reportsState: ReportsState;
+  type: 'SET_REPORTS_STATE';
+}
+
+export const SET_REPORTS_STATE = 'SET_REPORTS_STATE';
+
+export const setReportsState = (reportsState: ReportsState, key: string, value: number): SetReportsStateAction => ({
+  reportsState: {
+    ...reportsState,
+    [key]: value
+  },
+  type: SET_REPORTS_STATE
+});
+
+type SessionActions = SetCurrentUserAction | SetDrawerExpandedAction | SetReportsStateAction;
 
 export interface SessionState {
   currentUser: User | null;
   drawerExpanded: boolean;
+  reportsState: ReportsState;
 }
 
 const initialState: SessionState = {
   currentUser: null,
-  drawerExpanded: true
+  drawerExpanded: true,
+  reportsState: {
+    accounts: 2,
+    budgets: 2,
+    categories: 2,
+    goals: 2,
+    net: 0
+  }
 };
 
 // Session reducer manages the authUser object
@@ -50,6 +73,12 @@ export const reducer = (state: SessionState = initialState, action: SessionActio
       return {
         ...state,
         drawerExpanded: action.drawerExpanded
+      };
+    }
+    case SET_REPORTS_STATE: {
+      return {
+        ...state,
+        reportsState: action.reportsState
       };
     }
     default:

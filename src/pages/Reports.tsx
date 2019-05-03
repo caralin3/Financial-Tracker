@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
 import { ChartOptions } from 'chart.js';
-// import * as moment from 'moment';
 import * as React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { connect } from 'react-redux';
@@ -26,6 +25,7 @@ import {
   YearlyTrendChart
 } from '../components';
 import { routes } from '../routes';
+import { sessionState } from '../store';
 import {
   Account,
   accountType,
@@ -34,6 +34,7 @@ import {
   Category,
   Chart,
   Goal,
+  ReportsState,
   Subcategory,
   Transaction,
   User
@@ -56,7 +57,7 @@ export interface ReportsPageProps {
 }
 
 interface DispatchMappedProps {
-  dispatch: Dispatch<any>;
+  setReportsState: (reportsState: ReportsState, key: string, value: number) => void;
 }
 
 interface StateMappedProps {
@@ -66,6 +67,7 @@ interface StateMappedProps {
   currentUser: User | null;
   budgets: Budget[];
   goals: Goal[];
+  reportsState: ReportsState;
   subcategories: Subcategory[];
   transactions: Transaction[];
 }
@@ -79,6 +81,8 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   charts,
   history,
   goals,
+  reportsState,
+  setReportsState,
   subcategories,
   transactions
 }) => {
@@ -87,7 +91,6 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
   const [successMsg, setSuccessMsg] = React.useState<string>('');
   const [adding, setAdding] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<any>({ account: 2, budget: 2, category: 2, expenses: 4, goal: 2 });
   const [viewAcc, setViewAcc] = React.useState<accountType | ''>('');
   const [viewCat, setViewCat] = React.useState<string>('');
   const [currentAccTrans, setCurrentAccTrans] = React.useState<Transaction[]>([]);
@@ -105,18 +108,16 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
 
   React.useEffect(() => {
     setCurrentAccTrans(
-      getTransactionByRange(menuItems[selected.account].label, getObjectByType(transactions, 'expense'))
+      getTransactionByRange(menuItems[reportsState.accounts].label, getObjectByType(transactions, 'expense'))
     );
     setCurrentCatTrans(
-      getTransactionByRange(menuItems[selected.category].label, getObjectByType(transactions, 'expense'))
+      getTransactionByRange(menuItems[reportsState.categories].label, getObjectByType(transactions, 'expense'))
     );
-  }, [selected, transactions, accounts, budgets, goals]);
+  }, [reportsState, transactions, accounts, budgets, goals]);
 
   const handleMenu = (e: any, key: string) => {
-    setSelected({
-      ...selected,
-      [key]: e.currentTarget.attributes.getNamedItem('data-value').value
-    });
+    const value = parseInt(e.currentTarget.attributes.getNamedItem('data-value').value, 10);
+    setReportsState(reportsState, key, value);
   };
 
   const detailData = (labels: string[], dataArr: any[], criteria: string) => {
@@ -338,7 +339,11 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
       ) : (
         <Grid container={true} spacing={24}>
           <Grid item={true} xs={12}>
-            <NetChart />
+            <NetChart
+              reportsState={reportsState}
+              onMenuChange={e => handleMenu(e, 'net')}
+              transactions={transactions}
+            />
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
             <DashboardCard
@@ -347,9 +352,9 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                 <DropdownMenu
                   className="reports_dropdown"
                   key="accounts-range"
-                  selected={menuItems[selected.account].label}
+                  selected={menuItems[reportsState.accounts].label}
                   menuItems={menuItems}
-                  onClose={e => handleMenu(e, 'account')}
+                  onClose={e => handleMenu(e, 'accounts')}
                 />
               }
               actions={
@@ -362,7 +367,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                   : []
               }
               title="Account"
-              subheader={getSubheader(menuItems[selected.account].label)}
+              subheader={getSubheader(menuItems[reportsState.accounts].label)}
             >
               <Pie data={accountPieData} options={accountOptions} />
               <div className="reports_summary">
@@ -382,9 +387,9 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                 <DropdownMenu
                   className="reports_dropdown"
                   key="categories-range"
-                  selected={menuItems[selected.category].label}
+                  selected={menuItems[reportsState.categories].label}
                   menuItems={menuItems}
-                  onClose={e => handleMenu(e, 'category')}
+                  onClose={e => handleMenu(e, 'categories')}
                 />
               }
               actions={
@@ -397,7 +402,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                   : []
               }
               title="Categories"
-              subheader={getSubheader(menuItems[selected.category].label)}
+              subheader={getSubheader(menuItems[reportsState.categories].label)}
             >
               <div className="reports_pie">
                 <Pie data={categoryPieData} height={matchSm ? 250 : undefined} options={categoryOptions} />
@@ -418,14 +423,14 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                 <DropdownMenu
                   className="reports_dropdown"
                   key="budget-range"
-                  selected={menuItems[selected.budget].label}
+                  selected={menuItems[reportsState.budgets].label}
                   menuItems={menuItems}
-                  onClose={e => handleMenu(e, 'budget')}
+                  onClose={e => handleMenu(e, 'budgets')}
                 />
               }
               budgets={budgets}
-              currentTrans={getTransactionByRange(menuItems[selected.budget].label, transactions)}
-              subheader={getSubheader(menuItems[selected.budget].label)}
+              currentTrans={getTransactionByRange(menuItems[reportsState.budgets].label, transactions)}
+              subheader={getSubheader(menuItems[reportsState.budgets].label)}
             />
           </Grid>
           <Grid item={true} md={6} sm={12} xs={12}>
@@ -434,14 +439,14 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                 <DropdownMenu
                   className="reports_dropdown"
                   key="goal-range"
-                  selected={menuItems[selected.goal].label}
+                  selected={menuItems[reportsState.goals].label}
                   menuItems={menuItems}
-                  onClose={e => handleMenu(e, 'goal')}
+                  onClose={e => handleMenu(e, 'goals')}
                 />
               }
-              currentTrans={getTransactionByRange(menuItems[selected.goal].label, transactions)}
+              currentTrans={getTransactionByRange(menuItems[reportsState.goals].label, transactions)}
               goals={goals}
-              subheader={getSubheader(menuItems[selected.goal].label)}
+              subheader={getSubheader(menuItems[reportsState.goals].label)}
             />
           </Grid>
           {charts.map(chart => (
@@ -450,9 +455,12 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                 <MonthlyTrendChart
                   cardTitle={chart.cardTitle}
                   chartTitle={chart.chartTitle}
+                  id={chart.id}
                   item={chart.item}
                   itemType={chart.itemType}
                   onEdit={e => handleEdit(e, chart.id)}
+                  onMenuChange={e => handleMenu(e, chart.id)}
+                  selected={reportsState[chart.id] || 0}
                   transactions={transactions}
                 />
               ) : (
@@ -478,7 +486,10 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({ dispatch });
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  setReportsState: (reportsState: ReportsState, key: string, value: number) =>
+    dispatch(sessionState.setReportsState(reportsState, key, value))
+});
 
 const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,
@@ -487,6 +498,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   charts: state.chartsState.charts,
   currentUser: state.sessionState.currentUser,
   goals: state.goalsState.goals,
+  reportsState: state.sessionState.reportsState,
   subcategories: state.subcategoriesState.subcategories,
   transactions: state.transactionsState.transactions
 });

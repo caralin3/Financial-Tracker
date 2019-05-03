@@ -24,9 +24,12 @@ import { DashboardCard, DropdownMenu } from './';
 export interface MonthlyTrendChartProps extends RouteComponentProps {
   cardTitle: string;
   chartTitle?: string;
+  id: string;
   item: string;
   itemType: chartItemType;
   onEdit: (e: any) => void;
+  onMenuChange: (e: any) => void;
+  selected: number;
   transactions: Transaction[];
 }
 
@@ -36,10 +39,11 @@ const DisconnectedMonthlyTrendChart: React.SFC<MonthlyTrendChartProps> = ({
   item,
   itemType,
   onEdit,
+  onMenuChange,
+  selected,
   transactions
 }) => {
   // const [loading] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<number>(0);
   const [currentTrans, setCurrentTrans] = React.useState<Transaction[]>([]);
   const matchSm = useMediaQuery('(max-width:600px)');
 
@@ -48,11 +52,6 @@ const DisconnectedMonthlyTrendChart: React.SFC<MonthlyTrendChartProps> = ({
   React.useEffect(() => {
     setCurrentTrans(getTransactionByRange(menuItems[selected].label as string, transactions));
   }, [selected, transactions]);
-
-  const handleMenu = (e: any) => {
-    setSelected(e.currentTarget.attributes.getNamedItem('data-value').value);
-  };
-
   const getTransactionDates = () => {
     const expenses = getObjectByType(currentTrans, 'expense');
     return removeDups(expenses.map(trans => new Date(trans.date)));
@@ -85,7 +84,7 @@ const DisconnectedMonthlyTrendChart: React.SFC<MonthlyTrendChartProps> = ({
 
   const getDatesInMonth = () => {
     const datesInMonth = [];
-    const month = parseInt(selected.toString(), 10) + 1;
+    const month = parseInt(menuItems[selected].value.toString(), 10) + 1;
     const firstDayOfMonth = `${new Date().getFullYear()}-${month}`;
     const daysInMonth = moment(firstDayOfMonth, 'YYYY-M').daysInMonth();
     for (let day = 1; day <= daysInMonth; day++) {
@@ -178,7 +177,7 @@ const DisconnectedMonthlyTrendChart: React.SFC<MonthlyTrendChartProps> = ({
           key="expenses-range"
           selected={menuItems[selected].label as string}
           menuItems={menuItems as any}
-          onClose={e => handleMenu(e)}
+          onClose={onMenuChange}
         />
       }
       actions={[

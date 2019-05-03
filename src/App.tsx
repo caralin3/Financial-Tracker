@@ -12,18 +12,20 @@ import {
   accountsState,
   budgetsState,
   categoriesState,
+  chartsState,
   goalsState,
   subcategoriesState,
   transactionsState
 } from './store';
-import { Account, ApplicationState, Budget, Category, Goal, Subcategory, Transaction, User } from './types';
+import { Account, ApplicationState, Budget, Category, Chart, Goal, Subcategory, Transaction, User } from './types';
 
-interface AppProps { }
+interface AppProps {}
 
 interface DispatchMappedProps {
   setAccounts: (accounts: Account[]) => void;
   setBudgets: (budgets: Budget[]) => void;
   setCategories: (categories: Category[]) => void;
+  setCharts: (charts: Chart[]) => void;
   setGoals: (goals: Goal[]) => void;
   setSubcategories: (subcategories: Subcategory[]) => void;
   setTransactions: (transactions: Transaction[]) => void;
@@ -32,6 +34,7 @@ interface DispatchMappedProps {
 interface StateMappedProps {
   accounts: Account[];
   categories: Category[];
+  charts: Chart[];
   currentUser: User | null;
   budgets: Budget[];
   goals: Goal[];
@@ -44,7 +47,7 @@ interface AppState {
   loading: boolean;
 }
 
-interface AppMergedProps extends DispatchMappedProps, StateMappedProps, AppProps { }
+interface AppMergedProps extends DispatchMappedProps, StateMappedProps, AppProps {}
 
 class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
   public history: History.History = createHistory();
@@ -84,16 +87,18 @@ class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
       setAccounts,
       setBudgets,
       setCategories,
+      setCharts,
       setGoals,
       setSubcategories,
       setTransactions
     } = this.props;
     if (currentUser) {
       try {
-        const [accs, buds, cats, gols, subs, trans] = await Promise.all([
+        const [accs, buds, cats, charts, gols, subs, trans] = await Promise.all([
           requests.accounts.getAllAccounts(currentUser.id),
           requests.budgets.getAllBudgets(currentUser.id),
           requests.categories.getAllCategories(currentUser.id),
+          requests.charts.getAllCharts(currentUser.id),
           requests.goals.getAllGoals(currentUser.id),
           requests.subcategories.getAllSubcategories(currentUser.id),
           requests.transactions.getAllTransactions(currentUser.id)
@@ -101,6 +106,7 @@ class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
         setAccounts(accs);
         setBudgets(buds);
         setCategories(cats);
+        setCharts(charts);
         setGoals(gols);
         setSubcategories(subs);
         setTransactions(trans);
@@ -117,6 +123,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   setAccounts: (accounts: Account[]) => dispatch(accountsState.setAccounts(accounts)),
   setBudgets: (budgets: Budget[]) => dispatch(budgetsState.setBudgets(budgets)),
   setCategories: (categories: Category[]) => dispatch(categoriesState.setCategories(categories)),
+  setCharts: (charts: Chart[]) => dispatch(chartsState.setCharts(charts)),
   setGoals: (goals: Goal[]) => dispatch(goalsState.setGoals(goals)),
   setSubcategories: (subcategories: Subcategory[]) => dispatch(subcategoriesState.setSubcategories(subcategories)),
   setTransactions: (transactions: Transaction[]) => dispatch(transactionsState.setTransactions(transactions))
@@ -126,6 +133,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   accounts: state.accountsState.accounts,
   budgets: state.budgetsState.budgets,
   categories: state.categoriesState.categories,
+  charts: state.chartsState.charts,
   currentUser: state.sessionState.currentUser,
   goals: state.goalsState.goals,
   subcategories: state.subcategoriesState.subcategories,
