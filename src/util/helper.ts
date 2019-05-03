@@ -279,6 +279,19 @@ export const monthlyBudgetFactor = (freq: budgetFreq) => {
   }
 };
 
+export const weeklyBudgetFactor = (freq: budgetFreq) => {
+  switch (freq) {
+    case 'monthly':
+      return 4;
+    case 'quarterly':
+      return 13;
+    case 'semi-annually':
+      return 26;
+    default:
+      return 52;
+  }
+};
+
 export const yearlyBudgetFactor = (freq: budgetFreq) => {
   switch (freq) {
     case 'monthly':
@@ -305,6 +318,14 @@ export const getExpensesByCriteria = (criteria: goalCriteria, item: string, expe
     default:
       return [];
   }
+};
+
+export const comparatorLabels = {
+  '<': 'less than',
+  '<=': 'at most',
+  '===': 'exactly',
+  '>': 'more than',
+  '>=': 'at least'
 };
 
 export const comparators = {

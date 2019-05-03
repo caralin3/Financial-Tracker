@@ -13,11 +13,9 @@ import { solidColors } from '../appearance';
 import { withAuthorization } from '../auth/withAuthorization';
 import {
   Alert,
-  BudgetCard,
   ChartModal,
   DashboardCard,
   DropdownMenu,
-  GoalCard,
   Layout,
   Loading,
   MonthlyTrendChart,
@@ -416,38 +414,6 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
                 </div>
               </div>
             </DashboardCard>
-          </Grid>
-          <Grid item={true} md={6} sm={12} xs={12}>
-            <BudgetCard
-              action={
-                <DropdownMenu
-                  className="reports_dropdown"
-                  key="budget-range"
-                  selected={menuItems[reportsState.budgets].label}
-                  menuItems={menuItems}
-                  onClose={e => handleMenu(e, 'budgets')}
-                />
-              }
-              budgets={budgets}
-              currentTrans={getTransactionByRange(menuItems[reportsState.budgets].label, transactions)}
-              subheader={getSubheader(menuItems[reportsState.budgets].label)}
-            />
-          </Grid>
-          <Grid item={true} md={6} sm={12} xs={12}>
-            <GoalCard
-              action={
-                <DropdownMenu
-                  className="reports_dropdown"
-                  key="goal-range"
-                  selected={menuItems[reportsState.goals].label}
-                  menuItems={menuItems}
-                  onClose={e => handleMenu(e, 'goals')}
-                />
-              }
-              currentTrans={getTransactionByRange(menuItems[reportsState.goals].label, transactions)}
-              goals={goals}
-              subheader={getSubheader(menuItems[reportsState.goals].label)}
-            />
           </Grid>
           {charts.map(chart => (
             <Grid item={true} md={6} sm={12} xs={12} key={chart.id}>

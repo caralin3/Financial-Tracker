@@ -2,16 +2,16 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Alert, DashboardCard, GoalModal, Loading, ProgressBar } from '../components';
+import { Alert, DashboardCard, GoalModal, Loading } from '../components';
 import { routes } from '../routes';
 import { Goal, Transaction } from '../types';
 import {
-  calcPercent,
+  // calcPercent,
+  comparatorLabels,
   formatMoney,
   getArrayTotal,
-  getExpensesByAmount,
+  // getExpensesByAmount,
   getExpensesByCriteria,
-  getExpensesByDates,
   getObjectByType
 } from '../util';
 
@@ -29,18 +29,57 @@ const DisconnectedGoalCard: React.SFC<GoalCardProps> = ({ action, goals, current
   const [adding, setAdding] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<boolean>(false);
 
-  const calcSpent = (goal: Goal) => {
-    const item = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
-    const expenses = getObjectByType(currentTrans, 'expense');
-    const dateFilteredExps = getExpensesByDates(goal.frequency, expenses, subheader, goal.startDate, goal.endDate);
-    const criteriaFilteredExps = getExpensesByCriteria(goal.criteria, item, dateFilteredExps);
-    const amountFilteredExps = getExpensesByAmount(goal.amount, goal.comparator, criteriaFilteredExps);
-    return getArrayTotal(amountFilteredExps);
-  };
-
   const handleClick = (e: React.MouseEvent<HTMLElement, MouseEvent>, id: string) => {
     history.push(`${routes.dashboard}/edit/${id}`);
     setEditing(true);
+  };
+
+  const calcSpent = (goal: Goal, item: string) => {
+    const expenses = getObjectByType(currentTrans, 'expense');
+    const criteriaFilteredExps = getExpensesByCriteria(goal.criteria, item, expenses);
+    return getArrayTotal(criteriaFilteredExps);
+  };
+
+  const getStatus = (goal: Goal, spent: number) => {
+    const amount = goal.amount; // TODO: Handle subheader
+    switch (goal.comparator) {
+      case '<':
+        if (spent < amount) {
+          return 'Reached';
+        }
+        if (spent === amount) {
+          return 'Equal';
+        }
+        return `${formatMoney(spent - amount)} over`;
+      case '<=':
+        if (spent <= amount) {
+          return 'Reached';
+        }
+        return `${formatMoney(spent - amount)} over`;
+      case '===':
+        if (spent < amount) {
+          return `${formatMoney(amount - spent)} under`;
+        }
+        if (spent > amount) {
+          return `${formatMoney(spent - amount)} over`;
+        }
+        return 'Reached';
+      case '>':
+        if (spent > amount) {
+          return 'Reached';
+        }
+        if (spent === amount) {
+          return 'Equal';
+        }
+        return `${formatMoney(amount - spent)} under`;
+      case '>=':
+        if (spent >= amount) {
+          return 'Reached';
+        }
+        return `${formatMoney(spent - amount)} over`;
+      default:
+        return 'On Track';
+    }
   };
 
   return (
@@ -62,6 +101,7 @@ const DisconnectedGoalCard: React.SFC<GoalCardProps> = ({ action, goals, current
           setSuccess(true);
         }}
       />
+      {/* TODO: Fix edit? */}
       <GoalModal
         title="Edit Goal"
         buttonText="Edit"
@@ -79,19 +119,28 @@ const DisconnectedGoalCard: React.SFC<GoalCardProps> = ({ action, goals, current
           <ListItem>No goals</ListItem>
         ) : (
           goals.map(goal => {
-            const label = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
-            const spent = calcSpent(goal);
-            const total = goal.amount;
-            const percent = calcPercent(spent, total);
+            const item = goal.criteria === 'item' ? (goal.item as Transaction).item : (goal.item as any).name;
+            const spent = calcSpent(goal, item);
+            const status = getStatus(goal, spent);
+            // const total = goal.amount;
+            // const percent = calcPercent(spent, total);
             return (
-              <ListItem key={goal.id} button={true} onClick={e => handleClick(e, goal.id)}>
-                <ProgressBar
+              <ListItem className="goalCard_col" key={goal.id} button={true} onClick={e => handleClick(e, goal.id)}>
+                <span className="goalCard_spend">
+                  Spend {comparatorLabels[goal.comparator]} <strong>{formatMoney(goal.amount, true)}</strong> on {item}{' '}
+                  {goal.frequency}
+                </span>
+                <div className="goalCard_row">
+                  <strong>Spent: {formatMoney(spent)}</strong>
+                  <strong>Status: {status}</strong>
+                </div>
+                {/* <ProgressBar
                   percent={percent}
                   leftLabel={label}
                   rightLabel={`${formatMoney(spent, true)} ${goal.comparator} ${formatMoney(total, true)}`}
                   subLabel={goal.frequency}
                   textColor="primary"
-                />
+                /> */}
               </ListItem>
             );
           })

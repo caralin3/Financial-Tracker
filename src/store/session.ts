@@ -52,9 +52,7 @@ const initialState: SessionState = {
   drawerExpanded: true,
   reportsState: {
     accounts: 2,
-    budgets: 2,
     categories: 2,
-    goals: 2,
     net: 0
   }
 };

@@ -39,7 +39,7 @@ const DisconnectedBudgetCard: React.SFC<BudgetCardProps> = ({ action, budgets, c
   };
 
   const calcTotal = (budget: Budget) => {
-    if (isNaN(parseInt(subheader, 10))) {
+    if (isNaN(parseInt(subheader, 10)) || subheader.includes('')) {
       return budget.amount / monthlyBudgetFactor(budget.frequency);
     }
     return budget.amount * yearlyBudgetFactor(budget.frequency);
