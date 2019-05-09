@@ -1,14 +1,11 @@
-# React Firebase Starter
+# Financial Tracker
 
-Modeled after this tutorial https://www.robinwieruch.de/complete-firebase-authentication-react-tutorial/#react-firebase-authentication-redux
+A React application for tracking personal finances by logging expenses, income, and creating budgets. Tables and Charts are utilized for presenting the data.
 
-A React Firebase App Starter Kit created with `create-react-app`
-Includes the following libraries:
-
-* TypeScript
-* react-router
-* redux
-* redux-persist
-* firebase
-
-Uses Firebase for Authentication and the RealTime Database
+## Technology
+* React
+* Redux
+* Firebase Authentication
+* Firebase Firestore database
+* Material-UI
+* Charts created with react-chartjs-2
