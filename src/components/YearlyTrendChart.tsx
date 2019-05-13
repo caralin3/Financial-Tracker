@@ -98,7 +98,7 @@ const DisconnectedYearlyTrendChart: React.SFC<YearlyTrendChartProps> = ({
           return { x: month, y: sum };
         })
       );
-      const data = sortChartByMonths(monthlyData.filter(d => getMonths().indexOf(d.x) < getMonths().length - 1));
+      const data = sortChartByMonths(monthlyData.filter(d => getMonths().indexOf(d.x) < getMonths().length));
       datasets.push({
         ...datasetConfig,
         backgroundColor: solidColors[index],
@@ -109,6 +109,17 @@ const DisconnectedYearlyTrendChart: React.SFC<YearlyTrendChartProps> = ({
     });
     return { datasets, labels: getTransactionDates() };
   };
+
+  const getNumMonths = (exps: Transaction[]) => {
+    const monthlyData = removeDupObjs(
+      getMonths().map(month => {
+        const monthlyExp = exps.filter(t => moment(new Date(t.date)).format('MMMM') === month);
+        const sum = getArrayTotal(monthlyExp);
+        return { x: month, y: sum };
+      })
+    );
+    return monthlyData.length;
+  }
 
   const chartOptions: ChartOptions = {
     legend: {
@@ -183,7 +194,8 @@ const DisconnectedYearlyTrendChart: React.SFC<YearlyTrendChartProps> = ({
         .map(year => {
           const exps = getFilteredExpenses(year);
           const total = getArrayTotal(exps);
-          const avg = exps.length > 0 ? total / exps.length : 0;
+          const numMonths = getNumMonths(exps);
+          const avg = exps.length > 0 ? total / numMonths : 0;
           return (
             <div className="reports_summary" key={year}>
               <Typography>
