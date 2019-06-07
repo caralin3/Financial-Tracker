@@ -8,9 +8,8 @@ import * as moment from 'moment';
 import * as querystring from 'querystring';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import SwipeableViews from 'react-swipeable-views';
-import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { theme } from '../appearance';
 import { requests } from '../firebase/db';
@@ -664,7 +663,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   addTransaction: (trans: Transaction) => dispatch(transactionsState.addTransaction(trans)),
   editAccount: (acc: Account) => dispatch(accountsState.editAccount(acc)),
   editTransaction: (trans: Transaction) => dispatch(transactionsState.editTransaction(trans))
@@ -678,10 +677,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   transactions: state.transactionsState.transactions
 });
 
-export const TransactionModal = compose(
-  withRouter,
+export const TransactionModal = withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )
-)(DisconnectedTransactionModal) as any;
+  )(DisconnectedTransactionModal)
+);

@@ -2,6 +2,17 @@
   "name": "financial-tracker",
   "version": "3.0.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "pretty": "prettier --write src/**/*.ts src/**/*.tsx",
+    "lint": "yarn run tslint --project ./",
+    "a11y:axe": "axe http://localhost:3000 --tags wcag2a,wcag2aa,best-practice --browser chrome",
+    "a11y:pa11y": "pa11y http://localhost:3000 --standard WCAG2AA",
+    "a11y": "concurrently --names \"a11y:axe,a11y:pa11y\" --prefix-colors \"blue,green\" \"yarn run a11y:axe\" \"yarn run a11y:pa11y\"",
+    "test": "jest",
+    "eject": "react-scripts-ts eject"
+  },
   "dependencies": {
     "blob": "^0.0.5",
     "chart.js": "^2.8.0",
@@ -15,22 +26,10 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts-ts": "^4.0.8",
-    "recompose": "^0.30.0",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0"
-  },
-  "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "pretty": "prettier --write src/**/*.ts src/**/*.tsx",
-    "lint": "yarn run tslint --project ./",
-    "a11y:axe": "axe http://localhost:3000 --tags wcag2a,wcag2aa,best-practice --browser chrome",
-    "a11y:pa11y": "pa11y http://localhost:3000 --standard WCAG2AA",
-    "a11y": "concurrently --names \"a11y:axe,a11y:pa11y\" --prefix-colors \"blue,green\" \"yarn run a11y:axe\" \"yarn run a11y:pa11y\"",
-    "test": "jest",
-    "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
     "@material-ui/core": "^3.9.2",

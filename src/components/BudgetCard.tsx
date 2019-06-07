@@ -1,7 +1,7 @@
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Alert, BudgetModal, DashboardCard, Loading, ProgressBar } from '../components';
 import { routes } from '../routes';
 import { Budget, Transaction } from '../types';

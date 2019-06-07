@@ -2,8 +2,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { accountsState, transactionsState } from '../store';
@@ -249,7 +248,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   addAccount: (acc: Account) => dispatch(accountsState.addAccount(acc)),
   editAccount: (acc: Account) => dispatch(accountsState.editAccount(acc)),
   editTransaction: (trans: Transaction) => dispatch(transactionsState.editTransaction(trans))
@@ -261,10 +260,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   transactions: state.transactionsState.transactions
 });
 
-export const AccountModal = compose(
-  withRouter,
+export const AccountModal = withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )
-)(DisconnectedAccountModal) as any;
+  )(DisconnectedAccountModal)
+);

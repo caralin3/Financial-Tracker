@@ -22,7 +22,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { theme } from '../appearance';
@@ -305,7 +305,7 @@ const styles = {
   }
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   setDrawerExpanded: (open: boolean) => dispatch(sessionState.setDrawerExpanded(open))
 });
 

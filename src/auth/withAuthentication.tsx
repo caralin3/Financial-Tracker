@@ -37,7 +37,7 @@ export const withAuthentication = (Component: any) => {
     }
   }
 
-  const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+  const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
     setCurrentUser: (user: User) => dispatch(sessionState.setCurrentUser(user))
   });
 

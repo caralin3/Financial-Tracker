@@ -1,7 +1,7 @@
 import { ConnectedRouter } from 'connected-react-router';
 import * as History from 'history';
 import * as React from 'react';
-import { Route, Switch } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
 import {
   AccountsPage,
   CategoriesPage,
@@ -11,7 +11,10 @@ import {
   SettingsPage,
   TransactionsPage
 } from '../pages';
-import { RouteMap } from '../types';
+
+export interface RouteMap {
+  [route: string]: React.ComponentClass<unknown, any>;
+}
 
 export const routes = {
   accounts: '/accounts',

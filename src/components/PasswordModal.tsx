@@ -1,8 +1,7 @@
 import TextField from '@material-ui/core/TextField';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import config from '../config';
 import { auth } from '../firebase';
 import { ApplicationState, User } from '../types';
@@ -194,7 +193,4 @@ const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser
 });
 
-export const PasswordModal = compose(
-  withRouter,
-  connect(mapStateToProps)
-)(DisconnectedPasswordModal) as any;
+export const PasswordModal = withRouter(connect(mapStateToProps)(DisconnectedPasswordModal));

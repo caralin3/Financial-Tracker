@@ -2,8 +2,7 @@ import Button from '@material-ui/core/Button';
 import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, DataTable, Layout, Loading, TransactionModal } from '../components';
@@ -212,7 +211,7 @@ const DisconnectedTransactionsPage: React.SFC<TransactionsMergedProps> = ({
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   addTransaction: (trans: Transaction) => dispatch(transactionsState.addTransaction(trans)),
   editAccount: (acc: Account) => dispatch(accountsState.editAccount(acc)),
   removeTransaction: (id: string) => dispatch(transactionsState.deleteTransaction(id))
@@ -226,11 +225,11 @@ const mapStateToProps = (state: ApplicationState) => ({
   transactions: state.transactionsState.transactions
 });
 
-export const TransactionsPage = compose(
-  withAuthorization(authCondition),
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
+export const TransactionsPage = withAuthorization(authCondition)(
+  withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(DisconnectedTransactionsPage)
   )
-)(DisconnectedTransactionsPage);
+);
