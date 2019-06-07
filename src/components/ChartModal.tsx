@@ -2,8 +2,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { FBChart } from '../firebase/types';
@@ -332,7 +331,7 @@ const DisconnectedChartModal: React.SFC<ChartModalMergedProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   addChart: (char: Chart) => dispatch(chartsState.addChart(char)),
   editChart: (char: Chart) => dispatch(chartsState.editChart(char)),
   removeChart: (id: string) => dispatch(chartsState.deleteChart(id))
@@ -343,10 +342,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser
 });
 
-export const ChartModal = compose(
-  withRouter,
+export const ChartModal = withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )
-)(DisconnectedChartModal) as any;
+  )(DisconnectedChartModal)
+);

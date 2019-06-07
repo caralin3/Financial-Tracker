@@ -14,8 +14,7 @@ import classNames from 'classnames';
 import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { withAuthorization } from '../auth/withAuthorization';
 import {
   AccountModal,
@@ -350,12 +349,6 @@ const mapStateToProps = (state: ApplicationState) => ({
   transactions: state.transactionsState.transactions
 });
 
-export const DashboardPage = compose(
-  withAuthorization(authCondition),
-  withStyles(styles),
-  withRouter,
-  connect(
-    mapStateToProps,
-    null
-  )
-)(DisconnectedDashboardPage);
+export const DashboardPage = withAuthorization(authCondition)(
+  withStyles(styles)(withRouter(connect(mapStateToProps)(DisconnectedDashboardPage)))
+);

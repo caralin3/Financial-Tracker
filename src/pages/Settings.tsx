@@ -9,8 +9,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import LockIcon from '@material-ui/icons/Lock';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, Layout, Loading, PasswordModal, UserModal } from '../components';
 import { auth } from '../firebase';
@@ -201,9 +200,6 @@ const mapStateToProps = (state: ApplicationState) => ({
   transactions: state.transactionsState.transactions
 });
 
-export const SettingsPage = compose(
-  withAuthorization(authCondition),
-  withStyles(styles as any, { withTheme: true }),
-  withRouter,
-  connect(mapStateToProps)
-)(DisconnectedSettingsPage);
+export const SettingsPage = withAuthorization(authCondition)(
+  withStyles(styles)(withRouter(connect(mapStateToProps)(DisconnectedSettingsPage)))
+);

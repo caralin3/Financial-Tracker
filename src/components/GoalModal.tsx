@@ -5,8 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { FBGoal } from '../firebase/types';
@@ -428,7 +427,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   addGoal: (goal: Goal) => dispatch(goalsState.addGoal(goal)),
   editGoal: (goal: Goal) => dispatch(goalsState.editGoal(goal)),
   removeGoal: (id: string) => dispatch(goalsState.deleteGoal(id))
@@ -443,10 +442,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   transactions: state.transactionsState.transactions
 });
 
-export const GoalModal = compose(
-  withRouter,
+export const GoalModal = withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )
-)(DisconnectedGoalModal) as any;
+  )(DisconnectedGoalModal)
+);

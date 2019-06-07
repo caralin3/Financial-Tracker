@@ -1,7 +1,7 @@
 import * as History from 'history';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { firebase } from '../firebase';
 import { routes } from '../routes';

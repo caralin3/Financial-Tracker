@@ -2,8 +2,6 @@ import Card from '@material-ui/core/Card';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
-import { withRouter } from 'react-router';
-import { compose } from 'recompose';
 import { withoutAuthorization } from '../auth/withoutAuthorization';
 import { ForgotPasswordForm, LoginForm, SignUpForm } from '../components';
 
@@ -82,7 +80,4 @@ const DisconnectedLandingPage: React.SFC<LandingPageProps> = props => {
 
 const authCondition = (authUser: any) => !!authUser;
 
-export const LandingPage = compose(
-  withRouter,
-  withoutAuthorization(authCondition)
-)(DisconnectedLandingPage);
+export const LandingPage = withoutAuthorization(authCondition)(DisconnectedLandingPage);

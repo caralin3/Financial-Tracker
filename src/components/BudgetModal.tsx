@@ -5,8 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { FBBudget } from '../firebase/types';
@@ -339,7 +338,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   addBudget: (bud: Budget) => dispatch(budgetsState.addBudget(bud)),
   editBudget: (bud: Budget) => dispatch(budgetsState.editBudget(bud)),
   removeBudget: (id: string) => dispatch(budgetsState.deleteBudget(id))
@@ -351,10 +350,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser
 });
 
-export const BudgetModal = compose(
-  withRouter,
+export const BudgetModal = withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )
-)(DisconnectedBudgetModal) as any;
+  )(DisconnectedBudgetModal)
+);

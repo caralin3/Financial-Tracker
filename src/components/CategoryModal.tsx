@@ -2,8 +2,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { budgetsState, categoriesState, subcategoriesState, transactionsState } from '../store';
@@ -225,7 +224,7 @@ const DisconnectedCategoryModal: React.SFC<CategoryModalMergedProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   addCategory: (cat: Category) => dispatch(categoriesState.addCategory(cat)),
   editBudget: (bud: Budget) => dispatch(budgetsState.editBudget(bud)),
   editCategory: (cat: Category) => dispatch(categoriesState.editCategory(cat)),
@@ -241,10 +240,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   transactions: state.transactionsState.transactions
 });
 
-export const CategoryModal = compose(
-  withRouter,
+export const CategoryModal = withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )
-)(DisconnectedCategoryModal) as any;
+  )(DisconnectedCategoryModal)
+);
