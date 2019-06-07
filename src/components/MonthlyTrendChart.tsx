@@ -6,7 +6,7 @@ import { ChartOptions } from 'chart.js';
 import * as moment from 'moment';
 import * as React from 'react';
 import { Line } from 'react-chartjs-2';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { solidColors } from '../appearance';
 import { chartItemType, Transaction } from '../types';
 import {

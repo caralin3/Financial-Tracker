@@ -1,13 +1,12 @@
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { unstable_useMediaQuery as useMediaQuery } from '@material-ui/core/useMediaQuery';
-// import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import { ChartOptions } from 'chart.js';
 import * as moment from 'moment';
 import * as React from 'react';
 import { Line } from 'react-chartjs-2';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { solidColors } from '../appearance';
 import { chartItemType, Transaction } from '../types';
 import {
@@ -119,7 +118,7 @@ const DisconnectedYearlyTrendChart: React.SFC<YearlyTrendChartProps> = ({
       })
     );
     return monthlyData.length;
-  }
+  };
 
   const chartOptions: ChartOptions = {
     legend: {

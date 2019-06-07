@@ -1,8 +1,7 @@
 import TextField from '@material-ui/core/TextField';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { auth, db } from '../firebase';
 import { routes } from '../routes';
@@ -198,7 +197,7 @@ const DisconnectedSignUpForm: React.SFC<SignUpMergedProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   addCategory: (cat: Category) => dispatch(categoriesState.addCategory(cat)),
   addSubcategory: (sub: Subcategory) => dispatch(subcategoriesState.addSubcategory(sub)),
   setAccounts: (accounts: Account[]) => dispatch(accountsState.setAccounts(accounts)),
@@ -210,10 +209,9 @@ const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
   setTransactions: (transactions: Transaction[]) => dispatch(transactionsState.setTransactions(transactions))
 });
 
-export const SignUpForm = compose(
-  withRouter,
+export const SignUpForm = withRouter(
   connect(
     null,
     mapDispatchToProps
-  )
-)(DisconnectedSignUpForm);
+  )(DisconnectedSignUpForm)
+);

@@ -6,8 +6,7 @@ import { ChartOptions } from 'chart.js';
 import * as React from 'react';
 import { Pie } from 'react-chartjs-2';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { solidColors } from '../appearance';
 import { withAuthorization } from '../auth/withAuthorization';
@@ -452,7 +451,7 @@ const DisconnectedReportsPage: React.SFC<ReportsMergedProps> = ({
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   setReportsState: (reportsState: ReportsState, key: string, value: number) =>
     dispatch(sessionState.setReportsState(reportsState, key, value))
 });
@@ -469,11 +468,11 @@ const mapStateToProps = (state: ApplicationState) => ({
   transactions: state.transactionsState.transactions
 });
 
-export const ReportsPage = compose(
-  withAuthorization(authCondition),
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
+export const ReportsPage = withAuthorization(authCondition)(
+  withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(DisconnectedReportsPage)
   )
-)(DisconnectedReportsPage);
+);

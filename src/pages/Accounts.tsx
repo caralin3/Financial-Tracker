@@ -14,9 +14,8 @@ import PanoramaFishEyeIcon from '@material-ui/icons/PanoramaFishEye';
 import classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import SwipeableViews from 'react-swipeable-views';
-import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { AccountModal, Alert, AlertDialog, ExpandableCard, Layout, Loading } from '../components';
@@ -290,7 +289,7 @@ const AccountItem: React.SFC<AccountItemProps> = ({ balance, label, link, onDele
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   removeAccount: (id: string) => dispatch(accountsState.deleteAccount(id))
 });
 
@@ -299,11 +298,11 @@ const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser
 });
 
-export const AccountsPage = compose(
-  withAuthorization(authCondition),
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
+export const AccountsPage = withAuthorization(authCondition)(
+  withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(DisconnectedAccountsPage)
   )
-)(DisconnectedAccountsPage);
+);

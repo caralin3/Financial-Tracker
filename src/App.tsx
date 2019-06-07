@@ -119,7 +119,7 @@ class DisconnectedApp extends React.Component<AppMergedProps, AppState> {
   };
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   setAccounts: (accounts: Account[]) => dispatch(accountsState.setAccounts(accounts)),
   setBudgets: (budgets: Budget[]) => dispatch(budgetsState.setBudgets(budgets)),
   setCategories: (categories: Category[]) => dispatch(categoriesState.setCategories(categories)),

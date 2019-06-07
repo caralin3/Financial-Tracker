@@ -1,8 +1,7 @@
 import TextField from '@material-ui/core/TextField';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { requests } from '../firebase/db';
 import { sessionState } from '../store';
@@ -175,7 +174,7 @@ const DisconnectedUserModal: React.SFC<UserModalMergedProps> = ({
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   updateUser: (user: User) => dispatch(sessionState.setCurrentUser(user))
 });
 
@@ -183,10 +182,9 @@ const mapStateToProps = (state: ApplicationState) => ({
   currentUser: state.sessionState.currentUser
 });
 
-export const UserModal = compose(
-  withRouter,
+export const UserModal = withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )
-)(DisconnectedUserModal) as any;
+  )(DisconnectedUserModal)
+);

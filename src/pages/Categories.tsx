@@ -1,4 +1,3 @@
-// import { Theme, withStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -14,8 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { compose } from 'recompose';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { withAuthorization } from '../auth/withAuthorization';
 import { Alert, AlertDialog, CategoryModal, Layout, Loading, SubcategoryModal } from '../components';
@@ -269,7 +267,7 @@ const DisconnectedCategoriesPage: React.SFC<CategoriesMergedProps> = ({
 
 const authCondition = (authUser: any) => !!authUser;
 
-const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchMappedProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchMappedProps => ({
   removeCategory: (id: string) => dispatch(categoriesState.deleteCategory(id)),
   removeSubcategory: (id: string) => dispatch(subcategoriesState.deleteSubcategory(id))
 });
@@ -280,12 +278,11 @@ const mapStateToProps = (state: ApplicationState) => ({
   subcategories: state.subcategoriesState.subcategories
 });
 
-export const CategoriesPage = compose(
-  withAuthorization(authCondition),
-  // withStyles(styles as any, { withTheme: true }),
-  withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
+export const CategoriesPage = withAuthorization(authCondition)(
+  withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps
+    )(DisconnectedCategoriesPage)
   )
-)(DisconnectedCategoriesPage);
+);
