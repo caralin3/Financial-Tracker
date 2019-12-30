@@ -247,7 +247,7 @@ const DisconnectedBudgetModal: React.SFC<BudgetModalMergedProps> = ({
               id="expense-amount"
               label="Amount"
               fullWidth={true}
-              value={amount}
+              value={amount !== 0 ? amount : ''}
               onChange={e => {
                 const total = parseFloat(e.target.value) || 0;
                 const freq = getFreq(frequency);

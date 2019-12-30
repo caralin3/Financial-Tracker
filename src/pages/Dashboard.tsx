@@ -168,7 +168,7 @@ const DisconnectedDashboardPage: React.SFC<DashboardMergedProps> = ({
                   primaryTypographyProps={{
                     className: classNames('dashboard_item-amount dashboard_bold', {
                       ['dashboard_item-amount-neg']:
-                        accType.value === 'credit' || getArrayTotal(getObjectByType(accounts, accType.value)) < 0
+                      (accType.value === 'credit' && getArrayTotal(getObjectByType(accounts, accType.value)) > 0) || getArrayTotal(getObjectByType(accounts, accType.value)) < 0
                     })
                   }}
                   primary={`${

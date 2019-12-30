@@ -318,7 +318,7 @@ const DisconnectedGoalModal: React.SFC<GoalModalMergedProps> = ({
                   id="expense-amount"
                   label="Amount"
                   fullWidth={true}
-                  value={amount}
+                  value={amount !== 0 ? amount : ''}
                   onChange={e => {
                     setAmount(parseFloat(e.target.value) || 0);
                     setSubmit(false);

@@ -222,7 +222,7 @@ const DisconnectedAccountModal: React.SFC<AccountModalMergedProps> = ({
               id="account-amount"
               label="Balance"
               fullWidth={true}
-              value={amount}
+              value={amount !== 0 ? amount : ''}
               onChange={e => setAmount(parseFloat(e.target.value))}
               type="number"
               margin="normal"

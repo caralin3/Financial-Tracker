@@ -385,7 +385,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
             id="expense-amount"
             label="Amount"
             fullWidth={true}
-            value={amount}
+            value={amount !== 0 ? amount : ''}
             onChange={e => setAmount(parseFloat(e.target.value) || 0)}
             type="number"
             helperText={submit && !isValidAmount() ? 'Must be greater than zero' : undefined}
@@ -489,7 +489,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
             id="income-amount"
             label="Amount"
             fullWidth={true}
-            value={amount}
+            value={amount !== 0 ? amount : ''}
             onChange={e => setAmount(parseFloat(e.target.value) || 0)}
             type="number"
             helperText={submit && !isValidAmount() ? 'Must be greater than zero' : undefined}
@@ -567,7 +567,7 @@ const DisconnectedTransactionModal: React.SFC<TransactionModalMergedProps> = ({
             id="transfer-amount"
             label="Amount"
             fullWidth={true}
-            value={amount}
+            value={amount !== 0 ? amount : ''}
             onChange={e => setAmount(parseFloat(e.target.value) || 0)}
             type="number"
             helperText={submit && !isValidAmount() ? 'Must be greater than zero' : undefined}
