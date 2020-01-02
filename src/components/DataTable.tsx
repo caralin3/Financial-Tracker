@@ -147,7 +147,12 @@ export const Toolbar: React.SFC<TableToolbarProps> = ({
         if (line !== '') {
           line += ',';
         }
-        line += csvData[i][index];
+        const value = csvData[i][index];
+        if (!Number.isNaN(value)) {
+          line += value.replace('$', '').replace(',', '');
+        } else {
+          line += value;
+        }
       }
       str += line + '\r\n';
     }
