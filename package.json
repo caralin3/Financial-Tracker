@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "blob": "^0.0.5",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "connected-react-router": "^6.2.2",
     "firebase": "^7.6.1",
     "moment": "^2.24.0",
